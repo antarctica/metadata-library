@@ -1,0 +1,65 @@
+---
+
+# == Notes ==
+
+# - GitLab automatically passes artifacts from previous stages by default
+# - This project requires runners with specific tags to execute specific jobs
+# - This project includes variables specific to using 'Docker In Docker'
+# - This project uses additional services ran alongside the job images
+# - Set required secret variables at: https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/settings/ci_cd
+
+# = Secret variables
+# - Variables are grouped by section in KEY: "value" format (e.g. FOO: "bar")
+#   Sensitive values are represented by "[Sensitive]"
+#
+# - Snyk
+# > SNYK_TOKEN: "[Sensitive]"
+
+# == Global settings ==
+
+stages:
+  - test
+  - lint
+
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+  GITLAB_REGISTRY: docker-registry.data.bas.ac.uk
+  APP_NAME: uk_pdc_metadata_record_generator
+  SNYK_ORG: antarctica
+  SNYK_PROJECT: uk-pdc-metadata-record-generator
+
+image:
+  name: docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator:latest
+  entrypoint: [""]
+
+# == Jobs ==
+
+test-app:
+  stage: test
+  variables:
+    FLASK_ENV: testing
+  script:
+    - "flask test"
+
+dependencies-app:
+  stage: lint
+  image:
+    name: antarctica/snyk-cli:python-3
+    entrypoint: [""]
+  script:
+   - "pip install -r requirements.txt"
+   - "snyk test"
+   - "snyk monitor --project-name=$SNYK_PROJECT --org=$SNYK_ORG"
+  only:
+    - master
+
+pep8-app:
+  stage: lint
+  script:
+    - "flake8 . --ignore=E501"
+
+bandit-app:
+  stage: lint
+  script:
+    - "bandit -r ."
