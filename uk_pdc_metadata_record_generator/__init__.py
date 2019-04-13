@@ -86,18 +86,42 @@ class MetadataRecord(object):
 
 
 class MetadataRecordElement(object):
-    def __init__(self, record: MetadataRecord, attributes: dict):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
         self._ns = Namespaces()
         self.record = record
         self.attributes = attributes
+        self.parent_element = parent_element
+        self.element_attributes = element_attributes
 
     def make_element(self):
         pass
 
 
 class CodeListElement(MetadataRecordElement):
-    def __init__(self, record: MetadataRecord, attributes: dict):
-        super().__init__(record, attributes)
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        if parent_element is None:
+            self.parent_element = self.record
+        if element_attributes is None:
+            self.element_attributes = self.attributes
+
         self.element = None
         self.element_code = None
         self.attribute = None
@@ -106,18 +130,30 @@ class CodeListElement(MetadataRecordElement):
         self.code_list_values = []
 
     def make_element(self):
-        code_list_element = etree.SubElement(self.record, self.element)
-        if self.attribute in self.attributes and self.attributes[self.attribute] in self.code_list_values:
+        code_list_element = etree.SubElement(self.parent_element, self.element)
+        if self.attribute in self.element_attributes \
+                and self.element_attributes[self.attribute] in self.code_list_values:
             code_list_value = etree.SubElement(code_list_element, self.element_code, attrib={
                 'codeList': self.code_list,
-                'codeListValue': self.attributes[self.attribute]
+                'codeListValue': self.element_attributes[self.attribute]
             })
-            code_list_value.text = self.attributes[self.attribute]
+            code_list_value.text = self.element_attributes[self.attribute]
 
 
 class Language(CodeListElement):
-    def __init__(self, record: MetadataRecord, attributes: dict):
-        super().__init__(record, attributes)
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
         self.code_list_values = ['eng']
         self.code_list = 'http://www.loc.gov/standards/iso639-2/php/code_list.php'
         self.element = f"{{{self._ns.gmd}}}language"
@@ -126,8 +162,19 @@ class Language(CodeListElement):
 
 
 class CharacterSet(CodeListElement):
-    def __init__(self, record: MetadataRecord, attributes: dict):
-        super().__init__(record, attributes)
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
         self.code_list_values = ['utf8']
         self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
                          'codelist/gmxCodelists.xml#MD_CharacterSetCode'
