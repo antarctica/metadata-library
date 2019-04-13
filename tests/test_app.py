@@ -154,42 +154,34 @@ class AppTestCase(BaseTestCase):
         self.assertEqual(file_identifier.text, self.record_attributes['file_identifier'])
 
     def test_record_language(self):
-        language = self.test_response.find(f"{{{ self.ns.gmd }}}language")
+        language = self.test_response.find(f"{{{ self.ns.gmd }}}language/{{{ self.ns.gmd }}}LanguageCode")
         self.assertIsNotNone(language)
-
-        language_code = language.find(f"{{{ self.ns.gmd }}}LanguageCode")
-        self.assertIsNotNone(language_code)
-        self.assertEqual(language_code.attrib['codeList'], 'http://www.loc.gov/standards/iso639-2/php/code_list.php')
-        self.assertEqual(language_code.attrib['codeListValue'], self.record_attributes['language'])
-        self.assertEqual(language_code.text, self.record_attributes['language'])
+        self.assertEqual(language.attrib['codeList'], 'http://www.loc.gov/standards/iso639-2/php/code_list.php')
+        self.assertEqual(language.attrib['codeListValue'], self.record_attributes['language'])
+        self.assertEqual(language.text, self.record_attributes['language'])
 
     def test_record_character_set(self):
-        character_set = self.test_response.find(f"{{{ self.ns.gmd }}}characterSet")
-        self.assertIsNotNone(character_set)
-
-        character_set_code = character_set.find(f"{{{ self.ns.gmd }}}MD_CharacterSetCode")
-        self.assertIsNotNone(character_set_code)
+        character_set = self.test_response.find(
+            f"{{{ self.ns.gmd }}}characterSet/{{{ self.ns.gmd }}}MD_CharacterSetCode"
+        )
         self.assertEqual(
-            character_set_code.attrib['codeList'],
+            character_set.attrib['codeList'],
             'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
             '/codelist/gmxCodelists.xml#MD_CharacterSetCode'
         )
-        self.assertEqual(character_set_code.attrib['codeListValue'], self.record_attributes['character_set'])
-        self.assertEqual(character_set_code.text, self.record_attributes['character_set'])
+        self.assertEqual(character_set.attrib['codeListValue'], self.record_attributes['character_set'])
+        self.assertEqual(character_set.text, self.record_attributes['character_set'])
 
     def test_record_hierarchy_level(self):
-        hierarchy_level = self.test_response.find(f"{{{ self.ns.gmd }}}hierarchyLevel")
+        hierarchy_level = self.test_response.find(f"{{{ self.ns.gmd }}}hierarchyLevel/{{{ self.ns.gmd }}}MD_ScopeCode")
         self.assertIsNotNone(hierarchy_level)
-
-        hierarchy_level_code = hierarchy_level.find(f"{{{ self.ns.gmd }}}MD_ScopeCode")
-        self.assertIsNotNone(hierarchy_level_code)
         self.assertEqual(
-            hierarchy_level_code.attrib['codeList'],
+            hierarchy_level.attrib['codeList'],
             'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
             '/codelist/gmxCodelists.xml#MD_ScopeCode'
         )
-        self.assertEqual(hierarchy_level_code.attrib['codeListValue'], self.record_attributes['hierarchy-level'])
-        self.assertEqual(hierarchy_level_code.text, self.record_attributes['hierarchy-level'])
+        self.assertEqual(hierarchy_level.attrib['codeListValue'], self.record_attributes['hierarchy-level'])
+        self.assertEqual(hierarchy_level.text, self.record_attributes['hierarchy-level'])
 
         hierarchy_level_name = self.test_response.find(
             f"{{{ self.ns.gmd }}}hierarchyLevelName/{{{ self.ns.gco }}}CharacterString"
