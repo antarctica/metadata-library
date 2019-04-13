@@ -60,6 +60,7 @@ class MetadataRecord(object):
         self._file_identifier()
         self._language()
         self._character_set()
+        self._hierarchy_level()
 
     def _record(self) -> Element:
         return etree.Element(
@@ -82,6 +83,10 @@ class MetadataRecord(object):
     def _character_set(self):
         character_set = CharacterSet(record=self.record, attributes=self.attributes)
         character_set.make_element()
+
+    def _hierarchy_level(self):
+        hierarchy_level = HierarchyLevel(record=self.record, attributes=self.attributes)
+        hierarchy_level.make_element()
 
 
 
@@ -183,6 +188,53 @@ class CharacterSet(CodeListElement):
         self.attribute = 'character_set'
 
 
+class HierarchyLevel(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.code_list_values = [
+            'attribute',
+            'attributeType',
+            'collectionHardware',
+            'collectionSession',
+            'dataset',
+            'series',
+            'nonGeographicDataset',
+            'dimensionGroup',
+            'feature',
+            'featureType',
+            'propertyType',
+            'fieldSession',
+            'software',
+            'service',
+            'model',
+            'tile'
+        ]
+        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
+                         'codelist/gmxCodelists.xml#MD_ScopeCode'
+        self.element = f"{{{self._ns.gmd}}}hierarchyLevel"
+        self.element_code = f"{{{self._ns.gmd}}}MD_ScopeCode"
+        self.attribute = 'hierarchy-level'
+
+    def make_element(self):
+        super().make_element()
+        hierarchy_level_name_element = etree.SubElement(self.record, f"{{{self._ns.gmd}}}hierarchyLevelName")
+        if self.attribute in self.attributes and self.attributes[self.attribute] in self.code_list_values:
+            hierarchy_level_name_value = etree.SubElement(
+                hierarchy_level_name_element,
+                f"{{{self._ns.gco}}}CharacterString"
+            )
+            hierarchy_level_name_value.text = self.attributes[self.attribute]
 
 def create_app():
     app = Flask(__name__)

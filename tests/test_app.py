@@ -99,7 +99,26 @@ class AppTestCase(BaseTestCase):
         )
         self.assertEqual(character_set_code.attrib['codeListValue'], self.record_attributes['character_set'])
         self.assertEqual(character_set_code.text, self.record_attributes['character_set'])
+
+    def test_record_hierarchy_level(self):
+        hierarchy_level = self.test_response.find(f"{{{ self.ns.gmd }}}hierarchyLevel")
+        self.assertIsNotNone(hierarchy_level)
+
+        hierarchy_level_code = hierarchy_level.find(f"{{{ self.ns.gmd }}}MD_ScopeCode")
+        self.assertIsNotNone(hierarchy_level_code)
+        self.assertEqual(
+            hierarchy_level_code.attrib['codeList'],
+            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+            '/codelist/gmxCodelists.xml#MD_ScopeCode'
         )
+        self.assertEqual(hierarchy_level_code.attrib['codeListValue'], self.record_attributes['hierarchy-level'])
+        self.assertEqual(hierarchy_level_code.text, self.record_attributes['hierarchy-level'])
+
+        hierarchy_level_name = self.test_response.find(
+            f"{{{ self.ns.gmd }}}hierarchyLevelName/{{{ self.ns.gco }}}CharacterString"
+        )
+        self.assertIsNotNone(hierarchy_level_name)
+        self.assertEqual(hierarchy_level_name.text, self.record_attributes['hierarchy-level'])
 
 
 
