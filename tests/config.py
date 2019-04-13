@@ -28,5 +28,9 @@ test_record = {
     'metadata-standard': {
         'name': 'ISO 19115 (UK GEMINI)',
         'version': '1.0 (2.3)'
+    },
+    'reference-system-info': {
+        'code': 'urn:ogc:def:crs:EPSG:4326',
+        'version': '6.18.3'
     }
 }

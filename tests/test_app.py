@@ -11,7 +11,7 @@ from flask import current_app
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
 from lxml import etree  # nosec
 
-from uk_pdc_metadata_record_generator import create_app, Namespaces, MetadataRecord
+from uk_pdc_metadata_record_generator import create_app, Namespaces, MetadataRecord, ReferenceSystemInfo
 from tests import config
 
 
@@ -45,6 +45,82 @@ class BaseTestCase(unittest.TestCase):
 
 
 class AppTestCase(BaseTestCase):
+    def _test_responsible_party(self, responsible_party, responsible_party_attributes):
+        organisation_name = responsible_party.find(
+            f"{{{self.ns.gmd}}}organisationName/{{{self.ns.gco}}}CharacterString"
+        )
+        self.assertIsNotNone(organisation_name)
+        self.assertEqual(organisation_name.text, responsible_party_attributes['organisation']['name'])
+
+        contact_info = responsible_party.find(f"{{{self.ns.gmd}}}contactInfo/{{{self.ns.gmd}}}CI_Contact")
+        self.assertIsNotNone(contact_info)
+
+        if 'phone' in responsible_party_attributes:
+            phone = contact_info.find(
+                f"{{{self.ns.gmd}}}phone/{{{self.ns.gmd}}}CI_Telephone/{{{self.ns.gmd}}}voice/"
+                f"{{{self.ns.gco}}}CharacterString"
+            )
+            self.assertIsNotNone(phone)
+            self.assertEqual(phone.text, responsible_party_attributes['phone'])
+
+        if 'address' in responsible_party_attributes or 'email' in responsible_party_attributes:
+            address = contact_info.find(f"{{{self.ns.gmd}}}address/{{{self.ns.gmd}}}CI_Address")
+            self.assertIsNotNone(address)
+
+            if 'address' in responsible_party and 'delivery-point' in responsible_party['address']:
+                delivery_point = address.find(f"{{{self.ns.gmd}}}deliveryPoint/{{{self.ns.gco}}}CharacterString")
+                self.assertIsNotNone(delivery_point)
+                self.assertEqual(delivery_point.text, responsible_party_attributes['address']['delivery-point'])
+
+            if 'address' in responsible_party and 'city' in responsible_party['address']:
+                city = address.find(f"{{{self.ns.gmd}}}city/{{{self.ns.gco}}}CharacterString")
+                self.assertIsNotNone(city)
+                self.assertEqual(city.text, responsible_party_attributes['address']['city'])
+
+            if 'address' in responsible_party and 'administrative-area' in responsible_party['address']:
+                administrative_area = address.find(
+                    f"{{{self.ns.gmd}}}administrativeArea/{{{self.ns.gco}}}CharacterString"
+                )
+                self.assertIsNotNone(administrative_area)
+                self.assertEqual(
+                    administrative_area.text,
+                    responsible_party_attributes['address']['administrative-area']
+                )
+
+            if 'address' in responsible_party and 'postal-code' in responsible_party['address']:
+                postal_code = address.find(f"{{{self.ns.gmd}}}postalCode/{{{self.ns.gco}}}CharacterString")
+                self.assertIsNotNone(postal_code)
+                self.assertEqual(postal_code.text, responsible_party_attributes['address']['postal-code'])
+
+            if 'address' in responsible_party and 'country' in responsible_party['address']:
+                country = address.find(f"{{{self.ns.gmd}}}country/{{{self.ns.gco}}}CharacterString")
+                self.assertIsNotNone(country)
+                self.assertEqual(country.text, responsible_party_attributes['address']['country'])
+
+            if 'email' in responsible_party:
+                email = address.find(f"{{{self.ns.gmd}}}electronicMailAddress/{{{self.ns.gco}}}CharacterString")
+                self.assertIsNotNone(email)
+                self.assertEqual(email.text, responsible_party_attributes['email'])
+
+        if 'url' in responsible_party:
+            url = contact_info.find(
+                f"{{{self.ns.gmd}}}onlineResource/{{{self.ns.gmd}}}CI_OnlineResource/{{{self.ns.gmd}}}linkage/"
+                f"{{{self.ns.gmd}}}URL"
+            )
+            self.assertIsNotNone(url)
+            self.assertEqual(url.text, responsible_party_attributes['url'])
+
+        if 'role' in responsible_party:
+            role = responsible_party.find(f"{{{self.ns.gmd}}}role/{{{self.ns.gmd}}}CI_RoleCode")
+            self.assertIsNotNone(role)
+            self.assertEqual(
+                role.attrib['codeList'],
+                'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                '/codelist/gmxCodelists.xml#CI_RoleCode'
+            )
+            self.assertEqual(role.attrib['codeListValue'], responsible_party_attributes['role'])
+            self.assertEqual(role.text, responsible_party_attributes['role'])
+
     def test_app_exists(self):
         self.assertFalse(current_app is None)
 
@@ -78,42 +154,34 @@ class AppTestCase(BaseTestCase):
         self.assertEqual(file_identifier.text, self.record_attributes['file_identifier'])
 
     def test_record_language(self):
-        language = self.test_response.find(f"{{{ self.ns.gmd }}}language")
+        language = self.test_response.find(f"{{{ self.ns.gmd }}}language/{{{ self.ns.gmd }}}LanguageCode")
         self.assertIsNotNone(language)
-
-        language_code = language.find(f"{{{ self.ns.gmd }}}LanguageCode")
-        self.assertIsNotNone(language_code)
-        self.assertEqual(language_code.attrib['codeList'], 'http://www.loc.gov/standards/iso639-2/php/code_list.php')
-        self.assertEqual(language_code.attrib['codeListValue'], self.record_attributes['language'])
-        self.assertEqual(language_code.text, self.record_attributes['language'])
+        self.assertEqual(language.attrib['codeList'], 'http://www.loc.gov/standards/iso639-2/php/code_list.php')
+        self.assertEqual(language.attrib['codeListValue'], self.record_attributes['language'])
+        self.assertEqual(language.text, self.record_attributes['language'])
 
     def test_record_character_set(self):
-        character_set = self.test_response.find(f"{{{ self.ns.gmd }}}characterSet")
-        self.assertIsNotNone(character_set)
-
-        character_set_code = character_set.find(f"{{{ self.ns.gmd }}}MD_CharacterSetCode")
-        self.assertIsNotNone(character_set_code)
+        character_set = self.test_response.find(
+            f"{{{ self.ns.gmd }}}characterSet/{{{ self.ns.gmd }}}MD_CharacterSetCode"
+        )
         self.assertEqual(
-            character_set_code.attrib['codeList'],
+            character_set.attrib['codeList'],
             'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
             '/codelist/gmxCodelists.xml#MD_CharacterSetCode'
         )
-        self.assertEqual(character_set_code.attrib['codeListValue'], self.record_attributes['character_set'])
-        self.assertEqual(character_set_code.text, self.record_attributes['character_set'])
+        self.assertEqual(character_set.attrib['codeListValue'], self.record_attributes['character_set'])
+        self.assertEqual(character_set.text, self.record_attributes['character_set'])
 
     def test_record_hierarchy_level(self):
-        hierarchy_level = self.test_response.find(f"{{{ self.ns.gmd }}}hierarchyLevel")
+        hierarchy_level = self.test_response.find(f"{{{ self.ns.gmd }}}hierarchyLevel/{{{ self.ns.gmd }}}MD_ScopeCode")
         self.assertIsNotNone(hierarchy_level)
-
-        hierarchy_level_code = hierarchy_level.find(f"{{{ self.ns.gmd }}}MD_ScopeCode")
-        self.assertIsNotNone(hierarchy_level_code)
         self.assertEqual(
-            hierarchy_level_code.attrib['codeList'],
+            hierarchy_level.attrib['codeList'],
             'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
             '/codelist/gmxCodelists.xml#MD_ScopeCode'
         )
-        self.assertEqual(hierarchy_level_code.attrib['codeListValue'], self.record_attributes['hierarchy-level'])
-        self.assertEqual(hierarchy_level_code.text, self.record_attributes['hierarchy-level'])
+        self.assertEqual(hierarchy_level.attrib['codeListValue'], self.record_attributes['hierarchy-level'])
+        self.assertEqual(hierarchy_level.text, self.record_attributes['hierarchy-level'])
 
         hierarchy_level_name = self.test_response.find(
             f"{{{ self.ns.gmd }}}hierarchyLevelName/{{{ self.ns.gco }}}CharacterString"
@@ -128,55 +196,7 @@ class AppTestCase(BaseTestCase):
         responsible_party = contact.find(f"{{{ self.ns.gmd }}}CI_ResponsibleParty")
         self.assertIsNotNone(responsible_party)
 
-        organiastion_name = responsible_party.find(
-            f"{{{self.ns.gmd}}}organisationName/{{{self.ns.gco}}}CharacterString"
-        )
-        self.assertIsNotNone(organiastion_name)
-        self.assertEqual(organiastion_name.text, self.record_attributes['contact']['organisation']['name'])
-
-        contact_info = responsible_party.find(f"{{{self.ns.gmd}}}contactInfo/{{{self.ns.gmd}}}CI_Contact")
-        self.assertIsNotNone(contact_info)
-
-        phone = contact_info.find(
-            f"{{{self.ns.gmd}}}phone/{{{self.ns.gmd}}}CI_Telephone/{{{self.ns.gmd}}}voice/"
-            f"{{{self.ns.gco}}}CharacterString"
-        )
-        self.assertIsNotNone(phone)
-        self.assertEqual(phone.text, self.record_attributes['contact']['phone'])
-
-        address = contact_info.find(f"{{{self.ns.gmd}}}address/{{{self.ns.gmd}}}CI_Address")
-        self.assertIsNotNone(address)
-
-        delivery_point = address.find(f"{{{self.ns.gmd}}}deliveryPoint/{{{self.ns.gco}}}CharacterString")
-        self.assertIsNotNone(delivery_point)
-        self.assertEqual(delivery_point.text, self.record_attributes['contact']['address']['delivery-point'])
-
-        city = address.find(f"{{{self.ns.gmd}}}city/{{{self.ns.gco}}}CharacterString")
-        self.assertIsNotNone(city)
-        self.assertEqual(city.text, self.record_attributes['contact']['address']['city'])
-
-        administrative_area = address.find(f"{{{self.ns.gmd}}}administrativeArea/{{{self.ns.gco}}}CharacterString")
-        self.assertIsNotNone(administrative_area)
-        self.assertEqual(administrative_area.text, self.record_attributes['contact']['address']['administrative-area'])
-
-        postal_code = address.find(f"{{{self.ns.gmd}}}postalCode/{{{self.ns.gco}}}CharacterString")
-        self.assertIsNotNone(postal_code)
-        self.assertEqual(postal_code.text, self.record_attributes['contact']['address']['postal-code'])
-
-        country = address.find(f"{{{self.ns.gmd}}}country/{{{self.ns.gco}}}CharacterString")
-        self.assertIsNotNone(country)
-        self.assertEqual(country.text, self.record_attributes['contact']['address']['country'])
-
-        email = address.find(f"{{{self.ns.gmd}}}electronicMailAddress/{{{self.ns.gco}}}CharacterString")
-        self.assertIsNotNone(email)
-        self.assertEqual(email.text, self.record_attributes['contact']['email'])
-
-        url = contact_info.find(
-            f"{{{self.ns.gmd}}}onlineResource/{{{self.ns.gmd}}}CI_OnlineResource/{{{self.ns.gmd}}}linkage/"
-            f"{{{self.ns.gmd}}}URL"
-        )
-        self.assertIsNotNone(url)
-        self.assertEqual(url.text, self.record_attributes['contact']['url'])
+        self._test_responsible_party(responsible_party, self.record_attributes['contact'])
 
     def test_record_date_stamp(self):
         date_stamp = self.test_response.find(f"{{{ self.ns.gmd }}}dateStamp/{{{ self.ns.gco }}}DateTime")
@@ -237,3 +257,64 @@ class AppTestCase(BaseTestCase):
         )
         self.assertIsNotNone(metadata_standard_version)
         self.assertEqual(metadata_standard_version.text, self.record_attributes['metadata-standard']['version'])
+
+    def test_reference_system_identifier(self):
+        reference_system_identifier = self.test_response.find(
+            f"{{{self.ns.gmd}}}referenceSystemInfo/{{{self.ns.gmd}}}MD_ReferenceSystem/"
+            f"{{{self.ns.gmd}}}referenceSystemIdentifier/{{{self.ns.gmd}}}RS_Identifier"
+        )
+        self.assertIsNotNone(reference_system_identifier)
+
+        reference_system_authority = reference_system_identifier.find(
+            f"{{{self.ns.gmd}}}authority/{{{self.ns.gmd}}}CI_Citation"
+        )
+        self.assertIsNotNone(reference_system_authority)
+
+        authority_title = reference_system_authority.find(f"{{{self.ns.gmd}}}title/{{{ self.ns.gco }}}CharacterString")
+        self.assertIsNotNone(authority_title)
+        self.assertEqual(authority_title.text, ReferenceSystemInfo.epsg_citation['title'])
+
+        authority_date_container = reference_system_authority.find(f"{{{self.ns.gmd}}}date/{{{self.ns.gmd}}}CI_Date")
+        self.assertIsNotNone(authority_date_container)
+
+        authority_date = authority_date_container.find(f"{{{self.ns.gmd}}}date/{{{self.ns.gco}}}DateTime")
+        self.assertIsNotNone(authority_date)
+        self.assertEqual(datetime.fromisoformat(authority_date.text), ReferenceSystemInfo.epsg_citation['date']['date'])
+
+        authority_date_type = authority_date_container.find(
+            f"{{{self.ns.gmd}}}dateType/{{{self.ns.gmd}}}CI_DateTypeCode"
+        )
+        self.assertIsNotNone(authority_date_type)
+        self.assertEqual(
+            authority_date_type.attrib['codeList'],
+            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+            '/codelist/gmxCodelists.xml#CI_DateTypeCode'
+        )
+        self.assertEqual(
+            authority_date_type.attrib['codeListValue'],
+            ReferenceSystemInfo.epsg_citation['date']['date-type']
+        )
+        self.assertEqual(authority_date_type.text, ReferenceSystemInfo.epsg_citation['date']['date-type'])
+
+        authority_citation = reference_system_authority.find(f"{{{self.ns.gmd}}}citedResponsibleParty")
+        self.assertIsNotNone(authority_citation)
+
+        responsible_party = authority_citation.find(f"{{{ self.ns.gmd }}}CI_ResponsibleParty")
+        self.assertIsNotNone(responsible_party)
+
+        self._test_responsible_party(responsible_party, ReferenceSystemInfo.epsg_citation['contact'])
+
+        reference_system_code = reference_system_identifier.find(f"{{{ self.ns.gmd }}}code/{{{ self.ns.gmx }}}Anchor")
+        self.assertIsNotNone(reference_system_code)
+        self.assertEqual(
+            reference_system_code.attrib[f"{{{self.ns.xlink}}}href"],
+            'http://www.opengis.net/def/crs/EPSG/0/4326'
+        )
+        self.assertEqual(reference_system_code.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+        self.assertEqual(reference_system_code.text, self.record_attributes['reference-system-info']['code'])
+
+        reference_system_version = reference_system_identifier.find(
+            f"{{{self.ns.gmd}}}version/{{{ self.ns.gco }}}CharacterString"
+        )
+        self.assertIsNotNone(reference_system_version)
+        self.assertEqual(reference_system_version.text, self.record_attributes['reference-system-info']['version'])
