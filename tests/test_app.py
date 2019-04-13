@@ -1,5 +1,6 @@
 import unittest
 
+from datetime import datetime
 from http import HTTPStatus
 
 from flask import current_app
@@ -176,3 +177,8 @@ class AppTestCase(BaseTestCase):
         )
         self.assertIsNotNone(url)
         self.assertEqual(url.text, self.record_attributes['contact']['url'])
+
+    def test_record_date_stamp(self):
+        date_stamp = self.test_response.find(f"{{{ self.ns.gmd }}}dateStamp/{{{ self.ns.gco }}}DateTime")
+        self.assertIsNotNone(date_stamp)
+        self.assertEqual(datetime.fromisoformat(date_stamp.text), self.record_attributes['date-stamp'])

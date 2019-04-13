@@ -62,6 +62,7 @@ class MetadataRecord(object):
         self._character_set()
         self._hierarchy_level()
         self._contact()
+        self._date_stamp()
 
     def _record(self) -> Element:
         return etree.Element(
@@ -92,6 +93,10 @@ class MetadataRecord(object):
     def _contact(self):
         contact = Contact(record=self.record, attributes=self.attributes)
         contact.make_element()
+
+    def _date_stamp(self):
+        date_stamp = DateStamp(record=self.record, attributes=self.attributes)
+        date_stamp.make_element()
 
 
 
@@ -334,6 +339,25 @@ class Linkage(MetadataRecordElement):
         if 'url' in self.element_attributes:
             url_value = etree.SubElement(linkage_element, f"{{{self._ns.gmd}}}URL")
             url_value.text = self.element_attributes['url']
+
+
+class DateStamp(MetadataRecordElement):
+    def make_element(self):
+        date_stamp_element = etree.SubElement(self.record, f"{{{self._ns.gmd}}}dateStamp")
+        date_stamp_value = etree.SubElement(date_stamp_element, f"{{{self._ns.gco}}}DateTime")
+        date_stamp_value.text = self.attributes['date-stamp'].isoformat()
+
+
+class MetadataMaintenance(MetadataRecordElement):
+    def make_element(self):
+        metadata_maintenance_element = etree.SubElement(self.record, f"{{{self._ns.gmd}}}metadataMaintenance")
+        maintenance_information = MaintenanceInformation(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=metadata_maintenance_element,
+            element_attributes=self.attributes['metadata-maintenance']
+        )
+        maintenance_information.make_element()
 def create_app():
     app = Flask(__name__)
 

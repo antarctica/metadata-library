@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 test_record = {
     'file_identifier': '123',
     'language': 'eng',
@@ -18,4 +20,5 @@ test_record = {
         'email': 'polardatacentre@bas.ac.uk',
         'url': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/'
     },
+    'date-stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
 }
