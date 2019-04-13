@@ -21,4 +21,8 @@ test_record = {
         'url': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/'
     },
     'date-stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
+    'metadata-maintenance': {
+        'maintenance-frequency': 'asNeeded',
+        'progress': 'completed'
+    },
 }

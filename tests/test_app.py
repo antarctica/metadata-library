@@ -182,3 +182,45 @@ class AppTestCase(BaseTestCase):
         date_stamp = self.test_response.find(f"{{{ self.ns.gmd }}}dateStamp/{{{ self.ns.gco }}}DateTime")
         self.assertIsNotNone(date_stamp)
         self.assertEqual(datetime.fromisoformat(date_stamp.text), self.record_attributes['date-stamp'])
+
+    def test_metadata_maintenance(self):
+        metadata_maintenance = self.test_response.find(
+            f"{{{ self.ns.gmd }}}metadataMaintenance/{{{ self.ns.gmd }}}MD_MaintenanceInformation"
+        )
+        self.assertIsNotNone(metadata_maintenance)
+
+        metadata_maintenance_frequency = metadata_maintenance.find(
+            f"{{{ self.ns.gmd }}}maintenanceAndUpdateFrequency/{{{ self.ns.gmd }}}MD_MaintenanceFrequencyCode"
+        )
+        self.assertIsNotNone(metadata_maintenance_frequency)
+        self.assertEqual(
+            metadata_maintenance_frequency.attrib['codeList'],
+            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+            '/codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode'
+        )
+        self.assertEqual(
+            metadata_maintenance_frequency.attrib['codeListValue'],
+            self.record_attributes['metadata-maintenance']['maintenance-frequency']
+        )
+        self.assertEqual(
+            metadata_maintenance_frequency.text,
+            self.record_attributes['metadata-maintenance']['maintenance-frequency']
+        )
+
+        metadata_maintenance_progress = metadata_maintenance.find(
+            f"{{{ self.ns.gmd }}}maintenanceNote/{{{ self.ns.gmd }}}MD_ProgressCode"
+        )
+        self.assertIsNotNone(metadata_maintenance_progress)
+        self.assertEqual(
+            metadata_maintenance_progress.attrib['codeList'],
+            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+            '/codelist/gmxCodelists.xml#MD_ProgressCode'
+        )
+        self.assertEqual(
+            metadata_maintenance_progress.attrib['codeListValue'],
+            self.record_attributes['metadata-maintenance']['progress']
+        )
+        self.assertEqual(
+            metadata_maintenance_progress.text,
+            self.record_attributes['metadata-maintenance']['progress']
+        )

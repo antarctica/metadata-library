@@ -63,6 +63,7 @@ class MetadataRecord(object):
         self._hierarchy_level()
         self._contact()
         self._date_stamp()
+        self._metadata_maintenance()
 
     def _record(self) -> Element:
         return etree.Element(
@@ -98,6 +99,9 @@ class MetadataRecord(object):
         date_stamp = DateStamp(record=self.record, attributes=self.attributes)
         date_stamp.make_element()
 
+    def _metadata_maintenance(self):
+        metadata_maintenance = MetadataMaintenance(record=self.record, attributes=self.attributes)
+        metadata_maintenance.make_element()
 
 
 class MetadataRecordElement(object):
@@ -358,6 +362,93 @@ class MetadataMaintenance(MetadataRecordElement):
             element_attributes=self.attributes['metadata-maintenance']
         )
         maintenance_information.make_element()
+
+
+class MaintenanceInformation(MetadataRecordElement):
+    def make_element(self):
+        maintenance_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}MD_MaintenanceInformation")
+
+        if 'maintenance-frequency' in self.element_attributes:
+            maintenance_and_update_frequency = MaintenanceAndUpdateFrequency(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=maintenance_element,
+                element_attributes=self.element_attributes
+            )
+            maintenance_and_update_frequency.make_element()
+        if 'progress' in self.element_attributes:
+            maintenance_process = MaintenanceProgress(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=maintenance_element,
+                element_attributes=self.element_attributes
+            )
+            maintenance_process.make_element()
+
+
+class MaintenanceAndUpdateFrequency(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.code_list_values = [
+            'continual',
+            'daily',
+            'weekly',
+            'fortnightly',
+            'monthly',
+            'quarterly',
+            'biannually',
+            'annually',
+            'asNeeded',
+            'irregular',
+            'notPlanned',
+            'unknown'
+        ]
+        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
+                         'codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode'
+        self.element = f"{{{self._ns.gmd}}}maintenanceAndUpdateFrequency"
+        self.element_code = f"{{{self._ns.gmd}}}MD_MaintenanceFrequencyCode"
+        self.attribute = 'maintenance-frequency'
+
+
+class MaintenanceProgress(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.code_list_values = [
+            'completed',
+            'historicalArchive',
+            'obsolete',
+            'onGoing',
+            'planned',
+            'required',
+            'underDevelopment'
+        ]
+        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
+                         'codelist/gmxCodelists.xml#MD_ProgressCode'
+        self.element = f"{{{self._ns.gmd}}}maintenanceNote"
+        self.element_code = f"{{{self._ns.gmd}}}MD_ProgressCode"
+        self.attribute = 'progress'
 def create_app():
     app = Flask(__name__)
 
