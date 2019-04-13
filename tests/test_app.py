@@ -75,6 +75,30 @@ class AppTestCase(BaseTestCase):
         )
         self.assertIsNotNone(file_identifier)
         self.assertEqual(file_identifier.text, self.record_attributes['file_identifier'])
+
+    def test_record_language(self):
+        language = self.test_response.find(f"{{{ self.ns.gmd }}}language")
+        self.assertIsNotNone(language)
+
+        language_code = language.find(f"{{{ self.ns.gmd }}}LanguageCode")
+        self.assertIsNotNone(language_code)
+        self.assertEqual(language_code.attrib['codeList'], 'http://www.loc.gov/standards/iso639-2/php/code_list.php')
+        self.assertEqual(language_code.attrib['codeListValue'], self.record_attributes['language'])
+        self.assertEqual(language_code.text, self.record_attributes['language'])
+
+    def test_record_character_set(self):
+        character_set = self.test_response.find(f"{{{ self.ns.gmd }}}characterSet")
+        self.assertIsNotNone(character_set)
+
+        character_set_code = character_set.find(f"{{{ self.ns.gmd }}}MD_CharacterSetCode")
+        self.assertIsNotNone(character_set_code)
+        self.assertEqual(
+            character_set_code.attrib['codeList'],
+            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+            '/codelist/gmxCodelists.xml#MD_CharacterSetCode'
+        )
+        self.assertEqual(character_set_code.attrib['codeListValue'], self.record_attributes['character_set'])
+        self.assertEqual(character_set_code.text, self.record_attributes['character_set'])
         )
 
 
