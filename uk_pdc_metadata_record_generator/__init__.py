@@ -64,6 +64,7 @@ class MetadataRecord(object):
         self._contact()
         self._date_stamp()
         self._metadata_maintenance()
+        self._metadata_standard()
 
     def _record(self) -> Element:
         return etree.Element(
@@ -102,6 +103,10 @@ class MetadataRecord(object):
     def _metadata_maintenance(self):
         metadata_maintenance = MetadataMaintenance(record=self.record, attributes=self.attributes)
         metadata_maintenance.make_element()
+
+    def _metadata_standard(self):
+        metadata_standard = MetadataStandard(record=self.record, attributes=self.attributes)
+        metadata_standard.make_element()
 
 
 class MetadataRecordElement(object):
@@ -449,6 +454,29 @@ class MaintenanceProgress(CodeListElement):
         self.element = f"{{{self._ns.gmd}}}maintenanceNote"
         self.element_code = f"{{{self._ns.gmd}}}MD_ProgressCode"
         self.attribute = 'progress'
+
+
+class MetadataStandard(MetadataRecordElement):
+    def make_element(self):
+        if 'name' in self.attributes['metadata-standard']:
+            metadata_standard_name_element = etree.SubElement(self.record, f"{{{self._ns.gmd}}}metadataStandardName")
+            metadata_standard_name_value = etree.SubElement(
+                metadata_standard_name_element,
+                f"{{{self._ns.gco}}}CharacterString"
+            )
+            metadata_standard_name_value.text = self.attributes['metadata-standard']['name']
+        if 'version' in self.attributes['metadata-standard']:
+            metadata_standard_version_element = etree.SubElement(
+                self.record,
+                f"{{{self._ns.gmd}}}metadataStandardVersion"
+            )
+            metadata_standard_version_value = etree.SubElement(
+                metadata_standard_version_element,
+                f"{{{self._ns.gco}}}CharacterString"
+            )
+            metadata_standard_version_value.text = self.attributes['metadata-standard']['version']
+
+
 def create_app():
     app = Flask(__name__)
 

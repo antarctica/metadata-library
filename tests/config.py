@@ -25,4 +25,8 @@ test_record = {
         'maintenance-frequency': 'asNeeded',
         'progress': 'completed'
     },
+    'metadata-standard': {
+        'name': 'ISO 19115 (UK GEMINI)',
+        'version': '1.0 (2.3)'
+    }
 }

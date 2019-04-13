@@ -224,3 +224,16 @@ class AppTestCase(BaseTestCase):
             metadata_maintenance_progress.text,
             self.record_attributes['metadata-maintenance']['progress']
         )
+
+    def test_metadata_standard(self):
+        metadata_standard_name = self.test_response.find(
+            f"{{{self.ns.gmd}}}metadataStandardName/{{{ self.ns.gco }}}CharacterString"
+        )
+        self.assertIsNotNone(metadata_standard_name)
+        self.assertEqual(metadata_standard_name.text, self.record_attributes['metadata-standard']['name'])
+
+        metadata_standard_version = self.test_response.find(
+            f"{{{self.ns.gmd}}}metadataStandardVersion/{{{ self.ns.gco }}}CharacterString"
+        )
+        self.assertIsNotNone(metadata_standard_version)
+        self.assertEqual(metadata_standard_version.text, self.record_attributes['metadata-standard']['version'])
