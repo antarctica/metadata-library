@@ -76,10 +76,13 @@ class MetadataRecord(object):
             file_identifier_val.text = self.attributes['file_identifier']
 
     def _language(self):
-        Language(self.record, self.attributes)
+        language = Language(record=self.record, attributes=self.attributes)
+        language.make_element()
 
     def _character_set(self):
-        CharacterSet(self.record, self.attributes)
+        character_set = CharacterSet(record=self.record, attributes=self.attributes)
+        character_set.make_element()
+
 
 
 class MetadataRecordElement(object):
@@ -87,6 +90,9 @@ class MetadataRecordElement(object):
         self._ns = Namespaces()
         self.record = record
         self.attributes = attributes
+
+    def make_element(self):
+        pass
 
 
 class CodeListElement(MetadataRecordElement):
@@ -118,8 +124,6 @@ class Language(CodeListElement):
         self.element_code = f"{{{self._ns.gmd}}}LanguageCode"
         self.attribute = 'language'
 
-        self.make_element()
-
 
 class CharacterSet(CodeListElement):
     def __init__(self, record: MetadataRecord, attributes: dict):
@@ -131,7 +135,6 @@ class CharacterSet(CodeListElement):
         self.element_code = f"{{{self._ns.gmd}}}MD_CharacterSetCode"
         self.attribute = 'character_set'
 
-        self.make_element()
 
 
 def create_app():
