@@ -6,6 +6,8 @@ from flask import Flask, Response
 from lxml import etree  # nosec
 from lxml.etree import Element  # nosec
 
+from tests import config
+
 
 class Namespaces(object):
     gmd = 'http://www.isotc211.org/2005/gmd'
@@ -137,11 +139,7 @@ def create_app():
 
     @app.route('/')
     def index():
-        attributes = {
-            'file_identifier': '123',
-            'language': 'eng',
-            'character_set': 'utf8'
-        }
+        attributes = config.test_record
         record = MetadataRecord(**attributes)
         document = etree.ElementTree(record.record)
         document_str = etree.tostring(document, pretty_print=True, xml_declaration=True, encoding="utf-8")

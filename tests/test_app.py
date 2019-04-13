@@ -11,6 +11,7 @@ from flask import current_app
 from lxml import etree  # nosec
 
 from uk_pdc_metadata_record_generator import create_app, Namespaces
+from tests import config
 
 
 class BaseTestCase(unittest.TestCase):
@@ -25,6 +26,7 @@ class BaseTestCase(unittest.TestCase):
 
         self.ns = Namespaces()
 
+        self.record_attributes = config.test_record
         self.maxDiff = None
 
     def tearDown(self):
