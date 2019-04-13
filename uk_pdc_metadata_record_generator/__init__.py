@@ -69,7 +69,7 @@ class MetadataRecord(object):
     def _record(self) -> Element:
         return etree.Element(
             f"{{{self._ns.gmd}}}MD_Metadata",
-            attrib={f"{{{self._ns.xsi}}}schemaLocation": self._ns.schema_locations()},
+            attrib={f"{{{ self._ns.xsi }}}schemaLocation": self._ns.schema_locations()},
             nsmap=self._ns.nsmap()
         )
 
