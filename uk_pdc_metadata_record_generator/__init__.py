@@ -61,6 +61,7 @@ class MetadataRecord(object):
         self._language()
         self._character_set()
         self._hierarchy_level()
+        self._contact()
 
     def _record(self) -> Element:
         return etree.Element(
@@ -87,6 +88,10 @@ class MetadataRecord(object):
     def _hierarchy_level(self):
         hierarchy_level = HierarchyLevel(record=self.record, attributes=self.attributes)
         hierarchy_level.make_element()
+
+    def _contact(self):
+        contact = Contact(record=self.record, attributes=self.attributes)
+        contact.make_element()
 
 
 
@@ -236,6 +241,99 @@ class HierarchyLevel(CodeListElement):
             )
             hierarchy_level_name_value.text = self.attributes[self.attribute]
 
+
+class Contact(MetadataRecordElement):
+    def make_element(self):
+        contact_element = etree.SubElement(self.record, f"{{{self._ns.gmd}}}contact")
+
+        if 'contact' in self.attributes:
+            responsible_party = ResponsibleParty(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=contact_element,
+                element_attributes=self.attributes['contact']
+            )
+            responsible_party.make_element()
+
+
+class ResponsibleParty(MetadataRecordElement):
+    def make_element(self):
+        responsible_party_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}CI_ResponsibleParty")
+
+        if 'organisation' in self.element_attributes and 'name' in self.element_attributes['organisation']:
+            organisation_element = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}organisationName")
+            organisation_name_value = etree.SubElement(organisation_element, f"{{{self._ns.gco}}}CharacterString")
+            organisation_name_value.text = self.element_attributes['organisation']['name']
+
+        if 'phone' in self.element_attributes or 'address' in self.element_attributes \
+                or 'email' in self.element_attributes or 'url' in self.element_attributes:
+            contact_wrapper = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}contactInfo")
+            contact_element = etree.SubElement(contact_wrapper, f"{{{self._ns.gmd}}}CI_Contact")
+
+            if 'phone' in self.element_attributes:
+                phone_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}phone")
+                phone_element = etree.SubElement(phone_wrapper, f"{{{self._ns.gmd}}}CI_Telephone")
+                phone_voice = etree.SubElement(phone_element, f"{{{self._ns.gmd}}}voice")
+                phone_voice_value = etree.SubElement(phone_voice, f"{{{self._ns.gco}}}CharacterString")
+                phone_voice_value.text = self.element_attributes['phone']
+
+            if 'address' in self.element_attributes or 'email' in self.element_attributes:
+                address_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}address")
+                address_element = etree.SubElement(address_wrapper, f"{{{self._ns.gmd}}}CI_Address")
+
+                if 'delivery-point' in self.element_attributes['address']:
+                    delivery_point_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}deliveryPoint")
+                    delivery_point_value = etree.SubElement(
+                        delivery_point_element,
+                        f"{{{self._ns.gco}}}CharacterString"
+                    )
+                    delivery_point_value.text = self.element_attributes['address']['delivery-point']
+                if 'city' in self.element_attributes['address']:
+                    city_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}city")
+                    city_value = etree.SubElement(city_element, f"{{{self._ns.gco}}}CharacterString")
+                    city_value.text = self.element_attributes['address']['city']
+                if 'administrative-area' in self.element_attributes['address']:
+                    administrative_area_element = etree.SubElement(
+                        address_element,
+                        f"{{{self._ns.gmd}}}administrativeArea"
+                    )
+                    administrative_area_value = etree.SubElement(
+                        administrative_area_element,
+                        f"{{{self._ns.gco}}}CharacterString"
+                    )
+                    administrative_area_value.text = self.element_attributes['address']['administrative-area']
+                if 'postal-code' in self.element_attributes['address']:
+                    postal_code_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}postalCode")
+                    postal_code_value = etree.SubElement(postal_code_element, f"{{{self._ns.gco}}}CharacterString")
+                    postal_code_value.text = self.element_attributes['address']['postal-code']
+                if 'country' in self.element_attributes['address']:
+                    country_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}country")
+                    country_value = etree.SubElement(country_element, f"{{{self._ns.gco}}}CharacterString")
+                    country_value.text = self.element_attributes['address']['country']
+
+                if 'email' in self.element_attributes:
+                    email_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}electronicMailAddress")
+                    email_value = etree.SubElement(email_element, f"{{{self._ns.gco}}}CharacterString")
+                    email_value.text = self.element_attributes['email']
+
+            if 'url' in self.element_attributes:
+                url_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}onlineResource")
+                url_element = etree.SubElement(url_wrapper, f"{{{self._ns.gmd}}}CI_OnlineResource")
+                linkage = Linkage(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=url_element,
+                    element_attributes=self.element_attributes
+                )
+                linkage.make_element()
+
+
+class Linkage(MetadataRecordElement):
+    def make_element(self):
+        linkage_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}linkage")
+        if 'url' in self.element_attributes:
+            url_value = etree.SubElement(linkage_element, f"{{{self._ns.gmd}}}URL")
+            url_value.text = self.element_attributes['url']
 def create_app():
     app = Flask(__name__)
 

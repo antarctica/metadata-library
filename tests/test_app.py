@@ -120,8 +120,59 @@ class AppTestCase(BaseTestCase):
         self.assertIsNotNone(hierarchy_level_name)
         self.assertEqual(hierarchy_level_name.text, self.record_attributes['hierarchy-level'])
 
+    def test_record_contact(self):
+        contact = self.test_response.find(f"{{{ self.ns.gmd }}}contact")
+        self.assertIsNotNone(contact)
 
+        responsible_party = contact.find(f"{{{ self.ns.gmd }}}CI_ResponsibleParty")
+        self.assertIsNotNone(responsible_party)
 
+        organiastion_name = responsible_party.find(
+            f"{{{self.ns.gmd}}}organisationName/{{{self.ns.gco}}}CharacterString"
         )
+        self.assertIsNotNone(organiastion_name)
+        self.assertEqual(organiastion_name.text, self.record_attributes['contact']['organisation']['name'])
 
+        contact_info = responsible_party.find(f"{{{self.ns.gmd}}}contactInfo/{{{self.ns.gmd}}}CI_Contact")
+        self.assertIsNotNone(contact_info)
 
+        phone = contact_info.find(
+            f"{{{self.ns.gmd}}}phone/{{{self.ns.gmd}}}CI_Telephone/{{{self.ns.gmd}}}voice/"
+            f"{{{self.ns.gco}}}CharacterString"
+        )
+        self.assertIsNotNone(phone)
+        self.assertEqual(phone.text, self.record_attributes['contact']['phone'])
+
+        address = contact_info.find(f"{{{self.ns.gmd}}}address/{{{self.ns.gmd}}}CI_Address")
+        self.assertIsNotNone(address)
+
+        delivery_point = address.find(f"{{{self.ns.gmd}}}deliveryPoint/{{{self.ns.gco}}}CharacterString")
+        self.assertIsNotNone(delivery_point)
+        self.assertEqual(delivery_point.text, self.record_attributes['contact']['address']['delivery-point'])
+
+        city = address.find(f"{{{self.ns.gmd}}}city/{{{self.ns.gco}}}CharacterString")
+        self.assertIsNotNone(city)
+        self.assertEqual(city.text, self.record_attributes['contact']['address']['city'])
+
+        administrative_area = address.find(f"{{{self.ns.gmd}}}administrativeArea/{{{self.ns.gco}}}CharacterString")
+        self.assertIsNotNone(administrative_area)
+        self.assertEqual(administrative_area.text, self.record_attributes['contact']['address']['administrative-area'])
+
+        postal_code = address.find(f"{{{self.ns.gmd}}}postalCode/{{{self.ns.gco}}}CharacterString")
+        self.assertIsNotNone(postal_code)
+        self.assertEqual(postal_code.text, self.record_attributes['contact']['address']['postal-code'])
+
+        country = address.find(f"{{{self.ns.gmd}}}country/{{{self.ns.gco}}}CharacterString")
+        self.assertIsNotNone(country)
+        self.assertEqual(country.text, self.record_attributes['contact']['address']['country'])
+
+        email = address.find(f"{{{self.ns.gmd}}}electronicMailAddress/{{{self.ns.gco}}}CharacterString")
+        self.assertIsNotNone(email)
+        self.assertEqual(email.text, self.record_attributes['contact']['email'])
+
+        url = contact_info.find(
+            f"{{{self.ns.gmd}}}onlineResource/{{{self.ns.gmd}}}CI_OnlineResource/{{{self.ns.gmd}}}linkage/"
+            f"{{{self.ns.gmd}}}URL"
+        )
+        self.assertIsNotNone(url)
+        self.assertEqual(url.text, self.record_attributes['contact']['url'])
