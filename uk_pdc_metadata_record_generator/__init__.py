@@ -939,6 +939,16 @@ class DataIdentification(MetadataRecordElement):
                 element_attributes=keyword_attributes
             )
             descriptive_keywords.make_element()
+
+        constraints = ResourceConstraints(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        constraints.make_element()
+
+
 class Abstract(MetadataRecordElement):
     def make_element(self):
         abstract_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}abstract")
@@ -1048,6 +1058,146 @@ class Thesaurus(MetadataRecordElement):
             element_attributes=self.element_attributes
         )
         citation.make_element()
+
+
+class ResourceConstraints(MetadataRecordElement):
+    uk_ogl_v3_anchor = {
+        'href': 'http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/',
+        'value': 'This information is licensed under the Open Government Licence v3.0. To view this licence, visit '
+                 'http://www.nationalarchives.gov.uk/doc/open-government-licence/'
+    }
+
+    def make_element(self):
+        if 'access' in self.element_attributes['constraints']:
+            for access_constraint_attributes in self.element_attributes['constraints']['access']:
+                constraints_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}resourceConstraints")
+                constraints_element = etree.SubElement(constraints_wrapper, f"{{{self._ns.gmd}}}MD_LegalConstraints")
+
+                access_constraint = AccessConstraint(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=constraints_element,
+                    element_attributes=access_constraint_attributes
+                )
+                access_constraint.make_element()
+
+                if 'inspire-limitations-on-public-access' in access_constraint_attributes:
+                    public_access_limitation = InspireLimitationsOnPublicAccess(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=constraints_element,
+                        element_attributes=access_constraint_attributes
+                    )
+                    public_access_limitation.make_element()
+
+        if 'usage' in self.element_attributes['constraints']:
+            for usage_constraint_attributes in self.element_attributes['constraints']['usage']:
+                constraints_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}resourceConstraints")
+                constraints_element = etree.SubElement(constraints_wrapper, f"{{{self._ns.gmd}}}MD_LegalConstraints")
+
+                use_constraint = UseConstraint(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=constraints_element,
+                    element_attributes=usage_constraint_attributes
+                )
+                use_constraint.make_element()
+
+                if 'copyright-licence' in usage_constraint_attributes:
+                    if usage_constraint_attributes['copyright-licence'] == 'OGL-UK-3.0':
+                        other_constraint_element = etree.SubElement(
+                            constraints_element,
+                            f"{{{self._ns.gmd}}}otherConstraints"
+                        )
+
+                        copyright_statement = AnchorElement(
+                            record=self.record,
+                            attributes=self.attributes,
+                            parent_element=other_constraint_element,
+                            element_attributes=self.uk_ogl_v3_anchor,
+                            element_value=self.uk_ogl_v3_anchor['value']
+                        )
+                        copyright_statement.make_element()
+
+                if 'required-citation' in usage_constraint_attributes:
+                    other_constraint_element = etree.SubElement(
+                        constraints_element,
+                        f"{{{self._ns.gmd}}}otherConstraints"
+                    )
+                    other_constraint_wrapper = etree.SubElement(
+                        other_constraint_element,
+                        f"{{{self._ns.gco}}}CharacterString"
+                    )
+                    other_constraint_wrapper.text = f"Cite this information as: " \
+                        f"\"{ usage_constraint_attributes['required-citation'] }\""
+
+
+class AccessConstraint(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.code_list_values = [
+            'copyright',
+            'patent',
+            'patentPending',
+            'trademark',
+            'license',
+            'intellectualPropertyRights',
+            'restricted',
+            'otherRestrictions'
+        ]
+        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
+                         'codelist/gmxCodelists.xml#MD_RestrictionCode'
+        self.element = f"{{{self._ns.gmd}}}accessConstraints"
+        self.element_code = f"{{{self._ns.gmd}}}MD_RestrictionCode"
+        self.attribute = 'restriction-code'
+
+
+class UseConstraint(AccessConstraint):
+
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.element = f"{{{self._ns.gmd}}}useConstraints"
+
+
+class InspireLimitationsOnPublicAccess(MetadataRecordElement):
+    def make_element(self):
+        other_constraints_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}otherConstraints")
+
+        other_constraints_value = AnchorElement(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=other_constraints_element,
+            element_attributes={
+                'href': f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
+                f"{ self.element_attributes['inspire-limitations-on-public-access'] }"
+            },
+            element_value=self.element_attributes['inspire-limitations-on-public-access']
+        )
+        other_constraints_value.make_element()
+
+
 def create_app():
     app = Flask(__name__)
 

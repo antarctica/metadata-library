@@ -11,7 +11,8 @@ from flask import current_app
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
 from lxml import etree  # nosec
 
-from uk_pdc_metadata_record_generator import create_app, Namespaces, MetadataRecord, ReferenceSystemInfo
+from uk_pdc_metadata_record_generator import create_app, Namespaces, MetadataRecord, ReferenceSystemInfo, \
+    ResourceConstraints
 from tests import config
 
 
@@ -556,3 +557,99 @@ class AppTestCase(BaseTestCase):
                 thesaurus_citation = keyword.find(f"{{{self.ns.gmd}}}thesaurusName/{{{self.ns.gmd}}}CI_Citation")
                 self.assertIsNotNone(thesaurus_citation)
                 self._test_citation(thesaurus_citation, expected_keyword['thesaurus'])
+
+    def test_data_identification_resource_constraints(self):
+        for expected_access_constraint in self.record_attributes['resource']['constraints']['access']:
+            if 'inspire-limitations-on-public-access' in expected_access_constraint:
+                constraint = self.test_response.xpath(
+                    f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                    f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor[text()=$term]]]",
+                    term=expected_access_constraint['inspire-limitations-on-public-access'],
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(constraint), 1)
+                constraint = constraint[0]
+
+                access_constraint = constraint.find(f"{{{self.ns.gmd}}}accessConstraints/"
+                                                    f"{{{self.ns.gmd}}}MD_RestrictionCode")
+                self.assertIsNotNone(access_constraint)
+                self.assertEqual(
+                    access_constraint.attrib['codeList'],
+                    'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                    '/codelist/gmxCodelists.xml#MD_RestrictionCode'
+                )
+                self.assertEqual(
+                    access_constraint.attrib['codeListValue'],
+                    expected_access_constraint['restriction-code']
+                )
+                self.assertEqual(access_constraint.text, expected_access_constraint['restriction-code'])
+
+                public_use_constraint = constraint.find(f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor")
+                self.assertIsNotNone(public_use_constraint)
+                self.assertEqual(
+                    public_use_constraint.attrib[f"{{{self.ns.xlink}}}href"],
+                    f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
+                    f"{expected_access_constraint['inspire-limitations-on-public-access']}"
+                )
+                self.assertEqual(public_use_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                self.assertEqual(
+                    public_use_constraint.text,
+                    expected_access_constraint['inspire-limitations-on-public-access']
+                )
+
+        for expected_usage_constraint in self.record_attributes['resource']['constraints']['usage']:
+            if 'copyright-licence' in expected_usage_constraint and \
+                    expected_usage_constraint['copyright-licence'] == 'OGL-UK-3.0':
+                constraint = self.test_response.xpath(
+                    f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                    f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor"
+                    f"[@xlink:href='{ ResourceConstraints.uk_ogl_v3_anchor['href'] }']]]",
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(constraint), 1)
+                constraint = constraint[0]
+
+                usage_constraint = constraint.find(f"{{{self.ns.gmd}}}useConstraints/"
+                                                   f"{{{self.ns.gmd}}}MD_RestrictionCode")
+                self.assertIsNotNone(usage_constraint)
+                self.assertEqual(
+                    usage_constraint.attrib['codeList'],
+                    'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                    '/codelist/gmxCodelists.xml#MD_RestrictionCode'
+                )
+                self.assertEqual(
+                    usage_constraint.attrib['codeListValue'],
+                    expected_usage_constraint['restriction-code']
+                )
+                self.assertEqual(usage_constraint.text, expected_usage_constraint['restriction-code'])
+
+                copyright_constraint = constraint.find(f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor")
+                self.assertIsNotNone(copyright_constraint)
+                self.assertEqual(
+                    copyright_constraint.attrib[f"{{{self.ns.xlink}}}href"],
+                    ResourceConstraints.uk_ogl_v3_anchor['href']
+                )
+                self.assertEqual(copyright_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                self.assertEqual(
+                    copyright_constraint.text,
+                    ResourceConstraints.uk_ogl_v3_anchor['value']
+                )
+
+            if 'required-citation' in expected_usage_constraint:
+                constraint = self.test_response.xpath(
+                    f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                    f"gmd:MD_LegalConstraints[gmd:otherConstraints[gco:CharacterString"
+                    f"[starts-with(text(),'Cite this information as')]]]",
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(constraint), 1)
+                constraint = constraint[0]
+
+                citation_constraint = constraint.find(
+                    f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gco}}}CharacterString"
+                )
+                self.assertIsNotNone(citation_constraint)
+                self.assertEqual(
+                    citation_constraint.text,
+                    f"Cite this information as: \"{ expected_usage_constraint['required-citation'] }\""
+                )
