@@ -460,7 +460,7 @@ class MetadataMaintenance(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=metadata_maintenance_element,
-            element_attributes=self.attributes['metadata-maintenance']
+            element_attributes=self.attributes['maintenance']
         )
         maintenance_information.make_element()
 
@@ -869,6 +869,13 @@ class DataIdentification(MetadataRecordElement):
                 )
                 point_of_contact.make_element()
 
+        resource_maintenance = ResourceMaintenance(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        resource_maintenance.make_element()
 class Abstract(MetadataRecordElement):
     def make_element(self):
         abstract_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}abstract")
@@ -887,6 +894,18 @@ class PointOfContact(MetadataRecordElement):
             element_attributes=self.element_attributes
         )
         responsible_party.make_element()
+
+
+class ResourceMaintenance(MetadataRecordElement):
+    def make_element(self):
+        resource_maintenance_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}resourceMaintenance")
+        maintenance_information = MaintenanceInformation(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=resource_maintenance_element,
+            element_attributes=self.attributes['maintenance']
+        )
+        maintenance_information.make_element()
 def create_app():
     app = Flask(__name__)
 

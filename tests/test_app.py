@@ -269,6 +269,32 @@ class AppTestCase(BaseTestCase):
             self.assertIsNotNone(responsible_party)
 
             self._test_responsible_party(responsible_party, citation_attributes['contact'])
+
+    def _test_maintenance(self, maintenance, maintenance_attributes):
+        maintenance_frequency = maintenance.find(
+            f"{{{self.ns.gmd}}}maintenanceAndUpdateFrequency/{{{self.ns.gmd}}}MD_MaintenanceFrequencyCode"
+        )
+        self.assertIsNotNone(maintenance_frequency)
+        self.assertEqual(
+            maintenance_frequency.attrib['codeList'],
+            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+            '/codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode'
+        )
+        self.assertEqual(maintenance_frequency.attrib['codeListValue'], maintenance_attributes['maintenance-frequency'])
+        self.assertEqual(maintenance_frequency.text, maintenance_attributes['maintenance-frequency'])
+
+        maintenance_progress = maintenance.find(
+            f"{{{self.ns.gmd}}}maintenanceNote/{{{self.ns.gmd}}}MD_ProgressCode"
+        )
+        self.assertIsNotNone(maintenance_progress)
+        self.assertEqual(
+            maintenance_progress.attrib['codeList'],
+            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+            '/codelist/gmxCodelists.xml#MD_ProgressCode'
+        )
+        self.assertEqual(maintenance_progress.attrib['codeListValue'], maintenance_attributes['progress'])
+        self.assertEqual(maintenance_progress.text, maintenance_attributes['progress'])
+
     def test_app_exists(self):
         self.assertFalse(current_app is None)
 
@@ -356,42 +382,7 @@ class AppTestCase(BaseTestCase):
             f"{{{ self.ns.gmd }}}metadataMaintenance/{{{ self.ns.gmd }}}MD_MaintenanceInformation"
         )
         self.assertIsNotNone(metadata_maintenance)
-
-        metadata_maintenance_frequency = metadata_maintenance.find(
-            f"{{{ self.ns.gmd }}}maintenanceAndUpdateFrequency/{{{ self.ns.gmd }}}MD_MaintenanceFrequencyCode"
-        )
-        self.assertIsNotNone(metadata_maintenance_frequency)
-        self.assertEqual(
-            metadata_maintenance_frequency.attrib['codeList'],
-            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-            '/codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode'
-        )
-        self.assertEqual(
-            metadata_maintenance_frequency.attrib['codeListValue'],
-            self.record_attributes['metadata-maintenance']['maintenance-frequency']
-        )
-        self.assertEqual(
-            metadata_maintenance_frequency.text,
-            self.record_attributes['metadata-maintenance']['maintenance-frequency']
-        )
-
-        metadata_maintenance_progress = metadata_maintenance.find(
-            f"{{{ self.ns.gmd }}}maintenanceNote/{{{ self.ns.gmd }}}MD_ProgressCode"
-        )
-        self.assertIsNotNone(metadata_maintenance_progress)
-        self.assertEqual(
-            metadata_maintenance_progress.attrib['codeList'],
-            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-            '/codelist/gmxCodelists.xml#MD_ProgressCode'
-        )
-        self.assertEqual(
-            metadata_maintenance_progress.attrib['codeListValue'],
-            self.record_attributes['metadata-maintenance']['progress']
-        )
-        self.assertEqual(
-            metadata_maintenance_progress.text,
-            self.record_attributes['metadata-maintenance']['progress']
-        )
+        self._test_maintenance(metadata_maintenance, self.record_attributes['maintenance'])
 
     def test_metadata_standard(self):
         metadata_standard_name = self.test_response.find(
@@ -503,3 +494,11 @@ class AppTestCase(BaseTestCase):
                 self.assertEqual(len(responsible_party), 1)
                 responsible_party = responsible_party[0]
                 self._test_responsible_party(responsible_party, expected_poc)
+
+    def test_data_identification_resource_maintenance(self):
+        resource_maintenance = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+            f"{{{self.ns.gmd}}}resourceMaintenance/{{{ self.ns.gmd }}}MD_MaintenanceInformation"
+        )
+        self.assertIsNotNone(resource_maintenance)
+        self._test_maintenance(resource_maintenance, self.record_attributes['resource']['maintenance'])

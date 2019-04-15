@@ -25,7 +25,7 @@ test_record = {
         }
     },
     'date-stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
-    'metadata-maintenance': {
+    'maintenance': {
         'maintenance-frequency': 'asNeeded',
         'progress': 'completed'
     },
@@ -163,5 +163,9 @@ test_record = {
                 ]
             }
         ],
+        'maintenance': {
+            'maintenance-frequency': 'asNeeded',
+            'progress': 'completed'
+        },
     }
 }
