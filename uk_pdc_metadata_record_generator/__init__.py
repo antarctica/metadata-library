@@ -170,10 +170,14 @@ class CodeListElement(MetadataRecordElement):
         code_list_element = etree.SubElement(self.parent_element, self.element)
         if self.attribute in self.element_attributes \
                 and self.element_attributes[self.attribute] in self.code_list_values:
-            code_list_value = etree.SubElement(code_list_element, self.element_code, attrib={
-                'codeList': self.code_list,
-                'codeListValue': self.element_attributes[self.attribute]
-            })
+            code_list_value = etree.SubElement(
+                code_list_element,
+                self.element_code,
+                attrib={
+                    'codeList': self.code_list,
+                    'codeListValue': self.element_attributes[self.attribute]
+                }
+            )
             code_list_value.text = self.element_attributes[self.attribute]
 
 

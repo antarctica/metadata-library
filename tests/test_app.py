@@ -354,6 +354,7 @@ class AppTestCase(BaseTestCase):
         character_set = self.test_response.find(
             f"{{{ self.ns.gmd }}}characterSet/{{{ self.ns.gmd }}}MD_CharacterSetCode"
         )
+        self.assertIsNotNone(character_set)
         self.assertEqual(
             character_set.attrib['codeList'],
             'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
