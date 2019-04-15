@@ -679,3 +679,11 @@ class AppTestCase(BaseTestCase):
             self.record_attributes['resource']['spatial-representation-type']
         )
         self.assertEqual(representation_type.text, self.record_attributes['resource']['spatial-representation-type'])
+
+    def test_data_identification_spatial_resolution(self):
+        spatial_resolution = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+            f"{{{self.ns.gmd}}}spatialResolution/{{{self.ns.gmd}}}MD_Resolution/{{{self.ns.gmd}}}distance"
+        )
+        self.assertIsNotNone(spatial_resolution)
+        self.assertEqual(spatial_resolution.attrib[f"{{{self.ns.gco}}}nilReason"], 'inapplicable')

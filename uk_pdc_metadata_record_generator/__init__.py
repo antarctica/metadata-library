@@ -968,6 +968,14 @@ class DataIdentification(MetadataRecordElement):
         )
         spatial_representation_type.make_element()
 
+        spatial_resolution = SpatialResolution(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        spatial_resolution.make_element()
+
 
 class Abstract(MetadataRecordElement):
     def make_element(self):
@@ -1252,6 +1260,19 @@ class SpatialRepresentationType(CodeListElement):
         self.element = f"{{{self._ns.gmd}}}spatialRepresentationType"
         self.element_code = f"{{{self._ns.gmd}}}MD_SpatialRepresentationTypeCode"
         self.attribute = 'spatial-representation-type'
+
+
+class SpatialResolution(MetadataRecordElement):
+    def make_element(self):
+        resolution_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}spatialResolution")
+        resolution_element = etree.SubElement(resolution_wrapper, f"{{{self._ns.gmd}}}MD_Resolution")
+        etree.SubElement(
+            resolution_element,
+            f"{{{self._ns.gmd}}}distance",
+            attrib={f"{{{self._ns.gco}}}nilReason": 'inapplicable'}
+        )
+
+
 def create_app():
     app = Flask(__name__)
 
