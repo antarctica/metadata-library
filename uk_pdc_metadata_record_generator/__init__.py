@@ -976,6 +976,14 @@ class DataIdentification(MetadataRecordElement):
         )
         spatial_resolution.make_element()
 
+        language = Language(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        language.make_element()
+
 
 class Abstract(MetadataRecordElement):
     def make_element(self):

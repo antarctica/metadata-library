@@ -310,5 +310,6 @@ test_record = {
                                     'questions regarding appropriate use. If you find any errors or omissions, '
                                     'please report them to polardatacentre@bas.ac.uk.',
         'spatial-representation-type': 'textTable',
+        'language': 'eng',
     }
 }

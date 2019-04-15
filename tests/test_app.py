@@ -311,6 +311,11 @@ class AppTestCase(BaseTestCase):
         self.assertEqual(maintenance_progress.attrib['codeListValue'], maintenance_attributes['progress'])
         self.assertEqual(maintenance_progress.text, maintenance_attributes['progress'])
 
+    def _test_language(self, language, language_attribute):
+        self.assertEqual(language.attrib['codeList'], 'http://www.loc.gov/standards/iso639-2/php/code_list.php')
+        self.assertEqual(language.attrib['codeListValue'], language_attribute)
+        self.assertEqual(language.text, language_attribute)
+
     def test_app_exists(self):
         self.assertFalse(current_app is None)
 
@@ -346,9 +351,7 @@ class AppTestCase(BaseTestCase):
     def test_record_language(self):
         language = self.test_response.find(f"{{{ self.ns.gmd }}}language/{{{ self.ns.gmd }}}LanguageCode")
         self.assertIsNotNone(language)
-        self.assertEqual(language.attrib['codeList'], 'http://www.loc.gov/standards/iso639-2/php/code_list.php')
-        self.assertEqual(language.attrib['codeListValue'], self.record_attributes['language'])
-        self.assertEqual(language.text, self.record_attributes['language'])
+        self._test_language(language, self.record_attributes['language'])
 
     def test_record_character_set(self):
         character_set = self.test_response.find(
@@ -687,3 +690,11 @@ class AppTestCase(BaseTestCase):
         )
         self.assertIsNotNone(spatial_resolution)
         self.assertEqual(spatial_resolution.attrib[f"{{{self.ns.gco}}}nilReason"], 'inapplicable')
+
+    def test_data_identification_language(self):
+        language = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+            f"{{{ self.ns.gmd }}}language/{{{ self.ns.gmd }}}LanguageCode"
+        )
+        self.assertIsNotNone(language)
+        self._test_language(language, self.record_attributes['resource']['language'])
