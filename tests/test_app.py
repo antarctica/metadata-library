@@ -395,3 +395,11 @@ class AppTestCase(BaseTestCase):
         )
 
         self._test_citation(citation, self.record_attributes['resource'])
+
+    def test_data_identification_abstract(self):
+        abstract = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}abstract/"
+            f"{{{self.ns.gco}}}CharacterString"
+        )
+        self.assertIsNotNone(abstract)
+        self.assertEqual(abstract.text, self.record_attributes['resource']['abstract'])

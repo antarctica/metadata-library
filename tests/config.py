@@ -38,6 +38,13 @@ test_record = {
             'value': 'Analysis of d18O and salinity from sea ice and meltwater pool water samples collected in April '
                      '2016 in the Weddell Sea and Scotia Sea of the Southern Ocean during the marine survey JR15006'
         },
+        'abstract': 'The dataset contains oxygen stable isotope and salinity measurements from water samples collected '
+                    'from sea ice and meltwater pools in April 2016 in the region of South Georgia, Signy and deep '
+                    'within the Weddell Sea pack ice during the marine survey JR15006. &#13; The d18O and salinity '
+                    'measurements from sea ice and meltwater sources complement the same analysis from CTD casts and '
+                    'underway non-toxic flow water system on the RRS James Clark Ross during the JR15006. Establishing '
+                    'd18O and salinity values for saline water and oceanic freshwater components can be used to '
+                    'identify sources and changes of freshwater contributions to the ocean.&#13;',
         'dates': [
             {
                 'date': datetime(2018, 1, 1),

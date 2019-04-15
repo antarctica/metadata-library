@@ -767,6 +767,21 @@ class DataIdentification(MetadataRecordElement):
             element_attributes=self.attributes['resource']
         )
         citation.make_element()
+
+        abstract = Abstract(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        abstract.make_element()
+
+
+class Abstract(MetadataRecordElement):
+    def make_element(self):
+        abstract_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}abstract")
+        abstract_value = etree.SubElement(abstract_element, f"{{{self._ns.gco}}}CharacterString")
+        abstract_value.text = self.element_attributes['abstract']
 def create_app():
     app = Flask(__name__)
 
