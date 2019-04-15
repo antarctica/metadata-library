@@ -304,6 +304,10 @@ test_record = {
                                          'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f'
                 }
             ]
-        }
+        },
+        'supplemental-information': 'It is recommended that careful attention be paid to the contents of any data, '
+                                    'and that the originator of the data or information be contacted with any '
+                                    'questions regarding appropriate use. If you find any errors or omissions, '
+                                    'please report them to polardatacentre@bas.ac.uk.',
     }
 }

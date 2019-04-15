@@ -952,6 +952,14 @@ class DataIdentification(MetadataRecordElement):
         )
         constraints.make_element()
 
+        supplemental_information = SupplementalInformation(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        supplemental_information.make_element()
+
 
 class Abstract(MetadataRecordElement):
     def make_element(self):
@@ -1200,6 +1208,13 @@ class InspireLimitationsOnPublicAccess(MetadataRecordElement):
             element_value=self.element_attributes['inspire-limitations-on-public-access']
         )
         other_constraints_value.make_element()
+
+
+class SupplementalInformation(MetadataRecordElement):
+    def make_element(self):
+        supplemental_info_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}supplementalInformation")
+        supplemental_info_value = etree.SubElement(supplemental_info_element, f"{{{self._ns.gco}}}CharacterString")
+        supplemental_info_value.text = self.element_attributes['supplemental-information']
 
 
 def create_app():

@@ -654,3 +654,11 @@ class AppTestCase(BaseTestCase):
                     citation_constraint.text,
                     f"Cite this information as: \"{ expected_usage_constraint['required-citation'] }\""
                 )
+
+    def test_data_identification_supplemental_information(self):
+        supplemental_information = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+            f"{{{self.ns.gmd}}}supplementalInformation/{{{ self.ns.gco }}}CharacterString"
+        )
+        self.assertIsNotNone(supplemental_information)
+        self.assertEqual(supplemental_information.text, self.record_attributes['resource']['supplemental-information'])
