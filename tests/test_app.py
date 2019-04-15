@@ -121,6 +121,101 @@ class AppTestCase(BaseTestCase):
             self.assertEqual(role.attrib['codeListValue'], responsible_party_attributes['role'])
             self.assertEqual(role.text, responsible_party_attributes['role'])
 
+    def _test_citation(self, citation, citation_attributes):
+        if 'href' in citation_attributes['title']:
+            citation_title = citation.find(f"{{{self.ns.gmd}}}title/{{{self.ns.gmx}}}Anchor")
+            self.assertIsNotNone(citation_title)
+            self.assertEqual(
+                citation_title.attrib[f"{{{self.ns.xlink}}}href"],
+                citation_attributes['title']['href']
+            )
+            self.assertEqual(citation_title.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+            if 'title' in citation_attributes['title']:
+                self.assertEqual(
+                    citation_title.attrib[f"{{{self.ns.xlink}}}title"],
+                    citation_attributes['title']['title']
+                )
+        else:
+            citation_title = citation.find(f"{{{self.ns.gmd}}}title/{{{self.ns.gco}}}CharacterString")
+            self.assertIsNotNone(citation_title)
+        self.assertEqual(citation_title.text, citation_attributes['title']['value'])
+
+        if 'dates' in citation_attributes:
+            for expected_date in citation_attributes['dates']:
+                # Check the record for each expected date based on it's 'date-type', get the parent 'gmd:CI_Date'
+                # element so we can check both the gmd:date and gmd:dateType elements are as expected
+                record_date_container = citation.xpath(
+                    './gmd:date/gmd:CI_Date[gmd:dateType[gmd:CI_DateTypeCode[@codeListValue=$date_type]]]',
+                    date_type=expected_date['date-type'],
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(record_date_container), 1)
+                record_date_container = record_date_container[0]
+                self.assertEqual(record_date_container.tag, f"{{{self.ns.gmd}}}CI_Date")
+
+                record_date = record_date_container.find(f"{{{self.ns.gmd}}}date/{{{self.ns.gco}}}DateTime")
+                self.assertIsNotNone(record_date)
+
+                # Partial dates (e.g. year only, '2018') are not supported by Python despite being allowed by ISO 8601.
+                # We check these dates as strings, which is not ideal, to a given precision.
+                if 'date-precision' in expected_date:
+                    if expected_date['date-precision'] == 'year':
+                        self.assertEqual(record_date.text, str(expected_date['date'].year))
+                    elif expected_date['date-precision'] == 'month':
+                        _expected_date = [
+                            str(expected_date['date'].year),
+                            str(expected_date['date'].month)
+                        ]
+                        self.assertEqual(record_date.text, '-'.join(_expected_date))
+                else:
+                    self.assertEqual(datetime.fromisoformat(record_date.text), expected_date['date'])
+
+                record_date_type = record_date_container.find(
+                    f"{{{self.ns.gmd}}}dateType/{{{self.ns.gmd}}}CI_DateTypeCode"
+                )
+                self.assertIsNotNone(record_date_type)
+                self.assertEqual(
+                    record_date_type.attrib['codeList'],
+                    'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode'
+                )
+                self.assertEqual(record_date_type.attrib['codeListValue'], expected_date['date-type'])
+                self.assertEqual(record_date_type.text, expected_date['date-type'])
+
+        if 'edition' in citation_attributes:
+            edition = citation.find(f"{{{self.ns.gmd}}}edition/{{{self.ns.gco}}}CharacterString")
+            self.assertIsNotNone(edition)
+            self.assertEqual(edition.text, citation_attributes['edition'])
+
+        if 'identifiers' in citation_attributes:
+            for expected_identifier in citation_attributes['identifiers']:
+                # Check the record for each expected identifier based on it's 'identifier'
+                value_element = 'gco:CharacterString'
+                if 'href' in expected_identifier:
+                    value_element = 'gmx:Anchor'
+
+                identifier = citation.xpath(
+                    f"./gmd:identifier/gmd:MD_Identifier/gmd:code/{value_element}[text()=$identifier]",
+                    identifier=expected_identifier['identifier'],
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(identifier), 1)
+                identifier = identifier[0]
+
+                self.assertEqual(identifier.text, expected_identifier['identifier'])
+                if 'href' in expected_identifier:
+                    self.assertEqual(identifier.attrib[f"{{{ self.ns.xlink }}}href"], expected_identifier['href'])
+                    self.assertEqual(identifier.attrib[f"{{{ self.ns.xlink }}}actuate"], 'onRequest')
+                if 'title' in expected_identifier and 'href' in expected_identifier:
+                    self.assertEqual(identifier.attrib[f"{{{self.ns.xlink}}}title"], expected_identifier['title'])
+
+        if 'contact' in citation_attributes:
+            cited_responsible_party = citation.find(f"{{{self.ns.gmd}}}citedResponsibleParty")
+            self.assertIsNotNone(cited_responsible_party)
+
+            responsible_party = cited_responsible_party.find(f"{{{self.ns.gmd}}}CI_ResponsibleParty")
+            self.assertIsNotNone(responsible_party)
+
+            self._test_responsible_party(responsible_party, citation_attributes['contact'])
     def test_app_exists(self):
         self.assertFalse(current_app is None)
 
@@ -270,39 +365,7 @@ class AppTestCase(BaseTestCase):
         )
         self.assertIsNotNone(reference_system_authority)
 
-        authority_title = reference_system_authority.find(f"{{{self.ns.gmd}}}title/{{{ self.ns.gco }}}CharacterString")
-        self.assertIsNotNone(authority_title)
-        self.assertEqual(authority_title.text, ReferenceSystemInfo.epsg_citation['title'])
-
-        authority_date_container = reference_system_authority.find(f"{{{self.ns.gmd}}}date/{{{self.ns.gmd}}}CI_Date")
-        self.assertIsNotNone(authority_date_container)
-
-        authority_date = authority_date_container.find(f"{{{self.ns.gmd}}}date/{{{self.ns.gco}}}DateTime")
-        self.assertIsNotNone(authority_date)
-        self.assertEqual(datetime.fromisoformat(authority_date.text), ReferenceSystemInfo.epsg_citation['date']['date'])
-
-        authority_date_type = authority_date_container.find(
-            f"{{{self.ns.gmd}}}dateType/{{{self.ns.gmd}}}CI_DateTypeCode"
-        )
-        self.assertIsNotNone(authority_date_type)
-        self.assertEqual(
-            authority_date_type.attrib['codeList'],
-            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-            '/codelist/gmxCodelists.xml#CI_DateTypeCode'
-        )
-        self.assertEqual(
-            authority_date_type.attrib['codeListValue'],
-            ReferenceSystemInfo.epsg_citation['date']['date-type']
-        )
-        self.assertEqual(authority_date_type.text, ReferenceSystemInfo.epsg_citation['date']['date-type'])
-
-        authority_citation = reference_system_authority.find(f"{{{self.ns.gmd}}}citedResponsibleParty")
-        self.assertIsNotNone(authority_citation)
-
-        responsible_party = authority_citation.find(f"{{{ self.ns.gmd }}}CI_ResponsibleParty")
-        self.assertIsNotNone(responsible_party)
-
-        self._test_responsible_party(responsible_party, ReferenceSystemInfo.epsg_citation['contact'])
+        self._test_citation(reference_system_authority, ReferenceSystemInfo.epsg_citation)
 
         reference_system_code = reference_system_identifier.find(f"{{{ self.ns.gmd }}}code/{{{ self.ns.gmx }}}Anchor")
         self.assertIsNotNone(reference_system_code)
@@ -318,3 +381,17 @@ class AppTestCase(BaseTestCase):
         )
         self.assertIsNotNone(reference_system_version)
         self.assertEqual(reference_system_version.text, self.record_attributes['reference-system-info']['version'])
+
+    def test_data_identification(self):
+        data_identification = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+        )
+        self.assertIsNotNone(data_identification)
+
+    def test_data_identification_citation(self):
+        citation = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+            f"{{{self.ns.gmd}}}citation/{{{self.ns.gmd}}}CI_Citation"
+        )
+
+        self._test_citation(citation, self.record_attributes['resource'])

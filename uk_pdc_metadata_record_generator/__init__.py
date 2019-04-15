@@ -69,6 +69,7 @@ class MetadataRecord(object):
         self._metadata_maintenance()
         self._metadata_standard()
         self._reference_system_identifier()
+        self._data_identification()
 
     def _record(self) -> Element:
         return etree.Element(
@@ -115,6 +116,10 @@ class MetadataRecord(object):
     def _reference_system_identifier(self):
         reference_system_identifier = ReferenceSystemInfo(record=self.record, attributes=self.attributes)
         reference_system_identifier.make_element()
+
+    def _data_identification(self):
+        data_identification = DataIdentification(record=self.record, attributes=self.attributes)
+        data_identification.make_element()
 
 
 class MetadataRecordElement(object):
@@ -531,11 +536,13 @@ class MetadataStandard(MetadataRecordElement):
 
 class ReferenceSystemInfo(MetadataRecordElement):
     epsg_citation = {
-        'title': 'European Petroleum Survey Group (EPSG) Geodetic Parameter Registry',
-        'date': {
+        'title': {
+            'value': 'European Petroleum Survey Group (EPSG) Geodetic Parameter Registry'
+        },
+        'dates': [{
             'date': datetime(2008, 11, 12),
             'date-type': 'publication'
-        },
+        }],
         'contact': {
             'organisation': {
                 'name': 'European Petroleum Survey Group'
@@ -618,17 +625,31 @@ class Citation(MetadataRecordElement):
 
         if 'title' in self.element_attributes:
             title_element = etree.SubElement(citation_element, f"{{{self._ns.gmd}}}title")
-            title_value = etree.SubElement(title_element, f"{{{self._ns.gco}}}CharacterString")
-            title_value.text = self.element_attributes['title']
 
-        if 'date' in self.element_attributes:
-            date = Date(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=citation_element,
-                element_attributes=self.element_attributes['date']
-            )
-            date.make_element()
+        if 'dates' in self.element_attributes:
+            for date_attributes in self.element_attributes['dates']:
+                date = Date(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=citation_element,
+                    element_attributes=date_attributes
+                )
+                date.make_element()
+
+        if 'edition' in self.element_attributes:
+            edition_element = etree.SubElement(citation_element, f"{{{self._ns.gmd}}}edition")
+            edition_value = etree.SubElement(edition_element, f"{{{self._ns.gco}}}CharacterString")
+            edition_value.text = str(self.element_attributes['edition'])
+
+        if 'identifiers' in self.element_attributes:
+            for identifier_attributes in self.element_attributes['identifiers']:
+                identifier = Identifier(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=citation_element,
+                    element_attributes=identifier_attributes
+                )
+                identifier.make_element()
 
         if 'contact' in self.element_attributes:
             citated_responsible_party_element = etree.SubElement(
@@ -652,6 +673,16 @@ class Date(MetadataRecordElement):
         date_element = etree.SubElement(date_container_element, f"{{{self._ns.gmd}}}date")
         date_value = etree.SubElement(date_element, f"{{{self._ns.gco}}}DateTime")
         date_value.text = self.element_attributes['date'].isoformat()
+
+        if 'date-precision' in self.element_attributes:
+            if self.element_attributes['date-precision'] == 'year':
+                date_value.text = str(self.element_attributes['date'].year)
+            elif self.element_attributes['date-precision'] == 'month':
+                date_parts = [
+                    str(self.element_attributes['date'].year),
+                    str(self.element_attributes['date'].month)
+                ]
+                date_value.text = '-'.join(date_parts)
 
         date_type = DateType(
             record=self.record,
@@ -679,15 +710,63 @@ class DateType(CodeListElement):
         self.code_list_values = [
             'creation',
             'publication',
-            'revision'
+            'revision',
+            'expiry',
+            'lastUpdate',
+            'lastRevision',
+            'nextUpdate',
+            'unavailable',
+            'inForce',
+            'adopted',
+            'deprecated',
+            'superseded',
+            'validityBegins',
+            'validityExpires',
+            'released',
+            'distribution'
         ]
-        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
-                         'codelist/gmxCodelists.xml#CI_DateTypeCode'
+        self.code_list = 'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode'
         self.element = f"{{{self._ns.gmd}}}dateType"
         self.element_code = f"{{{self._ns.gmd}}}CI_DateTypeCode"
         self.attribute = 'date-type'
 
 
+class Identifier(MetadataRecordElement):
+    def make_element(self):
+        identifier_container = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}identifier")
+        identifier_wrapper = etree.SubElement(identifier_container, f"{{{self._ns.gmd}}}MD_Identifier")
+        identifier_element = etree.SubElement(identifier_wrapper, f"{{{self._ns.gmd}}}code")
+
+        if 'href' in self.element_attributes:
+            anchor = AnchorElement(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=identifier_element,
+                element_attributes=self.element_attributes,
+                element_value=self.element_attributes['identifier']
+            )
+            anchor.make_element()
+        else:
+            identifier_value = etree.SubElement(identifier_element, f"{{{self._ns.gco}}}CharacterString")
+            identifier_value.text = self.element_attributes['identifier']
+
+
+class DataIdentification(MetadataRecordElement):
+    def make_element(self):
+        data_identification_wrapper = etree.SubElement(self.record, f"{{{self._ns.gmd}}}identificationInfo")
+        data_identification_element = etree.SubElement(
+            data_identification_wrapper,
+            f"{{{self._ns.gmd}}}MD_DataIdentification"
+        )
+
+        citation_wrapper = etree.SubElement(data_identification_element, f"{{{self._ns.gmd}}}citation")
+        citation = Citation(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=citation_wrapper,
+            element_attributes=self.attributes['resource']
+        )
+        citation.make_element()
 def create_app():
     app = Flask(__name__)
 
