@@ -876,7 +876,7 @@ class AnchorElement(MetadataRecordElement):
         if 'title' in self.element_attributes:
             attributes[f"{{{self._ns.xlink}}}title"] = self.element_attributes['title']
 
-        anchor = etree.SubElement(self.parent_element,  f"{{{self._ns.gmx}}}Anchor", attrib=attributes)
+        anchor = etree.SubElement(self.parent_element, f"{{{self._ns.gmx}}}Anchor", attrib=attributes)
         anchor.text = self.text
 
 
