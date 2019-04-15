@@ -662,3 +662,20 @@ class AppTestCase(BaseTestCase):
         )
         self.assertIsNotNone(supplemental_information)
         self.assertEqual(supplemental_information.text, self.record_attributes['resource']['supplemental-information'])
+
+    def test_data_identification_spatial_representation_type(self):
+        representation_type = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+            f"{{{self.ns.gmd}}}spatialRepresentationType/{{{self.ns.gmd}}}MD_SpatialRepresentationTypeCode"
+        )
+        self.assertIsNotNone(representation_type)
+        self.assertEqual(
+            representation_type.attrib['codeList'],
+            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+            '/codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode'
+        )
+        self.assertEqual(
+            representation_type.attrib['codeListValue'],
+            self.record_attributes['resource']['spatial-representation-type']
+        )
+        self.assertEqual(representation_type.text, self.record_attributes['resource']['spatial-representation-type'])

@@ -960,6 +960,14 @@ class DataIdentification(MetadataRecordElement):
         )
         supplemental_information.make_element()
 
+        spatial_representation_type = SpatialRepresentationType(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        spatial_representation_type.make_element()
+
 
 class Abstract(MetadataRecordElement):
     def make_element(self):
@@ -1217,6 +1225,33 @@ class SupplementalInformation(MetadataRecordElement):
         supplemental_info_value.text = self.element_attributes['supplemental-information']
 
 
+class SpatialRepresentationType(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.code_list_values = [
+            'vector',
+            'grid',
+            'textTable',
+            'tin',
+            'stereoModel',
+            'video'
+        ]
+        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
+                         'codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode'
+        self.element = f"{{{self._ns.gmd}}}spatialRepresentationType"
+        self.element_code = f"{{{self._ns.gmd}}}MD_SpatialRepresentationTypeCode"
+        self.attribute = 'spatial-representation-type'
 def create_app():
     app = Flask(__name__)
 

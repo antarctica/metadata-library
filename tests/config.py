@@ -309,5 +309,6 @@ test_record = {
                                     'and that the originator of the data or information be contacted with any '
                                     'questions regarding appropriate use. If you find any errors or omissions, '
                                     'please report them to polardatacentre@bas.ac.uk.',
+        'spatial-representation-type': 'textTable',
     }
 }
