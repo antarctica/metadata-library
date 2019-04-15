@@ -7,7 +7,9 @@ test_record = {
     'hierarchy-level': 'dataset',
     'contact': {
         'organisation': {
-            'name': 'UK Polar Data Centre'
+            'name': 'UK Polar Data Centre',
+            'href': 'http://isni.org/isni/0000000405983800',
+            'title': 'ISNI record'
         },
         'phone': '+44 (0)1223 221400',
         'address': {
@@ -18,7 +20,9 @@ test_record = {
             'country': 'United Kingdom'
         },
         'email': 'polardatacentre@bas.ac.uk',
-        'url': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/'
+        'online-resource': {
+            'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
+        }
     },
     'date-stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
     'metadata-maintenance': {
@@ -74,6 +78,89 @@ test_record = {
                 'identifier': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
                 'href': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
                 'title': 'DOI'
+            }
+        ],
+        'contacts': [
+            {
+                'individual': {
+                    'name': 'Michael Meredith',
+                    'href': 'https://orcid.org/0000-0002-7342-7756',
+                    'title': 'ORCID record'
+                },
+                'organisation': {
+                    'name': 'British Antarctic Survey'
+                },
+                'email': 'mmm@bas.ac.uk',
+                'online-resource': {
+                    'href': 'https://orcid.org/0000-0002-7342-7756',
+                    'title': 'ORCID record',
+                    'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
+                                   'registry of unique researcher identifiers and a transparent method of linking '
+                                   'research activities and outputs to these identifiers.',
+                },
+                'role': 'originator'
+            },
+            {
+                'individual': {
+                    'name': 'Carol Arrowsmith',
+                    'href': 'https://orcid.org/0000-0003-3849-5179',
+                    'title': 'ORCID record'
+                },
+                'organisation': {
+                    'name': 'British Geological Survey'
+                },
+                'email': 'no-reply@bas.ac.uk',
+                'online-resource': {
+                    'href': 'https://orcid.org/0000-0003-3849-5179',
+                    'title': 'ORCID record',
+                    'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
+                                   'registry of unique researcher identifiers and a transparent method of linking '
+                                   'research activities and outputs to these identifiers.',
+                },
+                'role': 'originator'
+            },
+            {
+                'individual': {
+                    'name': 'Melanie Leng',
+                    'href': 'https://orcid.org/0000-0003-1115-5166',
+                    'title': 'ORCID record'
+                },
+                'organisation': {
+                    'name': 'British Geological Survey'
+                },
+                'email': 'no-reply@bas.ac.uk',
+                'online-resource': {
+                    'href': 'https://orcid.org/0000-0003-1115-5166',
+                    'title': 'ORCID record',
+                    'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
+                                   'registry of unique researcher identifiers and a transparent method of linking '
+                                   'research activities and outputs to these identifiers.',
+                },
+                'role': 'originator'
+            },
+            {
+                'organisation': {
+                    'name': 'UK Polar Data Centre',
+                    'href': 'http://isni.org/isni/0000000405983800',
+                    'title': 'ISNI record'
+                },
+                'phone': '+44 (0)1223 221400',
+                'address': {
+                    'delivery-point': 'British Antarctic Survey, High Cross, Madingley Road',
+                    'city': 'Cambridge',
+                    'administrative-area': 'Cambridgeshire',
+                    'postal-code': 'CB3 0ET',
+                    'country': 'United Kingdom'
+                },
+                'email': 'polardatacentre@bas.ac.uk',
+                'online-resource': {
+                    'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
+                },
+                'role': [
+                    'pointOfContact',
+                    'custodian',
+                    'publisher'
+                ]
             }
         ],
     }

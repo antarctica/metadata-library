@@ -287,11 +287,23 @@ class ResponsibleParty(MetadataRecordElement):
     def make_element(self):
         responsible_party_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}CI_ResponsibleParty")
 
+        if 'individual' in self.element_attributes and 'name' in self.element_attributes['individual']:
+            individual_element = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}individualName")
+            if 'href' in self.element_attributes['individual']:
+                anchor = AnchorElement(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=individual_element,
+                    element_attributes=self.element_attributes['individual'],
+                    element_value=self.element_attributes['individual']['name']
+                )
+                anchor.make_element()
+            else:
+                individual_value = etree.SubElement(individual_element, f"{{{self._ns.gco}}}CharacterString")
+                individual_value.text = self.element_attributes['individual']['name']
+
         if 'organisation' in self.element_attributes and 'name' in self.element_attributes['organisation']:
             organisation_element = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}organisationName")
-            organisation_name_value = etree.SubElement(organisation_element, f"{{{self._ns.gco}}}CharacterString")
-            organisation_name_value.text = self.element_attributes['organisation']['name']
-
         if 'phone' in self.element_attributes or 'address' in self.element_attributes \
                 or 'email' in self.element_attributes or 'url' in self.element_attributes:
             contact_wrapper = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}contactInfo")
@@ -343,17 +355,44 @@ class ResponsibleParty(MetadataRecordElement):
                     email_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}electronicMailAddress")
                     email_value = etree.SubElement(email_element, f"{{{self._ns.gco}}}CharacterString")
                     email_value.text = self.element_attributes['email']
+            if 'href' in self.element_attributes['organisation']:
+                anchor = AnchorElement(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=organisation_element,
+                    element_attributes=self.element_attributes['organisation'],
+                    element_value=self.element_attributes['organisation']['name']
+                )
+                anchor.make_element()
+            else:
+                organisation_name_value = etree.SubElement(organisation_element, f"{{{self._ns.gco}}}CharacterString")
+                organisation_name_value.text = self.element_attributes['organisation']['name']
 
-            if 'url' in self.element_attributes:
-                url_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}onlineResource")
-                url_element = etree.SubElement(url_wrapper, f"{{{self._ns.gmd}}}CI_OnlineResource")
+        if 'online-resource' in self.element_attributes:
+            online_resource_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}onlineResource")
+            online_resource_element = etree.SubElement(
+                online_resource_wrapper,
+                f"{{{self._ns.gmd}}}CI_OnlineResource"
+            )
+
+            if 'href' in self.element_attributes['online-resource']:
                 linkage = Linkage(
                     record=self.record,
                     attributes=self.attributes,
-                    parent_element=url_element,
-                    element_attributes=self.element_attributes
+                    parent_element=online_resource_element,
+                    element_attributes=self.element_attributes['online-resource']
                 )
                 linkage.make_element()
+
+            if 'title' in self.element_attributes['online-resource']:
+                title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}name")
+                title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
+                title_element.text = self.element_attributes['online-resource']['title']
+
+            if 'description' in self.element_attributes['online-resource']:
+                title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}description")
+                title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
+                title_element.text = self.element_attributes['online-resource']['description']
 
         if 'role' in self.element_attributes:
             role = Role(
@@ -368,9 +407,9 @@ class ResponsibleParty(MetadataRecordElement):
 class Linkage(MetadataRecordElement):
     def make_element(self):
         linkage_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}linkage")
-        if 'url' in self.element_attributes:
+        if 'href' in self.element_attributes:
             url_value = etree.SubElement(linkage_element, f"{{{self._ns.gmd}}}URL")
-            url_value.text = self.element_attributes['url']
+            url_value.text = self.element_attributes['href']
 
 
 class Role(CodeListElement):
@@ -548,7 +587,9 @@ class ReferenceSystemInfo(MetadataRecordElement):
                 'name': 'European Petroleum Survey Group'
             },
             'email': 'EPSGadministrator@iogp.org',
-            'url': 'https://www.epsg-registry.org/',
+            'online-resource': {
+                'href': 'https://www.epsg-registry.org/',
+            },
             'role': 'publisher'
         }
     }
@@ -751,6 +792,36 @@ class Identifier(MetadataRecordElement):
             identifier_value.text = self.element_attributes['identifier']
 
 
+class AnchorElement(MetadataRecordElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None,
+        element_value: str = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.text = element_value
+
+    def make_element(self):
+        attributes = {}
+
+        if 'href' in self.element_attributes:
+            attributes[f"{{{self._ns.xlink}}}href"] = self.element_attributes['href']
+            attributes[f"{{{self._ns.xlink}}}actuate"] = 'onRequest'
+        if 'title' in self.element_attributes:
+            attributes[f"{{{self._ns.xlink}}}title"] = self.element_attributes['title']
+
+        anchor = etree.SubElement(self.parent_element,  f"{{{self._ns.gmx}}}Anchor", attrib=attributes)
+        anchor.text = self.text
+
+
 class DataIdentification(MetadataRecordElement):
     def make_element(self):
         data_identification_wrapper = etree.SubElement(self.record, f"{{{self._ns.gmd}}}identificationInfo")
@@ -776,12 +847,46 @@ class DataIdentification(MetadataRecordElement):
         )
         abstract.make_element()
 
+        for point_of_contact_attributes in self.attributes['resource']['contacts']:
+            if isinstance(point_of_contact_attributes['role'], list):
+                for role in point_of_contact_attributes['role']:
+                    _point_of_contact = point_of_contact_attributes.copy()
+                    _point_of_contact['role'] = role
+
+                    point_of_contact = PointOfContact(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=data_identification_element,
+                        element_attributes=_point_of_contact
+                    )
+                    point_of_contact.make_element()
+            else:
+                point_of_contact = PointOfContact(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_identification_element,
+                    element_attributes=point_of_contact_attributes
+                )
+                point_of_contact.make_element()
 
 class Abstract(MetadataRecordElement):
     def make_element(self):
         abstract_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}abstract")
         abstract_value = etree.SubElement(abstract_element, f"{{{self._ns.gco}}}CharacterString")
         abstract_value.text = self.element_attributes['abstract']
+
+
+class PointOfContact(MetadataRecordElement):
+    def make_element(self):
+        point_of_contact_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}pointOfContact")
+
+        responsible_party = ResponsibleParty(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=point_of_contact_element,
+            element_attributes=self.element_attributes
+        )
+        responsible_party.make_element()
 def create_app():
     app = Flask(__name__)
 

@@ -46,11 +46,51 @@ class BaseTestCase(unittest.TestCase):
 
 class AppTestCase(BaseTestCase):
     def _test_responsible_party(self, responsible_party, responsible_party_attributes):
-        organisation_name = responsible_party.find(
-            f"{{{self.ns.gmd}}}organisationName/{{{self.ns.gco}}}CharacterString"
-        )
-        self.assertIsNotNone(organisation_name)
-        self.assertEqual(organisation_name.text, responsible_party_attributes['organisation']['name'])
+        if 'individual' in responsible_party_attributes and 'name' in responsible_party_attributes['individual']:
+            if 'href' in responsible_party_attributes['individual']:
+                individual_name = responsible_party.find(
+                    f"{{{self.ns.gmd}}}individualName/{{{self.ns.gmx}}}Anchor"
+                )
+                self.assertIsNotNone(individual_name)
+                self.assertEqual(
+                    individual_name.attrib[f"{{{ self.ns.xlink }}}href"],
+                    responsible_party_attributes['individual']['href']
+                )
+                self.assertEqual(individual_name.attrib[f"{{{ self.ns.xlink }}}actuate"], 'onRequest')
+                if 'title' in responsible_party_attributes['individual']:
+                    self.assertEqual(
+                        individual_name.attrib[f"{{{self.ns.xlink}}}title"],
+                        responsible_party_attributes['individual']['title']
+                    )
+            else:
+                individual_name = responsible_party.find(
+                    f"{{{self.ns.gmd}}}individualName/{{{self.ns.gco}}}CharacterString"
+                )
+                self.assertIsNotNone(individual_name)
+            self.assertEqual(individual_name.text, responsible_party_attributes['individual']['name'])
+
+        if 'organisation' in responsible_party_attributes and 'name' in responsible_party_attributes['organisation']:
+            if 'href' in responsible_party_attributes['organisation']:
+                organisation_name = responsible_party.find(
+                    f"{{{self.ns.gmd}}}organisationName/{{{self.ns.gmx}}}Anchor"
+                )
+                self.assertIsNotNone(organisation_name)
+                self.assertEqual(
+                    organisation_name.attrib[f"{{{ self.ns.xlink }}}href"],
+                    responsible_party_attributes['organisation']['href']
+                )
+                self.assertEqual(organisation_name.attrib[f"{{{ self.ns.xlink }}}actuate"], 'onRequest')
+                if 'title' in responsible_party_attributes['organisation']:
+                    self.assertEqual(
+                        organisation_name.attrib[f"{{{self.ns.xlink}}}title"],
+                        responsible_party_attributes['organisation']['title']
+                    )
+            else:
+                organisation_name = responsible_party.find(
+                    f"{{{self.ns.gmd}}}organisationName/{{{self.ns.gco}}}CharacterString"
+                )
+                self.assertIsNotNone(organisation_name)
+            self.assertEqual(organisation_name.text, responsible_party_attributes['organisation']['name'])
 
         contact_info = responsible_party.find(f"{{{self.ns.gmd}}}contactInfo/{{{self.ns.gmd}}}CI_Contact")
         self.assertIsNotNone(contact_info)
@@ -86,6 +126,9 @@ class AppTestCase(BaseTestCase):
                     administrative_area.text,
                     responsible_party_attributes['address']['administrative-area']
                 )
+        if 'online-resource' in responsible_party:
+            online_resource = contact_info.find(
+                f"{{{self.ns.gmd}}}onlineResource/{{{self.ns.gmd}}}CI_OnlineResource"
 
             if 'address' in responsible_party and 'postal-code' in responsible_party['address']:
                 postal_code = address.find(f"{{{self.ns.gmd}}}postalCode/{{{self.ns.gco}}}CharacterString")
@@ -102,13 +145,23 @@ class AppTestCase(BaseTestCase):
                 self.assertIsNotNone(email)
                 self.assertEqual(email.text, responsible_party_attributes['email'])
 
-        if 'url' in responsible_party:
-            url = contact_info.find(
-                f"{{{self.ns.gmd}}}onlineResource/{{{self.ns.gmd}}}CI_OnlineResource/{{{self.ns.gmd}}}linkage/"
-                f"{{{self.ns.gmd}}}URL"
             )
-            self.assertIsNotNone(url)
-            self.assertEqual(url.text, responsible_party_attributes['url'])
+            self.assertIsNotNone(online_resource)
+
+            if 'href' in responsible_party['online-resource']:
+                linkage = online_resource.find(f"{{{self.ns.gmd}}}linkage/{{{self.ns.gmd}}}URL")
+                self.assertIsNotNone(linkage)
+                self.assertEqual(linkage.text, responsible_party['online-resource']['href'])
+
+            if 'title' in responsible_party['online-resource']:
+                name = online_resource.find(f"{{{self.ns.gmd}}}name/{{{self.ns.gco}}}CharacterString")
+                self.assertIsNotNone(name)
+                self.assertEqual(name.text, responsible_party['online-resource']['title'])
+
+            if 'description' in responsible_party['online-resource']:
+                description = online_resource.find(f"{{{self.ns.gmd}}}description/{{{self.ns.gco}}}CharacterString")
+                self.assertIsNotNone(description)
+                self.assertEqual(description.text, responsible_party['online-resource']['description'])
 
         if 'role' in responsible_party:
             role = responsible_party.find(f"{{{self.ns.gmd}}}role/{{{self.ns.gmd}}}CI_RoleCode")
@@ -403,3 +456,50 @@ class AppTestCase(BaseTestCase):
         )
         self.assertIsNotNone(abstract)
         self.assertEqual(abstract.text, self.record_attributes['resource']['abstract'])
+
+    def test_data_identification_point_of_contact(self):
+        expected_pocs = []
+        for expected_poc in self.record_attributes['resource']['contacts']:
+            if isinstance(expected_poc['role'], list):
+                for role in expected_poc['role']:
+                    _expected_poc = expected_poc.copy()
+                    _expected_poc['role'] = role
+                    expected_pocs.append(_expected_poc)
+            else:
+                expected_pocs.append(expected_poc)
+
+        for expected_poc in expected_pocs:
+            with self.subTest(expected_poc=expected_poc):
+                if 'individual' not in expected_poc and 'organisation' not in expected_poc:
+                    self.skipTest('only pointsOfContact\'s with an individual and/or organisation name may be tested')
+                if 'role' not in expected_poc:
+                    self.skipTest('only pointsOfContact\'s with a role may be tested')
+
+                # Check the record for each expected point of contact based on it's 'name' and 'role', then get the
+                # parent 'CI_ResponsibleParty' element so we can check other properties
+                name_element = 'gmd:individualName'
+                value_element = 'gco:CharacterString'
+                if 'individual' in expected_poc:
+                    name = expected_poc['individual']['name']
+                    if 'href' in expected_poc['individual']:
+                        value_element = 'gmx:Anchor'
+                else:
+                    name_element = 'gmd:organisationName'
+                    name = expected_poc['organisation']['name']
+                    if 'href' in expected_poc['organisation']:
+                        value_element = 'gmx:Anchor'
+
+                base_xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/' \
+                             'gmd:CI_ResponsibleParty'
+                xpath = f"{base_xpath}[{ name_element }[{ value_element }[text()=$name]] and " \
+                    f"gmd:role[gmd:CI_RoleCode[text()=$role]]]"
+
+                responsible_party = self.test_response.xpath(
+                    xpath,
+                    name=name,
+                    role=expected_poc['role'],
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(responsible_party), 1)
+                responsible_party = responsible_party[0]
+                self._test_responsible_party(responsible_party, expected_poc)
