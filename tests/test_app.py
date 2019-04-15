@@ -103,47 +103,51 @@ class AppTestCase(BaseTestCase):
             self.assertIsNotNone(phone)
             self.assertEqual(phone.text, responsible_party_attributes['phone'])
 
-        if 'address' in responsible_party_attributes or 'email' in responsible_party_attributes:
-            address = contact_info.find(f"{{{self.ns.gmd}}}address/{{{self.ns.gmd}}}CI_Address")
-            self.assertIsNotNone(address)
+        address = contact_info.find(f"{{{self.ns.gmd}}}address/{{{self.ns.gmd}}}CI_Address")
+        self.assertIsNotNone(address)
 
-            if 'address' in responsible_party and 'delivery-point' in responsible_party['address']:
-                delivery_point = address.find(f"{{{self.ns.gmd}}}deliveryPoint/{{{self.ns.gco}}}CharacterString")
-                self.assertIsNotNone(delivery_point)
-                self.assertEqual(delivery_point.text, responsible_party_attributes['address']['delivery-point'])
+        if 'address' in responsible_party and 'delivery-point' in responsible_party['address']:
+            delivery_point = address.find(f"{{{self.ns.gmd}}}deliveryPoint/{{{self.ns.gco}}}CharacterString")
+            self.assertIsNotNone(delivery_point)
+            self.assertEqual(delivery_point.text, responsible_party_attributes['address']['delivery-point'])
 
-            if 'address' in responsible_party and 'city' in responsible_party['address']:
-                city = address.find(f"{{{self.ns.gmd}}}city/{{{self.ns.gco}}}CharacterString")
-                self.assertIsNotNone(city)
-                self.assertEqual(city.text, responsible_party_attributes['address']['city'])
+        if 'address' in responsible_party and 'city' in responsible_party['address']:
+            city = address.find(f"{{{self.ns.gmd}}}city/{{{self.ns.gco}}}CharacterString")
+            self.assertIsNotNone(city)
+            self.assertEqual(city.text, responsible_party_attributes['address']['city'])
 
-            if 'address' in responsible_party and 'administrative-area' in responsible_party['address']:
-                administrative_area = address.find(
-                    f"{{{self.ns.gmd}}}administrativeArea/{{{self.ns.gco}}}CharacterString"
-                )
-                self.assertIsNotNone(administrative_area)
-                self.assertEqual(
-                    administrative_area.text,
-                    responsible_party_attributes['address']['administrative-area']
-                )
+        if 'address' in responsible_party and 'administrative-area' in responsible_party['address']:
+            administrative_area = address.find(
+                f"{{{self.ns.gmd}}}administrativeArea/{{{self.ns.gco}}}CharacterString"
+            )
+            self.assertIsNotNone(administrative_area)
+            self.assertEqual(
+                administrative_area.text,
+                responsible_party_attributes['address']['administrative-area']
+            )
+
+        if 'address' in responsible_party and 'postal-code' in responsible_party['address']:
+            postal_code = address.find(f"{{{self.ns.gmd}}}postalCode/{{{self.ns.gco}}}CharacterString")
+            self.assertIsNotNone(postal_code)
+            self.assertEqual(postal_code.text, responsible_party_attributes['address']['postal-code'])
+
+        if 'address' in responsible_party and 'country' in responsible_party['address']:
+            country = address.find(f"{{{self.ns.gmd}}}country/{{{self.ns.gco}}}CharacterString")
+            self.assertIsNotNone(country)
+            self.assertEqual(country.text, responsible_party_attributes['address']['country'])
+
+        email = address.find(f"{{{self.ns.gmd}}}electronicMailAddress")
+        self.assertIsNotNone(email)
+        if 'email' in responsible_party_attributes:
+            email = email.find(f"{{{self.ns.gco}}}CharacterString")
+            self.assertIsNotNone(email)
+            self.assertEqual(email.text, responsible_party_attributes['email'])
+        else:
+            self.assertEqual(email.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
+
         if 'online-resource' in responsible_party:
             online_resource = contact_info.find(
                 f"{{{self.ns.gmd}}}onlineResource/{{{self.ns.gmd}}}CI_OnlineResource"
-
-            if 'address' in responsible_party and 'postal-code' in responsible_party['address']:
-                postal_code = address.find(f"{{{self.ns.gmd}}}postalCode/{{{self.ns.gco}}}CharacterString")
-                self.assertIsNotNone(postal_code)
-                self.assertEqual(postal_code.text, responsible_party_attributes['address']['postal-code'])
-
-            if 'address' in responsible_party and 'country' in responsible_party['address']:
-                country = address.find(f"{{{self.ns.gmd}}}country/{{{self.ns.gco}}}CharacterString")
-                self.assertIsNotNone(country)
-                self.assertEqual(country.text, responsible_party_attributes['address']['country'])
-
-            if 'email' in responsible_party:
-                email = address.find(f"{{{self.ns.gmd}}}electronicMailAddress/{{{self.ns.gco}}}CharacterString")
-                self.assertIsNotNone(email)
-                self.assertEqual(email.text, responsible_party_attributes['email'])
 
             )
             self.assertIsNotNone(online_resource)
@@ -162,6 +166,17 @@ class AppTestCase(BaseTestCase):
                 description = online_resource.find(f"{{{self.ns.gmd}}}description/{{{self.ns.gco}}}CharacterString")
                 self.assertIsNotNone(description)
                 self.assertEqual(description.text, responsible_party['online-resource']['description'])
+
+            if 'function' in responsible_party['online-resource']:
+                function = online_resource.find(f"{{{self.ns.gmd}}}function/{{{self.ns.gco}}}CI_OnLineFunctionCode")
+                self.assertIsNotNone(function)
+                self.assertEqual(
+                    function.attrib['codeList'],
+                    'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                    '/codelist/gmxCodelists.xml#CI_OnLineFunctionCode'
+                )
+                self.assertEqual(function.attrib['codeListValue'], responsible_party['online-resource']['function'])
+                self.assertEqual(function.text, responsible_party['online-resource']['function'])
 
         if 'role' in responsible_party:
             role = responsible_party.find(f"{{{self.ns.gmd}}}role/{{{self.ns.gmd}}}CI_RoleCode")
@@ -502,3 +517,42 @@ class AppTestCase(BaseTestCase):
         )
         self.assertIsNotNone(resource_maintenance)
         self._test_maintenance(resource_maintenance, self.record_attributes['resource']['maintenance'])
+
+    def test_data_identification_keywords(self):
+        for expected_keyword in self.record_attributes['resource']['keywords']:
+            with self.subTest(expected_keyword=expected_keyword):
+                if 'thesaurus' not in expected_keyword:
+                    self.skipTest('only keywords with a thesaurus may be tested')
+
+                value_element = 'gco:CharacterString'
+                if 'href' in expected_keyword['thesaurus']['title']:
+                    value_element = 'gmx:Anchor'
+                xpath = f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords" \
+                    f"[gmd:thesaurusName[gmd:CI_Citation[gmd:title[{ value_element }[text()=$name]]]]]"
+                keyword = self.test_response.xpath(
+                    xpath,
+                    name=expected_keyword['thesaurus']['title']['value'],
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(keyword), 1)
+                keyword = keyword[0]
+
+                for expected_term in expected_keyword['terms']:
+                    value_element = 'gco:CharacterString'
+                    if 'href' in expected_term:
+                        value_element = 'gmx:Anchor'
+                    term = keyword.xpath(
+                        f"./gmd:keyword/{value_element}[text()=$term]",
+                        term=expected_term['title'],
+                        namespaces=self.ns.nsmap()
+                    )
+                    self.assertEqual(len(term), 1)
+                    term = term[0]
+                    self.assertEqual(term.text, expected_term['title'])
+                    if 'href' in expected_term:
+                        self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}href"], expected_term['href'])
+                        self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+
+                thesaurus_citation = keyword.find(f"{{{self.ns.gmd}}}thesaurusName/{{{self.ns.gmd}}}CI_Citation")
+                self.assertIsNotNone(thesaurus_citation)
+                self._test_citation(thesaurus_citation, expected_keyword['thesaurus'])

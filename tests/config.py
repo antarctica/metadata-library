@@ -22,6 +22,7 @@ test_record = {
         'email': 'polardatacentre@bas.ac.uk',
         'online-resource': {
             'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
+            'function': 'information'
         }
     },
     'date-stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
@@ -97,6 +98,7 @@ test_record = {
                     'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
                                    'registry of unique researcher identifiers and a transparent method of linking '
                                    'research activities and outputs to these identifiers.',
+                    'function': 'information'
                 },
                 'role': 'originator'
             },
@@ -116,6 +118,7 @@ test_record = {
                     'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
                                    'registry of unique researcher identifiers and a transparent method of linking '
                                    'research activities and outputs to these identifiers.',
+                    'function': 'information'
                 },
                 'role': 'originator'
             },
@@ -135,6 +138,7 @@ test_record = {
                     'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
                                    'registry of unique researcher identifiers and a transparent method of linking '
                                    'research activities and outputs to these identifiers.',
+                    'function': 'information'
                 },
                 'role': 'originator'
             },
@@ -155,6 +159,7 @@ test_record = {
                 'email': 'polardatacentre@bas.ac.uk',
                 'online-resource': {
                     'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
+                    'function': 'information'
                 },
                 'role': [
                     'pointOfContact',
@@ -167,5 +172,119 @@ test_record = {
             'maintenance-frequency': 'asNeeded',
             'progress': 'completed'
         },
+        'keywords': [
+            {
+                'terms': [
+                    {
+                        'title': 'Oceanographic geographical features',
+                        'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/of'
+                    },
+                    {
+                        'title': 'Sea regions',
+                        'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/sr'
+                    },
+                    {
+                        'title': 'Land Cover',
+                        'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/lc'
+                    }
+                ],
+                'type': 'theme',
+                'thesaurus': {
+                    'title': {
+                        'value': 'General Multilingual Environmental Thesaurus - INSPIRE themes',
+                        'href': 'http://www.eionet.europa.eu/gemet/inspire_themes'
+                    },
+                    'dates': [
+                        {
+                            'date': datetime(2018, 8, 16),
+                            'date-type': 'publication'
+                        }
+                    ],
+                    'edition': '4.1.2',
+                    'contact': {
+                        'organisation': {
+                            'name': 'European Environment Information and Observation Network (EIONET), '
+                                    'European Environment Agency (EEA)'
+                        },
+                        'online-resource': {
+                            'href': 'https://www.eionet.europa.eu/gemet/en/themes/',
+                            'title': 'General Multilingual Environmental Thesaurus (GEMET) themes',
+                            'function': 'information'
+                        },
+                    },
+                    'role': 'originator'
+                }
+            },
+            {
+                'terms': [
+                    {
+                        'title': 'EARTH SCIENCE &gt; Hydrosphere &gt; Snow/Ice &gt; Snow Melt'
+                    },
+                    {
+                        'title': 'EARTH SCIENCE &gt; Hydrosphere &gt; Surface Water'
+                    },
+                    {
+                        'title': 'EARTH SCIENCE &gt; Oceans &gt; Sea Ice &gt; Isotopes'
+                    },
+                    {
+                        'title': 'EARTH SCIENCE &gt; Oceans &gt; Sea Ice &gt; Pack Ice'
+                    },
+                    {
+                        'title': 'EARTH SCIENCE &gt; Oceans &gt; Sea Ice &gt; Salinity'
+                    }
+                ],
+                'type': 'theme',
+                'thesaurus': {
+                    'title': {
+                        'value': 'Global Change Master Directory (GCMD) Science Keywords',
+                        'href': 'https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords'
+                    },
+                    'dates': [
+                        {
+                            'date': datetime(2018, 3, 15),
+                            'date-type': 'publication'
+                        }
+                    ],
+                    'edition': '8.6',
+                    'contact': {
+                        'organisation': {
+                            'name': 'Global Change Data Center, Science and Exploration Directorate, Goddard Space '
+                                    'Flight Center (GSFC) National Aeronautics and Space Administration (NASA)'
+                        },
+                        'address': {
+                            'city': 'Greenbelt',
+                            'administrative-area': 'MD',
+                            'country': 'United States of America'
+                        },
+                        'online-resource': {
+                            'href': 'https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords',
+                            'title': 'Global Change Master Directory (GCMD) Keywords',
+                            'description': 'The information provided on this page seeks to define how the GCMD '
+                                           'Keywords are structured, used and accessed. It also provides information '
+                                           'on how users can participate in the further development of the keywords.',
+                            'function': 'information'
+                        },
+                    },
+                    'role': 'originator'
+                }
+            },
+            {
+                'terms': [
+                    {
+                        'title': 'd18O'
+                    },
+                    {
+                        'title': 'meltwater pool'
+                    },
+                    {
+                        'title': 'salinity'
+                    },
+                    {
+                        'title': 'sea ice'
+                    }
+                ],
+                'type': 'theme'
+            }
+        ],
     }
 }
