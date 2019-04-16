@@ -311,5 +311,10 @@ test_record = {
                                     'please report them to polardatacentre@bas.ac.uk.',
         'spatial-representation-type': 'textTable',
         'language': 'eng',
+        'topics': [
+            'environment',
+            'inlandWaters',
+            'oceans'
+        ],
     }
 }

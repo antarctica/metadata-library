@@ -984,6 +984,15 @@ class DataIdentification(MetadataRecordElement):
         )
         language.make_element()
 
+        for topic_attribute in self.attributes['resource']['topics']:
+            topic = TopicCategory(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes={'topic': topic_attribute}
+            )
+            topic.make_element()
+
 
 class Abstract(MetadataRecordElement):
     def make_element(self):
@@ -1279,6 +1288,13 @@ class SpatialResolution(MetadataRecordElement):
             f"{{{self._ns.gmd}}}distance",
             attrib={f"{{{self._ns.gco}}}nilReason": 'inapplicable'}
         )
+
+
+class TopicCategory(MetadataRecordElement):
+    def make_element(self):
+        topic_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}topicCategory")
+        topic_value = etree.SubElement(topic_element, f"{{{self._ns.gmd}}}MD_TopicCategoryCode")
+        topic_value.text = self.element_attributes['topic']
 
 
 def create_app():

@@ -698,3 +698,14 @@ class AppTestCase(BaseTestCase):
         )
         self.assertIsNotNone(language)
         self._test_language(language, self.record_attributes['resource']['language'])
+
+    def test_data_identification_topic_categories(self):
+        for expected_topic in self.record_attributes['resource']['topics']:
+            with self.subTest(expected_topic=expected_topic):
+                topic = self.test_response.xpath(
+                    f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory"
+                    f"[gmd:MD_TopicCategoryCode[text()=$topic]]",
+                    topic=expected_topic,
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(topic), 1)
