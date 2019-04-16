@@ -316,5 +316,24 @@ test_record = {
             'inlandWaters',
             'oceans'
         ],
+        'extent': {
+            'geographic': {
+                'bounding-box': {
+                    'west-longitude': -45.61521,
+                    'east-longitude': -27.04976,
+                    'south-latitude': -68.1511,
+                    'north-latitude': -54.30761
+                }
+            },
+            'vertical': {
+                'code': 'urn:ogc:def:crs:EPSG::5715'
+            },
+            'temporal': {
+                'period': {
+                    'start': datetime(2016, 3, 31),
+                    'end': datetime(2018, 4, 26)
+                }
+            }
+        }
     }
 }

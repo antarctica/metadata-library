@@ -709,3 +709,114 @@ class AppTestCase(BaseTestCase):
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(topic), 1)
+
+    def test_data_identification_extent(self):
+        extent = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent"
+            f"/{{{self.ns.gmd}}}EX_Extent"
+        )
+        self.assertIsNotNone(extent)
+
+    def test_data_identification_extent_geographic(self):
+        expected_bounding_box = self.record_attributes['resource']['extent']['geographic']['bounding-box']
+        bounding_box = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent/"
+            f"{{{self.ns.gmd}}}EX_Extent/{{{self.ns.gmd}}}geographicElement/{{{self.ns.gmd}}}EX_GeographicBoundingBox"
+        )
+        self.assertIsNotNone(bounding_box)
+
+        west = bounding_box.find(f"{{{self.ns.gmd}}}westBoundLongitude/{{{self.ns.gco}}}Decimal")
+        self.assertIsNotNone(west)
+        self.assertEqual(west.text, str(expected_bounding_box['west-longitude']))
+
+        east = bounding_box.find(f"{{{self.ns.gmd}}}eastBoundLongitude/{{{self.ns.gco}}}Decimal")
+        self.assertIsNotNone(east)
+        self.assertEqual(east.text, str(expected_bounding_box['east-longitude']))
+
+        south = bounding_box.find(f"{{{self.ns.gmd}}}southBoundLatitude/{{{self.ns.gco}}}Decimal")
+        self.assertIsNotNone(south)
+        self.assertEqual(south.text, str(expected_bounding_box['south-latitude']))
+
+        north = bounding_box.find(f"{{{self.ns.gmd}}}northBoundLatitude/{{{self.ns.gco}}}Decimal")
+        self.assertIsNotNone(north)
+        self.assertEqual(north.text, str(expected_bounding_box['north-latitude']))
+
+    def test_data_identification_extent_vertical(self):
+        vertical_extent = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent/"
+            f"{{{self.ns.gmd}}}EX_Extent/{{{self.ns.gmd}}}verticalElement/{{{self.ns.gmd}}}EX_VerticalExtent"
+        )
+        self.assertIsNotNone(vertical_extent)
+
+        minimum = vertical_extent.find(f"{{{self.ns.gmd}}}minimumValue")
+        self.assertIsNotNone(minimum)
+        if 'minimum' in self.record_attributes['resource']['extent']['vertical']:
+            minimum_value = minimum.find(f"{{{self.ns.gco}}}Decimal")
+            self.assertIsNotNone(minimum_value)
+            self.assertEqual(minimum_value.text, self.record_attributes['resource']['extent']['vertical']['minimum'])
+        else:
+            self.assertEqual(minimum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
+
+        maximum = vertical_extent.find(f"{{{self.ns.gmd}}}maximumValue")
+        self.assertIsNotNone(maximum)
+        if 'maximum' in self.record_attributes['resource']['extent']['vertical']:
+            minimum_value = maximum.find(f"{{{self.ns.gco}}}Decimal")
+            self.assertIsNotNone(minimum_value)
+            self.assertEqual(minimum_value.text, self.record_attributes['resource']['extent']['vertical']['minimum'])
+        else:
+            self.assertEqual(maximum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
+
+        vertical_crs = vertical_extent.find(f"{{{self.ns.gmd}}}verticalCRS/{{{self.ns.gml}}}VerticalCRS")
+        self.assertIsNotNone(vertical_crs)
+        self.assertEqual(vertical_crs.attrib[f"{{{self.ns.gml}}}id"], 'ogp-crs-5715')
+
+        identifier = vertical_crs.find(f"{{{self.ns.gml}}}identifier")
+        self.assertIsNotNone(identifier)
+        self.assertEqual(identifier.attrib['codeSpace'], 'OGP')
+        self.assertEqual(identifier.text, self.record_attributes['resource']['extent']['vertical']['code'])
+
+        name = vertical_crs.find(f"{{{self.ns.gml}}}name")
+        self.assertIsNotNone(name)
+        self.assertEqual(name.text, 'MSL depth')
+
+        remarks = vertical_crs.find(f"{{{self.ns.gml}}}remarks")
+        self.assertIsNotNone(remarks)
+        self.assertEqual(remarks.text, 'Not specific to any location or epoch.')
+
+        domain = vertical_crs.find(f"{{{self.ns.gml}}}domainOfValidity")
+        self.assertIsNotNone(domain)
+        self.assertEqual(domain.attrib[f"{{{self.ns.xlink}}}href"], 'urn:ogc:def:area:EPSG::1262')
+
+        scope = vertical_crs.find(f"{{{self.ns.gml}}}scope")
+        self.assertIsNotNone(scope)
+        self.assertEqual(scope.text, 'Hydrography.')
+
+        vertical_cs = vertical_crs.find(f"{{{self.ns.gml}}}verticalCS")
+        self.assertIsNotNone(vertical_cs)
+        self.assertEqual(vertical_cs.attrib[f"{{{self.ns.xlink}}}href"], 'urn:ogc:def:cs:EPSG::6498')
+
+        vertical_datum = vertical_crs.find(f"{{{self.ns.gml}}}verticalDatum")
+        self.assertIsNotNone(vertical_datum)
+        self.assertEqual(vertical_datum.attrib[f"{{{self.ns.xlink}}}href"], 'urn:ogc:def:datum:EPSG::5100')
+
+    def test_data_identification_extent_temporal(self):
+        temporal_extent = self.test_response.find(
+            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent/"
+            f"{{{self.ns.gmd}}}EX_Extent/{{{self.ns.gmd}}}temporalElement/{{{self.ns.gmd}}}EX_TemporalExtent/"
+            f"{{{self.ns.gmd}}}extent/{{{self.ns.gml}}}TimePeriod"
+        )
+        self.assertIsNotNone(temporal_extent)
+        self.assertEqual(temporal_extent.attrib[f"{{{self.ns.gml}}}id"], 'boundingExtent')
+
+        beginning = temporal_extent.find(f"{{{self.ns.gml}}}beginPosition")
+        self.assertIsNotNone(datetime.fromisoformat(beginning.text))
+        self.assertEqual(
+            datetime.fromisoformat(beginning.text),
+            self.record_attributes['resource']['extent']['temporal']['period']['start'])
+
+        end = temporal_extent.find(f"{{{self.ns.gml}}}endPosition")
+        self.assertIsNotNone(end)
+        self.assertEqual(
+            datetime.fromisoformat(end.text),
+            self.record_attributes['resource']['extent']['temporal']['period']['end']
+        )

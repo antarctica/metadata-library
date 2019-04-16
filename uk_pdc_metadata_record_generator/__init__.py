@@ -54,6 +54,16 @@ class Namespaces(object):
         return schema_locations.lstrip()
 
 
+class Utils(object):
+    @staticmethod
+    def get_epsg_code(candidate_code: str) -> Optional[str]:
+        if candidate_code.startswith('urn:ogc:def:crs:EPSG'):
+            code_parts = candidate_code.split(':')
+            return code_parts[-1]
+
+        return None
+
+
 class MetadataRecord(object):
     def __init__(self, **kwargs):
         self._ns = Namespaces()
@@ -657,7 +667,7 @@ class ReferenceSystemInfo(MetadataRecordElement):
                 reference_system_identifier_element,
                 f"{{{self._ns.gmd}}}code"
             )
-            _epsg_code = self._get_epsg_code(self.attributes['reference-system-info']['code'])
+            _epsg_code = Utils.get_epsg_code(self.attributes['reference-system-info']['code'])
             if _epsg_code is not None:
                 reference_system_identifier_authority_element = etree.SubElement(
                     reference_system_identifier_element,
@@ -696,14 +706,6 @@ class ReferenceSystemInfo(MetadataRecordElement):
                 f"{{{self._ns.gco}}}CharacterString"
             )
             reference_system_identifier_version_value.text = self.attributes['reference-system-info']['version']
-
-    @staticmethod
-    def _get_epsg_code(candidate_code: str) -> Optional[str]:
-        if candidate_code.startswith('urn:ogc:def:crs:EPSG'):
-            code_parts = candidate_code.split(':')
-            return code_parts[-1]
-
-        return None
 
 
 class Citation(MetadataRecordElement):
@@ -992,6 +994,14 @@ class DataIdentification(MetadataRecordElement):
                 element_attributes={'topic': topic_attribute}
             )
             topic.make_element()
+
+        extent = Extent(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        extent.make_element()
 
 
 class Abstract(MetadataRecordElement):
@@ -1295,6 +1305,200 @@ class TopicCategory(MetadataRecordElement):
         topic_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}topicCategory")
         topic_value = etree.SubElement(topic_element, f"{{{self._ns.gmd}}}MD_TopicCategoryCode")
         topic_value.text = self.element_attributes['topic']
+
+
+class Extent(MetadataRecordElement):
+    def make_element(self):
+        extent_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}extent")
+        extent_element = etree.SubElement(extent_wrapper, f"{{{self._ns.gmd}}}EX_Extent")
+
+        if 'geographic' in self.element_attributes['extent']:
+            geographic_extent = GeographicExtent(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=extent_element,
+                element_attributes=self.element_attributes['extent']['geographic']
+            )
+            geographic_extent.make_element()
+
+        if 'vertical' in self.element_attributes['extent']:
+            vertical_extent = VerticalExtent(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=extent_element,
+                element_attributes=self.element_attributes['extent']['vertical']
+            )
+            vertical_extent.make_element()
+
+        if 'temporal' in self.element_attributes['extent']:
+            temporal_extent = TemporalExtent(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=extent_element,
+                element_attributes=self.element_attributes['extent']['temporal']
+            )
+            temporal_extent.make_element()
+
+
+class GeographicExtent(MetadataRecordElement):
+    def make_element(self):
+        geographic_extent_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}geographicElement")
+
+        if 'bounding-box' in self.element_attributes:
+            bounding_box = BoundingBox(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=geographic_extent_element,
+                element_attributes=self.element_attributes['bounding-box']
+            )
+            bounding_box.make_element()
+
+
+class BoundingBox(MetadataRecordElement):
+    def make_element(self):
+        bounding_box_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}EX_GeographicBoundingBox")
+
+        west_element = etree.SubElement(bounding_box_element, f"{{{self._ns.gmd}}}westBoundLongitude")
+        west_value = etree.SubElement(west_element, f"{{{self._ns.gco}}}Decimal")
+        west_value.text = str(self.element_attributes['west-longitude'])
+
+        east_element = etree.SubElement(bounding_box_element, f"{{{self._ns.gmd}}}eastBoundLongitude")
+        east_value = etree.SubElement(east_element, f"{{{self._ns.gco}}}Decimal")
+        east_value.text = str(self.element_attributes['east-longitude'])
+
+        south_element = etree.SubElement(bounding_box_element, f"{{{self._ns.gmd}}}southBoundLatitude")
+        south_value = etree.SubElement(south_element, f"{{{self._ns.gco}}}Decimal")
+        south_value.text = str(self.element_attributes['south-latitude'])
+
+        north_element = etree.SubElement(bounding_box_element, f"{{{self._ns.gmd}}}northBoundLatitude")
+        north_value = etree.SubElement(north_element, f"{{{self._ns.gco}}}Decimal")
+        north_value.text = str(self.element_attributes['north-latitude'])
+
+
+class VerticalExtent(MetadataRecordElement):
+    def make_element(self):
+        vertical_extent_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}verticalElement")
+        vertical_extent_element = etree.SubElement(vertical_extent_wrapper, f"{{{self._ns.gmd}}}EX_VerticalExtent")
+
+        if 'minimum' in self.element_attributes:
+            minimum_element = etree.SubElement(vertical_extent_element, f"{{{self._ns.gmd}}}minimumValue")
+            minimum_value = etree.SubElement(minimum_element, f"{{{self._ns.gco}}}Real")
+            minimum_value.text = self.element_attributes['minimum']
+        else:
+            etree.SubElement(
+                vertical_extent_element,
+                f"{{{self._ns.gmd}}}minimumValue",
+                attrib={f"{{{self._ns.gco}}}nilReason": 'unknown'}
+            )
+
+        if 'maximum' in self.element_attributes:
+            maximum_element = etree.SubElement(vertical_extent_element, f"{{{self._ns.gmd}}}maximumValue")
+            maximum_value = etree.SubElement(maximum_element, f"{{{self._ns.gco}}}Real")
+            maximum_value.text = self.element_attributes['maximum']
+        else:
+            etree.SubElement(
+                vertical_extent_element,
+                f"{{{self._ns.gmd}}}maximumValue",
+                attrib={f"{{{self._ns.gco}}}nilReason": 'unknown'}
+            )
+
+        if 'code' in self.element_attributes:
+            vertical_crs = VerticalCRS(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=vertical_extent_element,
+                element_attributes=self.element_attributes
+            )
+            vertical_crs.make_element()
+
+
+class VerticalCRS(MetadataRecordElement):
+    _epsg_crs_attributes = {
+        '5715': {
+            'name': 'MSL depth',
+            'remarks': 'Not specific to any location or epoch.',
+            'domain-of-validity': {
+                'href': 'urn:ogc:def:area:EPSG::1262'
+            },
+            'scope': 'Hydrography.',
+            'vertical-cs': {
+                'href': 'urn:ogc:def:cs:EPSG::6498'
+            },
+            'vertical-datum': {
+                'href': 'urn:ogc:def:datum:EPSG::5100'
+            }
+        }
+    }
+
+    def make_element(self):
+        vertical_crs_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}verticalCRS")
+
+        _epsg_code = Utils.get_epsg_code(self.element_attributes['code'])
+        if _epsg_code is not None:
+            vertical_crs_element = etree.SubElement(
+                vertical_crs_wrapper,
+                f"{{{self._ns.gml}}}VerticalCRS",
+                attrib={f"{{{self._ns.gml}}}id": f"ogp-crs-{ _epsg_code }"}
+            )
+            vertical_crs_id = etree.SubElement(
+                vertical_crs_element,
+                f"{{{self._ns.gml}}}identifier",
+                attrib={'codeSpace': 'OGP'}
+            )
+            vertical_crs_id.text = self.element_attributes['code']
+
+            if _epsg_code in self._epsg_crs_attributes:
+                name = etree.SubElement(vertical_crs_element, f"{{{self._ns.gml}}}name")
+                name.text = self._epsg_crs_attributes[_epsg_code]['name']
+
+                remarks = etree.SubElement(vertical_crs_element, f"{{{self._ns.gml}}}remarks")
+                remarks.text = self._epsg_crs_attributes[_epsg_code]['remarks']
+
+                etree.SubElement(
+                    vertical_crs_element,
+                    f"{{{self._ns.gml}}}domainOfValidity",
+                    attrib={
+                        f"{{{self._ns.xlink}}}href": self._epsg_crs_attributes[_epsg_code]['domain-of-validity']['href']
+                    }
+                )
+
+                scope = etree.SubElement(vertical_crs_element, f"{{{self._ns.gml}}}scope")
+                scope.text = self._epsg_crs_attributes[_epsg_code]['scope']
+
+                etree.SubElement(
+                    vertical_crs_element,
+                    f"{{{self._ns.gml}}}verticalCS",
+                    attrib={
+                        f"{{{self._ns.xlink}}}href": self._epsg_crs_attributes[_epsg_code]['vertical-cs']['href']
+                    }
+                )
+
+                etree.SubElement(
+                    vertical_crs_element,
+                    f"{{{self._ns.gml}}}verticalDatum",
+                    attrib={
+                        f"{{{self._ns.xlink}}}href": self._epsg_crs_attributes[_epsg_code]['vertical-datum']['href']
+                    }
+                )
+
+
+class TemporalExtent(MetadataRecordElement):
+    def make_element(self):
+        temporal_extent_container = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}temporalElement")
+        temporal_extent_wrapper = etree.SubElement(temporal_extent_container, f"{{{self._ns.gmd}}}EX_TemporalExtent")
+        temporal_extent_element = etree.SubElement(temporal_extent_wrapper, f"{{{self._ns.gmd}}}extent")
+
+        if 'period' in self.element_attributes:
+            time_period_element = etree.SubElement(
+                temporal_extent_element,
+                f"{{{self._ns.gml}}}TimePeriod",
+                attrib={f"{{{self._ns.gml}}}id": 'boundingExtent'}
+            )
+            begin_position_element = etree.SubElement(time_period_element, f"{{{self._ns.gml}}}beginPosition")
+            begin_position_element.text = self.element_attributes['period']['start'].isoformat()
+
+            end_position_element = etree.SubElement(time_period_element, f"{{{self._ns.gml}}}endPosition")
+            end_position_element.text = self.element_attributes['period']['end'].isoformat()
 
 
 def create_app():
