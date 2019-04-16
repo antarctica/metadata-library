@@ -69,6 +69,7 @@ class MetadataRecord(object):
         self._metadata_maintenance()
         self._metadata_standard()
         self._reference_system_identifier()
+        self._data_identification()
 
     def _record(self) -> Element:
         return etree.Element(
@@ -115,6 +116,10 @@ class MetadataRecord(object):
     def _reference_system_identifier(self):
         reference_system_identifier = ReferenceSystemInfo(record=self.record, attributes=self.attributes)
         reference_system_identifier.make_element()
+
+    def _data_identification(self):
+        data_identification = DataIdentification(record=self.record, attributes=self.attributes)
+        data_identification.make_element()
 
 
 class MetadataRecordElement(object):
@@ -165,10 +170,14 @@ class CodeListElement(MetadataRecordElement):
         code_list_element = etree.SubElement(self.parent_element, self.element)
         if self.attribute in self.element_attributes \
                 and self.element_attributes[self.attribute] in self.code_list_values:
-            code_list_value = etree.SubElement(code_list_element, self.element_code, attrib={
-                'codeList': self.code_list,
-                'codeListValue': self.element_attributes[self.attribute]
-            })
+            code_list_value = etree.SubElement(
+                code_list_element,
+                self.element_code,
+                attrib={
+                    'codeList': self.code_list,
+                    'codeListValue': self.element_attributes[self.attribute]
+                }
+            )
             code_list_value.text = self.element_attributes[self.attribute]
 
 
@@ -282,73 +291,125 @@ class ResponsibleParty(MetadataRecordElement):
     def make_element(self):
         responsible_party_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}CI_ResponsibleParty")
 
+        if 'individual' in self.element_attributes and 'name' in self.element_attributes['individual']:
+            individual_element = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}individualName")
+            if 'href' in self.element_attributes['individual']:
+                anchor = AnchorElement(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=individual_element,
+                    element_attributes=self.element_attributes['individual'],
+                    element_value=self.element_attributes['individual']['name']
+                )
+                anchor.make_element()
+            else:
+                individual_value = etree.SubElement(individual_element, f"{{{self._ns.gco}}}CharacterString")
+                individual_value.text = self.element_attributes['individual']['name']
+
         if 'organisation' in self.element_attributes and 'name' in self.element_attributes['organisation']:
             organisation_element = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}organisationName")
-            organisation_name_value = etree.SubElement(organisation_element, f"{{{self._ns.gco}}}CharacterString")
-            organisation_name_value.text = self.element_attributes['organisation']['name']
+            if 'href' in self.element_attributes['organisation']:
+                anchor = AnchorElement(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=organisation_element,
+                    element_attributes=self.element_attributes['organisation'],
+                    element_value=self.element_attributes['organisation']['name']
+                )
+                anchor.make_element()
+            else:
+                organisation_name_value = etree.SubElement(organisation_element, f"{{{self._ns.gco}}}CharacterString")
+                organisation_name_value.text = self.element_attributes['organisation']['name']
 
-        if 'phone' in self.element_attributes or 'address' in self.element_attributes \
-                or 'email' in self.element_attributes or 'url' in self.element_attributes:
-            contact_wrapper = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}contactInfo")
-            contact_element = etree.SubElement(contact_wrapper, f"{{{self._ns.gmd}}}CI_Contact")
+        contact_wrapper = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}contactInfo")
+        contact_element = etree.SubElement(contact_wrapper, f"{{{self._ns.gmd}}}CI_Contact")
 
-            if 'phone' in self.element_attributes:
-                phone_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}phone")
-                phone_element = etree.SubElement(phone_wrapper, f"{{{self._ns.gmd}}}CI_Telephone")
-                phone_voice = etree.SubElement(phone_element, f"{{{self._ns.gmd}}}voice")
-                phone_voice_value = etree.SubElement(phone_voice, f"{{{self._ns.gco}}}CharacterString")
-                phone_voice_value.text = self.element_attributes['phone']
+        if 'phone' in self.element_attributes:
+            phone_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}phone")
+            phone_element = etree.SubElement(phone_wrapper, f"{{{self._ns.gmd}}}CI_Telephone")
+            phone_voice = etree.SubElement(phone_element, f"{{{self._ns.gmd}}}voice")
+            phone_voice_value = etree.SubElement(phone_voice, f"{{{self._ns.gco}}}CharacterString")
+            phone_voice_value.text = self.element_attributes['phone']
 
-            if 'address' in self.element_attributes or 'email' in self.element_attributes:
-                address_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}address")
-                address_element = etree.SubElement(address_wrapper, f"{{{self._ns.gmd}}}CI_Address")
+        address_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}address")
+        address_element = etree.SubElement(address_wrapper, f"{{{self._ns.gmd}}}CI_Address")
 
-                if 'address' in self.element_attributes:
-                    if 'delivery-point' in self.element_attributes['address']:
-                        delivery_point_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}deliveryPoint")
-                        delivery_point_value = etree.SubElement(
-                            delivery_point_element,
-                            f"{{{self._ns.gco}}}CharacterString"
-                        )
-                        delivery_point_value.text = self.element_attributes['address']['delivery-point']
-                    if 'city' in self.element_attributes['address']:
-                        city_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}city")
-                        city_value = etree.SubElement(city_element, f"{{{self._ns.gco}}}CharacterString")
-                        city_value.text = self.element_attributes['address']['city']
-                    if 'administrative-area' in self.element_attributes['address']:
-                        administrative_area_element = etree.SubElement(
-                            address_element,
-                            f"{{{self._ns.gmd}}}administrativeArea"
-                        )
-                        administrative_area_value = etree.SubElement(
-                            administrative_area_element,
-                            f"{{{self._ns.gco}}}CharacterString"
-                        )
-                        administrative_area_value.text = self.element_attributes['address']['administrative-area']
-                    if 'postal-code' in self.element_attributes['address']:
-                        postal_code_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}postalCode")
-                        postal_code_value = etree.SubElement(postal_code_element, f"{{{self._ns.gco}}}CharacterString")
-                        postal_code_value.text = self.element_attributes['address']['postal-code']
-                    if 'country' in self.element_attributes['address']:
-                        country_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}country")
-                        country_value = etree.SubElement(country_element, f"{{{self._ns.gco}}}CharacterString")
-                        country_value.text = self.element_attributes['address']['country']
+        if 'address' in self.element_attributes:
+            if 'delivery-point' in self.element_attributes['address']:
+                delivery_point_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}deliveryPoint")
+                delivery_point_value = etree.SubElement(
+                    delivery_point_element,
+                    f"{{{self._ns.gco}}}CharacterString"
+                )
+                delivery_point_value.text = self.element_attributes['address']['delivery-point']
+            if 'city' in self.element_attributes['address']:
+                city_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}city")
+                city_value = etree.SubElement(city_element, f"{{{self._ns.gco}}}CharacterString")
+                city_value.text = self.element_attributes['address']['city']
+            if 'administrative-area' in self.element_attributes['address']:
+                administrative_area_element = etree.SubElement(
+                    address_element,
+                    f"{{{self._ns.gmd}}}administrativeArea"
+                )
+                administrative_area_value = etree.SubElement(
+                    administrative_area_element,
+                    f"{{{self._ns.gco}}}CharacterString"
+                )
+                administrative_area_value.text = self.element_attributes['address']['administrative-area']
+            if 'postal-code' in self.element_attributes['address']:
+                postal_code_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}postalCode")
+                postal_code_value = etree.SubElement(postal_code_element, f"{{{self._ns.gco}}}CharacterString")
+                postal_code_value.text = self.element_attributes['address']['postal-code']
+            if 'country' in self.element_attributes['address']:
+                country_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}country")
+                country_value = etree.SubElement(country_element, f"{{{self._ns.gco}}}CharacterString")
+                country_value.text = self.element_attributes['address']['country']
 
-                if 'email' in self.element_attributes:
-                    email_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}electronicMailAddress")
-                    email_value = etree.SubElement(email_element, f"{{{self._ns.gco}}}CharacterString")
-                    email_value.text = self.element_attributes['email']
+        if 'email' in self.element_attributes:
+            email_element = etree.SubElement(address_element, f"{{{self._ns.gmd}}}electronicMailAddress")
+            email_value = etree.SubElement(email_element, f"{{{self._ns.gco}}}CharacterString")
+            email_value.text = self.element_attributes['email']
+        else:
+            etree.SubElement(
+                address_element,
+                f"{{{self._ns.gmd}}}electronicMailAddress",
+                attrib={f"{{{self._ns.gco}}}nilReason": 'unknown'}
+            )
 
-            if 'url' in self.element_attributes:
-                url_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}onlineResource")
-                url_element = etree.SubElement(url_wrapper, f"{{{self._ns.gmd}}}CI_OnlineResource")
+        if 'online-resource' in self.element_attributes:
+            online_resource_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}onlineResource")
+            online_resource_element = etree.SubElement(
+                online_resource_wrapper,
+                f"{{{self._ns.gmd}}}CI_OnlineResource"
+            )
+
+            if 'href' in self.element_attributes['online-resource']:
                 linkage = Linkage(
                     record=self.record,
                     attributes=self.attributes,
-                    parent_element=url_element,
-                    element_attributes=self.element_attributes
+                    parent_element=online_resource_element,
+                    element_attributes=self.element_attributes['online-resource']
                 )
                 linkage.make_element()
+
+            if 'title' in self.element_attributes['online-resource']:
+                title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}name")
+                title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
+                title_element.text = self.element_attributes['online-resource']['title']
+
+            if 'description' in self.element_attributes['online-resource']:
+                title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}description")
+                title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
+                title_element.text = self.element_attributes['online-resource']['description']
+
+            if 'function' in self.element_attributes['online-resource']:
+                function = OnlineRole(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=responsible_party_element,
+                    element_attributes=self.element_attributes
+                )
+                function.make_element()
 
         if 'role' in self.element_attributes:
             role = Role(
@@ -363,9 +424,9 @@ class ResponsibleParty(MetadataRecordElement):
 class Linkage(MetadataRecordElement):
     def make_element(self):
         linkage_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}linkage")
-        if 'url' in self.element_attributes:
+        if 'href' in self.element_attributes:
             url_value = etree.SubElement(linkage_element, f"{{{self._ns.gmd}}}URL")
-            url_value.text = self.element_attributes['url']
+            url_value.text = self.element_attributes['href']
 
 
 class Role(CodeListElement):
@@ -402,6 +463,34 @@ class Role(CodeListElement):
         self.attribute = 'role'
 
 
+class OnlineRole(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.code_list_values = [
+            'download',
+            'information',
+            'offlineAccess',
+            'order',
+            'search'
+        ]
+        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
+                         'codelist/gmxCodelists.xml#CI_OnLineFunctionCode'
+        self.element = f"{{{self._ns.gmd}}}function"
+        self.element_code = f"{{{self._ns.gmd}}}CI_OnLineFunctionCode"
+        self.attribute = 'function'
+
+
 class DateStamp(MetadataRecordElement):
     def make_element(self):
         date_stamp_element = etree.SubElement(self.record, f"{{{self._ns.gmd}}}dateStamp")
@@ -416,7 +505,7 @@ class MetadataMaintenance(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=metadata_maintenance_element,
-            element_attributes=self.attributes['metadata-maintenance']
+            element_attributes=self.attributes['maintenance']
         )
         maintenance_information.make_element()
 
@@ -531,17 +620,22 @@ class MetadataStandard(MetadataRecordElement):
 
 class ReferenceSystemInfo(MetadataRecordElement):
     epsg_citation = {
-        'title': 'European Petroleum Survey Group (EPSG) Geodetic Parameter Registry',
-        'date': {
+        'title': {
+            'value': 'European Petroleum Survey Group (EPSG) Geodetic Parameter Registry'
+        },
+        'dates': [{
             'date': datetime(2008, 11, 12),
             'date-type': 'publication'
-        },
+        }],
         'contact': {
             'organisation': {
                 'name': 'European Petroleum Survey Group'
             },
             'email': 'EPSGadministrator@iogp.org',
-            'url': 'https://www.epsg-registry.org/',
+            'online-resource': {
+                'href': 'https://www.epsg-registry.org/',
+                'function': 'information'
+            },
             'role': 'publisher'
         }
     }
@@ -618,17 +712,43 @@ class Citation(MetadataRecordElement):
 
         if 'title' in self.element_attributes:
             title_element = etree.SubElement(citation_element, f"{{{self._ns.gmd}}}title")
-            title_value = etree.SubElement(title_element, f"{{{self._ns.gco}}}CharacterString")
-            title_value.text = self.element_attributes['title']
+            if 'href' in self.element_attributes['title']:
+                anchor = AnchorElement(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=title_element,
+                    element_attributes=self.element_attributes['title'],
+                    element_value=self.element_attributes['title']['value']
+                )
+                anchor.make_element()
+            else:
+                title_value = etree.SubElement(title_element, f"{{{self._ns.gco}}}CharacterString")
+                title_value.text = self.element_attributes['title']['value']
 
-        if 'date' in self.element_attributes:
-            date = Date(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=citation_element,
-                element_attributes=self.element_attributes['date']
-            )
-            date.make_element()
+        if 'dates' in self.element_attributes:
+            for date_attributes in self.element_attributes['dates']:
+                date = Date(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=citation_element,
+                    element_attributes=date_attributes
+                )
+                date.make_element()
+
+        if 'edition' in self.element_attributes:
+            edition_element = etree.SubElement(citation_element, f"{{{self._ns.gmd}}}edition")
+            edition_value = etree.SubElement(edition_element, f"{{{self._ns.gco}}}CharacterString")
+            edition_value.text = str(self.element_attributes['edition'])
+
+        if 'identifiers' in self.element_attributes:
+            for identifier_attributes in self.element_attributes['identifiers']:
+                identifier = Identifier(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=citation_element,
+                    element_attributes=identifier_attributes
+                )
+                identifier.make_element()
 
         if 'contact' in self.element_attributes:
             citated_responsible_party_element = etree.SubElement(
@@ -652,6 +772,16 @@ class Date(MetadataRecordElement):
         date_element = etree.SubElement(date_container_element, f"{{{self._ns.gmd}}}date")
         date_value = etree.SubElement(date_element, f"{{{self._ns.gco}}}DateTime")
         date_value.text = self.element_attributes['date'].isoformat()
+
+        if 'date-precision' in self.element_attributes:
+            if self.element_attributes['date-precision'] == 'year':
+                date_value.text = str(self.element_attributes['date'].year)
+            elif self.element_attributes['date-precision'] == 'month':
+                date_parts = [
+                    str(self.element_attributes['date'].year),
+                    str(self.element_attributes['date'].month)
+                ]
+                date_value.text = '-'.join(date_parts)
 
         date_type = DateType(
             record=self.record,
@@ -679,13 +809,476 @@ class DateType(CodeListElement):
         self.code_list_values = [
             'creation',
             'publication',
-            'revision'
+            'revision',
+            'expiry',
+            'lastUpdate',
+            'lastRevision',
+            'nextUpdate',
+            'unavailable',
+            'inForce',
+            'adopted',
+            'deprecated',
+            'superseded',
+            'validityBegins',
+            'validityExpires',
+            'released',
+            'distribution'
         ]
-        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
-                         'codelist/gmxCodelists.xml#CI_DateTypeCode'
+        self.code_list = 'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode'
         self.element = f"{{{self._ns.gmd}}}dateType"
         self.element_code = f"{{{self._ns.gmd}}}CI_DateTypeCode"
         self.attribute = 'date-type'
+
+
+class Identifier(MetadataRecordElement):
+    def make_element(self):
+        identifier_container = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}identifier")
+        identifier_wrapper = etree.SubElement(identifier_container, f"{{{self._ns.gmd}}}MD_Identifier")
+        identifier_element = etree.SubElement(identifier_wrapper, f"{{{self._ns.gmd}}}code")
+
+        if 'href' in self.element_attributes:
+            anchor = AnchorElement(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=identifier_element,
+                element_attributes=self.element_attributes,
+                element_value=self.element_attributes['identifier']
+            )
+            anchor.make_element()
+        else:
+            identifier_value = etree.SubElement(identifier_element, f"{{{self._ns.gco}}}CharacterString")
+            identifier_value.text = self.element_attributes['identifier']
+
+
+class AnchorElement(MetadataRecordElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None,
+        element_value: str = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.text = element_value
+
+    def make_element(self):
+        attributes = {}
+
+        if 'href' in self.element_attributes:
+            attributes[f"{{{self._ns.xlink}}}href"] = self.element_attributes['href']
+            attributes[f"{{{self._ns.xlink}}}actuate"] = 'onRequest'
+        if 'title' in self.element_attributes:
+            attributes[f"{{{self._ns.xlink}}}title"] = self.element_attributes['title']
+
+        anchor = etree.SubElement(self.parent_element, f"{{{self._ns.gmx}}}Anchor", attrib=attributes)
+        anchor.text = self.text
+
+
+class DataIdentification(MetadataRecordElement):
+    def make_element(self):
+        data_identification_wrapper = etree.SubElement(self.record, f"{{{self._ns.gmd}}}identificationInfo")
+        data_identification_element = etree.SubElement(
+            data_identification_wrapper,
+            f"{{{self._ns.gmd}}}MD_DataIdentification"
+        )
+
+        citation_wrapper = etree.SubElement(data_identification_element, f"{{{self._ns.gmd}}}citation")
+        citation = Citation(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=citation_wrapper,
+            element_attributes=self.attributes['resource']
+        )
+        citation.make_element()
+
+        abstract = Abstract(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        abstract.make_element()
+
+        for point_of_contact_attributes in self.attributes['resource']['contacts']:
+            if isinstance(point_of_contact_attributes['role'], list):
+                for role in point_of_contact_attributes['role']:
+                    _point_of_contact = point_of_contact_attributes.copy()
+                    _point_of_contact['role'] = role
+
+                    point_of_contact = PointOfContact(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=data_identification_element,
+                        element_attributes=_point_of_contact
+                    )
+                    point_of_contact.make_element()
+            else:
+                point_of_contact = PointOfContact(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_identification_element,
+                    element_attributes=point_of_contact_attributes
+                )
+                point_of_contact.make_element()
+
+        resource_maintenance = ResourceMaintenance(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        resource_maintenance.make_element()
+
+        for keyword_attributes in self.attributes['resource']['keywords']:
+            descriptive_keywords = DescriptiveKeywords(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=keyword_attributes
+            )
+            descriptive_keywords.make_element()
+
+        constraints = ResourceConstraints(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        constraints.make_element()
+
+        supplemental_information = SupplementalInformation(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        supplemental_information.make_element()
+
+        spatial_representation_type = SpatialRepresentationType(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        spatial_representation_type.make_element()
+
+        spatial_resolution = SpatialResolution(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        spatial_resolution.make_element()
+
+        language = Language(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes['resource']
+        )
+        language.make_element()
+
+
+class Abstract(MetadataRecordElement):
+    def make_element(self):
+        abstract_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}abstract")
+        abstract_value = etree.SubElement(abstract_element, f"{{{self._ns.gco}}}CharacterString")
+        abstract_value.text = self.element_attributes['abstract']
+
+
+class PointOfContact(MetadataRecordElement):
+    def make_element(self):
+        point_of_contact_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}pointOfContact")
+
+        responsible_party = ResponsibleParty(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=point_of_contact_element,
+            element_attributes=self.element_attributes
+        )
+        responsible_party.make_element()
+
+
+class ResourceMaintenance(MetadataRecordElement):
+    def make_element(self):
+        resource_maintenance_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}resourceMaintenance")
+        maintenance_information = MaintenanceInformation(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=resource_maintenance_element,
+            element_attributes=self.attributes['maintenance']
+        )
+        maintenance_information.make_element()
+
+
+class DescriptiveKeywords(MetadataRecordElement):
+    def make_element(self):
+        keywords_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}descriptiveKeywords")
+        keywords_element = etree.SubElement(keywords_wrapper, f"{{{self._ns.gmd}}}MD_Keywords")
+
+        for term in self.element_attributes['terms']:
+            term_element = etree.SubElement(keywords_element, f"{{{self._ns.gmd}}}keyword")
+            if 'href' in term:
+                anchor = AnchorElement(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=term_element,
+                    element_attributes=term,
+                    element_value=term['title']
+                )
+                anchor.make_element()
+            else:
+                term_value = etree.SubElement(term_element, f"{{{self._ns.gco}}}CharacterString")
+                term_value.text = term['title']
+
+        keyword_type = DescriptiveKeywordsType(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=keywords_element,
+            element_attributes=self.element_attributes
+        )
+        keyword_type.make_element()
+
+        if 'thesaurus' in self.element_attributes:
+            thesaurus = Thesaurus(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=keywords_element,
+                element_attributes=self.element_attributes['thesaurus']
+            )
+            thesaurus.make_element()
+
+
+class DescriptiveKeywordsType(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.code_list_values = [
+            'discipline',
+            'place',
+            'stratum',
+            'temporal',
+            'theme'
+        ]
+        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
+                         'codelist/gmxCodelists.xml#MD_KeywordTypeCode'
+        self.element = f"{{{self._ns.gmd}}}type"
+        self.element_code = f"{{{self._ns.gmd}}}MD_KeywordTypeCode"
+        self.attribute = 'type'
+
+
+class Thesaurus(MetadataRecordElement):
+    def make_element(self):
+        thesaurus_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}thesaurusName")
+
+        citation = Citation(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=thesaurus_element,
+            element_attributes=self.element_attributes
+        )
+        citation.make_element()
+
+
+class ResourceConstraints(MetadataRecordElement):
+    uk_ogl_v3_anchor = {
+        'href': 'http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/',
+        'value': 'This information is licensed under the Open Government Licence v3.0. To view this licence, visit '
+                 'http://www.nationalarchives.gov.uk/doc/open-government-licence/'
+    }
+
+    def make_element(self):
+        if 'access' in self.element_attributes['constraints']:
+            for access_constraint_attributes in self.element_attributes['constraints']['access']:
+                constraints_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}resourceConstraints")
+                constraints_element = etree.SubElement(constraints_wrapper, f"{{{self._ns.gmd}}}MD_LegalConstraints")
+
+                access_constraint = AccessConstraint(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=constraints_element,
+                    element_attributes=access_constraint_attributes
+                )
+                access_constraint.make_element()
+
+                if 'inspire-limitations-on-public-access' in access_constraint_attributes:
+                    public_access_limitation = InspireLimitationsOnPublicAccess(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=constraints_element,
+                        element_attributes=access_constraint_attributes
+                    )
+                    public_access_limitation.make_element()
+
+        if 'usage' in self.element_attributes['constraints']:
+            for usage_constraint_attributes in self.element_attributes['constraints']['usage']:
+                constraints_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}resourceConstraints")
+                constraints_element = etree.SubElement(constraints_wrapper, f"{{{self._ns.gmd}}}MD_LegalConstraints")
+
+                use_constraint = UseConstraint(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=constraints_element,
+                    element_attributes=usage_constraint_attributes
+                )
+                use_constraint.make_element()
+
+                if 'copyright-licence' in usage_constraint_attributes:
+                    if usage_constraint_attributes['copyright-licence'] == 'OGL-UK-3.0':
+                        other_constraint_element = etree.SubElement(
+                            constraints_element,
+                            f"{{{self._ns.gmd}}}otherConstraints"
+                        )
+
+                        copyright_statement = AnchorElement(
+                            record=self.record,
+                            attributes=self.attributes,
+                            parent_element=other_constraint_element,
+                            element_attributes=self.uk_ogl_v3_anchor,
+                            element_value=self.uk_ogl_v3_anchor['value']
+                        )
+                        copyright_statement.make_element()
+
+                if 'required-citation' in usage_constraint_attributes:
+                    other_constraint_element = etree.SubElement(
+                        constraints_element,
+                        f"{{{self._ns.gmd}}}otherConstraints"
+                    )
+                    other_constraint_wrapper = etree.SubElement(
+                        other_constraint_element,
+                        f"{{{self._ns.gco}}}CharacterString"
+                    )
+                    other_constraint_wrapper.text = f"Cite this information as: " \
+                        f"\"{ usage_constraint_attributes['required-citation'] }\""
+
+
+class AccessConstraint(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.code_list_values = [
+            'copyright',
+            'patent',
+            'patentPending',
+            'trademark',
+            'license',
+            'intellectualPropertyRights',
+            'restricted',
+            'otherRestrictions'
+        ]
+        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
+                         'codelist/gmxCodelists.xml#MD_RestrictionCode'
+        self.element = f"{{{self._ns.gmd}}}accessConstraints"
+        self.element_code = f"{{{self._ns.gmd}}}MD_RestrictionCode"
+        self.attribute = 'restriction-code'
+
+
+class UseConstraint(AccessConstraint):
+
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.element = f"{{{self._ns.gmd}}}useConstraints"
+
+
+class InspireLimitationsOnPublicAccess(MetadataRecordElement):
+    def make_element(self):
+        other_constraints_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}otherConstraints")
+
+        other_constraints_value = AnchorElement(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=other_constraints_element,
+            element_attributes={
+                'href': f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
+                f"{ self.element_attributes['inspire-limitations-on-public-access'] }"
+            },
+            element_value=self.element_attributes['inspire-limitations-on-public-access']
+        )
+        other_constraints_value.make_element()
+
+
+class SupplementalInformation(MetadataRecordElement):
+    def make_element(self):
+        supplemental_info_element = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}supplementalInformation")
+        supplemental_info_value = etree.SubElement(supplemental_info_element, f"{{{self._ns.gco}}}CharacterString")
+        supplemental_info_value.text = self.element_attributes['supplemental-information']
+
+
+class SpatialRepresentationType(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.code_list_values = [
+            'vector',
+            'grid',
+            'textTable',
+            'tin',
+            'stereoModel',
+            'video'
+        ]
+        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
+                         'codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode'
+        self.element = f"{{{self._ns.gmd}}}spatialRepresentationType"
+        self.element_code = f"{{{self._ns.gmd}}}MD_SpatialRepresentationTypeCode"
+        self.attribute = 'spatial-representation-type'
+
+
+class SpatialResolution(MetadataRecordElement):
+    def make_element(self):
+        resolution_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}spatialResolution")
+        resolution_element = etree.SubElement(resolution_wrapper, f"{{{self._ns.gmd}}}MD_Resolution")
+        etree.SubElement(
+            resolution_element,
+            f"{{{self._ns.gmd}}}distance",
+            attrib={f"{{{self._ns.gco}}}nilReason": 'inapplicable'}
+        )
 
 
 def create_app():
