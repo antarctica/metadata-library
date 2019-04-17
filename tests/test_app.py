@@ -928,3 +928,20 @@ class AppTestCase(BaseTestCase):
             f"{{{self.ns.gmd}}}dataQualityInfo/{{{self.ns.gmd}}}DQ_DataQuality"
         )
         self.assertIsNotNone(data_quality)
+
+    def test_data_quality_scope(self):
+        scope = self.test_response.find(
+            f"{{{self.ns.gmd}}}dataQualityInfo/{{{self.ns.gmd}}}DQ_DataQuality/{{{self.ns.gmd}}}scope/"
+            f"{{{self.ns.gmd}}}DQ_Scope"
+        )
+        self.assertIsNotNone(scope)
+
+        scope_code = scope.find(f"{{{ self.ns.gmd }}}level/{{{ self.ns.gmd }}}MD_ScopeCode")
+        self.assertIsNotNone(scope_code)
+        self.assertEqual(
+            scope_code.attrib['codeList'],
+            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+            '/codelist/gmxCodelists.xml#MD_ScopeCode'
+        )
+        self.assertEqual(scope_code.attrib['codeListValue'], self.record_attributes['hierarchy-level'])
+        self.assertEqual(scope_code.text, self.record_attributes['hierarchy-level'])

@@ -244,7 +244,7 @@ class CharacterSet(CodeListElement):
         self.attribute = 'character_set'
 
 
-class HierarchyLevel(CodeListElement):
+class ScopeCode(CodeListElement):
     def __init__(
         self,
         record: MetadataRecord,
@@ -278,9 +278,26 @@ class HierarchyLevel(CodeListElement):
         ]
         self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
                          'codelist/gmxCodelists.xml#MD_ScopeCode'
-        self.element = f"{{{self._ns.gmd}}}hierarchyLevel"
+        self.element = f"{{{self._ns.gmd}}}level"
         self.element_code = f"{{{self._ns.gmd}}}MD_ScopeCode"
         self.attribute = 'hierarchy-level'
+
+
+class HierarchyLevel(ScopeCode):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.element = f"{{{self._ns.gmd}}}hierarchyLevel"
 
     def make_element(self):
         super().make_element()
@@ -1241,7 +1258,6 @@ class AccessConstraint(CodeListElement):
 
 
 class UseConstraint(AccessConstraint):
-
     def __init__(
         self,
         record: MetadataRecord,
@@ -1638,6 +1654,36 @@ class DataQuality(MetadataRecordElement):
     def make_element(self):
         data_quality_wrapper = etree.SubElement(self.record, f"{{{self._ns.gmd}}}dataQualityInfo")
         data_quality_element = etree.SubElement(data_quality_wrapper, f"{{{self._ns.gmd}}}DQ_DataQuality")
+
+        scope = Scope(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_quality_element
+        )
+        scope.make_element()
+
+
+class Scope(MetadataRecordElement):
+    def make_element(self):
+        scope_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}scope")
+        scope_element = etree.SubElement(scope_wrapper, f"{{{self._ns.gmd}}}DQ_Scope")
+
+        scope_code = ScopeCode(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=scope_element
+        )
+        scope_code.make_element()
+
+
+class Report(MetadataRecordElement):
+    def make_element(self):
+        pass
+
+
+class Lineage(MetadataRecordElement):
+    def make_element(self):
+        pass
 
 
 def create_app():
