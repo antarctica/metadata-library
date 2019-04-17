@@ -46,6 +46,33 @@ class BaseTestCase(unittest.TestCase):
 
 
 class AppTestCase(BaseTestCase):
+    def _test_online_resource(self, online_resource, online_resource_attributes):
+        if 'href' in online_resource_attributes:
+            linkage = online_resource.find(f"{{{self.ns.gmd}}}linkage/{{{self.ns.gmd}}}URL")
+            self.assertIsNotNone(linkage)
+            self.assertEqual(linkage.text, online_resource_attributes['href'])
+
+        if 'title' in online_resource_attributes:
+            name = online_resource.find(f"{{{self.ns.gmd}}}name/{{{self.ns.gco}}}CharacterString")
+            self.assertIsNotNone(name)
+            self.assertEqual(name.text, online_resource_attributes['title'])
+
+        if 'description' in online_resource_attributes:
+            description = online_resource.find(f"{{{self.ns.gmd}}}description/{{{self.ns.gco}}}CharacterString")
+            self.assertIsNotNone(description)
+            self.assertEqual(description.text, online_resource_attributes['description'])
+
+        if 'function' in online_resource_attributes:
+            function = online_resource.find(f"{{{self.ns.gmd}}}function/{{{self.ns.gco}}}CI_OnLineFunctionCode")
+            self.assertIsNotNone(function)
+            self.assertEqual(
+                function.attrib['codeList'],
+                'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                '/codelist/gmxCodelists.xml#CI_OnLineFunctionCode'
+            )
+            self.assertEqual(function.attrib['codeListValue'], online_resource_attributes['function'])
+            self.assertEqual(function.text, online_resource_attributes['function'])
+
     def _test_responsible_party(self, responsible_party, responsible_party_attributes):
         if 'individual' in responsible_party_attributes and 'name' in responsible_party_attributes['individual']:
             if 'href' in responsible_party_attributes['individual']:
@@ -152,32 +179,7 @@ class AppTestCase(BaseTestCase):
 
             )
             self.assertIsNotNone(online_resource)
-
-            if 'href' in responsible_party['online-resource']:
-                linkage = online_resource.find(f"{{{self.ns.gmd}}}linkage/{{{self.ns.gmd}}}URL")
-                self.assertIsNotNone(linkage)
-                self.assertEqual(linkage.text, responsible_party['online-resource']['href'])
-
-            if 'title' in responsible_party['online-resource']:
-                name = online_resource.find(f"{{{self.ns.gmd}}}name/{{{self.ns.gco}}}CharacterString")
-                self.assertIsNotNone(name)
-                self.assertEqual(name.text, responsible_party['online-resource']['title'])
-
-            if 'description' in responsible_party['online-resource']:
-                description = online_resource.find(f"{{{self.ns.gmd}}}description/{{{self.ns.gco}}}CharacterString")
-                self.assertIsNotNone(description)
-                self.assertEqual(description.text, responsible_party['online-resource']['description'])
-
-            if 'function' in responsible_party['online-resource']:
-                function = online_resource.find(f"{{{self.ns.gmd}}}function/{{{self.ns.gco}}}CI_OnLineFunctionCode")
-                self.assertIsNotNone(function)
-                self.assertEqual(
-                    function.attrib['codeList'],
-                    'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-                    '/codelist/gmxCodelists.xml#CI_OnLineFunctionCode'
-                )
-                self.assertEqual(function.attrib['codeListValue'], responsible_party['online-resource']['function'])
-                self.assertEqual(function.text, responsible_party['online-resource']['function'])
+            self._test_online_resource(online_resource, responsible_party_attributes['online-resource'])
 
         if 'role' in responsible_party:
             role = responsible_party.find(f"{{{self.ns.gmd}}}role/{{{self.ns.gmd}}}CI_RoleCode")
@@ -473,10 +475,11 @@ class AppTestCase(BaseTestCase):
         for expected_poc in self.record_attributes['resource']['contacts']:
             if isinstance(expected_poc['role'], list):
                 for role in expected_poc['role']:
-                    _expected_poc = expected_poc.copy()
-                    _expected_poc['role'] = role
-                    expected_pocs.append(_expected_poc)
-            else:
+                    if role != 'distributor':
+                        _expected_poc = expected_poc.copy()
+                        _expected_poc['role'] = role
+                        expected_pocs.append(_expected_poc)
+            elif expected_poc['role'] != 'distributor':
                 expected_pocs.append(expected_poc)
 
         for expected_poc in expected_pocs:
@@ -820,3 +823,102 @@ class AppTestCase(BaseTestCase):
             datetime.fromisoformat(end.text),
             self.record_attributes['resource']['extent']['temporal']['period']['end']
         )
+
+    def test_data_distribution(self):
+        data_distribution = self.test_response.find(
+            f"{{{self.ns.gmd}}}distributionInfo/{{{self.ns.gmd}}}MD_Distribution/"
+        )
+        self.assertIsNotNone(data_distribution)
+
+    def test_data_distribution_formats(self):
+        for expected_format in self.record_attributes['resource']['formats']:
+            with self.subTest(expected_format=expected_format):
+                base_xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format'
+                xpath = f"{ base_xpath }[gmd:name[gco:CharacterString[text()=$format]]]"
+                format_identifier = expected_format['format']
+
+                if 'href' in expected_format:
+                    xpath = f"{base_xpath}[gmd:name[gmx:Anchor[@xlink:href=$format]]]"
+                    format_identifier = expected_format['href']
+
+                transfer_format = self.test_response.xpath(
+                    xpath,
+                    format=format_identifier,
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(transfer_format), 1)
+                transfer_format = transfer_format[0]
+
+                if 'href' in expected_format:
+                    transfer_format_value = transfer_format.find(f"{{{self.ns.gmd}}}name/{{{self.ns.gmx}}}Anchor")
+                    self.assertIsNotNone(transfer_format_value)
+                    self.assertEqual(
+                        transfer_format_value.attrib[f"{{{self.ns.xlink}}}href"],
+                        expected_format['href']
+                    )
+                    self.assertEqual(transfer_format_value.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                    if 'title' in expected_format:
+                        self.assertEqual(
+                            transfer_format_value.attrib[f"{{{self.ns.xlink}}}title"],
+                            expected_format['title']
+                        )
+                else:
+                    transfer_format_value = transfer_format.find(
+                        f"{{{self.ns.gmd}}}name/{{{self.ns.gco}}}CharacterString"
+                    )
+                    self.assertIsNotNone(transfer_format_value)
+                self.assertEqual(transfer_format_value.text, expected_format['format'])
+
+    def test_data_distribution_distributors(self):
+        expected_distributors = []
+        for expected_distributor in self.record_attributes['resource']['contacts']:
+            if isinstance(expected_distributor['role'], list):
+                for role in expected_distributor['role']:
+                    if role == 'distributor':
+                        _expected_poc = expected_distributor.copy()
+                        _expected_poc['role'] = role
+                        expected_distributors.append(_expected_poc)
+            elif expected_distributor['role'] == 'distributor':
+                expected_distributors.append(expected_distributor)
+
+        for expected_distributor in expected_distributors:
+            with self.subTest(expected_distributor=expected_distributor):
+                if 'organisation' not in expected_distributor:
+                    self.skipTest('only distributor\'s with an organisation name may be tested')
+                if 'role' not in expected_distributor:
+                    self.skipTest('only distributor\'s with a role may be tested')
+
+                # Check the record for each expected distributor based on it's 'name' and 'role', then get the parent
+                # 'CI_ResponsibleParty' element so we can check other properties
+                value_element = 'gco:CharacterString'
+                if 'href' in expected_distributor['organisation']:
+                    value_element = 'gmx:Anchor'
+
+                xpath = f"./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/" \
+                    f"gmd:distributorContact/gmd:CI_ResponsibleParty[gmd:organisationName" \
+                    f"[{ value_element }[text()=$name]] and gmd:role[gmd:CI_RoleCode[text()=$role]]]"
+
+                distributor = self.test_response.xpath(
+                    xpath,
+                    name=expected_distributor['organisation']['name'],
+                    role=expected_distributor['role'],
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(distributor), 1)
+                distributor = distributor[0]
+                self._test_responsible_party(distributor, expected_distributor)
+
+    def test_data_distribution_transfer_options(self):
+        for expected_transfer_options in self.record_attributes['resource']['transfer-options']:
+            with self.subTest(expected_transfer_options=expected_transfer_options):
+                xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions' \
+                        '[gmd:onLine[gmd:CI_OnlineResource[gmd:linkage[gmd:URL[text()=$transfer_option]]]]]'
+
+                transfer_option = self.test_response.xpath(
+                    xpath,
+                    transfer_option=expected_transfer_options['online-resource']['href'],
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(transfer_option), 1)
+                transfer_option = transfer_option[0]
+                self._test_online_resource(transfer_option, expected_transfer_options)

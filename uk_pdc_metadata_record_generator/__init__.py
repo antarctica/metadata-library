@@ -80,6 +80,7 @@ class MetadataRecord(object):
         self._metadata_standard()
         self._reference_system_identifier()
         self._data_identification()
+        self._data_distribution()
 
     def _record(self) -> Element:
         return etree.Element(
@@ -130,6 +131,10 @@ class MetadataRecord(object):
     def _data_identification(self):
         data_identification = DataIdentification(record=self.record, attributes=self.attributes)
         data_identification.make_element()
+
+    def _data_distribution(self):
+        data_distribution = DataDistribution(record=self.record, attributes=self.attributes)
+        data_distribution.make_element()
 
 
 class MetadataRecordElement(object):
@@ -387,39 +392,14 @@ class ResponsibleParty(MetadataRecordElement):
             )
 
         if 'online-resource' in self.element_attributes:
-            online_resource_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}onlineResource")
-            online_resource_element = etree.SubElement(
-                online_resource_wrapper,
-                f"{{{self._ns.gmd}}}CI_OnlineResource"
+            online_resource_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}onlineResource")
+            online_resource = OnlineResource(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=online_resource_wrapper,
+                element_attributes=self.element_attributes['online-resource']
             )
-
-            if 'href' in self.element_attributes['online-resource']:
-                linkage = Linkage(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=online_resource_element,
-                    element_attributes=self.element_attributes['online-resource']
-                )
-                linkage.make_element()
-
-            if 'title' in self.element_attributes['online-resource']:
-                title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}name")
-                title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
-                title_element.text = self.element_attributes['online-resource']['title']
-
-            if 'description' in self.element_attributes['online-resource']:
-                title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}description")
-                title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
-                title_element.text = self.element_attributes['online-resource']['description']
-
-            if 'function' in self.element_attributes['online-resource']:
-                function = OnlineRole(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=responsible_party_element,
-                    element_attributes=self.element_attributes
-                )
-                function.make_element()
+            online_resource.make_element()
 
         if 'role' in self.element_attributes:
             role = Role(
@@ -429,6 +409,42 @@ class ResponsibleParty(MetadataRecordElement):
                 element_attributes=self.element_attributes
             )
             role.make_element()
+
+
+class OnlineResource(MetadataRecordElement):
+    def make_element(self):
+        online_resource_element = etree.SubElement(
+            self.parent_element,
+            f"{{{self._ns.gmd}}}CI_OnlineResource"
+        )
+
+        if 'href' in self.element_attributes:
+            linkage = Linkage(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=online_resource_element,
+                element_attributes=self.element_attributes
+            )
+            linkage.make_element()
+
+        if 'title' in self.element_attributes:
+            title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}name")
+            title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
+            title_element.text = self.element_attributes['title']
+
+        if 'description' in self.element_attributes:
+            title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}description")
+            title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
+            title_element.text = self.element_attributes['description']
+
+        if 'function' in self.element_attributes:
+            function = OnlineRole(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=online_resource_element,
+                element_attributes=self.element_attributes
+            )
+            function.make_element()
 
 
 class Linkage(MetadataRecordElement):
@@ -910,16 +926,17 @@ class DataIdentification(MetadataRecordElement):
         for point_of_contact_attributes in self.attributes['resource']['contacts']:
             if isinstance(point_of_contact_attributes['role'], list):
                 for role in point_of_contact_attributes['role']:
-                    _point_of_contact = point_of_contact_attributes.copy()
-                    _point_of_contact['role'] = role
+                    if role != 'distributor':
+                        _point_of_contact = point_of_contact_attributes.copy()
+                        _point_of_contact['role'] = role
 
-                    point_of_contact = PointOfContact(
-                        record=self.record,
-                        attributes=self.attributes,
-                        parent_element=data_identification_element,
-                        element_attributes=_point_of_contact
-                    )
-                    point_of_contact.make_element()
+                        point_of_contact = PointOfContact(
+                            record=self.record,
+                            attributes=self.attributes,
+                            parent_element=data_identification_element,
+                            element_attributes=_point_of_contact
+                        )
+                        point_of_contact.make_element()
             else:
                 point_of_contact = PointOfContact(
                     record=self.record,
@@ -1499,6 +1516,117 @@ class TemporalExtent(MetadataRecordElement):
 
             end_position_element = etree.SubElement(time_period_element, f"{{{self._ns.gml}}}endPosition")
             end_position_element.text = self.element_attributes['period']['end'].isoformat()
+
+
+class DataDistribution(MetadataRecordElement):
+    def make_element(self):
+        data_distribution_wrapper = etree.SubElement(self.record, f"{{{self._ns.gmd}}}distributionInfo")
+        data_distribution_element = etree.SubElement(data_distribution_wrapper, f"{{{self._ns.gmd}}}MD_Distribution")
+
+        for format_attributes in self.attributes['resource']['formats']:
+            distribution_format = DistributionFormat(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_distribution_element,
+                element_attributes=format_attributes
+            )
+            distribution_format.make_element()
+
+        for point_of_contact_attributes in self.attributes['resource']['contacts']:
+            if isinstance(point_of_contact_attributes['role'], list):
+                for role in point_of_contact_attributes['role']:
+                    if role == 'distributor':
+                        _point_of_contact = point_of_contact_attributes.copy()
+                        _point_of_contact['role'] = role
+
+                        distributor = Distributor(
+                            record=self.record,
+                            attributes=self.attributes,
+                            parent_element=data_distribution_element,
+                            element_attributes=_point_of_contact
+                        )
+                        distributor.make_element()
+            elif point_of_contact_attributes['role'] == 'distributor':
+                distributor = Distributor(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_distribution_element,
+                    element_attributes=point_of_contact_attributes
+                )
+                distributor.make_element()
+
+        for transfer_attributes in self.attributes['resource']['transfer-options']:
+            transfer_options = TransformOptions(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_distribution_element,
+                element_attributes=transfer_attributes
+            )
+            transfer_options.make_element()
+
+
+class DistributionFormat(MetadataRecordElement):
+    def make_element(self):
+        distribution_format_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}distributionFormat")
+        distribution_format_element = etree.SubElement(distribution_format_wrapper, f"{{{self._ns.gmd}}}MD_Format")
+
+        format_name_element = etree.SubElement(distribution_format_element, f"{{{self._ns.gmd}}}name")
+        if 'href' in self.element_attributes:
+            anchor = AnchorElement(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=format_name_element,
+                element_attributes=self.element_attributes,
+                element_value=self.element_attributes['format']
+            )
+            anchor.make_element()
+        else:
+            format_name_value = etree.SubElement(format_name_element, f"{{{self._ns.gco}}}CharacterString")
+            format_name_value.text = self.element_attributes['format']
+
+        if 'version' in self.element_attributes:
+            format_version_element = etree.SubElement(distribution_format_element, f"{{{self._ns.gmd}}}version")
+            format_version_value = etree.SubElement(format_version_element, f"{{{self._ns.gco}}}CharacterString")
+            format_version_value.text = self.element_attributes['version']
+        else:
+            etree.SubElement(
+                distribution_format_element,
+                f"{{{self._ns.gmd}}}version",
+                attrib={f"{{{self._ns.gco}}}nilReason": 'unknown'}
+            )
+
+
+class Distributor(MetadataRecordElement):
+    def make_element(self):
+        distributor_container = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}distributor")
+        distributor_wrapper = etree.SubElement(distributor_container, f"{{{self._ns.gmd}}}MD_Distributor")
+        distributor_element = etree.SubElement(distributor_wrapper, f"{{{self._ns.gmd}}}distributorContact")
+
+        responsible_party = ResponsibleParty(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=distributor_element,
+            element_attributes=self.element_attributes
+        )
+        responsible_party.make_element()
+
+
+class TransformOptions(MetadataRecordElement):
+    def make_element(self):
+        transfer_options_container = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}transferOptions")
+        transfer_options_wrapper = etree.SubElement(
+            transfer_options_container,
+            f"{{{self._ns.gmd}}}MD_DigitalTransferOptions"
+        )
+        transfer_options_element = etree.SubElement(transfer_options_wrapper, f"{{{self._ns.gmd}}}onLine")
+
+        online_resource = OnlineResource(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=transfer_options_element,
+            element_attributes=self.element_attributes['online-resource']
+        )
+        online_resource.make_element()
 
 
 def create_app():
