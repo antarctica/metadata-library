@@ -473,10 +473,11 @@ class AppTestCase(BaseTestCase):
         for expected_poc in self.record_attributes['resource']['contacts']:
             if isinstance(expected_poc['role'], list):
                 for role in expected_poc['role']:
-                    _expected_poc = expected_poc.copy()
-                    _expected_poc['role'] = role
-                    expected_pocs.append(_expected_poc)
-            else:
+                    if role != 'distributor':
+                        _expected_poc = expected_poc.copy()
+                        _expected_poc['role'] = role
+                        expected_pocs.append(_expected_poc)
+            elif expected_poc['role'] != 'distributor':
                 expected_pocs.append(expected_poc)
 
         for expected_poc in expected_pocs:
@@ -865,3 +866,42 @@ class AppTestCase(BaseTestCase):
                     )
                     self.assertIsNotNone(transfer_format_value)
                 self.assertEqual(transfer_format_value.text, expected_format['format'])
+
+    def test_data_distribution_distributors(self):
+        expected_distributors = []
+        for expected_distributor in self.record_attributes['resource']['contacts']:
+            if isinstance(expected_distributor['role'], list):
+                for role in expected_distributor['role']:
+                    if role == 'distributor':
+                        _expected_poc = expected_distributor.copy()
+                        _expected_poc['role'] = role
+                        expected_distributors.append(_expected_poc)
+            elif expected_distributor['role'] == 'distributor':
+                expected_distributors.append(expected_distributor)
+
+        for expected_distributor in expected_distributors:
+            with self.subTest(expected_distributor=expected_distributor):
+                if 'organisation' not in expected_distributor:
+                    self.skipTest('only distributor\'s with an organisation name may be tested')
+                if 'role' not in expected_distributor:
+                    self.skipTest('only distributor\'s with a role may be tested')
+
+                # Check the record for each expected distributor based on it's 'name' and 'role', then get the parent
+                # 'CI_ResponsibleParty' element so we can check other properties
+                value_element = 'gco:CharacterString'
+                if 'href' in expected_distributor['organisation']:
+                    value_element = 'gmx:Anchor'
+
+                xpath = f"./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/" \
+                    f"gmd:distributorContact/gmd:CI_ResponsibleParty[gmd:organisationName" \
+                    f"[{ value_element }[text()=$name]] and gmd:role[gmd:CI_RoleCode[text()=$role]]]"
+
+                distributor = self.test_response.xpath(
+                    xpath,
+                    name=expected_distributor['organisation']['name'],
+                    role=expected_distributor['role'],
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(distributor), 1)
+                distributor = distributor[0]
+                self._test_responsible_party(distributor, expected_distributor)

@@ -164,7 +164,8 @@ test_record = {
                 'role': [
                     'pointOfContact',
                     'custodian',
-                    'publisher'
+                    'publisher',
+                    'distributor'
                 ]
             }
         ],

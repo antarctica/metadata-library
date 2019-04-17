@@ -915,16 +915,17 @@ class DataIdentification(MetadataRecordElement):
         for point_of_contact_attributes in self.attributes['resource']['contacts']:
             if isinstance(point_of_contact_attributes['role'], list):
                 for role in point_of_contact_attributes['role']:
-                    _point_of_contact = point_of_contact_attributes.copy()
-                    _point_of_contact['role'] = role
+                    if role != 'distributor':
+                        _point_of_contact = point_of_contact_attributes.copy()
+                        _point_of_contact['role'] = role
 
-                    point_of_contact = PointOfContact(
-                        record=self.record,
-                        attributes=self.attributes,
-                        parent_element=data_identification_element,
-                        element_attributes=_point_of_contact
-                    )
-                    point_of_contact.make_element()
+                        point_of_contact = PointOfContact(
+                            record=self.record,
+                            attributes=self.attributes,
+                            parent_element=data_identification_element,
+                            element_attributes=_point_of_contact
+                        )
+                        point_of_contact.make_element()
             else:
                 point_of_contact = PointOfContact(
                     record=self.record,
@@ -1520,6 +1521,29 @@ class DataDistribution(MetadataRecordElement):
             )
             distribution_format.make_element()
 
+        for point_of_contact_attributes in self.attributes['resource']['contacts']:
+            if isinstance(point_of_contact_attributes['role'], list):
+                for role in point_of_contact_attributes['role']:
+                    if role == 'distributor':
+                        _point_of_contact = point_of_contact_attributes.copy()
+                        _point_of_contact['role'] = role
+
+                        distributor = Distributor(
+                            record=self.record,
+                            attributes=self.attributes,
+                            parent_element=data_distribution_element,
+                            element_attributes=_point_of_contact
+                        )
+                        distributor.make_element()
+            elif point_of_contact_attributes['role'] == 'distributor':
+                distributor = Distributor(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_distribution_element,
+                    element_attributes=point_of_contact_attributes
+                )
+                distributor.make_element()
+
 class DistributionFormat(MetadataRecordElement):
     def make_element(self):
         distribution_format_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}distributionFormat")
@@ -1549,6 +1573,21 @@ class DistributionFormat(MetadataRecordElement):
                 f"{{{self._ns.gmd}}}version",
                 attrib={f"{{{self._ns.gco}}}nilReason": 'unknown'}
             )
+
+
+class Distributor(MetadataRecordElement):
+    def make_element(self):
+        distributor_container = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}distributor")
+        distributor_wrapper = etree.SubElement(distributor_container, f"{{{self._ns.gmd}}}MD_Distributor")
+        distributor_element = etree.SubElement(distributor_wrapper, f"{{{self._ns.gmd}}}distributorContact")
+
+        responsible_party = ResponsibleParty(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=distributor_element,
+            element_attributes=self.element_attributes
+        )
+        responsible_party.make_element()
 
 
 def create_app():
