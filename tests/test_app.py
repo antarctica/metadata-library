@@ -820,3 +820,9 @@ class AppTestCase(BaseTestCase):
             datetime.fromisoformat(end.text),
             self.record_attributes['resource']['extent']['temporal']['period']['end']
         )
+
+    def test_data_distribution(self):
+        data_distribution = self.test_response.find(
+            f"{{{self.ns.gmd}}}distributionInfo/{{{self.ns.gmd}}}MD_Distribution/"
+        )
+        self.assertIsNotNone(data_distribution)

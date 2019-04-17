@@ -80,6 +80,7 @@ class MetadataRecord(object):
         self._metadata_standard()
         self._reference_system_identifier()
         self._data_identification()
+        self._data_distribution()
 
     def _record(self) -> Element:
         return etree.Element(
@@ -130,6 +131,10 @@ class MetadataRecord(object):
     def _data_identification(self):
         data_identification = DataIdentification(record=self.record, attributes=self.attributes)
         data_identification.make_element()
+
+    def _data_distribution(self):
+        data_distribution = DataDistribution(record=self.record, attributes=self.attributes)
+        data_distribution.make_element()
 
 
 class MetadataRecordElement(object):
@@ -1501,6 +1506,10 @@ class TemporalExtent(MetadataRecordElement):
             end_position_element.text = self.element_attributes['period']['end'].isoformat()
 
 
+class DataDistribution(MetadataRecordElement):
+    def make_element(self):
+        data_distribution_wrapper = etree.SubElement(self.record, f"{{{self._ns.gmd}}}distributionInfo")
+        data_distribution_element = etree.SubElement(data_distribution_wrapper, f"{{{self._ns.gmd}}}MD_Distribution")
 def create_app():
     app = Flask(__name__)
 
