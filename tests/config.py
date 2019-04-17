@@ -334,6 +334,13 @@ test_record = {
                     'end': datetime(2018, 4, 26)
                 }
             }
-        }
+        },
+        'formats': [
+            {
+                'format': 'Microsoft Excel Workbook',
+                'href': 'https://www.iana.org/assignments/media-types/application/'
+                        'vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }
+        ],
     }
 }

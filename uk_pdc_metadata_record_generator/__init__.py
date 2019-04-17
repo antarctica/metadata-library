@@ -1510,6 +1510,47 @@ class DataDistribution(MetadataRecordElement):
     def make_element(self):
         data_distribution_wrapper = etree.SubElement(self.record, f"{{{self._ns.gmd}}}distributionInfo")
         data_distribution_element = etree.SubElement(data_distribution_wrapper, f"{{{self._ns.gmd}}}MD_Distribution")
+
+        for format_attributes in self.attributes['resource']['formats']:
+            distribution_format = DistributionFormat(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_distribution_element,
+                element_attributes=format_attributes
+            )
+            distribution_format.make_element()
+
+class DistributionFormat(MetadataRecordElement):
+    def make_element(self):
+        distribution_format_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}distributionFormat")
+        distribution_format_element = etree.SubElement(distribution_format_wrapper, f"{{{self._ns.gmd}}}MD_Format")
+
+        format_name_element = etree.SubElement(distribution_format_element, f"{{{self._ns.gmd}}}name")
+        if 'href' in self.element_attributes:
+            anchor = AnchorElement(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=format_name_element,
+                element_attributes=self.element_attributes,
+                element_value=self.element_attributes['format']
+            )
+            anchor.make_element()
+        else:
+            format_name_value = etree.SubElement(format_name_element, f"{{{self._ns.gco}}}CharacterString")
+            format_name_value.text = self.element_attributes['format']
+
+        if 'version' in self.element_attributes:
+            format_version_element = etree.SubElement(distribution_format_element, f"{{{self._ns.gmd}}}version")
+            format_version_value = etree.SubElement(format_version_element, f"{{{self._ns.gco}}}CharacterString")
+            format_version_value.text = self.element_attributes['version']
+        else:
+            etree.SubElement(
+                distribution_format_element,
+                f"{{{self._ns.gmd}}}version",
+                attrib={f"{{{self._ns.gco}}}nilReason": 'unknown'}
+            )
+
+
 def create_app():
     app = Flask(__name__)
 

@@ -826,3 +826,42 @@ class AppTestCase(BaseTestCase):
             f"{{{self.ns.gmd}}}distributionInfo/{{{self.ns.gmd}}}MD_Distribution/"
         )
         self.assertIsNotNone(data_distribution)
+
+    def test_data_distribution_formats(self):
+        for expected_format in self.record_attributes['resource']['formats']:
+            with self.subTest(expected_format=expected_format):
+                base_xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format'
+                xpath = f"{ base_xpath }[gmd:name[gco:CharacterString[text()=$format]]]"
+                format_identifier = expected_format['format']
+
+                if 'href' in expected_format:
+                    xpath = f"{base_xpath}[gmd:name[gmx:Anchor[@xlink:href=$format]]]"
+                    format_identifier = expected_format['href']
+
+                transfer_format = self.test_response.xpath(
+                    xpath,
+                    format=format_identifier,
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(transfer_format), 1)
+                transfer_format = transfer_format[0]
+
+                if 'href' in expected_format:
+                    transfer_format_value = transfer_format.find(f"{{{self.ns.gmd}}}name/{{{self.ns.gmx}}}Anchor")
+                    self.assertIsNotNone(transfer_format_value)
+                    self.assertEqual(
+                        transfer_format_value.attrib[f"{{{self.ns.xlink}}}href"],
+                        expected_format['href']
+                    )
+                    self.assertEqual(transfer_format_value.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                    if 'title' in expected_format:
+                        self.assertEqual(
+                            transfer_format_value.attrib[f"{{{self.ns.xlink}}}title"],
+                            expected_format['title']
+                        )
+                else:
+                    transfer_format_value = transfer_format.find(
+                        f"{{{self.ns.gmd}}}name/{{{self.ns.gco}}}CharacterString"
+                    )
+                    self.assertIsNotNone(transfer_format_value)
+                self.assertEqual(transfer_format_value.text, expected_format['format'])
