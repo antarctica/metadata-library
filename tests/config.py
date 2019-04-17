@@ -343,5 +343,24 @@ test_record = {
                         'vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             }
         ],
+        'transfer-options': [
+            {
+                'online-resource': {
+                    'href': 'https://www.bodc.ac.uk/data/bodc_database/nodb/data_collection/6618/',
+                    'title': 'Get Data',
+                    'description': 'Download underlying CTD data',
+                    'function': 'download'
+                }
+            },
+            {
+                'online-resource': {
+                    'href': 'https://ramadda.data.bas.ac.uk/repository/entry/show?entryid='
+                            '63af1e57-8f20-4fb1-a55c-bd0e703f8a56',
+                    'title': 'Get Data',
+                    'description': 'Download measurement data',
+                    'function': 'download'
+                }
+            }
+        ]
     }
 }

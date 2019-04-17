@@ -392,39 +392,14 @@ class ResponsibleParty(MetadataRecordElement):
             )
 
         if 'online-resource' in self.element_attributes:
-            online_resource_wrapper = etree.SubElement(contact_element, f"{{{self._ns.gmd}}}onlineResource")
-            online_resource_element = etree.SubElement(
-                online_resource_wrapper,
-                f"{{{self._ns.gmd}}}CI_OnlineResource"
+            online_resource_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}onlineResource")
+            online_resource = OnlineResource(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=online_resource_wrapper,
+                element_attributes=self.element_attributes['online-resource']
             )
-
-            if 'href' in self.element_attributes['online-resource']:
-                linkage = Linkage(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=online_resource_element,
-                    element_attributes=self.element_attributes['online-resource']
-                )
-                linkage.make_element()
-
-            if 'title' in self.element_attributes['online-resource']:
-                title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}name")
-                title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
-                title_element.text = self.element_attributes['online-resource']['title']
-
-            if 'description' in self.element_attributes['online-resource']:
-                title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}description")
-                title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
-                title_element.text = self.element_attributes['online-resource']['description']
-
-            if 'function' in self.element_attributes['online-resource']:
-                function = OnlineRole(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=responsible_party_element,
-                    element_attributes=self.element_attributes
-                )
-                function.make_element()
+            online_resource.make_element()
 
         if 'role' in self.element_attributes:
             role = Role(
@@ -434,6 +409,42 @@ class ResponsibleParty(MetadataRecordElement):
                 element_attributes=self.element_attributes
             )
             role.make_element()
+
+
+class OnlineResource(MetadataRecordElement):
+    def make_element(self):
+        online_resource_element = etree.SubElement(
+            self.parent_element,
+            f"{{{self._ns.gmd}}}CI_OnlineResource"
+        )
+
+        if 'href' in self.element_attributes:
+            linkage = Linkage(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=online_resource_element,
+                element_attributes=self.element_attributes
+            )
+            linkage.make_element()
+
+        if 'title' in self.element_attributes:
+            title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}name")
+            title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
+            title_element.text = self.element_attributes['title']
+
+        if 'description' in self.element_attributes:
+            title_wrapper = etree.SubElement(online_resource_element, f"{{{self._ns.gmd}}}description")
+            title_element = etree.SubElement(title_wrapper, f"{{{self._ns.gco}}}CharacterString")
+            title_element.text = self.element_attributes['description']
+
+        if 'function' in self.element_attributes:
+            function = OnlineRole(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=online_resource_element,
+                element_attributes=self.element_attributes
+            )
+            function.make_element()
 
 
 class Linkage(MetadataRecordElement):
@@ -1544,6 +1555,16 @@ class DataDistribution(MetadataRecordElement):
                 )
                 distributor.make_element()
 
+        for transfer_attributes in self.attributes['resource']['transfer-options']:
+            transfer_options = TransformOptions(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_distribution_element,
+                element_attributes=transfer_attributes
+            )
+            transfer_options.make_element()
+
+
 class DistributionFormat(MetadataRecordElement):
     def make_element(self):
         distribution_format_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}distributionFormat")
@@ -1588,6 +1609,24 @@ class Distributor(MetadataRecordElement):
             element_attributes=self.element_attributes
         )
         responsible_party.make_element()
+
+
+class TransformOptions(MetadataRecordElement):
+    def make_element(self):
+        transfer_options_container = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}transferOptions")
+        transfer_options_wrapper = etree.SubElement(
+            transfer_options_container,
+            f"{{{self._ns.gmd}}}MD_DigitalTransferOptions"
+        )
+        transfer_options_element = etree.SubElement(transfer_options_wrapper, f"{{{self._ns.gmd}}}onLine")
+
+        online_resource = OnlineResource(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=transfer_options_element,
+            element_attributes=self.element_attributes['online-resource']
+        )
+        online_resource.make_element()
 
 
 def create_app():
