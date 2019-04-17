@@ -81,6 +81,7 @@ class MetadataRecord(object):
         self._reference_system_identifier()
         self._data_identification()
         self._data_distribution()
+        self._data_quality()
 
     def _record(self) -> Element:
         return etree.Element(
@@ -135,6 +136,10 @@ class MetadataRecord(object):
     def _data_distribution(self):
         data_distribution = DataDistribution(record=self.record, attributes=self.attributes)
         data_distribution.make_element()
+
+    def _data_quality(self):
+        data_quality = DataQuality(record=self.record, attributes=self.attributes)
+        data_quality.make_element()
 
 
 class MetadataRecordElement(object):
@@ -1627,6 +1632,12 @@ class TransformOptions(MetadataRecordElement):
             element_attributes=self.element_attributes['online-resource']
         )
         online_resource.make_element()
+
+
+class DataQuality(MetadataRecordElement):
+    def make_element(self):
+        data_quality_wrapper = etree.SubElement(self.record, f"{{{self._ns.gmd}}}dataQualityInfo")
+        data_quality_element = etree.SubElement(data_quality_wrapper, f"{{{self._ns.gmd}}}DQ_DataQuality")
 
 
 def create_app():

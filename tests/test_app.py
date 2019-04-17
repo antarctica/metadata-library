@@ -922,3 +922,9 @@ class AppTestCase(BaseTestCase):
                 self.assertEqual(len(transfer_option), 1)
                 transfer_option = transfer_option[0]
                 self._test_online_resource(transfer_option, expected_transfer_options)
+
+    def test_data_quality(self):
+        data_quality = self.test_response.find(
+            f"{{{self.ns.gmd}}}dataQualityInfo/{{{self.ns.gmd}}}DQ_DataQuality"
+        )
+        self.assertIsNotNone(data_quality)
