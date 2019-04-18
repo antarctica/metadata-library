@@ -72,75 +72,88 @@ class MetadataRecord(object):
     def __init__(self, **kwargs):
         self.ns = Namespaces()
         self.attributes = kwargs
+        self.record = self.make_element()
 
-        self.record = self._record()
-        self._file_identifier()
-        self._language()
-        self._character_set()
-        self._hierarchy_level()
-        self._contact()
-        self._date_stamp()
-        self._metadata_maintenance()
-        self._metadata_standard()
-        self._reference_system_identifier()
-        self._data_identification()
-        self._data_distribution()
-        self._data_quality()
-
-    def _record(self) -> Element:
-        return etree.Element(
+    def make_element(self):
+        metadata_record = etree.Element(
             f"{{{self.ns.gmd}}}MD_Metadata",
             attrib={f"{{{ self.ns.xsi }}}schemaLocation": self.ns.schema_locations()},
             nsmap=self.ns.nsmap()
         )
 
-    def _file_identifier(self):
-        identifier = FileIdentifier(record=self.record, attributes=self.attributes)
+        identifier = FileIdentifier(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         identifier.make_element()
 
-    def _language(self):
-        language = Language(record=self.record, attributes=self.attributes)
+        language = Language(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         language.make_element()
 
-    def _character_set(self):
-        character_set = CharacterSet(record=self.record, attributes=self.attributes)
+        character_set = CharacterSet(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         character_set.make_element()
 
-    def _hierarchy_level(self):
-        hierarchy_level = HierarchyLevel(record=self.record, attributes=self.attributes)
+        hierarchy_level = HierarchyLevel(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         hierarchy_level.make_element()
 
-    def _contact(self):
-        contact = Contact(record=self.record, attributes=self.attributes)
+        contact = Contact(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         contact.make_element()
 
-    def _date_stamp(self):
-        date_stamp = DateStamp(record=self.record, attributes=self.attributes)
+        date_stamp = DateStamp(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         date_stamp.make_element()
 
-    def _metadata_maintenance(self):
-        metadata_maintenance = MetadataMaintenance(record=self.record, attributes=self.attributes)
+        metadata_maintenance = MetadataMaintenance(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         metadata_maintenance.make_element()
 
-    def _metadata_standard(self):
-        metadata_standard = MetadataStandard(record=self.record, attributes=self.attributes)
+        metadata_standard = MetadataStandard(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         metadata_standard.make_element()
 
-    def _reference_system_identifier(self):
-        reference_system_identifier = ReferenceSystemInfo(record=self.record, attributes=self.attributes)
+        reference_system_identifier = ReferenceSystemInfo(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         reference_system_identifier.make_element()
 
-    def _data_identification(self):
-        data_identification = DataIdentification(record=self.record, attributes=self.attributes)
+        data_identification = DataIdentification(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         data_identification.make_element()
 
-    def _data_distribution(self):
-        data_distribution = DataDistribution(record=self.record, attributes=self.attributes)
+        data_distribution = DataDistribution(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         data_distribution.make_element()
 
-    def _data_quality(self):
-        data_quality = DataQuality(record=self.record, attributes=self.attributes)
+        data_quality = DataQuality(
+            record=metadata_record,
+            attributes=self.attributes
+        )
         data_quality.make_element()
+
+        return metadata_record
 
 
 class MetadataRecordElement(object):
