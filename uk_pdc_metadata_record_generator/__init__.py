@@ -49,7 +49,7 @@ class Namespaces(object):
     def schema_locations(self) -> str:
         schema_locations = ''
         for prefix, location in self._schema_locations.items():
-            schema_locations = f"{ schema_locations } { self._namespaces[prefix] } { location }"
+            schema_locations = f"{schema_locations} {self._namespaces[prefix]} {location}"
 
         return schema_locations.lstrip()
 
@@ -727,7 +727,7 @@ class ReferenceSystemInfo(MetadataRecordElement):
                     reference_system_identifier_code_element,
                     f"{{{self._ns.gmx}}}Anchor",
                     attrib={
-                        f"{{{self._ns.xlink}}}href": f"http://www.opengis.net/def/crs/EPSG/0/{ _epsg_code }",
+                        f"{{{self._ns.xlink}}}href": f"http://www.opengis.net/def/crs/EPSG/0/{_epsg_code}",
                         f"{{{self._ns.xlink}}}actuate": 'onRequest'
                     }
                 )
@@ -1230,7 +1230,7 @@ class ResourceConstraints(MetadataRecordElement):
                         f"{{{self._ns.gco}}}CharacterString"
                     )
                     other_constraint_wrapper.text = f"Cite this information as: " \
-                        f"\"{ usage_constraint_attributes['required-citation'] }\""
+                        f"\"{usage_constraint_attributes['required-citation']}\""
 
 
 class AccessConstraint(CodeListElement):
@@ -1291,7 +1291,7 @@ class InspireLimitationsOnPublicAccess(MetadataRecordElement):
             parent_element=other_constraints_element,
             element_attributes={
                 'href': f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
-                f"{ self.element_attributes['inspire-limitations-on-public-access'] }"
+                f"{self.element_attributes['inspire-limitations-on-public-access']}"
             },
             element_value=self.element_attributes['inspire-limitations-on-public-access']
         )
@@ -1483,7 +1483,7 @@ class VerticalCRS(MetadataRecordElement):
             vertical_crs_element = etree.SubElement(
                 vertical_crs_wrapper,
                 f"{{{self._ns.gml}}}VerticalCRS",
-                attrib={f"{{{self._ns.gml}}}id": f"ogp-crs-{ _epsg_code }"}
+                attrib={f"{{{self._ns.gml}}}id": f"ogp-crs-{_epsg_code}"}
             )
             vertical_crs_id = etree.SubElement(
                 vertical_crs_element,
