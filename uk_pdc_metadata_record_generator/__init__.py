@@ -705,10 +705,6 @@ class ReferenceSystemInfo(MetadataRecordElement):
         )
 
         if 'code' in self.attributes['reference-system-info']:
-            reference_system_identifier_code_element = etree.SubElement(
-                reference_system_identifier_element,
-                f"{{{self._ns.gmd}}}code"
-            )
             _epsg_code = Utils.get_epsg_code(self.attributes['reference-system-info']['code'])
             if _epsg_code is not None:
                 reference_system_identifier_authority_element = etree.SubElement(
@@ -723,6 +719,10 @@ class ReferenceSystemInfo(MetadataRecordElement):
                 )
                 citation.make_element()
 
+                reference_system_identifier_code_element = etree.SubElement(
+                    reference_system_identifier_element,
+                    f"{{{self._ns.gmd}}}code"
+                )
                 reference_system_identifier_code_value = etree.SubElement(
                     reference_system_identifier_code_element,
                     f"{{{self._ns.gmx}}}Anchor",
@@ -732,6 +732,10 @@ class ReferenceSystemInfo(MetadataRecordElement):
                     }
                 )
             else:
+                reference_system_identifier_code_element = etree.SubElement(
+                    reference_system_identifier_element,
+                    f"{{{self._ns.gmd}}}code"
+                )
                 reference_system_identifier_code_value = etree.SubElement(
                     reference_system_identifier_code_element,
                     f"{{{self._ns.gco}}}CharacterString"
