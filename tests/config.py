@@ -23,7 +23,8 @@ test_record = {
         'online-resource': {
             'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
             'function': 'information'
-        }
+        },
+        'role': 'pointOfContact'
     },
     'date-stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
     'maintenance': {
