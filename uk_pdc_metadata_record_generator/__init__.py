@@ -775,13 +775,13 @@ class Citation(MetadataRecordElement):
 
         if 'dates' in self.element_attributes:
             for date_attributes in self.element_attributes['dates']:
-                date = Date(
+                citation_date = Date(
                     record=self.record,
                     attributes=self.attributes,
                     parent_element=citation_element,
                     element_attributes=date_attributes
                 )
-                date.make_element()
+                citation_date.make_element()
 
         if 'edition' in self.element_attributes:
             edition_element = etree.SubElement(citation_element, f"{{{self._ns.gmd}}}edition")
@@ -829,12 +829,6 @@ class Date(MetadataRecordElement):
         if 'date-precision' in self.element_attributes:
             if self.element_attributes['date-precision'] == 'year':
                 date_value.text = str(self.element_attributes['date'].year)
-            elif self.element_attributes['date-precision'] == 'month':
-                date_parts = [
-                    str(self.element_attributes['date'].year),
-                    str(self.element_attributes['date'].month)
-                ]
-                date_value.text = '-'.join(date_parts)
 
         date_type = DateType(
             record=self.record,
@@ -1785,6 +1779,7 @@ def create_app():
         record = MetadataRecord(**attributes)
         document = etree.ElementTree(record.record)
         document_str = etree.tostring(document, pretty_print=True, xml_declaration=True, encoding="utf-8")
+
         return Response(document_str, mimetype='text/xml')
 
     return app
