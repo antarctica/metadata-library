@@ -690,27 +690,6 @@ class MetadataStandard(MetadataRecordElement):
 
 
 class ReferenceSystemInfo(MetadataRecordElement):
-    epsg_citation = {
-        'title': {
-            'value': 'European Petroleum Survey Group (EPSG) Geodetic Parameter Registry'
-        },
-        'dates': [{
-            'date': date(2008, 11, 12),
-            'date-type': 'publication'
-        }],
-        'contact': {
-            'organisation': {
-                'name': 'European Petroleum Survey Group'
-            },
-            'email': 'EPSGadministrator@iogp.org',
-            'online-resource': {
-                'href': 'https://www.epsg-registry.org/',
-                'function': 'information'
-            },
-            'role': 'publisher'
-        }
-    }
-
     def make_element(self):
         reference_system_wrapper = etree.SubElement(self.record, f"{{{self.ns.gmd}}}referenceSystemInfo")
         reference_system_element = etree.SubElement(reference_system_wrapper, f"{{{self.ns.gmd}}}MD_ReferenceSystem")
@@ -723,43 +702,39 @@ class ReferenceSystemInfo(MetadataRecordElement):
             f"{{{self.ns.gmd}}}RS_Identifier"
         )
 
+        if 'authority' in self.attributes['reference-system-info']:
+            reference_system_identifier_authority_element = etree.SubElement(
+                reference_system_identifier_element,
+                f"{{{self.ns.gmd}}}authority"
+            )
+            citation = Citation(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=reference_system_identifier_authority_element,
+                element_attributes=self.attributes['reference-system-info']['authority']
+            )
+            citation.make_element()
+
         if 'code' in self.attributes['reference-system-info']:
-            _epsg_code = Utils.get_epsg_code(self.attributes['reference-system-info']['code'])
-            if _epsg_code is not None:
-                reference_system_identifier_authority_element = etree.SubElement(
-                    reference_system_identifier_element,
-                    f"{{{self.ns.gmd}}}authority"
-                )
-                citation = Citation(
+            reference_system_identifier_code_element = etree.SubElement(
+                reference_system_identifier_element,
+                f"{{{self.ns.gmd}}}code"
+            )
+            if 'href' in self.attributes['reference-system-info']['code']:
+                anchor = AnchorElement(
                     record=self.record,
                     attributes=self.attributes,
-                    parent_element=reference_system_identifier_authority_element,
-                    element_attributes=self.epsg_citation
+                    parent_element=reference_system_identifier_code_element,
+                    element_attributes=self.attributes['reference-system-info']['code'],
+                    element_value=self.attributes['reference-system-info']['code']['value']
                 )
-                citation.make_element()
-
-                reference_system_identifier_code_element = etree.SubElement(
-                    reference_system_identifier_element,
-                    f"{{{self.ns.gmd}}}code"
-                )
-                reference_system_identifier_code_value = etree.SubElement(
-                    reference_system_identifier_code_element,
-                    f"{{{self.ns.gmx}}}Anchor",
-                    attrib={
-                        f"{{{self.ns.xlink}}}href": f"http://www.opengis.net/def/crs/EPSG/0/{_epsg_code}",
-                        f"{{{self.ns.xlink}}}actuate": 'onRequest'
-                    }
-                )
+                anchor.make_element()
             else:
-                reference_system_identifier_code_element = etree.SubElement(
-                    reference_system_identifier_element,
-                    f"{{{self.ns.gmd}}}code"
-                )
                 reference_system_identifier_code_value = etree.SubElement(
                     reference_system_identifier_code_element,
                     f"{{{self.ns.gco}}}CharacterString"
                 )
-            reference_system_identifier_code_value.text = self.attributes['reference-system-info']['code']
+                reference_system_identifier_code_value.text = self.attributes['reference-system-info']['code']['value']
 
         if 'version' in self.attributes['reference-system-info']:
             reference_system_identifier_version_element = etree.SubElement(
@@ -1181,12 +1156,6 @@ class Thesaurus(MetadataRecordElement):
 
 
 class ResourceConstraints(MetadataRecordElement):
-    uk_ogl_v3_anchor = {
-        'href': 'http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/',
-        'value': 'This information is licensed under the Open Government Licence v3.0. To view this licence, visit '
-                 'http://www.nationalarchives.gov.uk/doc/open-government-licence/'
-    }
-
     def make_element(self):
         if 'access' in self.element_attributes['constraints']:
             for access_constraint_attributes in self.element_attributes['constraints']['access']:
@@ -1224,20 +1193,26 @@ class ResourceConstraints(MetadataRecordElement):
                 use_constraint.make_element()
 
                 if 'copyright-licence' in usage_constraint_attributes:
-                    if usage_constraint_attributes['copyright-licence'] == 'OGL-UK-3.0':
-                        other_constraint_element = etree.SubElement(
-                            constraints_element,
-                            f"{{{self.ns.gmd}}}otherConstraints"
-                        )
+                    other_constraint_element = etree.SubElement(
+                        constraints_element,
+                        f"{{{self.ns.gmd}}}otherConstraints"
+                    )
 
+                    if 'href' in usage_constraint_attributes['copyright-licence']:
                         copyright_statement = AnchorElement(
                             record=self.record,
                             attributes=self.attributes,
                             parent_element=other_constraint_element,
-                            element_attributes=self.uk_ogl_v3_anchor,
-                            element_value=self.uk_ogl_v3_anchor['value']
+                            element_attributes=usage_constraint_attributes['copyright-licence'],
+                            element_value=usage_constraint_attributes['copyright-licence']['statement']
                         )
                         copyright_statement.make_element()
+                    else:
+                        copyright_statement = etree.SubElement(
+                            other_constraint_element,
+                            f"{{{self.ns.gco}}}CharacterString"
+                        )
+                        copyright_statement.text = usage_constraint_attributes['copyright-licence']['statement']
 
                 if 'required-citation' in usage_constraint_attributes:
                     other_constraint_element = etree.SubElement(
@@ -1477,73 +1452,52 @@ class VerticalExtent(MetadataRecordElement):
 
 
 class VerticalCRS(MetadataRecordElement):
-    _epsg_crs_attributes = {
-        '5715': {
-            'name': 'MSL depth',
-            'remarks': 'Not specific to any location or epoch.',
-            'domain-of-validity': {
-                'href': 'urn:ogc:def:area:EPSG::1262'
-            },
-            'scope': 'Hydrography.',
-            'vertical-cs': {
-                'href': 'urn:ogc:def:cs:EPSG::6498'
-            },
-            'vertical-datum': {
-                'href': 'urn:ogc:def:datum:EPSG::5100'
-            }
-        }
-    }
-
     def make_element(self):
         vertical_crs_wrapper = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}verticalCRS")
+        vertical_crs_element = etree.SubElement(
+            vertical_crs_wrapper,
+            f"{{{self.ns.gml}}}VerticalCRS",
+            attrib={f"{{{self.ns.gml}}}id": self.element_attributes['identifier']}
+        )
+        vertical_crs_code = etree.SubElement(
+            vertical_crs_element,
+            f"{{{self.ns.gml}}}identifier",
+            attrib={'codeSpace': 'OGP'}
+        )
+        vertical_crs_code.text = self.element_attributes['code']
 
-        _epsg_code = Utils.get_epsg_code(self.element_attributes['code'])
-        if _epsg_code is not None:
-            vertical_crs_element = etree.SubElement(
-                vertical_crs_wrapper,
-                f"{{{self.ns.gml}}}VerticalCRS",
-                attrib={f"{{{self.ns.gml}}}id": f"ogp-crs-{_epsg_code}"}
-            )
-            vertical_crs_id = etree.SubElement(
-                vertical_crs_element,
-                f"{{{self.ns.gml}}}identifier",
-                attrib={'codeSpace': 'OGP'}
-            )
-            vertical_crs_id.text = self.element_attributes['code']
+        name = etree.SubElement(vertical_crs_element, f"{{{self.ns.gml}}}name")
+        name.text = self.element_attributes['name']
 
-            if _epsg_code in self._epsg_crs_attributes:
-                name = etree.SubElement(vertical_crs_element, f"{{{self.ns.gml}}}name")
-                name.text = self._epsg_crs_attributes[_epsg_code]['name']
+        remarks = etree.SubElement(vertical_crs_element, f"{{{self.ns.gml}}}remarks")
+        remarks.text = self.element_attributes['remarks']
 
-                remarks = etree.SubElement(vertical_crs_element, f"{{{self.ns.gml}}}remarks")
-                remarks.text = self._epsg_crs_attributes[_epsg_code]['remarks']
+        etree.SubElement(
+            vertical_crs_element,
+            f"{{{self.ns.gml}}}domainOfValidity",
+            attrib={
+                f"{{{self.ns.xlink}}}href": self.element_attributes['domain-of-validity']['href']
+            }
+        )
 
-                etree.SubElement(
-                    vertical_crs_element,
-                    f"{{{self.ns.gml}}}domainOfValidity",
-                    attrib={
-                        f"{{{self.ns.xlink}}}href": self._epsg_crs_attributes[_epsg_code]['domain-of-validity']['href']
-                    }
-                )
+        scope = etree.SubElement(vertical_crs_element, f"{{{self.ns.gml}}}scope")
+        scope.text = self.element_attributes['scope']
 
-                scope = etree.SubElement(vertical_crs_element, f"{{{self.ns.gml}}}scope")
-                scope.text = self._epsg_crs_attributes[_epsg_code]['scope']
+        etree.SubElement(
+            vertical_crs_element,
+            f"{{{self.ns.gml}}}verticalCS",
+            attrib={
+                f"{{{self.ns.xlink}}}href": self.element_attributes['vertical-cs']['href']
+            }
+        )
 
-                etree.SubElement(
-                    vertical_crs_element,
-                    f"{{{self.ns.gml}}}verticalCS",
-                    attrib={
-                        f"{{{self.ns.xlink}}}href": self._epsg_crs_attributes[_epsg_code]['vertical-cs']['href']
-                    }
-                )
-
-                etree.SubElement(
-                    vertical_crs_element,
-                    f"{{{self.ns.gml}}}verticalDatum",
-                    attrib={
-                        f"{{{self.ns.xlink}}}href": self._epsg_crs_attributes[_epsg_code]['vertical-datum']['href']
-                    }
-                )
+        etree.SubElement(
+            vertical_crs_element,
+            f"{{{self.ns.gml}}}verticalDatum",
+            attrib={
+                f"{{{self.ns.xlink}}}href": self.element_attributes['vertical-datum']['href']
+            }
+        )
 
 
 class TemporalExtent(MetadataRecordElement):
@@ -1720,22 +1674,6 @@ class Scope(MetadataRecordElement):
 
 
 class Report(MetadataRecordElement):
-    inspire_attributes = {
-        'title': {
-            'value': 'Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of '
-                     'the European Parliament and of the Council as regards interoperability of spatial data sets and '
-                     'services',
-            'href': 'http://data.europa.eu/eli/reg/2010/1089'
-        },
-        'dates': [
-            {
-                'date': date(2010, 12, 8),
-                'date-type': 'publication'
-            }
-        ],
-        'explanation': 'See the referenced specification'
-    }
-
     def make_element(self):
         report_wrapper = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}report")
         report_element = etree.SubElement(report_wrapper, f"{{{self.ns.gmd}}}DQ_DomainConsistency")
@@ -1754,30 +1692,25 @@ class Report(MetadataRecordElement):
         )
         identification_code_space_value.text = self.element_attributes['code-space']
 
-        report_attributes = None
-        if self.element_attributes['code'] == 'Conformity_001' and self.element_attributes['code-space'] == 'INSPIRE':
-            report_attributes = self.inspire_attributes
+        result_wrapper = etree.SubElement(report_element, f"{{{self.ns.gmd}}}result")
+        result_element = etree.SubElement(result_wrapper, f"{{{self.ns.gmd}}}DQ_ConformanceResult")
 
-        if report_attributes is not None:
-            result_wrapper = etree.SubElement(report_element, f"{{{self.ns.gmd}}}result")
-            result_element = etree.SubElement(result_wrapper, f"{{{self.ns.gmd}}}DQ_ConformanceResult")
+        specification_element = etree.SubElement(result_element, f"{{{self.ns.gmd}}}specification")
+        citation = Citation(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=specification_element,
+            element_attributes=self.element_attributes
+        )
+        citation.make_element()
 
-            specification_element = etree.SubElement(result_element, f"{{{self.ns.gmd}}}specification")
-            citation = Citation(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=specification_element,
-                element_attributes=report_attributes
-            )
-            citation.make_element()
+        explanation_element = etree.SubElement(result_element, f"{{{self.ns.gmd}}}explanation")
+        explanation_value = etree.SubElement(explanation_element, f"{{{self.ns.gco}}}CharacterString")
+        explanation_value.text = self.element_attributes['explanation']
 
-            explanation_element = etree.SubElement(result_element, f"{{{self.ns.gmd}}}explanation")
-            explanation_value = etree.SubElement(explanation_element, f"{{{self.ns.gco}}}CharacterString")
-            explanation_value.text = report_attributes['explanation']
-
-            pass_element = etree.SubElement(result_element, f"{{{self.ns.gmd}}}pass")
-            pass_value = etree.SubElement(pass_element, f"{{{self.ns.gco}}}Boolean")
-            pass_value.text = str(self.element_attributes['pass']).lower()
+        pass_element = etree.SubElement(result_element, f"{{{self.ns.gmd}}}pass")
+        pass_value = etree.SubElement(pass_element, f"{{{self.ns.gco}}}Boolean")
+        pass_value.text = str(self.element_attributes['pass']).lower()
 
 
 class Lineage(MetadataRecordElement):

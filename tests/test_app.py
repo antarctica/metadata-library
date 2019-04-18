@@ -11,8 +11,7 @@ from flask import current_app
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
 from lxml import etree  # nosec
 
-from uk_pdc_metadata_record_generator import create_app, Namespaces, MetadataRecord, ReferenceSystemInfo, \
-    ResourceConstraints, Report
+from uk_pdc_metadata_record_generator import create_app, Namespaces, MetadataRecord
 from tests import config
 
 
@@ -447,17 +446,16 @@ class AppTestCase(BaseTestCase):
             f"{{{self.ns.gmd}}}authority/{{{self.ns.gmd}}}CI_Citation"
         )
         self.assertIsNotNone(reference_system_authority)
-
-        self._test_citation(reference_system_authority, ReferenceSystemInfo.epsg_citation)
+        self._test_citation(reference_system_authority, self.record_attributes['reference-system-info']['authority'])
 
         reference_system_code = reference_system_identifier.find(f"{{{self.ns.gmd}}}code/{{{self.ns.gmx}}}Anchor")
         self.assertIsNotNone(reference_system_code)
         self.assertEqual(
             reference_system_code.attrib[f"{{{self.ns.xlink}}}href"],
-            'http://www.opengis.net/def/crs/EPSG/0/4326'
+            self.record_attributes['reference-system-info']['code']['href']
         )
         self.assertEqual(reference_system_code.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-        self.assertEqual(reference_system_code.text, self.record_attributes['reference-system-info']['code'])
+        self.assertEqual(reference_system_code.text, self.record_attributes['reference-system-info']['code']['value'])
 
         reference_system_version = reference_system_identifier.find(
             f"{{{self.ns.gmd}}}version/{{{self.ns.gco}}}CharacterString"
@@ -625,11 +623,11 @@ class AppTestCase(BaseTestCase):
 
         for expected_usage_constraint in self.record_attributes['resource']['constraints']['usage']:
             if 'copyright-licence' in expected_usage_constraint and \
-                    expected_usage_constraint['copyright-licence'] == 'OGL-UK-3.0':
+                    'href' in expected_usage_constraint['copyright-licence']:
                 constraint = self.test_response.xpath(
                     f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
                     f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor"
-                    f"[@xlink:href='{ResourceConstraints.uk_ogl_v3_anchor['href']}']]]",
+                    f"[@xlink:href='{expected_usage_constraint['copyright-licence']['href']}']]]",
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(constraint), 1)
@@ -653,12 +651,12 @@ class AppTestCase(BaseTestCase):
                 self.assertIsNotNone(copyright_constraint)
                 self.assertEqual(
                     copyright_constraint.attrib[f"{{{self.ns.xlink}}}href"],
-                    ResourceConstraints.uk_ogl_v3_anchor['href']
+                    expected_usage_constraint['copyright-licence']['href']
                 )
                 self.assertEqual(copyright_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
                 self.assertEqual(
                     copyright_constraint.text,
-                    ResourceConstraints.uk_ogl_v3_anchor['value']
+                    expected_usage_constraint['copyright-licence']['statement']
                 )
 
             if 'required-citation' in expected_usage_constraint:
@@ -790,7 +788,10 @@ class AppTestCase(BaseTestCase):
 
         vertical_crs = vertical_extent.find(f"{{{self.ns.gmd}}}verticalCRS/{{{self.ns.gml}}}VerticalCRS")
         self.assertIsNotNone(vertical_crs)
-        self.assertEqual(vertical_crs.attrib[f"{{{self.ns.gml}}}id"], 'ogp-crs-5715')
+        self.assertEqual(
+            vertical_crs.attrib[f"{{{self.ns.gml}}}id"],
+            self.record_attributes['resource']['extent']['vertical']['identifier']
+        )
 
         identifier = vertical_crs.find(f"{{{self.ns.gml}}}identifier")
         self.assertIsNotNone(identifier)
@@ -799,27 +800,36 @@ class AppTestCase(BaseTestCase):
 
         name = vertical_crs.find(f"{{{self.ns.gml}}}name")
         self.assertIsNotNone(name)
-        self.assertEqual(name.text, 'MSL depth')
+        self.assertEqual(name.text, self.record_attributes['resource']['extent']['vertical']['name'])
 
         remarks = vertical_crs.find(f"{{{self.ns.gml}}}remarks")
         self.assertIsNotNone(remarks)
-        self.assertEqual(remarks.text, 'Not specific to any location or epoch.')
+        self.assertEqual(remarks.text, self.record_attributes['resource']['extent']['vertical']['remarks'])
 
         domain = vertical_crs.find(f"{{{self.ns.gml}}}domainOfValidity")
         self.assertIsNotNone(domain)
-        self.assertEqual(domain.attrib[f"{{{self.ns.xlink}}}href"], 'urn:ogc:def:area:EPSG::1262')
+        self.assertEqual(
+            domain.attrib[f"{{{self.ns.xlink}}}href"],
+            self.record_attributes['resource']['extent']['vertical']['domain-of-validity']['href']
+        )
 
         scope = vertical_crs.find(f"{{{self.ns.gml}}}scope")
         self.assertIsNotNone(scope)
-        self.assertEqual(scope.text, 'Hydrography.')
+        self.assertEqual(scope.text, self.record_attributes['resource']['extent']['vertical']['scope'])
 
         vertical_cs = vertical_crs.find(f"{{{self.ns.gml}}}verticalCS")
         self.assertIsNotNone(vertical_cs)
-        self.assertEqual(vertical_cs.attrib[f"{{{self.ns.xlink}}}href"], 'urn:ogc:def:cs:EPSG::6498')
+        self.assertEqual(
+            vertical_cs.attrib[f"{{{self.ns.xlink}}}href"],
+            self.record_attributes['resource']['extent']['vertical']['vertical-cs']['href']
+        )
 
         vertical_datum = vertical_crs.find(f"{{{self.ns.gml}}}verticalDatum")
         self.assertIsNotNone(vertical_datum)
-        self.assertEqual(vertical_datum.attrib[f"{{{self.ns.xlink}}}href"], 'urn:ogc:def:datum:EPSG::5100')
+        self.assertEqual(
+            vertical_datum.attrib[f"{{{self.ns.xlink}}}href"],
+            self.record_attributes['resource']['extent']['vertical']['vertical-datum']['href']
+        )
 
     def test_data_identification_extent_temporal(self):
         temporal_extent = self.test_response.find(
@@ -1007,21 +1017,17 @@ class AppTestCase(BaseTestCase):
                     f"{{{self.ns.gmd}}}result/{{{self.ns.gmd}}}DQ_ConformanceResult"
                 )
 
-                report_attributes = None
-                if expected_measure['code'] == 'Conformity_001' and expected_measure['code-space'] == 'INSPIRE':
-                    report_attributes = Report.inspire_attributes
-
                 measure_citation = measure_result.find(
                     f"{{{self.ns.gmd}}}specification/{{{self.ns.gmd}}}CI_Citation"
                 )
                 self.assertIsNotNone(measure_citation)
-                self._test_citation(measure_citation, report_attributes)
+                self._test_citation(measure_citation, expected_measure)
 
                 measure_explanation = measure_result.find(
                     f"{{{self.ns.gmd}}}explanation/{{{self.ns.gco}}}CharacterString"
                 )
                 self.assertIsNotNone(measure_explanation)
-                self.assertEqual(measure_explanation.text, report_attributes['explanation'])
+                self.assertEqual(measure_explanation.text, expected_measure['explanation'])
 
                 measure_pass = measure_result.find(
                     f"{{{self.ns.gmd}}}pass/{{{self.ns.gco}}}Boolean"
