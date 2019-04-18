@@ -1,6 +1,6 @@
 import unittest
 
-from datetime import datetime
+from datetime import datetime, date
 from http import HTTPStatus
 
 from flask import current_app
@@ -46,6 +46,15 @@ class BaseTestCase(unittest.TestCase):
 
 
 class AppTestCase(BaseTestCase):
+    @staticmethod
+    def _test_date_datetime(date_datetime: str, expected_date_datetime):
+        if type(expected_date_datetime) is date:
+            return date.fromisoformat(date_datetime)
+        elif type(expected_date_datetime) is datetime:
+            return datetime.fromisoformat(date_datetime)
+
+        raise TypeError('expected value must be a date or datetime')
+
     def _test_online_resource(self, online_resource, online_resource_attributes):
         if 'href' in online_resource_attributes:
             linkage = online_resource.find(f"{{{self.ns.gmd}}}linkage/{{{self.ns.gmd}}}URL")
@@ -224,7 +233,12 @@ class AppTestCase(BaseTestCase):
                 record_date_container = record_date_container[0]
                 self.assertEqual(record_date_container.tag, f"{{{self.ns.gmd}}}CI_Date")
 
-                record_date = record_date_container.find(f"{{{self.ns.gmd}}}date/{{{self.ns.gco}}}DateTime")
+                date_element = None
+                if type(expected_date['date']) is date:
+                    date_element = f"{{{self.ns.gco}}}Date"
+                elif type(expected_date['date']) is datetime:
+                    date_element = f"{{{self.ns.gco}}}DateTime"
+                record_date = record_date_container.find(f"{{{self.ns.gmd}}}date/{ date_element }")
                 self.assertIsNotNone(record_date)
 
                 # Partial dates (e.g. year only, '2018') are not supported by Python despite being allowed by ISO 8601.
@@ -239,7 +253,10 @@ class AppTestCase(BaseTestCase):
                         ]
                         self.assertEqual(record_date.text, '-'.join(_expected_date))
                 else:
-                    self.assertEqual(datetime.fromisoformat(record_date.text), expected_date['date'])
+                    self.assertEqual(
+                        self._test_date_datetime(record_date.text, expected_date['date']),
+                        expected_date['date']
+                    )
 
                 record_date_type = record_date_container.find(
                     f"{{{self.ns.gmd}}}dateType/{{{self.ns.gmd}}}CI_DateTypeCode"
@@ -814,13 +831,20 @@ class AppTestCase(BaseTestCase):
         beginning = temporal_extent.find(f"{{{self.ns.gml}}}beginPosition")
         self.assertIsNotNone(datetime.fromisoformat(beginning.text))
         self.assertEqual(
-            datetime.fromisoformat(beginning.text),
-            self.record_attributes['resource']['extent']['temporal']['period']['start'])
+            self._test_date_datetime(
+                beginning.text,
+                self.record_attributes['resource']['extent']['temporal']['period']['start']
+            ),
+            self.record_attributes['resource']['extent']['temporal']['period']['start']
+        )
 
         end = temporal_extent.find(f"{{{self.ns.gml}}}endPosition")
         self.assertIsNotNone(end)
         self.assertEqual(
-            datetime.fromisoformat(end.text),
+            self._test_date_datetime(
+                end.text,
+                self.record_attributes['resource']['extent']['temporal']['period']['end']
+            ),
             self.record_attributes['resource']['extent']['temporal']['period']['end']
         )
 

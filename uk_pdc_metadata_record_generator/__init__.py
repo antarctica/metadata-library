@@ -1,5 +1,5 @@
-from datetime import datetime
-from typing import Optional
+from datetime import datetime, date
+from typing import Optional, Union
 
 from flask import Flask, Response
 
@@ -62,6 +62,10 @@ class Utils(object):
             return code_parts[-1]
 
         return None
+
+    @staticmethod
+    def format_date_string(date_datetime: Union[date, datetime]) -> str:
+        return date_datetime.isoformat()
 
 
 class MetadataRecord(object):
@@ -543,7 +547,7 @@ class DateStamp(MetadataRecordElement):
     def make_element(self):
         date_stamp_element = etree.SubElement(self.record, f"{{{self._ns.gmd}}}dateStamp")
         date_stamp_value = etree.SubElement(date_stamp_element, f"{{{self._ns.gco}}}DateTime")
-        date_stamp_value.text = self.attributes['date-stamp'].isoformat()
+        date_stamp_value.text = Utils.format_date_string(self.attributes['date-stamp'])
 
 
 class MetadataMaintenance(MetadataRecordElement):
@@ -672,7 +676,7 @@ class ReferenceSystemInfo(MetadataRecordElement):
             'value': 'European Petroleum Survey Group (EPSG) Geodetic Parameter Registry'
         },
         'dates': [{
-            'date': datetime(2008, 11, 12),
+            'date': date(2008, 11, 12),
             'date-type': 'publication'
         }],
         'contact': {
@@ -810,8 +814,13 @@ class Date(MetadataRecordElement):
         date_container_element = etree.SubElement(date_container_wrapper, f"{{{self._ns.gmd}}}CI_Date")
 
         date_element = etree.SubElement(date_container_element, f"{{{self._ns.gmd}}}date")
-        date_value = etree.SubElement(date_element, f"{{{self._ns.gco}}}DateTime")
-        date_value.text = self.element_attributes['date'].isoformat()
+
+        date_value_element = f"{{{self._ns.gco}}}Date"
+        if isinstance(self.element_attributes['date'], datetime):
+            date_value_element = f"{{{self._ns.gco}}}DateTime"
+
+        date_value = etree.SubElement(date_element, date_value_element)
+        date_value.text = Utils.format_date_string(self.element_attributes['date'])
 
         if 'date-precision' in self.element_attributes:
             if self.element_attributes['date-precision'] == 'year':
@@ -1533,10 +1542,10 @@ class TemporalExtent(MetadataRecordElement):
                 attrib={f"{{{self._ns.gml}}}id": 'boundingExtent'}
             )
             begin_position_element = etree.SubElement(time_period_element, f"{{{self._ns.gml}}}beginPosition")
-            begin_position_element.text = self.element_attributes['period']['start'].isoformat()
+            begin_position_element.text = Utils.format_date_string(self.element_attributes['period']['start'])
 
             end_position_element = etree.SubElement(time_period_element, f"{{{self._ns.gml}}}endPosition")
-            end_position_element.text = self.element_attributes['period']['end'].isoformat()
+            end_position_element.text = Utils.format_date_string(self.element_attributes['period']['end'])
 
 
 class DataDistribution(MetadataRecordElement):
@@ -1703,7 +1712,7 @@ class Report(MetadataRecordElement):
         },
         'dates': [
             {
-                'date': datetime(2010, 12, 8),
+                'date': date(2010, 12, 8),
                 'date-type': 'publication'
             }
         ],
