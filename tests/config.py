@@ -213,8 +213,8 @@ test_record = {
                             'title': 'General Multilingual Environmental Thesaurus (GEMET) themes',
                             'function': 'information'
                         },
+                        'role': 'publisher'
                     },
-                    'role': 'originator'
                 }
             },
             {
@@ -266,8 +266,8 @@ test_record = {
                                            'on how users can participate in the further development of the keywords.',
                             'function': 'information'
                         },
-                    },
-                    'role': 'originator'
+                        'role': 'publisher'
+                    }
                 }
             },
             {
