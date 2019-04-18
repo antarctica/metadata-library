@@ -1097,12 +1097,12 @@ class DescriptiveKeywords(MetadataRecordElement):
                     attributes=self.attributes,
                     parent_element=term_element,
                     element_attributes=term,
-                    element_value=term['title']
+                    element_value=term['term']
                 )
                 anchor.make_element()
             else:
                 term_value = etree.SubElement(term_element, f"{{{self._ns.gco}}}CharacterString")
-                term_value.text = term['title']
+                term_value.text = term['term']
 
         keyword_type = DescriptiveKeywordsType(
             record=self.record,

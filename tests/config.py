@@ -177,15 +177,15 @@ test_record = {
             {
                 'terms': [
                     {
-                        'title': 'Oceanographic geographical features',
+                        'term': 'Oceanographic geographical features',
                         'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/of'
                     },
                     {
-                        'title': 'Sea regions',
+                        'term': 'Sea regions',
                         'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/sr'
                     },
                     {
-                        'title': 'Land Cover',
+                        'term': 'Land Cover',
                         'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/lc'
                     }
                 ],
@@ -219,19 +219,19 @@ test_record = {
             {
                 'terms': [
                     {
-                        'title': 'EARTH SCIENCE &gt; Hydrosphere &gt; Snow/Ice &gt; Snow Melt'
+                        'term': 'EARTH SCIENCE > Hydrosphere > Snow/Ice > Snow Melt'
                     },
                     {
-                        'title': 'EARTH SCIENCE &gt; Hydrosphere &gt; Surface Water'
+                        'term': 'EARTH SCIENCE > Hydrosphere > Surface Water'
                     },
                     {
-                        'title': 'EARTH SCIENCE &gt; Oceans &gt; Sea Ice &gt; Isotopes'
+                        'term': 'EARTH SCIENCE > Oceans > Sea Ice > Isotopes'
                     },
                     {
-                        'title': 'EARTH SCIENCE &gt; Oceans &gt; Sea Ice &gt; Pack Ice'
+                        'term': 'EARTH SCIENCE > Oceans > Sea Ice > Pack Ice'
                     },
                     {
-                        'title': 'EARTH SCIENCE &gt; Oceans &gt; Sea Ice &gt; Salinity'
+                        'term': 'EARTH SCIENCE > Oceans > Sea Ice > Salinity'
                     }
                 ],
                 'type': 'theme',
@@ -272,16 +272,16 @@ test_record = {
             {
                 'terms': [
                     {
-                        'title': 'd18O'
+                        'term': 'd18O'
                     },
                     {
-                        'title': 'meltwater pool'
+                        'term': 'meltwater pool'
                     },
                     {
-                        'title': 'salinity'
+                        'term': 'salinity'
                     },
                     {
-                        'title': 'sea ice'
+                        'term': 'sea ice'
                     }
                 ],
                 'type': 'theme'
