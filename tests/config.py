@@ -361,6 +361,13 @@ test_record = {
                     'function': 'download'
                 }
             }
-        ]
+        ],
+        'measures': [
+            {
+                'code': 'Conformity_001',
+                'code-space': 'INSPIRE',
+                'pass': True
+            }
+        ],
     }
 }

@@ -12,7 +12,7 @@ from flask import current_app
 from lxml import etree  # nosec
 
 from uk_pdc_metadata_record_generator import create_app, Namespaces, MetadataRecord, ReferenceSystemInfo, \
-    ResourceConstraints
+    ResourceConstraints, Report
 from tests import config
 
 
@@ -945,3 +945,60 @@ class AppTestCase(BaseTestCase):
         )
         self.assertEqual(scope_code.attrib['codeListValue'], self.record_attributes['hierarchy-level'])
         self.assertEqual(scope_code.text, self.record_attributes['hierarchy-level'])
+
+    def test_data_quality_measures(self):
+        for expected_measure in self.record_attributes['resource']['measures']:
+            with self.subTest(expected_measure=expected_measure):
+                xpath = './gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency' \
+                        '[gmd:measureIdentification[gmd:RS_Identifier[gmd:code[gco:CharacterString[text()=$code]] and' \
+                        ' gmd:codeSpace[gco:CharacterString[text()=$code_space]]]]]'
+
+                measure = self.test_response.xpath(
+                    xpath,
+                    code=expected_measure['code'],
+                    code_space=expected_measure['code-space'],
+                    namespaces=self.ns.nsmap()
+                )
+                self.assertEqual(len(measure), 1)
+                measure = measure[0]
+
+                measure_identifier = measure.find(
+                    f"{{{ self.ns.gmd }}}measureIdentification/{{{ self.ns.gmd }}}RS_Identifier"
+                )
+                self.assertIsNotNone(measure_identifier)
+                measure_identifier_code = measure_identifier.find(
+                    f"{{{ self.ns.gmd }}}code/{{{ self.ns.gco }}}CharacterString"
+                )
+                self.assertIsNotNone(measure_identifier_code)
+                self.assertEqual(measure_identifier_code.text, expected_measure['code'])
+                measure_identifier_code_space = measure_identifier.find(
+                    f"{{{self.ns.gmd}}}codeSpace/{{{ self.ns.gco }}}CharacterString"
+                )
+                self.assertIsNotNone(measure_identifier_code_space)
+                self.assertEqual(measure_identifier_code_space.text, expected_measure['code-space'])
+
+                measure_result = measure.find(
+                    f"{{{ self.ns.gmd }}}result/{{{ self.ns.gmd }}}DQ_ConformanceResult"
+                )
+
+                report_attributes = None
+                if expected_measure['code'] == 'Conformity_001' and expected_measure['code-space'] == 'INSPIRE':
+                    report_attributes = Report.inspire_attributes
+
+                measure_citation = measure_result.find(
+                    f"{{{ self.ns.gmd }}}specification/{{{ self.ns.gmd }}}CI_Citation"
+                )
+                self.assertIsNotNone(measure_citation)
+                self._test_citation(measure_citation, report_attributes)
+
+                measure_explanation = measure_result.find(
+                    f"{{{ self.ns.gmd }}}explanation/{{{ self.ns.gco }}}CharacterString"
+                )
+                self.assertIsNotNone(measure_explanation)
+                self.assertEqual(measure_explanation.text, report_attributes['explanation'])
+
+                measure_pass = measure_result.find(
+                    f"{{{ self.ns.gmd }}}pass/{{{ self.ns.gco }}}Boolean"
+                )
+                self.assertIsNotNone(measure_pass)
+                self.assertEqual(measure_pass.text, str(expected_measure['pass']).lower())

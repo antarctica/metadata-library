@@ -1662,6 +1662,15 @@ class DataQuality(MetadataRecordElement):
         )
         scope.make_element()
 
+        for measure_attributes in self.attributes['resource']['measures']:
+            report = Report(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_quality_element,
+                element_attributes=measure_attributes
+            )
+            report.make_element()
+
 
 class Scope(MetadataRecordElement):
     def make_element(self):
@@ -1677,8 +1686,64 @@ class Scope(MetadataRecordElement):
 
 
 class Report(MetadataRecordElement):
+    inspire_attributes = {
+        'title': {
+            'value': 'Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of '
+                     'the European Parliament and of the Council as regards interoperability of spatial data sets and '
+                     'services',
+            'href': 'http://data.europa.eu/eli/reg/2010/1089'
+        },
+        'dates': [
+            {
+                'date': datetime(2010, 12, 8),
+                'date-type': 'publication'
+            }
+        ],
+        'explanation': 'See the referenced specification'
+    }
+
     def make_element(self):
-        pass
+        report_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}report")
+        report_element = etree.SubElement(report_wrapper, f"{{{self._ns.gmd}}}DQ_DomainConsistency")
+
+        identification_wrapper = etree.SubElement(report_element, f"{{{self._ns.gmd}}}measureIdentification")
+        identification_element = etree.SubElement(identification_wrapper, f"{{{self._ns.gmd}}}RS_Identifier")
+
+        identification_code_element = etree.SubElement(identification_element, f"{{{self._ns.gmd}}}code")
+        identification_code_value = etree.SubElement(identification_code_element, f"{{{self._ns.gco}}}CharacterString")
+        identification_code_value.text = self.element_attributes['code']
+
+        identification_code_space_element = etree.SubElement(identification_element, f"{{{self._ns.gmd}}}codeSpace")
+        identification_code_space_value = etree.SubElement(
+            identification_code_space_element,
+            f"{{{self._ns.gco}}}CharacterString"
+        )
+        identification_code_space_value.text = self.element_attributes['code-space']
+
+        report_attributes = None
+        if self.element_attributes['code'] == 'Conformity_001' and self.element_attributes['code-space'] == 'INSPIRE':
+            report_attributes = self.inspire_attributes
+
+        if report_attributes is not None:
+            result_wrapper = etree.SubElement(report_element, f"{{{self._ns.gmd}}}result")
+            result_element = etree.SubElement(result_wrapper, f"{{{self._ns.gmd}}}DQ_ConformanceResult")
+
+            specification_element = etree.SubElement(result_element, f"{{{self._ns.gmd}}}specification")
+            citation = Citation(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=specification_element,
+                element_attributes=report_attributes
+            )
+            citation.make_element()
+
+            explanation_element = etree.SubElement(result_element, f"{{{self._ns.gmd}}}explanation")
+            explanation_value = etree.SubElement(explanation_element, f"{{{self._ns.gco}}}CharacterString")
+            explanation_value.text = report_attributes['explanation']
+
+            pass_element = etree.SubElement(result_element, f"{{{self._ns.gmd}}}pass")
+            pass_value = etree.SubElement(pass_element, f"{{{self._ns.gco}}}Boolean")
+            pass_value.text = str(self.element_attributes['pass']).lower()
 
 
 class Lineage(MetadataRecordElement):
