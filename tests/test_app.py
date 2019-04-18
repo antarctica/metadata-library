@@ -568,15 +568,17 @@ class AppTestCase(BaseTestCase):
                         value_element = 'gmx:Anchor'
                     term = keyword.xpath(
                         f"./gmd:keyword/{value_element}[text()=$term]",
-                        term=expected_term['title'],
+                        term=expected_term['term'],
                         namespaces=self.ns.nsmap()
                     )
                     self.assertEqual(len(term), 1)
                     term = term[0]
-                    self.assertEqual(term.text, expected_term['title'])
+                    self.assertEqual(term.text, expected_term['term'])
                     if 'href' in expected_term:
                         self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}href"], expected_term['href'])
                         self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                    if 'title' in expected_term:
+                        self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}title"], expected_term['title'])
 
                 thesaurus_citation = keyword.find(f"{{{self.ns.gmd}}}thesaurusName/{{{self.ns.gmd}}}CI_Citation")
                 self.assertIsNotNone(thesaurus_citation)
