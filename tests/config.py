@@ -369,5 +369,22 @@ test_record = {
                 'pass': True
             }
         ],
+        'lineage': 'At all sample locations, 2 or more salinity bottles and d18O vials were filled following the usual '
+                   'procedure. The d18O vials were rinsed 3 times, filled and dried before being closed with a stopper '
+                   'and sealed with the crimper. Oxygen isotope (d18O) measurements were made using the CO2 '
+                   'equilibration method with an Isoprime 100 mass spectrometer plus Aquaprep device. 90 samples '
+                   '(200&#181;l of water) were loaded into Labco Limited exetainers (3.7ml) and placed in the heated '
+                   'sample tray at 40&#176;C. The exetainers were then evacuated to remove atmosphere then flushed '
+                   'with CO2 and left to equilibrate for between 12 (first sample) - 37 (last sample) hours. Each '
+                   'individual gas sample was then admitted to the cryogenic water trap where any water vapour is '
+                   'removed. The dry sample gas was then expanded into the dual inlet where it was measured on the '
+                   'transducer before being expanded in the dual inlet bellows. Ionvantage software then balances the '
+                   'reference bellows relative to this volume. The sample and reference CO2 gases enter alternatively '
+                   'into the Isoprime100 through the dual changeover valve for isotope ratio measurement. In each run '
+                   'two laboratory standards (CA-HI and CA-LO) plus up to 2 secondary standards were analysed in '
+                   'triplicate. The value of these laboratory standards has been accurately determined by comparison '
+                   'with international calibration and reference materials (VSMOW2, SLAP2 and GISP) and so the 18O/16O '
+                   'ratios (versus VSMOW2) of the unknown samples can be calculated and are expressed in delta units, '
+                   'd18O (parts per mille). Errors are &lt; +/- 0.05 per mil.'
     }
 }

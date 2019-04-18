@@ -1671,6 +1671,14 @@ class DataQuality(MetadataRecordElement):
             )
             report.make_element()
 
+        lineage = Lineage(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_quality_element,
+            element_attributes=self.attributes['resource']
+        )
+        lineage.make_element()
+
 
 class Scope(MetadataRecordElement):
     def make_element(self):
@@ -1748,7 +1756,11 @@ class Report(MetadataRecordElement):
 
 class Lineage(MetadataRecordElement):
     def make_element(self):
-        pass
+        lineage_container = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}lineage")
+        lineage_wrapper = etree.SubElement(lineage_container, f"{{{self._ns.gmd}}}LI_Lineage")
+        lineage_element = etree.SubElement(lineage_wrapper, f"{{{self._ns.gmd}}}statement")
+        lineage_value = etree.SubElement(lineage_element, f"{{{self._ns.gco}}}CharacterString")
+        lineage_value.text = self.element_attributes['lineage']
 
 
 def create_app():

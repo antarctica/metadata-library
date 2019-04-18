@@ -1002,3 +1002,11 @@ class AppTestCase(BaseTestCase):
                 )
                 self.assertIsNotNone(measure_pass)
                 self.assertEqual(measure_pass.text, str(expected_measure['pass']).lower())
+
+    def test_data_quality_lineage(self):
+        lineage = self.test_response.find(
+            f"{{{self.ns.gmd}}}dataQualityInfo/{{{self.ns.gmd}}}DQ_DataQuality/{{{self.ns.gmd}}}lineage/"
+            f"{{{self.ns.gmd}}}LI_Lineage/{{{self.ns.gmd}}}statement/{{{self.ns.gco}}}CharacterString"
+        )
+        self.assertIsNotNone(lineage)
+        self.assertEqual(lineage.text, self.record_attributes['resource']['lineage'])
