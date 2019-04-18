@@ -112,7 +112,7 @@ test_record = {
                 'organisation': {
                     'name': 'British Geological Survey'
                 },
-                'email': 'no-reply@bas.ac.uk',
+                'email': 'noreply@bas.ac.uk',
                 'online-resource': {
                     'href': 'https://orcid.org/0000-0003-3849-5179',
                     'title': 'ORCID record',
@@ -132,7 +132,7 @@ test_record = {
                 'organisation': {
                     'name': 'British Geological Survey'
                 },
-                'email': 'no-reply@bas.ac.uk',
+                'email': 'noreply@bas.ac.uk',
                 'online-resource': {
                     'href': 'https://orcid.org/0000-0003-1115-5166',
                     'title': 'ORCID record',
