@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 
 test_record = {
     'file_identifier': '123',
@@ -52,12 +52,12 @@ test_record = {
                     'identify sources and changes of freshwater contributions to the ocean.&#13;',
         'dates': [
             {
-                'date': datetime(2018, 1, 1),
+                'date': date(2018, 1, 1),
                 'date-precision': 'year',
                 'date-type': 'creation'
             },
             {
-                'date': datetime(2018, 1, 1),
+                'date': date(2018, 1, 1),
                 'date-precision': 'year',
                 'date-type': 'revision'
             },
@@ -197,7 +197,7 @@ test_record = {
                     },
                     'dates': [
                         {
-                            'date': datetime(2018, 8, 16),
+                            'date': date(2018, 8, 16),
                             'date-type': 'publication'
                         }
                     ],
@@ -242,7 +242,7 @@ test_record = {
                     },
                     'dates': [
                         {
-                            'date': datetime(2018, 3, 15),
+                            'date': date(2018, 3, 15),
                             'date-type': 'publication'
                         }
                     ],
@@ -331,8 +331,8 @@ test_record = {
             },
             'temporal': {
                 'period': {
-                    'start': datetime(2016, 3, 31),
-                    'end': datetime(2018, 4, 26)
+                    'start': date(2016, 3, 31),
+                    'end': date(2016, 4, 26)
                 }
             }
         },
