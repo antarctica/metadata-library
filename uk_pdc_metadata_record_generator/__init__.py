@@ -418,7 +418,7 @@ class ResponsibleParty(MetadataRecordElement):
             )
 
         if 'online-resource' in self.element_attributes:
-            online_resource_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}onlineResource")
+            online_resource_wrapper = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}onlineResource")
             online_resource = OnlineResource(
                 record=self.record,
                 attributes=self.attributes,
@@ -705,10 +705,6 @@ class ReferenceSystemInfo(MetadataRecordElement):
         )
 
         if 'code' in self.attributes['reference-system-info']:
-            reference_system_identifier_code_element = etree.SubElement(
-                reference_system_identifier_element,
-                f"{{{self._ns.gmd}}}code"
-            )
             _epsg_code = Utils.get_epsg_code(self.attributes['reference-system-info']['code'])
             if _epsg_code is not None:
                 reference_system_identifier_authority_element = etree.SubElement(
@@ -723,6 +719,10 @@ class ReferenceSystemInfo(MetadataRecordElement):
                 )
                 citation.make_element()
 
+                reference_system_identifier_code_element = etree.SubElement(
+                    reference_system_identifier_element,
+                    f"{{{self._ns.gmd}}}code"
+                )
                 reference_system_identifier_code_value = etree.SubElement(
                     reference_system_identifier_code_element,
                     f"{{{self._ns.gmx}}}Anchor",
@@ -732,6 +732,10 @@ class ReferenceSystemInfo(MetadataRecordElement):
                     }
                 )
             else:
+                reference_system_identifier_code_element = etree.SubElement(
+                    reference_system_identifier_element,
+                    f"{{{self._ns.gmd}}}code"
+                )
                 reference_system_identifier_code_value = etree.SubElement(
                     reference_system_identifier_code_element,
                     f"{{{self._ns.gco}}}CharacterString"
@@ -771,13 +775,13 @@ class Citation(MetadataRecordElement):
 
         if 'dates' in self.element_attributes:
             for date_attributes in self.element_attributes['dates']:
-                date = Date(
+                citation_date = Date(
                     record=self.record,
                     attributes=self.attributes,
                     parent_element=citation_element,
                     element_attributes=date_attributes
                 )
-                date.make_element()
+                citation_date.make_element()
 
         if 'edition' in self.element_attributes:
             edition_element = etree.SubElement(citation_element, f"{{{self._ns.gmd}}}edition")
@@ -825,12 +829,6 @@ class Date(MetadataRecordElement):
         if 'date-precision' in self.element_attributes:
             if self.element_attributes['date-precision'] == 'year':
                 date_value.text = str(self.element_attributes['date'].year)
-            elif self.element_attributes['date-precision'] == 'month':
-                date_parts = [
-                    str(self.element_attributes['date'].year),
-                    str(self.element_attributes['date'].month)
-                ]
-                date_value.text = '-'.join(date_parts)
 
         date_type = DateType(
             record=self.record,
@@ -1781,6 +1779,7 @@ def create_app():
         record = MetadataRecord(**attributes)
         document = etree.ElementTree(record.record)
         document_str = etree.tostring(document, pretty_print=True, xml_declaration=True, encoding="utf-8")
+
         return Response(document_str, mimetype='text/xml')
 
     return app

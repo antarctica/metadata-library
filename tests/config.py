@@ -1,7 +1,7 @@
 from datetime import datetime, timezone, date
 
 test_record = {
-    'file_identifier': '123',
+    'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
     'language': 'eng',
     'character_set': 'utf8',
     'hierarchy-level': 'dataset',
@@ -23,7 +23,8 @@ test_record = {
         'online-resource': {
             'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
             'function': 'information'
-        }
+        },
+        'role': 'pointOfContact'
     },
     'date-stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
     'maintenance': {
@@ -45,11 +46,11 @@ test_record = {
         },
         'abstract': 'The dataset contains oxygen stable isotope and salinity measurements from water samples collected '
                     'from sea ice and meltwater pools in April 2016 in the region of South Georgia, Signy and deep '
-                    'within the Weddell Sea pack ice during the marine survey JR15006. &#13; The d18O and salinity '
+                    'within the Weddell Sea pack ice during the marine survey JR15006. The d18O and salinity '
                     'measurements from sea ice and meltwater sources complement the same analysis from CTD casts and '
                     'underway non-toxic flow water system on the RRS James Clark Ross during the JR15006. Establishing '
                     'd18O and salinity values for saline water and oceanic freshwater components can be used to '
-                    'identify sources and changes of freshwater contributions to the ocean.&#13;',
+                    'identify sources and changes of freshwater contributions to the ocean.',
         'dates': [
             {
                 'date': date(2018, 1, 1),
@@ -111,7 +112,7 @@ test_record = {
                 'organisation': {
                     'name': 'British Geological Survey'
                 },
-                'email': 'no-reply@bas.ac.uk',
+                'email': 'noreply@bas.ac.uk',
                 'online-resource': {
                     'href': 'https://orcid.org/0000-0003-3849-5179',
                     'title': 'ORCID record',
@@ -131,7 +132,7 @@ test_record = {
                 'organisation': {
                     'name': 'British Geological Survey'
                 },
-                'email': 'no-reply@bas.ac.uk',
+                'email': 'noreply@bas.ac.uk',
                 'online-resource': {
                     'href': 'https://orcid.org/0000-0003-1115-5166',
                     'title': 'ORCID record',
@@ -212,8 +213,8 @@ test_record = {
                             'title': 'General Multilingual Environmental Thesaurus (GEMET) themes',
                             'function': 'information'
                         },
+                        'role': 'publisher'
                     },
-                    'role': 'originator'
                 }
             },
             {
@@ -265,8 +266,8 @@ test_record = {
                                            'on how users can participate in the further development of the keywords.',
                             'function': 'information'
                         },
-                    },
-                    'role': 'originator'
+                        'role': 'publisher'
+                    }
                 }
             },
             {
@@ -373,8 +374,8 @@ test_record = {
                    'procedure. The d18O vials were rinsed 3 times, filled and dried before being closed with a stopper '
                    'and sealed with the crimper. Oxygen isotope (d18O) measurements were made using the CO2 '
                    'equilibration method with an Isoprime 100 mass spectrometer plus Aquaprep device. 90 samples '
-                   '(200&#181;l of water) were loaded into Labco Limited exetainers (3.7ml) and placed in the heated '
-                   'sample tray at 40&#176;C. The exetainers were then evacuated to remove atmosphere then flushed '
+                   '(200µl of water) were loaded into Labco Limited exetainers (3.7ml) and placed in the heated '
+                   'sample tray at 40°C. The exetainers were then evacuated to remove atmosphere then flushed '
                    'with CO2 and left to equilibrate for between 12 (first sample) - 37 (last sample) hours. Each '
                    'individual gas sample was then admitted to the cryogenic water trap where any water vapour is '
                    'removed. The dry sample gas was then expanded into the dual inlet where it was measured on the '
@@ -385,6 +386,6 @@ test_record = {
                    'triplicate. The value of these laboratory standards has been accurately determined by comparison '
                    'with international calibration and reference materials (VSMOW2, SLAP2 and GISP) and so the 18O/16O '
                    'ratios (versus VSMOW2) of the unknown samples can be calculated and are expressed in delta units, '
-                   'd18O (parts per mille). Errors are &lt; +/- 0.05 per mil.'
+                   'd18O (parts per mille). Errors are < +/- 0.05 per mil.'
     }
 }
