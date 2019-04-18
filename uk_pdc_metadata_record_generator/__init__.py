@@ -418,7 +418,7 @@ class ResponsibleParty(MetadataRecordElement):
             )
 
         if 'online-resource' in self.element_attributes:
-            online_resource_wrapper = etree.SubElement(self.parent_element, f"{{{self._ns.gmd}}}onlineResource")
+            online_resource_wrapper = etree.SubElement(responsible_party_element, f"{{{self._ns.gmd}}}onlineResource")
             online_resource = OnlineResource(
                 record=self.record,
                 attributes=self.attributes,
