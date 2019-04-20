@@ -1,9 +1,9 @@
 from datetime import datetime, timezone, date
 
 test_record = {
-    'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
+    'file-identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
     'language': 'eng',
-    'character_set': 'utf8',
+    'character-set': 'utf8',
     'hierarchy-level': 'dataset',
     'contact': {
         'organisation': {

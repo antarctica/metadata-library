@@ -221,7 +221,7 @@ class FileIdentifier(MetadataRecordElement):
 
         if 'file_identifier' in self.attributes:
             file_identifier_val = etree.SubElement(file_identifier, f"{{{self.ns.gco}}}CharacterString")
-            file_identifier_val.text = self.attributes['file_identifier']
+        file_identifier_val.text = self.attributes['file-identifier']
 
 
 class Language(CodeListElement):
@@ -264,7 +264,7 @@ class CharacterSet(CodeListElement):
                          'codelist/gmxCodelists.xml#MD_CharacterSetCode'
         self.element = f"{{{self.ns.gmd}}}characterSet"
         self.element_code = f"{{{self.ns.gmd}}}MD_CharacterSetCode"
-        self.attribute = 'character_set'
+        self.attribute = 'character-set'
 
 
 class ScopeCode(CodeListElement):

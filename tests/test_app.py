@@ -364,7 +364,7 @@ class AppTestCase(BaseTestCase):
             f"{{{self.ns.gmd}}}fileIdentifier/{{{self.ns.gco}}}CharacterString"
         )
         self.assertIsNotNone(file_identifier)
-        self.assertEqual(file_identifier.text, self.record_attributes['file_identifier'])
+        self.assertEqual(file_identifier.text, self.record_attributes['file-identifier'])
 
     def test_record_language(self):
         language = self.test_response.find(f"{{{self.ns.gmd}}}language/{{{self.ns.gmd}}}LanguageCode")
@@ -381,8 +381,8 @@ class AppTestCase(BaseTestCase):
             'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
             '/codelist/gmxCodelists.xml#MD_CharacterSetCode'
         )
-        self.assertEqual(character_set.attrib['codeListValue'], self.record_attributes['character_set'])
-        self.assertEqual(character_set.text, self.record_attributes['character_set'])
+        self.assertEqual(character_set.attrib['codeListValue'], self.record_attributes['character-set'])
+        self.assertEqual(character_set.text, self.record_attributes['character-set'])
 
     def test_record_hierarchy_level(self):
         hierarchy_level = self.test_response.find(f"{{{self.ns.gmd}}}hierarchyLevel/{{{self.ns.gmd}}}MD_ScopeCode")
