@@ -219,7 +219,7 @@ class FileIdentifier(MetadataRecordElement):
     def make_element(self):
         file_identifier = etree.SubElement(self.record, f"{{{self.ns.gmd}}}fileIdentifier")
 
-        if 'file_identifier' in self.attributes:
+        if 'file-identifier' in self.attributes:
             file_identifier_val = etree.SubElement(file_identifier, f"{{{self.ns.gco}}}CharacterString")
             file_identifier_val.text = self.attributes['file-identifier']
 
