@@ -221,7 +221,7 @@ class FileIdentifier(MetadataRecordElement):
 
         if 'file_identifier' in self.attributes:
             file_identifier_val = etree.SubElement(file_identifier, f"{{{self.ns.gco}}}CharacterString")
-        file_identifier_val.text = self.attributes['file-identifier']
+            file_identifier_val.text = self.attributes['file-identifier']
 
 
 class Language(CodeListElement):
