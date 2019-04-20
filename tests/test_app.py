@@ -474,7 +474,7 @@ class AppTestCase(BaseTestCase):
             f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
             f"{{{self.ns.gmd}}}citation/{{{self.ns.gmd}}}CI_Citation"
         )
-
+        self.assertIsNotNone(citation)
         self._test_citation(citation, self.record_attributes['resource'])
 
     def test_data_identification_abstract(self):

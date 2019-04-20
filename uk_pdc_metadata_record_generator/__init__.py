@@ -83,7 +83,8 @@ class MetadataRecord(object):
 
         identifier = FileIdentifier(
             record=metadata_record,
-            attributes=self.attributes
+            attributes=self.attributes,
+            parent_element=metadata_record
         )
         identifier.make_element()
 
@@ -107,7 +108,9 @@ class MetadataRecord(object):
 
         contact = Contact(
             record=metadata_record,
-            attributes=self.attributes
+            attributes=self.attributes,
+            parent_element=metadata_record,
+            element_attributes=self.attributes['contact']
         )
         contact.make_element()
 
@@ -119,21 +122,27 @@ class MetadataRecord(object):
 
         metadata_maintenance = MetadataMaintenance(
             record=metadata_record,
-            attributes=self.attributes
+            attributes=self.attributes,
+            parent_element=metadata_record,
+            element_attributes=self.attributes['maintenance']
         )
         metadata_maintenance.make_element()
 
         metadata_standard = MetadataStandard(
             record=metadata_record,
-            attributes=self.attributes
+            attributes=self.attributes,
+            parent_element=metadata_record,
+            element_attributes=self.attributes['metadata-standard']
         )
         metadata_standard.make_element()
 
-        reference_system_identifier = ReferenceSystemInfo(
+        reference_system_info = ReferenceSystemInfo(
             record=metadata_record,
-            attributes=self.attributes
+            attributes=self.attributes,
+            parent_element=metadata_record,
+            element_attributes=self.attributes['reference-system-info']
         )
-        reference_system_identifier.make_element()
+        reference_system_info.make_element()
 
         data_identification = DataIdentification(
             record=metadata_record,
@@ -170,6 +179,11 @@ class MetadataRecordElement(object):
         self.parent_element = parent_element
         self.element_attributes = element_attributes
 
+        if self.parent_element is None:
+            self.parent_element = self.record
+        if self.element_attributes is None:
+            self.element_attributes = self.attributes
+
     def make_element(self):
         pass
 
@@ -188,17 +202,11 @@ class CodeListElement(MetadataRecordElement):
             parent_element=parent_element,
             element_attributes=element_attributes
         )
-        if parent_element is None:
-            self.parent_element = self.record
-        if element_attributes is None:
-            self.element_attributes = self.attributes
-
+        self.code_list_values = []
+        self.code_list = None
         self.element = None
         self.element_code = None
         self.attribute = None
-
-        self.code_list = None
-        self.code_list_values = []
 
     def make_element(self):
         code_list_element = etree.SubElement(self.parent_element, self.element)
@@ -217,11 +225,9 @@ class CodeListElement(MetadataRecordElement):
 
 class FileIdentifier(MetadataRecordElement):
     def make_element(self):
-        file_identifier = etree.SubElement(self.record, f"{{{self.ns.gmd}}}fileIdentifier")
-
-        if 'file-identifier' in self.attributes:
-            file_identifier_val = etree.SubElement(file_identifier, f"{{{self.ns.gco}}}CharacterString")
-            file_identifier_val.text = self.attributes['file-identifier']
+        file_identifier_element = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}fileIdentifier")
+        file_identifier_value = etree.SubElement(file_identifier_element, f"{{{self.ns.gco}}}CharacterString")
+        file_identifier_value.text = self.attributes['file-identifier']
 
 
 class Language(CodeListElement):
@@ -335,16 +341,15 @@ class HierarchyLevel(ScopeCode):
 
 class Contact(MetadataRecordElement):
     def make_element(self):
-        contact_element = etree.SubElement(self.record, f"{{{self.ns.gmd}}}contact")
+        contact_element = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}contact")
 
-        if 'contact' in self.attributes:
-            responsible_party = ResponsibleParty(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=contact_element,
-                element_attributes=self.attributes['contact']
-            )
-            responsible_party.make_element()
+        responsible_party = ResponsibleParty(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=contact_element,
+            element_attributes=self.element_attributes
+        )
+        responsible_party.make_element()
 
 
 class ResponsibleParty(MetadataRecordElement):
@@ -378,7 +383,10 @@ class ResponsibleParty(MetadataRecordElement):
                 )
                 anchor.make_element()
             else:
-                organisation_name_value = etree.SubElement(organisation_element, f"{{{self.ns.gco}}}CharacterString")
+                organisation_name_value = etree.SubElement(
+                    organisation_element,
+                    f"{{{self.ns.gco}}}CharacterString"
+                )
                 organisation_name_value.text = self.element_attributes['organisation']['name']
 
         contact_wrapper = etree.SubElement(responsible_party_element, f"{{{self.ns.gmd}}}contactInfo")
@@ -437,7 +445,10 @@ class ResponsibleParty(MetadataRecordElement):
             )
 
         if 'online-resource' in self.element_attributes:
-            online_resource_wrapper = etree.SubElement(responsible_party_element, f"{{{self.ns.gmd}}}onlineResource")
+            online_resource_wrapper = etree.SubElement(
+                responsible_party_element,
+                f"{{{self.ns.gmd}}}onlineResource"
+            )
             online_resource = OnlineResource(
                 record=self.record,
                 attributes=self.attributes,
@@ -571,7 +582,11 @@ class DateStamp(MetadataRecordElement):
 
 class MetadataMaintenance(MetadataRecordElement):
     def make_element(self):
-        metadata_maintenance_element = etree.SubElement(self.record, f"{{{self.ns.gmd}}}metadataMaintenance")
+        metadata_maintenance_element = etree.SubElement(
+            self.parent_element,
+            f"{{{self.ns.gmd}}}metadataMaintenance"
+        )
+
         maintenance_information = MaintenanceInformation(
             record=self.record,
             attributes=self.attributes,
@@ -593,6 +608,7 @@ class MaintenanceInformation(MetadataRecordElement):
                 element_attributes=self.element_attributes
             )
             maintenance_and_update_frequency.make_element()
+
         if 'progress' in self.element_attributes:
             maintenance_process = MaintenanceProgress(
                 record=self.record,
@@ -670,28 +686,32 @@ class MaintenanceProgress(CodeListElement):
 
 class MetadataStandard(MetadataRecordElement):
     def make_element(self):
-        if 'name' in self.attributes['metadata-standard']:
-            metadata_standard_name_element = etree.SubElement(self.record, f"{{{self.ns.gmd}}}metadataStandardName")
+        if 'name' in self.element_attributes:
+            metadata_standard_name_element = etree.SubElement(
+                self.parent_element,
+                f"{{{self.ns.gmd}}}metadataStandardName"
+            )
             metadata_standard_name_value = etree.SubElement(
                 metadata_standard_name_element,
                 f"{{{self.ns.gco}}}CharacterString"
             )
-            metadata_standard_name_value.text = self.attributes['metadata-standard']['name']
-        if 'version' in self.attributes['metadata-standard']:
+            metadata_standard_name_value.text = self.element_attributes['name']
+
+        if 'version' in self.element_attributes:
             metadata_standard_version_element = etree.SubElement(
-                self.record,
+                self.parent_element,
                 f"{{{self.ns.gmd}}}metadataStandardVersion"
             )
             metadata_standard_version_value = etree.SubElement(
                 metadata_standard_version_element,
                 f"{{{self.ns.gco}}}CharacterString"
             )
-            metadata_standard_version_value.text = self.attributes['metadata-standard']['version']
+            metadata_standard_version_value.text = self.element_attributes['version']
 
 
 class ReferenceSystemInfo(MetadataRecordElement):
     def make_element(self):
-        reference_system_wrapper = etree.SubElement(self.record, f"{{{self.ns.gmd}}}referenceSystemInfo")
+        reference_system_wrapper = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}referenceSystemInfo")
         reference_system_element = etree.SubElement(reference_system_wrapper, f"{{{self.ns.gmd}}}MD_ReferenceSystem")
         reference_system_identifier_wrapper = etree.SubElement(
             reference_system_element,
@@ -702,7 +722,7 @@ class ReferenceSystemInfo(MetadataRecordElement):
             f"{{{self.ns.gmd}}}RS_Identifier"
         )
 
-        if 'authority' in self.attributes['reference-system-info']:
+        if 'authority' in self.element_attributes:
             reference_system_identifier_authority_element = etree.SubElement(
                 reference_system_identifier_element,
                 f"{{{self.ns.gmd}}}authority"
@@ -711,22 +731,22 @@ class ReferenceSystemInfo(MetadataRecordElement):
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=reference_system_identifier_authority_element,
-                element_attributes=self.attributes['reference-system-info']['authority']
+                element_attributes=self.element_attributes['authority']
             )
             citation.make_element()
 
-        if 'code' in self.attributes['reference-system-info']:
+        if 'code' in self.element_attributes:
             reference_system_identifier_code_element = etree.SubElement(
                 reference_system_identifier_element,
                 f"{{{self.ns.gmd}}}code"
             )
-            if 'href' in self.attributes['reference-system-info']['code']:
+            if 'href' in self.element_attributes['code']:
                 anchor = AnchorElement(
                     record=self.record,
                     attributes=self.attributes,
                     parent_element=reference_system_identifier_code_element,
-                    element_attributes=self.attributes['reference-system-info']['code'],
-                    element_value=self.attributes['reference-system-info']['code']['value']
+                    element_attributes=self.element_attributes['code'],
+                    element_value=self.element_attributes['code']['value']
                 )
                 anchor.make_element()
             else:
@@ -734,9 +754,9 @@ class ReferenceSystemInfo(MetadataRecordElement):
                     reference_system_identifier_code_element,
                     f"{{{self.ns.gco}}}CharacterString"
                 )
-                reference_system_identifier_code_value.text = self.attributes['reference-system-info']['code']['value']
+                reference_system_identifier_code_value.text = self.element_attributes['code']['value']
 
-        if 'version' in self.attributes['reference-system-info']:
+        if 'version' in self.element_attributes:
             reference_system_identifier_version_element = etree.SubElement(
                 reference_system_identifier_element,
                 f"{{{self.ns.gmd}}}version"
@@ -745,7 +765,7 @@ class ReferenceSystemInfo(MetadataRecordElement):
                 reference_system_identifier_version_element,
                 f"{{{self.ns.gco}}}CharacterString"
             )
-            reference_system_identifier_version_value.text = self.attributes['reference-system-info']['version']
+            reference_system_identifier_version_value.text = self.element_attributes['version']
 
 
 class Citation(MetadataRecordElement):
@@ -814,7 +834,7 @@ class Date(MetadataRecordElement):
         date_element = etree.SubElement(date_container_element, f"{{{self.ns.gmd}}}date")
 
         date_value_element = f"{{{self.ns.gco}}}Date"
-        if isinstance(self.element_attributes['date'], datetime):
+        if type(self.element_attributes['date']) is datetime:
             date_value_element = f"{{{self.ns.gco}}}DateTime"
 
         date_value = etree.SubElement(date_element, date_value_element)
@@ -918,12 +938,13 @@ class AnchorElement(MetadataRecordElement):
             attributes[f"{{{self.ns.xlink}}}title"] = self.element_attributes['title']
 
         anchor = etree.SubElement(self.parent_element, f"{{{self.ns.gmx}}}Anchor", attrib=attributes)
-        anchor.text = self.text
+        if self.text is not None:
+            anchor.text = self.text
 
 
 class DataIdentification(MetadataRecordElement):
     def make_element(self):
-        data_identification_wrapper = etree.SubElement(self.record, f"{{{self.ns.gmd}}}identificationInfo")
+        data_identification_wrapper = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}identificationInfo")
         data_identification_element = etree.SubElement(
             data_identification_wrapper,
             f"{{{self.ns.gmd}}}MD_DataIdentification"
@@ -934,7 +955,7 @@ class DataIdentification(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=citation_wrapper,
-            element_attributes=self.attributes['resource']
+            element_attributes=self.element_attributes['resource']
         )
         citation.make_element()
 
@@ -947,7 +968,7 @@ class DataIdentification(MetadataRecordElement):
         abstract.make_element()
 
         for point_of_contact_attributes in self.attributes['resource']['contacts']:
-            if isinstance(point_of_contact_attributes['role'], list):
+            if type(point_of_contact_attributes['role']) is list:
                 for role in point_of_contact_attributes['role']:
                     if role != 'distributor':
                         _point_of_contact = point_of_contact_attributes.copy()
@@ -973,7 +994,7 @@ class DataIdentification(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=data_identification_element,
-            element_attributes=self.attributes['resource']
+            element_attributes=self.element_attributes['resource']['maintenance']
         )
         resource_maintenance.make_element()
 
@@ -990,7 +1011,7 @@ class DataIdentification(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=data_identification_element,
-            element_attributes=self.attributes['resource']
+            element_attributes=self.attributes['resource']['constraints']
         )
         constraints.make_element()
 
@@ -1039,7 +1060,7 @@ class DataIdentification(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=data_identification_element,
-            element_attributes=self.attributes['resource']
+            element_attributes=self.attributes['resource']['extent']
         )
         extent.make_element()
 
@@ -1066,12 +1087,15 @@ class PointOfContact(MetadataRecordElement):
 
 class ResourceMaintenance(MetadataRecordElement):
     def make_element(self):
-        resource_maintenance_element = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceMaintenance")
+        resource_maintenance_element = etree.SubElement(
+            self.parent_element,
+            f"{{{self.ns.gmd}}}resourceMaintenance"
+        )
         maintenance_information = MaintenanceInformation(
             record=self.record,
             attributes=self.attributes,
             parent_element=resource_maintenance_element,
-            element_attributes=self.attributes['maintenance']
+            element_attributes=self.element_attributes
         )
         maintenance_information.make_element()
 
@@ -1096,13 +1120,14 @@ class DescriptiveKeywords(MetadataRecordElement):
                 term_value = etree.SubElement(term_element, f"{{{self.ns.gco}}}CharacterString")
                 term_value.text = term['term']
 
-        keyword_type = DescriptiveKeywordsType(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=keywords_element,
-            element_attributes=self.element_attributes
-        )
-        keyword_type.make_element()
+        if 'type' in self.element_attributes:
+            keyword_type = DescriptiveKeywordsType(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=keywords_element,
+                element_attributes=self.element_attributes
+            )
+            keyword_type.make_element()
 
         if 'thesaurus' in self.element_attributes:
             thesaurus = Thesaurus(
@@ -1157,8 +1182,8 @@ class Thesaurus(MetadataRecordElement):
 
 class ResourceConstraints(MetadataRecordElement):
     def make_element(self):
-        if 'access' in self.element_attributes['constraints']:
-            for access_constraint_attributes in self.element_attributes['constraints']['access']:
+        if 'access' in self.element_attributes:
+            for access_constraint_attributes in self.element_attributes['access']:
                 constraints_wrapper = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceConstraints")
                 constraints_element = etree.SubElement(constraints_wrapper, f"{{{self.ns.gmd}}}MD_LegalConstraints")
 
@@ -1179,8 +1204,8 @@ class ResourceConstraints(MetadataRecordElement):
                     )
                     public_access_limitation.make_element()
 
-        if 'usage' in self.element_attributes['constraints']:
-            for usage_constraint_attributes in self.element_attributes['constraints']['usage']:
+        if 'usage' in self.element_attributes:
+            for usage_constraint_attributes in self.element_attributes['usage']:
                 constraints_wrapper = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceConstraints")
                 constraints_element = etree.SubElement(constraints_wrapper, f"{{{self.ns.gmd}}}MD_LegalConstraints")
 
@@ -1351,30 +1376,30 @@ class Extent(MetadataRecordElement):
         extent_wrapper = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}extent")
         extent_element = etree.SubElement(extent_wrapper, f"{{{self.ns.gmd}}}EX_Extent")
 
-        if 'geographic' in self.element_attributes['extent']:
+        if 'geographic' in self.element_attributes:
             geographic_extent = GeographicExtent(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=extent_element,
-                element_attributes=self.element_attributes['extent']['geographic']
+                element_attributes=self.element_attributes['geographic']
             )
             geographic_extent.make_element()
 
-        if 'vertical' in self.element_attributes['extent']:
+        if 'vertical' in self.element_attributes:
             vertical_extent = VerticalExtent(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=extent_element,
-                element_attributes=self.element_attributes['extent']['vertical']
+                element_attributes=self.element_attributes['vertical']
             )
             vertical_extent.make_element()
 
-        if 'temporal' in self.element_attributes['extent']:
+        if 'temporal' in self.element_attributes:
             temporal_extent = TemporalExtent(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=extent_element,
-                element_attributes=self.element_attributes['extent']['temporal']
+                element_attributes=self.element_attributes['temporal']
             )
             temporal_extent.make_element()
 
@@ -1534,7 +1559,7 @@ class DataDistribution(MetadataRecordElement):
             distribution_format.make_element()
 
         for point_of_contact_attributes in self.attributes['resource']['contacts']:
-            if isinstance(point_of_contact_attributes['role'], list):
+            if type(point_of_contact_attributes['role']) is list:
                 for role in point_of_contact_attributes['role']:
                     if role == 'distributor':
                         _point_of_contact = point_of_contact_attributes.copy()
