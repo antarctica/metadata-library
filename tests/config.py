@@ -1,9 +1,9 @@
 from datetime import datetime, timezone, date
 
 test_record = {
-    'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
+    'file-identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
     'language': 'eng',
-    'character_set': 'utf8',
+    'character-set': 'utf8',
     'hierarchy-level': 'dataset',
     'contact': {
         'organisation': {
@@ -36,8 +36,31 @@ test_record = {
         'version': '1.0 (2.3)'
     },
     'reference-system-info': {
-        'code': 'urn:ogc:def:crs:EPSG:4326',
-        'version': '6.18.3'
+        'code': {
+            'value': 'urn:ogc:def:crs:EPSG:4326',
+            'href': 'http://www.opengis.net/def/crs/EPSG/0/4326'
+        },
+        'version': '6.18.3',
+        'authority': {
+            'title': {
+                'value': 'European Petroleum Survey Group (EPSG) Geodetic Parameter Registry'
+            },
+            'dates': [{
+                'date': date(2008, 11, 12),
+                'date-type': 'publication'
+            }],
+            'contact': {
+                'organisation': {
+                    'name': 'European Petroleum Survey Group'
+                },
+                'email': 'EPSGadministrator@iogp.org',
+                'online-resource': {
+                    'href': 'https://www.epsg-registry.org/',
+                    'function': 'information'
+                },
+                'role': 'publisher'
+            }
+        }
     },
     'resource': {
         'title': {
@@ -298,7 +321,12 @@ test_record = {
             'usage': [
                 {
                     'restriction-code': 'otherRestrictions',
-                    'copyright-licence': 'OGL-UK-3.0',
+                    'copyright-licence': {
+                        'code': 'OGL-UK-3.0',
+                        'href': 'http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/',
+                        'statement': 'This information is licensed under the Open Government Licence v3.0. To view this'
+                                     ' licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/'
+                    },
                     'required-citation': 'Bougamont, M. (2018). Ice flow model output for Pine Island Glacier '
                                          '(West Antarctica), from numerical inversions of ice surface velocities '
                                          'observed in 1996 and 2014 [Data set]. UK Polar Data Centre, Natural '
@@ -328,7 +356,20 @@ test_record = {
                 }
             },
             'vertical': {
-                'code': 'urn:ogc:def:crs:EPSG::5715'
+                'identifier': 'ogp-crs-5715',
+                'code': 'urn:ogc:def:crs:EPSG::5715',
+                'name': 'MSL depth',
+                'remarks': 'Not specific to any location or epoch.',
+                'scope': 'Hydrography.',
+                'domain-of-validity': {
+                    'href': 'urn:ogc:def:area:EPSG::1262'
+                },
+                'vertical-cs': {
+                    'href': 'urn:ogc:def:cs:EPSG::6498'
+                },
+                'vertical-datum': {
+                    'href': 'urn:ogc:def:datum:EPSG::5100'
+                }
             },
             'temporal': {
                 'period': {
@@ -367,7 +408,20 @@ test_record = {
             {
                 'code': 'Conformity_001',
                 'code-space': 'INSPIRE',
-                'pass': True
+                'pass': True,
+                'title': {
+                    'value': 'Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive '
+                             '2007/2/EC of the European Parliament and of the Council as regards interoperability of '
+                             'spatial data sets and services',
+                    'href': 'http://data.europa.eu/eli/reg/2010/1089'
+                },
+                'dates': [
+                    {
+                        'date': date(2010, 12, 8),
+                        'date-type': 'publication'
+                    }
+                ],
+                'explanation': 'See the referenced specification'
             }
         ],
         'lineage': 'At all sample locations, 2 or more salinity bottles and d18O vials were filled following the usual '
