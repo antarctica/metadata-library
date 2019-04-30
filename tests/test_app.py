@@ -11,7 +11,7 @@ from flask import current_app
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
 from lxml import etree  # nosec
 
-from uk_pdc_metadata_record_generator import create_app, Namespaces, MetadataRecord
+from uk_pdc_metadata_record_generator import create_app, Namespaces, MetadataRecord, MetadataRecordConfig
 from tests import config
 
 
@@ -27,9 +27,12 @@ class BaseTestCase(unittest.TestCase):
 
         self.ns = Namespaces()
 
-        self.record_attributes = config.test_record
+        self.record_configuration = MetadataRecordConfig(**config.test_record)
+        self.test_record = MetadataRecord(self.record_configuration)
 
-        self.test_record = MetadataRecord(**self.record_attributes)
+        # transition variable
+        self.record_attributes = self.record_configuration.config
+
         self.test_document = etree.tostring(
             etree.ElementTree(self.test_record.record),
             pretty_print=True,

@@ -68,10 +68,22 @@ class Utils(object):
         return date_datetime.isoformat()
 
 
+class MetadataConfig(object):
+    def __init__(self, **kwargs: dict):
+        self.config = kwargs
+
+    def config(self) -> dict:
+        return self.config
+
+
+class MetadataRecordConfig(MetadataConfig):
+    pass
+
+
 class MetadataRecord(object):
-    def __init__(self, **kwargs):
+    def __init__(self, configuration: MetadataRecordConfig):
         self.ns = Namespaces()
-        self.attributes = kwargs
+        self.attributes = configuration.config
         self.record = self.make_element()
 
     def make_element(self):
@@ -1752,8 +1764,8 @@ def create_app():
 
     @app.route('/')
     def index():
-        attributes = config.test_record
-        record = MetadataRecord(**attributes)
+        configuration = MetadataRecordConfig(**config.test_record)
+        record = MetadataRecord(configuration)
         document = etree.ElementTree(record.record)
         document_str = etree.tostring(document, pretty_print=True, xml_declaration=True, encoding="utf-8")
 
