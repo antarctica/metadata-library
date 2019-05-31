@@ -13,22 +13,22 @@ test_record = {
         },
         'phone': '+44 (0)1223 221400',
         'address': {
-            'delivery-point': 'British Antarctic Survey, High Cross, Madingley Road',
+            'delivery_point': 'British Antarctic Survey, High Cross, Madingley Road',
             'city': 'Cambridge',
-            'administrative-area': 'Cambridgeshire',
-            'postal-code': 'CB3 0ET',
+            'administrative_area': 'Cambridgeshire',
+            'postal_code': 'CB3 0ET',
             'country': 'United Kingdom'
         },
         'email': 'polardatacentre@bas.ac.uk',
-        'online-resource': {
+        'online_resource': {
             'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
             'function': 'information'
         },
-        'role': 'pointOfContact'
+        'role': ['pointOfContact']
     },
     'date_stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
     'maintenance': {
-        'maintenance-frequency': 'asNeeded',
+        'maintenance_frequency': 'asNeeded',
         'progress': 'completed'
     },
     'metadata_standard': {
@@ -47,18 +47,18 @@ test_record = {
             },
             'dates': [{
                 'date': date(2008, 11, 12),
-                'date-type': 'publication'
+                'date_type': 'publication'
             }],
             'contact': {
                 'organisation': {
                     'name': 'European Petroleum Survey Group'
                 },
                 'email': 'EPSGadministrator@iogp.org',
-                'online-resource': {
+                'online_resource': {
                     'href': 'https://www.epsg-registry.org/',
                     'function': 'information'
                 },
-                'role': 'publisher'
+                'role': ['publisher']
             }
         }
     },
@@ -77,32 +77,29 @@ test_record = {
         'dates': [
             {
                 'date': date(2018, 1, 1),
-                'date-precision': 'year',
-                'date-type': 'creation'
+                'date_precision': 'year',
+                'date_type': 'creation'
             },
             {
                 'date': date(2018, 1, 1),
-                'date-precision': 'year',
-                'date-type': 'revision'
+                'date_precision': 'year',
+                'date_type': 'revision'
             },
             {
                 'date': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
-                'date-type': 'publication'
+                'date_type': 'publication'
             },
             {
                 'date': datetime(2018, 12, 8, 14, 40, 44, tzinfo=timezone.utc),
-                'date-type': 'released'
+                'date_type': 'released'
             }
         ],
         'edition': '1',
         'identifiers': [
             {
-                'identifier': 'https://data.bas.ac.uk/metadata.php?id=b1a7d1b5-c419-41e7-9178-b1ffd76d5371'
-            },
-            {
                 'identifier': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
                 'href': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
-                'title': 'DOI'
+                'title': 'doi'
             }
         ],
         'contacts': [
@@ -116,7 +113,7 @@ test_record = {
                     'name': 'British Antarctic Survey'
                 },
                 'email': 'mmm@bas.ac.uk',
-                'online-resource': {
+                'online_resource': {
                     'href': 'https://orcid.org/0000-0002-7342-7756',
                     'title': 'ORCID record',
                     'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
@@ -124,7 +121,7 @@ test_record = {
                                    'research activities and outputs to these identifiers.',
                     'function': 'information'
                 },
-                'role': 'originator'
+                'role': ['author']
             },
             {
                 'individual': {
@@ -136,7 +133,7 @@ test_record = {
                     'name': 'British Geological Survey'
                 },
                 'email': 'noreply@bas.ac.uk',
-                'online-resource': {
+                'online_resource': {
                     'href': 'https://orcid.org/0000-0003-3849-5179',
                     'title': 'ORCID record',
                     'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
@@ -144,7 +141,7 @@ test_record = {
                                    'research activities and outputs to these identifiers.',
                     'function': 'information'
                 },
-                'role': 'originator'
+                'role': ['author']
             },
             {
                 'individual': {
@@ -156,7 +153,7 @@ test_record = {
                     'name': 'British Geological Survey'
                 },
                 'email': 'noreply@bas.ac.uk',
-                'online-resource': {
+                'online_resource': {
                     'href': 'https://orcid.org/0000-0003-1115-5166',
                     'title': 'ORCID record',
                     'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
@@ -164,7 +161,7 @@ test_record = {
                                    'research activities and outputs to these identifiers.',
                     'function': 'information'
                 },
-                'role': 'originator'
+                'role': ['author']
             },
             {
                 'organisation': {
@@ -174,14 +171,14 @@ test_record = {
                 },
                 'phone': '+44 (0)1223 221400',
                 'address': {
-                    'delivery-point': 'British Antarctic Survey, High Cross, Madingley Road',
+                    'delivery_point': 'British Antarctic Survey, High Cross, Madingley Road',
                     'city': 'Cambridge',
-                    'administrative-area': 'Cambridgeshire',
-                    'postal-code': 'CB3 0ET',
+                    'administrative_area': 'Cambridgeshire',
+                    'postal_code': 'CB3 0ET',
                     'country': 'United Kingdom'
                 },
                 'email': 'polardatacentre@bas.ac.uk',
-                'online-resource': {
+                'online_resource': {
                     'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
                     'function': 'information'
                 },
@@ -194,7 +191,7 @@ test_record = {
             }
         ],
         'maintenance': {
-            'maintenance-frequency': 'asNeeded',
+            'maintenance_frequency': 'asNeeded',
             'progress': 'completed'
         },
         'keywords': [
@@ -222,7 +219,7 @@ test_record = {
                     'dates': [
                         {
                             'date': date(2018, 8, 16),
-                            'date-type': 'publication'
+                            'date_type': 'publication'
                         }
                     ],
                     'edition': '4.1.2',
@@ -231,12 +228,13 @@ test_record = {
                             'name': 'European Environment Information and Observation Network (EIONET), '
                                     'European Environment Agency (EEA)'
                         },
-                        'online-resource': {
+                        "email": "helpdesk@eionet.europa.eu",
+                        'online_resource': {
                             'href': 'https://www.eionet.europa.eu/gemet/en/themes/',
                             'title': 'General Multilingual Environmental Thesaurus (GEMET) themes',
                             'function': 'information'
                         },
-                        'role': 'publisher'
+                        'role': ['publisher']
                     },
                 }
             },
@@ -267,7 +265,7 @@ test_record = {
                     'dates': [
                         {
                             'date': date(2018, 3, 15),
-                            'date-type': 'publication'
+                            'date_type': 'publication'
                         }
                     ],
                     'edition': '8.6',
@@ -276,12 +274,13 @@ test_record = {
                             'name': 'Global Change Data Center, Science and Exploration Directorate, Goddard Space '
                                     'Flight Center (GSFC) National Aeronautics and Space Administration (NASA)'
                         },
+                        "email": "support@earthdata.nasa.gov",
                         'address': {
                             'city': 'Greenbelt',
-                            'administrative-area': 'MD',
+                            'administrative_area': 'MD',
                             'country': 'United States of America'
                         },
-                        'online-resource': {
+                        'online_resource': {
                             'href': 'https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords',
                             'title': 'Global Change Master Directory (GCMD) Keywords',
                             'description': 'The information provided on this page seeks to define how the GCMD '
@@ -289,7 +288,7 @@ test_record = {
                                            'on how users can participate in the further development of the keywords.',
                             'function': 'information'
                         },
-                        'role': 'publisher'
+                        'role': ['publisher']
                     }
                 }
             },
@@ -314,20 +313,20 @@ test_record = {
         'constraints': {
             'access': [
                 {
-                    'restriction-code': 'otherRestrictions',
-                    'inspire-limitations-on-public-access': 'noLimitations'
+                    'restriction_code': 'otherRestrictions',
+                    'inspire_limitations_on_public_access': 'noLimitations'
                 }
             ],
             'usage': [
                 {
-                    'restriction-code': 'otherRestrictions',
-                    'copyright-licence': {
+                    'restriction_code': 'otherRestrictions',
+                    'copyright_licence': {
                         'code': 'OGL-UK-3.0',
                         'href': 'http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/',
                         'statement': 'This information is licensed under the Open Government Licence v3.0. To view this'
                                      ' licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/'
                     },
-                    'required-citation': 'Bougamont, M. (2018). Ice flow model output for Pine Island Glacier '
+                    'required_citation': 'Bougamont, M. (2018). Ice flow model output for Pine Island Glacier '
                                          '(West Antarctica), from numerical inversions of ice surface velocities '
                                          'observed in 1996 and 2014 [Data set]. UK Polar Data Centre, Natural '
                                          'Environment Research Council, UK Research and Innovation. '
@@ -335,11 +334,11 @@ test_record = {
                 }
             ]
         },
-        'supplemental-information': 'It is recommended that careful attention be paid to the contents of any data, '
+        'supplemental_information': 'It is recommended that careful attention be paid to the contents of any data, '
                                     'and that the originator of the data or information be contacted with any '
                                     'questions regarding appropriate use. If you find any errors or omissions, '
                                     'please report them to polardatacentre@bas.ac.uk.',
-        'spatial-representation-type': 'textTable',
+        'spatial_representation_type': 'textTable',
         'language': 'eng',
         'topics': [
             'environment',
@@ -348,11 +347,11 @@ test_record = {
         ],
         'extent': {
             'geographic': {
-                'bounding-box': {
-                    'west-longitude': -45.61521,
-                    'east-longitude': -27.04976,
-                    'south-latitude': -68.1511,
-                    'north-latitude': -54.30761
+                'bounding_box': {
+                    'west_longitude': -45.61521,
+                    'east_longitude': -27.04976,
+                    'south_latitude': -68.1511,
+                    'north_latitude': -54.30761
                 }
             },
             'vertical': {
@@ -361,13 +360,13 @@ test_record = {
                 'name': 'MSL depth',
                 'remarks': 'Not specific to any location or epoch.',
                 'scope': 'Hydrography.',
-                'domain-of-validity': {
+                'domain_of_validity': {
                     'href': 'urn:ogc:def:area:EPSG::1262'
                 },
-                'vertical-cs': {
+                'vertical_cs': {
                     'href': 'urn:ogc:def:cs:EPSG::6498'
                 },
-                'vertical-datum': {
+                'vertical_datum': {
                     'href': 'urn:ogc:def:datum:EPSG::5100'
                 }
             },
@@ -385,9 +384,9 @@ test_record = {
                         'vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             }
         ],
-        'transfer-options': [
+        'transfer_options': [
             {
-                'online-resource': {
+                'online_resource': {
                     'href': 'https://www.bodc.ac.uk/data/bodc_database/nodb/data_collection/6618/',
                     'title': 'Get Data',
                     'description': 'Download underlying CTD data',
@@ -395,7 +394,7 @@ test_record = {
                 }
             },
             {
-                'online-resource': {
+                'online_resource': {
                     'href': 'https://ramadda.data.bas.ac.uk/repository/entry/show?entryid='
                             '63af1e57-8f20-4fb1-a55c-bd0e703f8a56',
                     'title': 'Get Data',
@@ -407,7 +406,7 @@ test_record = {
         'measures': [
             {
                 'code': 'Conformity_001',
-                'code-space': 'INSPIRE',
+                'code_space': 'INSPIRE',
                 'pass': True,
                 'title': {
                     'value': 'Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive '
@@ -418,7 +417,7 @@ test_record = {
                 'dates': [
                     {
                         'date': date(2010, 12, 8),
-                        'date-type': 'publication'
+                        'date_type': 'publication'
                     }
                 ],
                 'explanation': 'See the referenced specification'
