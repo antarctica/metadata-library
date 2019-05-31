@@ -1,4 +1,7 @@
+import json
+
 from datetime import datetime, date
+from pathlib import Path
 from typing import Optional, Union
 
 from flask import Flask, Response
@@ -6,6 +9,7 @@ from flask import Flask, Response
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
+from jsonschema import ValidationError, validate
 from lxml import etree  # nosec
 from lxml.etree import Element  # nosec
 
@@ -71,9 +75,28 @@ class Utils(object):
 class MetadataConfig(object):
     def __init__(self, **kwargs: dict):
         self.config = kwargs
+        self.schema = None
+        self.schema_path = Path('resources/metadata-record-schema.json')
+
+        self.load_schema()
+        self.validate()
 
     def config(self) -> dict:
         return self.config
+
+    def load_schema(self):
+        with open(self.schema_path) as schema_file:
+            self.schema = json.load(schema_file)
+
+    def validate(self):
+        return validate(instance=self.config, schema=self.schema)
+
+    def is_valid(self) -> bool:
+        try:
+            self.validate()
+            return True
+        except ValidationError:
+            return False
 
 
 class MetadataRecordConfig(MetadataConfig):
