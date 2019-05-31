@@ -3,3 +3,5 @@ Flask==1.0.2
 flake8==3.7.7
 jsonschema==3.0.1
 lxml==4.3.3
+simplejson==3.16.0
+strict-rfc3339==0.7

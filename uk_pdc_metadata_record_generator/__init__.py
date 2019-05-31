@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 
 from datetime import datetime, date
 from pathlib import Path
@@ -9,7 +9,7 @@ from flask import Flask, Response
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
-from jsonschema import ValidationError, validate
+from jsonschema import validate
 from lxml import etree  # nosec
 from lxml.etree import Element  # nosec
 
@@ -89,14 +89,8 @@ class MetadataConfig(object):
             self.schema = json.load(schema_file)
 
     def validate(self):
-        return validate(instance=self.config, schema=self.schema)
-
-    def is_valid(self) -> bool:
-        try:
-            self.validate()
-            return True
-        except ValidationError:
-            return False
+        _config = json.loads(json.dumps(self.config, default=str))
+        return validate(instance=_config, schema=self.schema)
 
 
 class MetadataRecordConfig(MetadataConfig):
@@ -167,7 +161,7 @@ class MetadataRecord(object):
             record=metadata_record,
             attributes=self.attributes,
             parent_element=metadata_record,
-            element_attributes=self.attributes['metadata-standard']
+            element_attributes=self.attributes['metadata_standard']
         )
         metadata_standard.make_element()
 
@@ -175,7 +169,7 @@ class MetadataRecord(object):
             record=metadata_record,
             attributes=self.attributes,
             parent_element=metadata_record,
-            element_attributes=self.attributes['reference-system-info']
+            element_attributes=self.attributes['reference_system_info']
         )
         reference_system_info.make_element()
 
@@ -262,7 +256,7 @@ class FileIdentifier(MetadataRecordElement):
     def make_element(self):
         file_identifier_element = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}fileIdentifier")
         file_identifier_value = etree.SubElement(file_identifier_element, f"{{{self.ns.gco}}}CharacterString")
-        file_identifier_value.text = self.attributes['file-identifier']
+        file_identifier_value.text = self.attributes['file_identifier']
 
 
 class Language(CodeListElement):
@@ -305,7 +299,7 @@ class CharacterSet(CodeListElement):
                          'codelist/gmxCodelists.xml#MD_CharacterSetCode'
         self.element = f"{{{self.ns.gmd}}}characterSet"
         self.element_code = f"{{{self.ns.gmd}}}MD_CharacterSetCode"
-        self.attribute = 'character-set'
+        self.attribute = 'character_set'
 
 
 class ScopeCode(CodeListElement):
@@ -344,7 +338,7 @@ class ScopeCode(CodeListElement):
                          'codelist/gmxCodelists.xml#MD_ScopeCode'
         self.element = f"{{{self.ns.gmd}}}level"
         self.element_code = f"{{{self.ns.gmd}}}MD_ScopeCode"
-        self.attribute = 'hierarchy-level'
+        self.attribute = 'hierarchy_level'
 
 
 class HierarchyLevel(ScopeCode):
@@ -612,7 +606,7 @@ class DateStamp(MetadataRecordElement):
     def make_element(self):
         date_stamp_element = etree.SubElement(self.record, f"{{{self.ns.gmd}}}dateStamp")
         date_stamp_value = etree.SubElement(date_stamp_element, f"{{{self.ns.gco}}}DateTime")
-        date_stamp_value.text = Utils.format_date_string(self.attributes['date-stamp'])
+        date_stamp_value.text = Utils.format_date_string(self.attributes['date_stamp'])
 
 
 class MetadataMaintenance(MetadataRecordElement):

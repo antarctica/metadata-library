@@ -1,10 +1,10 @@
 from datetime import datetime, timezone, date
 
 test_record = {
-    'file-identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
+    'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
     'language': 'eng',
-    'character-set': 'utf8',
-    'hierarchy-level': 'dataset',
+    'character_set': 'utf8',
+    'hierarchy_level': 'dataset',
     'contact': {
         'organisation': {
             'name': 'UK Polar Data Centre',
@@ -26,16 +26,16 @@ test_record = {
         },
         'role': 'pointOfContact'
     },
-    'date-stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
+    'date_stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
     'maintenance': {
         'maintenance-frequency': 'asNeeded',
         'progress': 'completed'
     },
-    'metadata-standard': {
+    'metadata_standard': {
         'name': 'ISO 19115 (UK GEMINI)',
         'version': '1.0 (2.3)'
     },
-    'reference-system-info': {
+    'reference_system_info': {
         'code': {
             'value': 'urn:ogc:def:crs:EPSG:4326',
             'href': 'http://www.opengis.net/def/crs/EPSG/0/4326'

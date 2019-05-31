@@ -1,5 +1,71 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "UK PDC Metadata Record Schema",
-  "description": "Schema describing a UK PDC metadata record"
+  "description": "Schema describing a UK PDC metadata record",
+  "definitions": {},
+  "type": "object",
+  "required": [
+    "file_identifier",
+    "language",
+    "character_set",
+    "hierarchy_level"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "file_identifier": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "character_set": {
+      "type": "string"
+    },
+    "hierarchy_level": {
+      "type": "string",
+      "enum": [
+        "dataset"
+      ]
+    },
+    "contact": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "date_stamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "maintenance": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "metadata_standard": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "metadata_system_info": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "reference_system_info": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "resource": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
 }
