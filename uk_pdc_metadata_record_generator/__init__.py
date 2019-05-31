@@ -5,11 +5,11 @@ from pathlib import Path
 from typing import Optional, Union
 
 from flask import Flask, Response
+from jsonschema import validate
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
-from jsonschema import validate
 from lxml import etree  # nosec
 from lxml.etree import Element  # nosec
 
