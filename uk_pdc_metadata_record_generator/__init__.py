@@ -1624,7 +1624,7 @@ class DataDistribution(MetadataRecordElement):
                 distributor.make_element()
 
         for transfer_attributes in self.attributes['resource']['transfer_options']:
-            transfer_options = TransformOptions(
+            transfer_options = TransferOptions(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=data_distribution_element,
@@ -1679,7 +1679,7 @@ class Distributor(MetadataRecordElement):
         responsible_party.make_element()
 
 
-class TransformOptions(MetadataRecordElement):
+class TransferOptions(MetadataRecordElement):
     def make_element(self):
         transfer_options_container = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}transferOptions")
         transfer_options_wrapper = etree.SubElement(

@@ -327,7 +327,10 @@ test_record = {
                         'href': 'http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/',
                         'statement': 'This information is licensed under the Open Government Licence v3.0. To view this'
                                      ' licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/'
-                    },
+                    }
+                },
+                {
+                    'restriction_code': 'otherRestrictions',
                     'required_citation': 'Bougamont, M. (2018). Ice flow model output for Pine Island Glacier '
                                          '(West Antarctica), from numerical inversions of ice surface velocities '
                                          'observed in 1996 and 2014 [Data set]. UK Polar Data Centre, Natural '
@@ -336,10 +339,9 @@ test_record = {
                 }
             ]
         },
-        'supplemental_information': 'It is recommended that careful attention be paid to the contents of any data, '
-                                    'and that the originator of the data or information be contacted with any '
-                                    'questions regarding appropriate use. If you find any errors or omissions, '
-                                    'please report them to polardatacentre@bas.ac.uk.',
+        'supplemental_information': 'It is recommended that careful attention be paid to the contents of any data, and '
+                                    'that the author be contacted with any questions regarding appropriate use. If you '
+                                    'find any errors or omissions, please report them to polardatacentre@bas.ac.uk.',
         'spatial_representation_type': 'textTable',
         'language': 'eng',
         'topics': [
