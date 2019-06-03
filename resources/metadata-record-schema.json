@@ -494,7 +494,22 @@
     "hierarchy_level": {
       "type": "string",
       "enum": [
-        "dataset"
+        "attribute",
+        "attributeType",
+        "collectionHardware",
+        "collectionSession",
+        "dataset",
+        "series",
+        "nonGeographicDataset",
+        "dimensionGroup",
+        "feature",
+        "featureType",
+        "propertyType",
+        "fieldSession",
+        "software",
+        "service",
+        "model",
+        "tile"
       ]
     },
     "contact": {

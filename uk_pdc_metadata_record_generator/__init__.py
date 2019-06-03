@@ -555,20 +555,28 @@ class Role(CodeListElement):
             element_attributes=element_attributes
         )
         self.code_list_values = [
-            'resourceProvider',
-            'custodian',
-            'owner',
-            'user',
-            'distributor',
-            'originator',
-            'pointOfContact',
-            'principalInvestigator',
-            'processor',
-            'publisher',
-            'author'
+            "author",
+            "custodian",
+            "distributor",
+            "originator",
+            "owner",
+            "pointOfContact",
+            "principalInvestigator",
+            "processor",
+            "publisher",
+            "resourceProvider",
+            "sponsor",
+            "user",
+            "coAuthor",
+            "collaborator",
+            "contributor",
+            "editor",
+            "funder",
+            "mediator",
+            "rightsHolder",
+            "stakeholder"
         ]
-        self.code_list = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/' \
-                         'codelist/gmxCodelists.xml#CI_RoleCode'
+        self.code_list = 'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode'
         self.element = f"{{{self.ns.gmd}}}role"
         self.element_code = f"{{{self.ns.gmd}}}CI_RoleCode"
         self.attribute = 'role'
