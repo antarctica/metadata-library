@@ -1493,7 +1493,7 @@ class VerticalExtent(MetadataRecordElement):
         if 'minimum' in self.element_attributes:
             minimum_element = etree.SubElement(vertical_extent_element, f"{{{self.ns.gmd}}}minimumValue")
             minimum_value = etree.SubElement(minimum_element, f"{{{self.ns.gco}}}Real")
-            minimum_value.text = self.element_attributes['minimum']
+            minimum_value.text = str(self.element_attributes['minimum'])
         else:
             etree.SubElement(
                 vertical_extent_element,
@@ -1504,7 +1504,7 @@ class VerticalExtent(MetadataRecordElement):
         if 'maximum' in self.element_attributes:
             maximum_element = etree.SubElement(vertical_extent_element, f"{{{self.ns.gmd}}}maximumValue")
             maximum_value = etree.SubElement(maximum_element, f"{{{self.ns.gco}}}Real")
-            maximum_value.text = self.element_attributes['maximum']
+            maximum_value.text = str(self.element_attributes['maximum'])
         else:
             etree.SubElement(
                 vertical_extent_element,

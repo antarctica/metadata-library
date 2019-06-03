@@ -782,7 +782,10 @@ class AppTestCase(BaseTestCase):
         if 'minimum' in self.record_attributes['resource']['extent']['vertical']:
             minimum_value = minimum.find(f"{{{self.ns.gco}}}Decimal")
             self.assertIsNotNone(minimum_value)
-            self.assertEqual(minimum_value.text, self.record_attributes['resource']['extent']['vertical']['minimum'])
+            self.assertEqual(
+                minimum_value.text,
+                str(self.record_attributes['resource']['extent']['vertical']['minimum'])
+            )
         else:
             self.assertEqual(minimum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
 
@@ -791,7 +794,10 @@ class AppTestCase(BaseTestCase):
         if 'maximum' in self.record_attributes['resource']['extent']['vertical']:
             minimum_value = maximum.find(f"{{{self.ns.gco}}}Decimal")
             self.assertIsNotNone(minimum_value)
-            self.assertEqual(minimum_value.text, self.record_attributes['resource']['extent']['vertical']['minimum'])
+            self.assertEqual(
+                minimum_value.text,
+                str(self.record_attributes['resource']['extent']['vertical']['minimum'])
+            )
         else:
             self.assertEqual(maximum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
 
