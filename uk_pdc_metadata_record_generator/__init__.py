@@ -1,7 +1,11 @@
+import simplejson as json
+
 from datetime import datetime, date
+from pathlib import Path
 from typing import Optional, Union
 
 from flask import Flask, Response
+from jsonschema import validate
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
@@ -71,9 +75,22 @@ class Utils(object):
 class MetadataConfig(object):
     def __init__(self, **kwargs: dict):
         self.config = kwargs
+        self.schema = None
+        self.schema_path = Path('resources/metadata-record-schema.json')
+
+        self.load_schema()
+        self.validate()
 
     def config(self) -> dict:
         return self.config
+
+    def load_schema(self):
+        with open(self.schema_path) as schema_file:
+            self.schema = json.load(schema_file)
+
+    def validate(self):
+        _config = json.loads(json.dumps(self.config, default=str))
+        return validate(instance=_config, schema=self.schema)
 
 
 class MetadataRecordConfig(MetadataConfig):
@@ -144,7 +161,7 @@ class MetadataRecord(object):
             record=metadata_record,
             attributes=self.attributes,
             parent_element=metadata_record,
-            element_attributes=self.attributes['metadata-standard']
+            element_attributes=self.attributes['metadata_standard']
         )
         metadata_standard.make_element()
 
@@ -152,7 +169,7 @@ class MetadataRecord(object):
             record=metadata_record,
             attributes=self.attributes,
             parent_element=metadata_record,
-            element_attributes=self.attributes['reference-system-info']
+            element_attributes=self.attributes['reference_system_info']
         )
         reference_system_info.make_element()
 
@@ -239,7 +256,7 @@ class FileIdentifier(MetadataRecordElement):
     def make_element(self):
         file_identifier_element = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}fileIdentifier")
         file_identifier_value = etree.SubElement(file_identifier_element, f"{{{self.ns.gco}}}CharacterString")
-        file_identifier_value.text = self.attributes['file-identifier']
+        file_identifier_value.text = self.attributes['file_identifier']
 
 
 class Language(CodeListElement):
@@ -282,7 +299,7 @@ class CharacterSet(CodeListElement):
                          'codelist/gmxCodelists.xml#MD_CharacterSetCode'
         self.element = f"{{{self.ns.gmd}}}characterSet"
         self.element_code = f"{{{self.ns.gmd}}}MD_CharacterSetCode"
-        self.attribute = 'character-set'
+        self.attribute = 'character_set'
 
 
 class ScopeCode(CodeListElement):
@@ -321,7 +338,7 @@ class ScopeCode(CodeListElement):
                          'codelist/gmxCodelists.xml#MD_ScopeCode'
         self.element = f"{{{self.ns.gmd}}}level"
         self.element_code = f"{{{self.ns.gmd}}}MD_ScopeCode"
-        self.attribute = 'hierarchy-level'
+        self.attribute = 'hierarchy_level'
 
 
 class HierarchyLevel(ScopeCode):
@@ -415,18 +432,18 @@ class ResponsibleParty(MetadataRecordElement):
         address_element = etree.SubElement(address_wrapper, f"{{{self.ns.gmd}}}CI_Address")
 
         if 'address' in self.element_attributes:
-            if 'delivery-point' in self.element_attributes['address']:
+            if 'delivery_point' in self.element_attributes['address']:
                 delivery_point_element = etree.SubElement(address_element, f"{{{self.ns.gmd}}}deliveryPoint")
                 delivery_point_value = etree.SubElement(
                     delivery_point_element,
                     f"{{{self.ns.gco}}}CharacterString"
                 )
-                delivery_point_value.text = self.element_attributes['address']['delivery-point']
+                delivery_point_value.text = self.element_attributes['address']['delivery_point']
             if 'city' in self.element_attributes['address']:
                 city_element = etree.SubElement(address_element, f"{{{self.ns.gmd}}}city")
                 city_value = etree.SubElement(city_element, f"{{{self.ns.gco}}}CharacterString")
                 city_value.text = self.element_attributes['address']['city']
-            if 'administrative-area' in self.element_attributes['address']:
+            if 'administrative_area' in self.element_attributes['address']:
                 administrative_area_element = etree.SubElement(
                     address_element,
                     f"{{{self.ns.gmd}}}administrativeArea"
@@ -435,11 +452,11 @@ class ResponsibleParty(MetadataRecordElement):
                     administrative_area_element,
                     f"{{{self.ns.gco}}}CharacterString"
                 )
-                administrative_area_value.text = self.element_attributes['address']['administrative-area']
-            if 'postal-code' in self.element_attributes['address']:
+                administrative_area_value.text = self.element_attributes['address']['administrative_area']
+            if 'postal_code' in self.element_attributes['address']:
                 postal_code_element = etree.SubElement(address_element, f"{{{self.ns.gmd}}}postalCode")
                 postal_code_value = etree.SubElement(postal_code_element, f"{{{self.ns.gco}}}CharacterString")
-                postal_code_value.text = self.element_attributes['address']['postal-code']
+                postal_code_value.text = self.element_attributes['address']['postal_code']
             if 'country' in self.element_attributes['address']:
                 country_element = etree.SubElement(address_element, f"{{{self.ns.gmd}}}country")
                 country_value = etree.SubElement(country_element, f"{{{self.ns.gco}}}CharacterString")
@@ -456,7 +473,7 @@ class ResponsibleParty(MetadataRecordElement):
                 attrib={f"{{{self.ns.gco}}}nilReason": 'unknown'}
             )
 
-        if 'online-resource' in self.element_attributes:
+        if 'online_resource' in self.element_attributes:
             online_resource_wrapper = etree.SubElement(
                 responsible_party_element,
                 f"{{{self.ns.gmd}}}onlineResource"
@@ -465,7 +482,7 @@ class ResponsibleParty(MetadataRecordElement):
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=online_resource_wrapper,
-                element_attributes=self.element_attributes['online-resource']
+                element_attributes=self.element_attributes['online_resource']
             )
             online_resource.make_element()
 
@@ -589,7 +606,7 @@ class DateStamp(MetadataRecordElement):
     def make_element(self):
         date_stamp_element = etree.SubElement(self.record, f"{{{self.ns.gmd}}}dateStamp")
         date_stamp_value = etree.SubElement(date_stamp_element, f"{{{self.ns.gco}}}DateTime")
-        date_stamp_value.text = Utils.format_date_string(self.attributes['date-stamp'])
+        date_stamp_value.text = Utils.format_date_string(self.attributes['date_stamp'])
 
 
 class MetadataMaintenance(MetadataRecordElement):
@@ -612,7 +629,7 @@ class MaintenanceInformation(MetadataRecordElement):
     def make_element(self):
         maintenance_element = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}MD_MaintenanceInformation")
 
-        if 'maintenance-frequency' in self.element_attributes:
+        if 'maintenance_frequency' in self.element_attributes:
             maintenance_and_update_frequency = MaintenanceAndUpdateFrequency(
                 record=self.record,
                 attributes=self.attributes,
@@ -663,7 +680,7 @@ class MaintenanceAndUpdateFrequency(CodeListElement):
                          'codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode'
         self.element = f"{{{self.ns.gmd}}}maintenanceAndUpdateFrequency"
         self.element_code = f"{{{self.ns.gmd}}}MD_MaintenanceFrequencyCode"
-        self.attribute = 'maintenance-frequency'
+        self.attribute = 'maintenance_frequency'
 
 
 class MaintenanceProgress(CodeListElement):
@@ -852,8 +869,8 @@ class Date(MetadataRecordElement):
         date_value = etree.SubElement(date_element, date_value_element)
         date_value.text = Utils.format_date_string(self.element_attributes['date'])
 
-        if 'date-precision' in self.element_attributes:
-            if self.element_attributes['date-precision'] == 'year':
+        if 'date_precision' in self.element_attributes:
+            if self.element_attributes['date_precision'] == 'year':
                 date_value.text = str(self.element_attributes['date'].year)
 
         date_type = DateType(
@@ -900,7 +917,7 @@ class DateType(CodeListElement):
         self.code_list = 'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode'
         self.element = f"{{{self.ns.gmd}}}dateType"
         self.element_code = f"{{{self.ns.gmd}}}CI_DateTypeCode"
-        self.attribute = 'date-type'
+        self.attribute = 'date_type'
 
 
 class Identifier(MetadataRecordElement):
@@ -1207,7 +1224,7 @@ class ResourceConstraints(MetadataRecordElement):
                 )
                 access_constraint.make_element()
 
-                if 'inspire-limitations-on-public-access' in access_constraint_attributes:
+                if 'inspire_limitations_on_public_access' in access_constraint_attributes:
                     public_access_limitation = InspireLimitationsOnPublicAccess(
                         record=self.record,
                         attributes=self.attributes,
@@ -1229,19 +1246,19 @@ class ResourceConstraints(MetadataRecordElement):
                 )
                 use_constraint.make_element()
 
-                if 'copyright-licence' in usage_constraint_attributes:
+                if 'copyright_licence' in usage_constraint_attributes:
                     other_constraint_element = etree.SubElement(
                         constraints_element,
                         f"{{{self.ns.gmd}}}otherConstraints"
                     )
 
-                    if 'href' in usage_constraint_attributes['copyright-licence']:
+                    if 'href' in usage_constraint_attributes['copyright_licence']:
                         copyright_statement = AnchorElement(
                             record=self.record,
                             attributes=self.attributes,
                             parent_element=other_constraint_element,
-                            element_attributes=usage_constraint_attributes['copyright-licence'],
-                            element_value=usage_constraint_attributes['copyright-licence']['statement']
+                            element_attributes=usage_constraint_attributes['copyright_licence'],
+                            element_value=usage_constraint_attributes['copyright_licence']['statement']
                         )
                         copyright_statement.make_element()
                     else:
@@ -1249,9 +1266,9 @@ class ResourceConstraints(MetadataRecordElement):
                             other_constraint_element,
                             f"{{{self.ns.gco}}}CharacterString"
                         )
-                        copyright_statement.text = usage_constraint_attributes['copyright-licence']['statement']
+                        copyright_statement.text = usage_constraint_attributes['copyright_licence']['statement']
 
-                if 'required-citation' in usage_constraint_attributes:
+                if 'required_citation' in usage_constraint_attributes:
                     other_constraint_element = etree.SubElement(
                         constraints_element,
                         f"{{{self.ns.gmd}}}otherConstraints"
@@ -1261,7 +1278,7 @@ class ResourceConstraints(MetadataRecordElement):
                         f"{{{self.ns.gco}}}CharacterString"
                     )
                     other_constraint_wrapper.text = f"Cite this information as: " \
-                        f"\"{usage_constraint_attributes['required-citation']}\""
+                        f"\"{usage_constraint_attributes['required_citation']}\""
 
 
 class AccessConstraint(CodeListElement):
@@ -1292,7 +1309,7 @@ class AccessConstraint(CodeListElement):
                          'codelist/gmxCodelists.xml#MD_RestrictionCode'
         self.element = f"{{{self.ns.gmd}}}accessConstraints"
         self.element_code = f"{{{self.ns.gmd}}}MD_RestrictionCode"
-        self.attribute = 'restriction-code'
+        self.attribute = 'restriction_code'
 
 
 class UseConstraint(AccessConstraint):
@@ -1322,9 +1339,9 @@ class InspireLimitationsOnPublicAccess(MetadataRecordElement):
             parent_element=other_constraints_element,
             element_attributes={
                 'href': f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
-                f"{self.element_attributes['inspire-limitations-on-public-access']}"
+                f"{self.element_attributes['inspire_limitations_on_public_access']}"
             },
-            element_value=self.element_attributes['inspire-limitations-on-public-access']
+            element_value=self.element_attributes['inspire_limitations_on_public_access']
         )
         other_constraints_value.make_element()
 
@@ -1333,7 +1350,7 @@ class SupplementalInformation(MetadataRecordElement):
     def make_element(self):
         supplemental_info_element = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}supplementalInformation")
         supplemental_info_value = etree.SubElement(supplemental_info_element, f"{{{self.ns.gco}}}CharacterString")
-        supplemental_info_value.text = self.element_attributes['supplemental-information']
+        supplemental_info_value.text = self.element_attributes['supplemental_information']
 
 
 class SpatialRepresentationType(CodeListElement):
@@ -1362,7 +1379,7 @@ class SpatialRepresentationType(CodeListElement):
                          'codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode'
         self.element = f"{{{self.ns.gmd}}}spatialRepresentationType"
         self.element_code = f"{{{self.ns.gmd}}}MD_SpatialRepresentationTypeCode"
-        self.attribute = 'spatial-representation-type'
+        self.attribute = 'spatial_representation_type'
 
 
 class SpatialResolution(MetadataRecordElement):
@@ -1420,12 +1437,12 @@ class GeographicExtent(MetadataRecordElement):
     def make_element(self):
         geographic_extent_element = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}geographicElement")
 
-        if 'bounding-box' in self.element_attributes:
+        if 'bounding_box' in self.element_attributes:
             bounding_box = BoundingBox(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=geographic_extent_element,
-                element_attributes=self.element_attributes['bounding-box']
+                element_attributes=self.element_attributes['bounding_box']
             )
             bounding_box.make_element()
 
@@ -1436,19 +1453,19 @@ class BoundingBox(MetadataRecordElement):
 
         west_element = etree.SubElement(bounding_box_element, f"{{{self.ns.gmd}}}westBoundLongitude")
         west_value = etree.SubElement(west_element, f"{{{self.ns.gco}}}Decimal")
-        west_value.text = str(self.element_attributes['west-longitude'])
+        west_value.text = str(self.element_attributes['west_longitude'])
 
         east_element = etree.SubElement(bounding_box_element, f"{{{self.ns.gmd}}}eastBoundLongitude")
         east_value = etree.SubElement(east_element, f"{{{self.ns.gco}}}Decimal")
-        east_value.text = str(self.element_attributes['east-longitude'])
+        east_value.text = str(self.element_attributes['east_longitude'])
 
         south_element = etree.SubElement(bounding_box_element, f"{{{self.ns.gmd}}}southBoundLatitude")
         south_value = etree.SubElement(south_element, f"{{{self.ns.gco}}}Decimal")
-        south_value.text = str(self.element_attributes['south-latitude'])
+        south_value.text = str(self.element_attributes['south_latitude'])
 
         north_element = etree.SubElement(bounding_box_element, f"{{{self.ns.gmd}}}northBoundLatitude")
         north_value = etree.SubElement(north_element, f"{{{self.ns.gco}}}Decimal")
-        north_value.text = str(self.element_attributes['north-latitude'])
+        north_value.text = str(self.element_attributes['north_latitude'])
 
 
 class VerticalExtent(MetadataRecordElement):
@@ -1513,7 +1530,7 @@ class VerticalCRS(MetadataRecordElement):
             vertical_crs_element,
             f"{{{self.ns.gml}}}domainOfValidity",
             attrib={
-                f"{{{self.ns.xlink}}}href": self.element_attributes['domain-of-validity']['href']
+                f"{{{self.ns.xlink}}}href": self.element_attributes['domain_of_validity']['href']
             }
         )
 
@@ -1524,7 +1541,7 @@ class VerticalCRS(MetadataRecordElement):
             vertical_crs_element,
             f"{{{self.ns.gml}}}verticalCS",
             attrib={
-                f"{{{self.ns.xlink}}}href": self.element_attributes['vertical-cs']['href']
+                f"{{{self.ns.xlink}}}href": self.element_attributes['vertical_cs']['href']
             }
         )
 
@@ -1532,7 +1549,7 @@ class VerticalCRS(MetadataRecordElement):
             vertical_crs_element,
             f"{{{self.ns.gml}}}verticalDatum",
             attrib={
-                f"{{{self.ns.xlink}}}href": self.element_attributes['vertical-datum']['href']
+                f"{{{self.ns.xlink}}}href": self.element_attributes['vertical_datum']['href']
             }
         )
 
@@ -1593,7 +1610,7 @@ class DataDistribution(MetadataRecordElement):
                 )
                 distributor.make_element()
 
-        for transfer_attributes in self.attributes['resource']['transfer-options']:
+        for transfer_attributes in self.attributes['resource']['transfer_options']:
             transfer_options = TransformOptions(
                 record=self.record,
                 attributes=self.attributes,
@@ -1662,7 +1679,7 @@ class TransformOptions(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=transfer_options_element,
-            element_attributes=self.element_attributes['online-resource']
+            element_attributes=self.element_attributes['online_resource']
         )
         online_resource.make_element()
 
@@ -1727,7 +1744,7 @@ class Report(MetadataRecordElement):
             identification_code_space_element,
             f"{{{self.ns.gco}}}CharacterString"
         )
-        identification_code_space_value.text = self.element_attributes['code-space']
+        identification_code_space_value.text = self.element_attributes['code_space']
 
         result_wrapper = etree.SubElement(report_element, f"{{{self.ns.gmd}}}result")
         result_element = etree.SubElement(result_wrapper, f"{{{self.ns.gmd}}}DQ_ConformanceResult")

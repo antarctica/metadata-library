@@ -145,30 +145,30 @@ class AppTestCase(BaseTestCase):
         address = contact_info.find(f"{{{self.ns.gmd}}}address/{{{self.ns.gmd}}}CI_Address")
         self.assertIsNotNone(address)
 
-        if 'address' in responsible_party and 'delivery-point' in responsible_party['address']:
+        if 'address' in responsible_party and 'delivery_point' in responsible_party['address']:
             delivery_point = address.find(f"{{{self.ns.gmd}}}deliveryPoint/{{{self.ns.gco}}}CharacterString")
             self.assertIsNotNone(delivery_point)
-            self.assertEqual(delivery_point.text, responsible_party_attributes['address']['delivery-point'])
+            self.assertEqual(delivery_point.text, responsible_party_attributes['address']['delivery_point'])
 
         if 'address' in responsible_party and 'city' in responsible_party['address']:
             city = address.find(f"{{{self.ns.gmd}}}city/{{{self.ns.gco}}}CharacterString")
             self.assertIsNotNone(city)
             self.assertEqual(city.text, responsible_party_attributes['address']['city'])
 
-        if 'address' in responsible_party and 'administrative-area' in responsible_party['address']:
+        if 'address' in responsible_party and 'administrative_area' in responsible_party['address']:
             administrative_area = address.find(
                 f"{{{self.ns.gmd}}}administrativeArea/{{{self.ns.gco}}}CharacterString"
             )
             self.assertIsNotNone(administrative_area)
             self.assertEqual(
                 administrative_area.text,
-                responsible_party_attributes['address']['administrative-area']
+                responsible_party_attributes['address']['administrative_area']
             )
 
-        if 'address' in responsible_party and 'postal-code' in responsible_party['address']:
+        if 'address' in responsible_party and 'postal_code' in responsible_party['address']:
             postal_code = address.find(f"{{{self.ns.gmd}}}postalCode/{{{self.ns.gco}}}CharacterString")
             self.assertIsNotNone(postal_code)
-            self.assertEqual(postal_code.text, responsible_party_attributes['address']['postal-code'])
+            self.assertEqual(postal_code.text, responsible_party_attributes['address']['postal_code'])
 
         if 'address' in responsible_party and 'country' in responsible_party['address']:
             country = address.find(f"{{{self.ns.gmd}}}country/{{{self.ns.gco}}}CharacterString")
@@ -184,13 +184,13 @@ class AppTestCase(BaseTestCase):
         else:
             self.assertEqual(email.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
 
-        if 'online-resource' in responsible_party:
+        if 'online_resource' in responsible_party:
             online_resource = contact_info.find(
                 f"{{{self.ns.gmd}}}onlineResource/{{{self.ns.gmd}}}CI_OnlineResource"
 
             )
             self.assertIsNotNone(online_resource)
-            self._test_online_resource(online_resource, responsible_party_attributes['online-resource'])
+            self._test_online_resource(online_resource, responsible_party_attributes['online_resource'])
 
         if 'role' in responsible_party:
             role = responsible_party.find(f"{{{self.ns.gmd}}}role/{{{self.ns.gmd}}}CI_RoleCode")
@@ -224,11 +224,11 @@ class AppTestCase(BaseTestCase):
 
         if 'dates' in citation_attributes:
             for expected_date in citation_attributes['dates']:
-                # Check the record for each expected date based on it's 'date-type', get the parent 'gmd:CI_Date'
+                # Check the record for each expected date based on it's 'date_type', get the parent 'gmd:CI_Date'
                 # element so we can check both the gmd:date and gmd:dateType elements are as expected
                 record_date_container = citation.xpath(
                     './gmd:date/gmd:CI_Date[gmd:dateType[gmd:CI_DateTypeCode[@codeListValue=$date_type]]]',
-                    date_type=expected_date['date-type'],
+                    date_type=expected_date['date_type'],
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(record_date_container), 1)
@@ -245,10 +245,10 @@ class AppTestCase(BaseTestCase):
 
                 # Partial dates (e.g. year only, '2018') are not supported by Python despite being allowed by ISO 8601.
                 # We check these dates as strings, which is not ideal, to a given precision.
-                if 'date-precision' in expected_date:
-                    if expected_date['date-precision'] == 'year':
+                if 'date_precision' in expected_date:
+                    if expected_date['date_precision'] == 'year':
                         self.assertEqual(record_date.text, str(expected_date['date'].year))
-                    elif expected_date['date-precision'] == 'month':
+                    elif expected_date['date_precision'] == 'month':
                         _expected_date = [
                             str(expected_date['date'].year),
                             str(expected_date['date'].month)
@@ -268,8 +268,8 @@ class AppTestCase(BaseTestCase):
                     record_date_type.attrib['codeList'],
                     'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode'
                 )
-                self.assertEqual(record_date_type.attrib['codeListValue'], expected_date['date-type'])
-                self.assertEqual(record_date_type.text, expected_date['date-type'])
+                self.assertEqual(record_date_type.attrib['codeListValue'], expected_date['date_type'])
+                self.assertEqual(record_date_type.text, expected_date['date_type'])
 
         if 'edition' in citation_attributes:
             edition = citation.find(f"{{{self.ns.gmd}}}edition/{{{self.ns.gco}}}CharacterString")
@@ -317,8 +317,8 @@ class AppTestCase(BaseTestCase):
             'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
             '/codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode'
         )
-        self.assertEqual(maintenance_frequency.attrib['codeListValue'], maintenance_attributes['maintenance-frequency'])
-        self.assertEqual(maintenance_frequency.text, maintenance_attributes['maintenance-frequency'])
+        self.assertEqual(maintenance_frequency.attrib['codeListValue'], maintenance_attributes['maintenance_frequency'])
+        self.assertEqual(maintenance_frequency.text, maintenance_attributes['maintenance_frequency'])
 
         maintenance_progress = maintenance.find(
             f"{{{self.ns.gmd}}}maintenanceNote/{{{self.ns.gmd}}}MD_ProgressCode"
@@ -367,7 +367,7 @@ class AppTestCase(BaseTestCase):
             f"{{{self.ns.gmd}}}fileIdentifier/{{{self.ns.gco}}}CharacterString"
         )
         self.assertIsNotNone(file_identifier)
-        self.assertEqual(file_identifier.text, self.record_attributes['file-identifier'])
+        self.assertEqual(file_identifier.text, self.record_attributes['file_identifier'])
 
     def test_record_language(self):
         language = self.test_response.find(f"{{{self.ns.gmd}}}language/{{{self.ns.gmd}}}LanguageCode")
@@ -384,8 +384,8 @@ class AppTestCase(BaseTestCase):
             'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
             '/codelist/gmxCodelists.xml#MD_CharacterSetCode'
         )
-        self.assertEqual(character_set.attrib['codeListValue'], self.record_attributes['character-set'])
-        self.assertEqual(character_set.text, self.record_attributes['character-set'])
+        self.assertEqual(character_set.attrib['codeListValue'], self.record_attributes['character_set'])
+        self.assertEqual(character_set.text, self.record_attributes['character_set'])
 
     def test_record_hierarchy_level(self):
         hierarchy_level = self.test_response.find(f"{{{self.ns.gmd}}}hierarchyLevel/{{{self.ns.gmd}}}MD_ScopeCode")
@@ -395,14 +395,14 @@ class AppTestCase(BaseTestCase):
             'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
             '/codelist/gmxCodelists.xml#MD_ScopeCode'
         )
-        self.assertEqual(hierarchy_level.attrib['codeListValue'], self.record_attributes['hierarchy-level'])
-        self.assertEqual(hierarchy_level.text, self.record_attributes['hierarchy-level'])
+        self.assertEqual(hierarchy_level.attrib['codeListValue'], self.record_attributes['hierarchy_level'])
+        self.assertEqual(hierarchy_level.text, self.record_attributes['hierarchy_level'])
 
         hierarchy_level_name = self.test_response.find(
             f"{{{self.ns.gmd}}}hierarchyLevelName/{{{self.ns.gco}}}CharacterString"
         )
         self.assertIsNotNone(hierarchy_level_name)
-        self.assertEqual(hierarchy_level_name.text, self.record_attributes['hierarchy-level'])
+        self.assertEqual(hierarchy_level_name.text, self.record_attributes['hierarchy_level'])
 
     def test_record_contact(self):
         contact = self.test_response.find(f"{{{self.ns.gmd}}}contact")
@@ -416,7 +416,7 @@ class AppTestCase(BaseTestCase):
     def test_record_date_stamp(self):
         date_stamp = self.test_response.find(f"{{{self.ns.gmd}}}dateStamp/{{{self.ns.gco}}}DateTime")
         self.assertIsNotNone(date_stamp)
-        self.assertEqual(datetime.fromisoformat(date_stamp.text), self.record_attributes['date-stamp'])
+        self.assertEqual(datetime.fromisoformat(date_stamp.text), self.record_attributes['date_stamp'])
 
     def test_metadata_maintenance(self):
         metadata_maintenance = self.test_response.find(
@@ -430,13 +430,13 @@ class AppTestCase(BaseTestCase):
             f"{{{self.ns.gmd}}}metadataStandardName/{{{self.ns.gco}}}CharacterString"
         )
         self.assertIsNotNone(metadata_standard_name)
-        self.assertEqual(metadata_standard_name.text, self.record_attributes['metadata-standard']['name'])
+        self.assertEqual(metadata_standard_name.text, self.record_attributes['metadata_standard']['name'])
 
         metadata_standard_version = self.test_response.find(
             f"{{{self.ns.gmd}}}metadataStandardVersion/{{{self.ns.gco}}}CharacterString"
         )
         self.assertIsNotNone(metadata_standard_version)
-        self.assertEqual(metadata_standard_version.text, self.record_attributes['metadata-standard']['version'])
+        self.assertEqual(metadata_standard_version.text, self.record_attributes['metadata_standard']['version'])
 
     def test_reference_system_identifier(self):
         reference_system_identifier = self.test_response.find(
@@ -449,22 +449,22 @@ class AppTestCase(BaseTestCase):
             f"{{{self.ns.gmd}}}authority/{{{self.ns.gmd}}}CI_Citation"
         )
         self.assertIsNotNone(reference_system_authority)
-        self._test_citation(reference_system_authority, self.record_attributes['reference-system-info']['authority'])
+        self._test_citation(reference_system_authority, self.record_attributes['reference_system_info']['authority'])
 
         reference_system_code = reference_system_identifier.find(f"{{{self.ns.gmd}}}code/{{{self.ns.gmx}}}Anchor")
         self.assertIsNotNone(reference_system_code)
         self.assertEqual(
             reference_system_code.attrib[f"{{{self.ns.xlink}}}href"],
-            self.record_attributes['reference-system-info']['code']['href']
+            self.record_attributes['reference_system_info']['code']['href']
         )
         self.assertEqual(reference_system_code.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-        self.assertEqual(reference_system_code.text, self.record_attributes['reference-system-info']['code']['value'])
+        self.assertEqual(reference_system_code.text, self.record_attributes['reference_system_info']['code']['value'])
 
         reference_system_version = reference_system_identifier.find(
             f"{{{self.ns.gmd}}}version/{{{self.ns.gco}}}CharacterString"
         )
         self.assertIsNotNone(reference_system_version)
-        self.assertEqual(reference_system_version.text, self.record_attributes['reference-system-info']['version'])
+        self.assertEqual(reference_system_version.text, self.record_attributes['reference_system_info']['version'])
 
     def test_data_identification(self):
         data_identification = self.test_response.find(
@@ -587,11 +587,11 @@ class AppTestCase(BaseTestCase):
 
     def test_data_identification_resource_constraints(self):
         for expected_access_constraint in self.record_attributes['resource']['constraints']['access']:
-            if 'inspire-limitations-on-public-access' in expected_access_constraint:
+            if 'inspire_limitations_on_public_access' in expected_access_constraint:
                 constraint = self.test_response.xpath(
                     f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
                     f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor[text()=$term]]]",
-                    term=expected_access_constraint['inspire-limitations-on-public-access'],
+                    term=expected_access_constraint['inspire_limitations_on_public_access'],
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(constraint), 1)
@@ -607,30 +607,30 @@ class AppTestCase(BaseTestCase):
                 )
                 self.assertEqual(
                     access_constraint.attrib['codeListValue'],
-                    expected_access_constraint['restriction-code']
+                    expected_access_constraint['restriction_code']
                 )
-                self.assertEqual(access_constraint.text, expected_access_constraint['restriction-code'])
+                self.assertEqual(access_constraint.text, expected_access_constraint['restriction_code'])
 
                 public_use_constraint = constraint.find(f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor")
                 self.assertIsNotNone(public_use_constraint)
                 self.assertEqual(
                     public_use_constraint.attrib[f"{{{self.ns.xlink}}}href"],
                     f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
-                    f"{expected_access_constraint['inspire-limitations-on-public-access']}"
+                    f"{expected_access_constraint['inspire_limitations_on_public_access']}"
                 )
                 self.assertEqual(public_use_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
                 self.assertEqual(
                     public_use_constraint.text,
-                    expected_access_constraint['inspire-limitations-on-public-access']
+                    expected_access_constraint['inspire_limitations_on_public_access']
                 )
 
         for expected_usage_constraint in self.record_attributes['resource']['constraints']['usage']:
-            if 'copyright-licence' in expected_usage_constraint and \
-                    'href' in expected_usage_constraint['copyright-licence']:
+            if 'copyright_licence' in expected_usage_constraint and \
+                    'href' in expected_usage_constraint['copyright_licence']:
                 constraint = self.test_response.xpath(
                     f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
                     f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor"
-                    f"[@xlink:href='{expected_usage_constraint['copyright-licence']['href']}']]]",
+                    f"[@xlink:href='{expected_usage_constraint['copyright_licence']['href']}']]]",
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(constraint), 1)
@@ -646,23 +646,23 @@ class AppTestCase(BaseTestCase):
                 )
                 self.assertEqual(
                     usage_constraint.attrib['codeListValue'],
-                    expected_usage_constraint['restriction-code']
+                    expected_usage_constraint['restriction_code']
                 )
-                self.assertEqual(usage_constraint.text, expected_usage_constraint['restriction-code'])
+                self.assertEqual(usage_constraint.text, expected_usage_constraint['restriction_code'])
 
                 copyright_constraint = constraint.find(f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor")
                 self.assertIsNotNone(copyright_constraint)
                 self.assertEqual(
                     copyright_constraint.attrib[f"{{{self.ns.xlink}}}href"],
-                    expected_usage_constraint['copyright-licence']['href']
+                    expected_usage_constraint['copyright_licence']['href']
                 )
                 self.assertEqual(copyright_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
                 self.assertEqual(
                     copyright_constraint.text,
-                    expected_usage_constraint['copyright-licence']['statement']
+                    expected_usage_constraint['copyright_licence']['statement']
                 )
 
-            if 'required-citation' in expected_usage_constraint:
+            if 'required_citation' in expected_usage_constraint:
                 constraint = self.test_response.xpath(
                     f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
                     f"gmd:MD_LegalConstraints[gmd:otherConstraints[gco:CharacterString"
@@ -678,7 +678,7 @@ class AppTestCase(BaseTestCase):
                 self.assertIsNotNone(citation_constraint)
                 self.assertEqual(
                     citation_constraint.text,
-                    f"Cite this information as: \"{expected_usage_constraint['required-citation']}\""
+                    f"Cite this information as: \"{expected_usage_constraint['required_citation']}\""
                 )
 
     def test_data_identification_supplemental_information(self):
@@ -687,7 +687,7 @@ class AppTestCase(BaseTestCase):
             f"{{{self.ns.gmd}}}supplementalInformation/{{{self.ns.gco}}}CharacterString"
         )
         self.assertIsNotNone(supplemental_information)
-        self.assertEqual(supplemental_information.text, self.record_attributes['resource']['supplemental-information'])
+        self.assertEqual(supplemental_information.text, self.record_attributes['resource']['supplemental_information'])
 
     def test_data_identification_spatial_representation_type(self):
         representation_type = self.test_response.find(
@@ -702,9 +702,9 @@ class AppTestCase(BaseTestCase):
         )
         self.assertEqual(
             representation_type.attrib['codeListValue'],
-            self.record_attributes['resource']['spatial-representation-type']
+            self.record_attributes['resource']['spatial_representation_type']
         )
-        self.assertEqual(representation_type.text, self.record_attributes['resource']['spatial-representation-type'])
+        self.assertEqual(representation_type.text, self.record_attributes['resource']['spatial_representation_type'])
 
     def test_data_identification_spatial_resolution(self):
         spatial_resolution = self.test_response.find(
@@ -741,7 +741,7 @@ class AppTestCase(BaseTestCase):
         self.assertIsNotNone(extent)
 
     def test_data_identification_extent_geographic(self):
-        expected_bounding_box = self.record_attributes['resource']['extent']['geographic']['bounding-box']
+        expected_bounding_box = self.record_attributes['resource']['extent']['geographic']['bounding_box']
         bounding_box = self.test_response.find(
             f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent/"
             f"{{{self.ns.gmd}}}EX_Extent/{{{self.ns.gmd}}}geographicElement/{{{self.ns.gmd}}}EX_GeographicBoundingBox"
@@ -750,19 +750,19 @@ class AppTestCase(BaseTestCase):
 
         west = bounding_box.find(f"{{{self.ns.gmd}}}westBoundLongitude/{{{self.ns.gco}}}Decimal")
         self.assertIsNotNone(west)
-        self.assertEqual(west.text, str(expected_bounding_box['west-longitude']))
+        self.assertEqual(west.text, str(expected_bounding_box['west_longitude']))
 
         east = bounding_box.find(f"{{{self.ns.gmd}}}eastBoundLongitude/{{{self.ns.gco}}}Decimal")
         self.assertIsNotNone(east)
-        self.assertEqual(east.text, str(expected_bounding_box['east-longitude']))
+        self.assertEqual(east.text, str(expected_bounding_box['east_longitude']))
 
         south = bounding_box.find(f"{{{self.ns.gmd}}}southBoundLatitude/{{{self.ns.gco}}}Decimal")
         self.assertIsNotNone(south)
-        self.assertEqual(south.text, str(expected_bounding_box['south-latitude']))
+        self.assertEqual(south.text, str(expected_bounding_box['south_latitude']))
 
         north = bounding_box.find(f"{{{self.ns.gmd}}}northBoundLatitude/{{{self.ns.gco}}}Decimal")
         self.assertIsNotNone(north)
-        self.assertEqual(north.text, str(expected_bounding_box['north-latitude']))
+        self.assertEqual(north.text, str(expected_bounding_box['north_latitude']))
 
     def test_data_identification_extent_vertical(self):
         vertical_extent = self.test_response.find(
@@ -813,7 +813,7 @@ class AppTestCase(BaseTestCase):
         self.assertIsNotNone(domain)
         self.assertEqual(
             domain.attrib[f"{{{self.ns.xlink}}}href"],
-            self.record_attributes['resource']['extent']['vertical']['domain-of-validity']['href']
+            self.record_attributes['resource']['extent']['vertical']['domain_of_validity']['href']
         )
 
         scope = vertical_crs.find(f"{{{self.ns.gml}}}scope")
@@ -824,14 +824,14 @@ class AppTestCase(BaseTestCase):
         self.assertIsNotNone(vertical_cs)
         self.assertEqual(
             vertical_cs.attrib[f"{{{self.ns.xlink}}}href"],
-            self.record_attributes['resource']['extent']['vertical']['vertical-cs']['href']
+            self.record_attributes['resource']['extent']['vertical']['vertical_cs']['href']
         )
 
         vertical_datum = vertical_crs.find(f"{{{self.ns.gml}}}verticalDatum")
         self.assertIsNotNone(vertical_datum)
         self.assertEqual(
             vertical_datum.attrib[f"{{{self.ns.xlink}}}href"],
-            self.record_attributes['resource']['extent']['vertical']['vertical-datum']['href']
+            self.record_attributes['resource']['extent']['vertical']['vertical_datum']['href']
         )
 
     def test_data_identification_extent_temporal(self):
@@ -948,14 +948,14 @@ class AppTestCase(BaseTestCase):
                 self._test_responsible_party(distributor, expected_distributor)
 
     def test_data_distribution_transfer_options(self):
-        for expected_transfer_options in self.record_attributes['resource']['transfer-options']:
+        for expected_transfer_options in self.record_attributes['resource']['transfer_options']:
             with self.subTest(expected_transfer_options=expected_transfer_options):
                 xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions' \
                         '[gmd:onLine[gmd:CI_OnlineResource[gmd:linkage[gmd:URL[text()=$transfer_option]]]]]'
 
                 transfer_option = self.test_response.xpath(
                     xpath,
-                    transfer_option=expected_transfer_options['online-resource']['href'],
+                    transfer_option=expected_transfer_options['online_resource']['href'],
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(transfer_option), 1)
@@ -982,8 +982,8 @@ class AppTestCase(BaseTestCase):
             'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
             '/codelist/gmxCodelists.xml#MD_ScopeCode'
         )
-        self.assertEqual(scope_code.attrib['codeListValue'], self.record_attributes['hierarchy-level'])
-        self.assertEqual(scope_code.text, self.record_attributes['hierarchy-level'])
+        self.assertEqual(scope_code.attrib['codeListValue'], self.record_attributes['hierarchy_level'])
+        self.assertEqual(scope_code.text, self.record_attributes['hierarchy_level'])
 
     def test_data_quality_measures(self):
         for expected_measure in self.record_attributes['resource']['measures']:
@@ -995,7 +995,7 @@ class AppTestCase(BaseTestCase):
                 measure = self.test_response.xpath(
                     xpath,
                     code=expected_measure['code'],
-                    code_space=expected_measure['code-space'],
+                    code_space=expected_measure['code_space'],
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(measure), 1)
@@ -1014,7 +1014,7 @@ class AppTestCase(BaseTestCase):
                     f"{{{self.ns.gmd}}}codeSpace/{{{self.ns.gco}}}CharacterString"
                 )
                 self.assertIsNotNone(measure_identifier_code_space)
-                self.assertEqual(measure_identifier_code_space.text, expected_measure['code-space'])
+                self.assertEqual(measure_identifier_code_space.text, expected_measure['code_space'])
 
                 measure_result = measure.find(
                     f"{{{self.ns.gmd}}}result/{{{self.ns.gmd}}}DQ_ConformanceResult"
