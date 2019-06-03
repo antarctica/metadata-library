@@ -538,6 +538,8 @@ class AppTestCase(BaseTestCase):
             elif expected_poc['role'] != 'distributor':
                 expected_pocs.append(expected_poc)
 
+        base_xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty'
+
         for expected_poc in expected_pocs:
             with self.subTest(expected_poc=expected_poc):
                 self._test_contact(contact_type='pointOfContact', contact=expected_poc, base_xpath=base_xpath)
@@ -923,6 +925,9 @@ class AppTestCase(BaseTestCase):
                         expected_distributors.append(_expected_poc)
             elif expected_distributor['role'] == 'distributor':
                 expected_distributors.append(expected_distributor)
+
+        base_xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/' \
+                     'gmd:distributorContact/gmd:CI_ResponsibleParty'
 
         for expected_distributor in expected_distributors:
             with self.subTest(expected_distributor=expected_distributor):
