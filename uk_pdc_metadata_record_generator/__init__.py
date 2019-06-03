@@ -135,13 +135,18 @@ class MetadataRecord(object):
         )
         hierarchy_level.make_element()
 
-        contact = Contact(
-            record=metadata_record,
-            attributes=self.attributes,
-            parent_element=metadata_record,
-            element_attributes=self.attributes['contact']
-        )
-        contact.make_element()
+        for contact_attributes in self.attributes['contacts']:
+            for role in contact_attributes['role']:
+                _contact = contact_attributes.copy()
+                _contact['role'] = role
+
+                contact = Contact(
+                    record=metadata_record,
+                    attributes=self.attributes,
+                    parent_element=metadata_record,
+                    element_attributes=_contact
+                )
+                contact.make_element()
 
         date_stamp = DateStamp(
             record=metadata_record,
@@ -1005,27 +1010,18 @@ class DataIdentification(MetadataRecordElement):
         abstract.make_element()
 
         for point_of_contact_attributes in self.attributes['resource']['contacts']:
-            if type(point_of_contact_attributes['role']) is list:
-                for role in point_of_contact_attributes['role']:
-                    if role != 'distributor':
-                        _point_of_contact = point_of_contact_attributes.copy()
-                        _point_of_contact['role'] = role
+            for role in point_of_contact_attributes['role']:
+                if role != 'distributor':
+                    _point_of_contact = point_of_contact_attributes.copy()
+                    _point_of_contact['role'] = role
 
-                        point_of_contact = PointOfContact(
-                            record=self.record,
-                            attributes=self.attributes,
-                            parent_element=data_identification_element,
-                            element_attributes=_point_of_contact
-                        )
-                        point_of_contact.make_element()
-            else:
-                point_of_contact = PointOfContact(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=data_identification_element,
-                    element_attributes=point_of_contact_attributes
-                )
-                point_of_contact.make_element()
+                    point_of_contact = PointOfContact(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=data_identification_element,
+                        element_attributes=_point_of_contact
+                    )
+                    point_of_contact.make_element()
 
         resource_maintenance = ResourceMaintenance(
             record=self.record,
@@ -1255,6 +1251,8 @@ class ResourceConstraints(MetadataRecordElement):
                 use_constraint.make_element()
 
                 if 'copyright_licence' in usage_constraint_attributes:
+                    constraints_element.set('id', 'copyright')
+
                     other_constraint_element = etree.SubElement(
                         constraints_element,
                         f"{{{self.ns.gmd}}}otherConstraints"
@@ -1277,6 +1275,8 @@ class ResourceConstraints(MetadataRecordElement):
                         copyright_statement.text = usage_constraint_attributes['copyright_licence']['statement']
 
                 if 'required_citation' in usage_constraint_attributes:
+                    constraints_element.set('id', 'citation')
+
                     other_constraint_element = etree.SubElement(
                         constraints_element,
                         f"{{{self.ns.gmd}}}otherConstraints"
@@ -1484,7 +1484,7 @@ class VerticalExtent(MetadataRecordElement):
         if 'minimum' in self.element_attributes:
             minimum_element = etree.SubElement(vertical_extent_element, f"{{{self.ns.gmd}}}minimumValue")
             minimum_value = etree.SubElement(minimum_element, f"{{{self.ns.gco}}}Real")
-            minimum_value.text = self.element_attributes['minimum']
+            minimum_value.text = str(self.element_attributes['minimum'])
         else:
             etree.SubElement(
                 vertical_extent_element,
@@ -1495,7 +1495,7 @@ class VerticalExtent(MetadataRecordElement):
         if 'maximum' in self.element_attributes:
             maximum_element = etree.SubElement(vertical_extent_element, f"{{{self.ns.gmd}}}maximumValue")
             maximum_value = etree.SubElement(maximum_element, f"{{{self.ns.gco}}}Real")
-            maximum_value.text = self.element_attributes['maximum']
+            maximum_value.text = str(self.element_attributes['maximum'])
         else:
             etree.SubElement(
                 vertical_extent_element,
@@ -1596,30 +1596,21 @@ class DataDistribution(MetadataRecordElement):
             distribution_format.make_element()
 
         for point_of_contact_attributes in self.attributes['resource']['contacts']:
-            if type(point_of_contact_attributes['role']) is list:
-                for role in point_of_contact_attributes['role']:
-                    if role == 'distributor':
-                        _point_of_contact = point_of_contact_attributes.copy()
-                        _point_of_contact['role'] = role
+            for role in point_of_contact_attributes['role']:
+                if role == 'distributor':
+                    _point_of_contact = point_of_contact_attributes.copy()
+                    _point_of_contact['role'] = role
 
-                        distributor = Distributor(
-                            record=self.record,
-                            attributes=self.attributes,
-                            parent_element=data_distribution_element,
-                            element_attributes=_point_of_contact
-                        )
-                        distributor.make_element()
-            elif point_of_contact_attributes['role'] == 'distributor':
-                distributor = Distributor(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=data_distribution_element,
-                    element_attributes=point_of_contact_attributes
-                )
-                distributor.make_element()
+                    distributor = Distributor(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=data_distribution_element,
+                        element_attributes=_point_of_contact
+                    )
+                    distributor.make_element()
 
         for transfer_attributes in self.attributes['resource']['transfer_options']:
-            transfer_options = TransformOptions(
+            transfer_options = TransferOptions(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=data_distribution_element,
@@ -1674,15 +1665,37 @@ class Distributor(MetadataRecordElement):
         responsible_party.make_element()
 
 
-class TransformOptions(MetadataRecordElement):
+class TransferOptions(MetadataRecordElement):
     def make_element(self):
         transfer_options_container = etree.SubElement(self.parent_element, f"{{{self.ns.gmd}}}transferOptions")
         transfer_options_wrapper = etree.SubElement(
             transfer_options_container,
             f"{{{self.ns.gmd}}}MD_DigitalTransferOptions"
         )
-        transfer_options_element = etree.SubElement(transfer_options_wrapper, f"{{{self.ns.gmd}}}onLine")
 
+        if 'size' in self.element_attributes:
+            if 'unit' in self.element_attributes['size']:
+                transfer_size_unit_element = etree.SubElement(
+                    transfer_options_wrapper,
+                    f"{{{self.ns.gmd}}}unitsOfDistribution"
+                )
+                transfer_size_unit_value = etree.SubElement(
+                    transfer_size_unit_element,
+                    f"{{{self.ns.gco}}}CharacterString"
+                )
+                transfer_size_unit_value.text = self.element_attributes['size']['unit']
+            if 'magnitude' in self.element_attributes['size']:
+                transfer_size_magnitude_element = etree.SubElement(
+                    transfer_options_wrapper,
+                    f"{{{self.ns.gmd}}}transferSize"
+                )
+                transfer_size_magnitude_value = etree.SubElement(
+                    transfer_size_magnitude_element,
+                    f"{{{self.ns.gco}}}Real"
+                )
+                transfer_size_magnitude_value.text = str(self.element_attributes['size']['magnitude'])
+
+        transfer_options_element = etree.SubElement(transfer_options_wrapper, f"{{{self.ns.gmd}}}onLine")
         online_resource = OnlineResource(
             record=self.record,
             attributes=self.attributes,

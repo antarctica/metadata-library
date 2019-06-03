@@ -337,6 +337,39 @@ class AppTestCase(BaseTestCase):
         self.assertEqual(language.attrib['codeListValue'], language_attribute)
         self.assertEqual(language.text, language_attribute)
 
+    def _test_contact(self, contact_type, contact, base_xpath):
+        if 'individual' not in contact and 'organisation' not in contact:
+            self.skipTest(f"only {contact_type}'s with an individual and/or organisation name may be tested")
+        if 'role' not in contact:
+            self.skipTest(f"only {contact_type}'s with a role may be tested")
+
+        # Check the record for each expected contact based on it's 'name' and 'role', then get the parent
+        # 'CI_ResponsibleParty' element so we can check other properties
+        name_element = 'gmd:individualName'
+        value_element = 'gco:CharacterString'
+        if 'individual' in contact:
+            name = contact['individual']['name']
+            if 'href' in contact['individual']:
+                value_element = 'gmx:Anchor'
+        else:
+            name_element = 'gmd:organisationName'
+            name = contact['organisation']['name']
+            if 'href' in contact['organisation']:
+                value_element = 'gmx:Anchor'
+
+        xpath = f"{base_xpath}[{name_element}[{value_element}[text()=$name]] and " \
+            f"gmd:role[gmd:CI_RoleCode[text()=$role]]]"
+
+        responsible_party = self.test_response.xpath(
+            xpath,
+            name=name,
+            role=contact['role'],
+            namespaces=self.ns.nsmap()
+        )
+        self.assertEqual(len(responsible_party), 1)
+        responsible_party = responsible_party[0]
+        self._test_responsible_party(responsible_party, contact)
+
     def test_app_exists(self):
         self.assertFalse(current_app is None)
 
@@ -405,13 +438,18 @@ class AppTestCase(BaseTestCase):
         self.assertEqual(hierarchy_level_name.text, self.record_attributes['hierarchy_level'])
 
     def test_record_contact(self):
-        contact = self.test_response.find(f"{{{self.ns.gmd}}}contact")
-        self.assertIsNotNone(contact)
+        expected_contacts = []
+        for expected_contact in self.record_attributes['contacts']:
+            for role in expected_contact['role']:
+                _expected_contact = expected_contact.copy()
+                _expected_contact['role'] = role
+                expected_contacts.append(_expected_contact)
 
-        responsible_party = contact.find(f"{{{self.ns.gmd}}}CI_ResponsibleParty")
-        self.assertIsNotNone(responsible_party)
+        base_xpath = './gmd:contact/gmd:CI_ResponsibleParty'
 
-        self._test_responsible_party(responsible_party, self.record_attributes['contact'])
+        for expected_contact in expected_contacts:
+            with self.subTest(expected_contact=expected_contact):
+                self._test_contact(contact_type='contact', contact=expected_contact, base_xpath=base_xpath)
 
     def test_record_date_stamp(self):
         date_stamp = self.test_response.find(f"{{{self.ns.gmd}}}dateStamp/{{{self.ns.gco}}}DateTime")
@@ -491,50 +529,17 @@ class AppTestCase(BaseTestCase):
     def test_data_identification_point_of_contact(self):
         expected_pocs = []
         for expected_poc in self.record_attributes['resource']['contacts']:
-            if isinstance(expected_poc['role'], list):
-                for role in expected_poc['role']:
-                    if role != 'distributor':
-                        _expected_poc = expected_poc.copy()
-                        _expected_poc['role'] = role
-                        expected_pocs.append(_expected_poc)
-            elif expected_poc['role'] != 'distributor':
-                expected_pocs.append(expected_poc)
+            for role in expected_poc['role']:
+                if role != 'distributor':
+                    _expected_poc = expected_poc.copy()
+                    _expected_poc['role'] = role
+                    expected_pocs.append(_expected_poc)
+
+        base_xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty'
 
         for expected_poc in expected_pocs:
             with self.subTest(expected_poc=expected_poc):
-                if 'individual' not in expected_poc and 'organisation' not in expected_poc:
-                    self.skipTest('only pointsOfContact\'s with an individual and/or organisation name may be tested')
-                if 'role' not in expected_poc:
-                    self.skipTest('only pointsOfContact\'s with a role may be tested')
-
-                # Check the record for each expected point of contact based on it's 'name' and 'role', then get the
-                # parent 'CI_ResponsibleParty' element so we can check other properties
-                name_element = 'gmd:individualName'
-                value_element = 'gco:CharacterString'
-                if 'individual' in expected_poc:
-                    name = expected_poc['individual']['name']
-                    if 'href' in expected_poc['individual']:
-                        value_element = 'gmx:Anchor'
-                else:
-                    name_element = 'gmd:organisationName'
-                    name = expected_poc['organisation']['name']
-                    if 'href' in expected_poc['organisation']:
-                        value_element = 'gmx:Anchor'
-
-                base_xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/' \
-                             'gmd:CI_ResponsibleParty'
-                xpath = f"{base_xpath}[{name_element}[{value_element}[text()=$name]] and " \
-                    f"gmd:role[gmd:CI_RoleCode[text()=$role]]]"
-
-                responsible_party = self.test_response.xpath(
-                    xpath,
-                    name=name,
-                    role=expected_poc['role'],
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(responsible_party), 1)
-                responsible_party = responsible_party[0]
-                self._test_responsible_party(responsible_party, expected_poc)
+                self._test_contact(contact_type='pointOfContact', contact=expected_poc, base_xpath=base_xpath)
 
     def test_data_identification_resource_maintenance(self):
         resource_maintenance = self.test_response.find(
@@ -629,8 +634,7 @@ class AppTestCase(BaseTestCase):
                     'href' in expected_usage_constraint['copyright_licence']:
                 constraint = self.test_response.xpath(
                     f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                    f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor"
-                    f"[@xlink:href='{expected_usage_constraint['copyright_licence']['href']}']]]",
+                    f"gmd:MD_LegalConstraints[@id='copyright']",
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(constraint), 1)
@@ -665,8 +669,7 @@ class AppTestCase(BaseTestCase):
             if 'required_citation' in expected_usage_constraint:
                 constraint = self.test_response.xpath(
                     f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                    f"gmd:MD_LegalConstraints[gmd:otherConstraints[gco:CharacterString"
-                    f"[starts-with(text(),'Cite this information as')]]]",
+                    f"gmd:MD_LegalConstraints[@id='citation']",
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(constraint), 1)
@@ -776,7 +779,10 @@ class AppTestCase(BaseTestCase):
         if 'minimum' in self.record_attributes['resource']['extent']['vertical']:
             minimum_value = minimum.find(f"{{{self.ns.gco}}}Decimal")
             self.assertIsNotNone(minimum_value)
-            self.assertEqual(minimum_value.text, self.record_attributes['resource']['extent']['vertical']['minimum'])
+            self.assertEqual(
+                minimum_value.text,
+                str(self.record_attributes['resource']['extent']['vertical']['minimum'])
+            )
         else:
             self.assertEqual(minimum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
 
@@ -785,7 +791,10 @@ class AppTestCase(BaseTestCase):
         if 'maximum' in self.record_attributes['resource']['extent']['vertical']:
             minimum_value = maximum.find(f"{{{self.ns.gco}}}Decimal")
             self.assertIsNotNone(minimum_value)
-            self.assertEqual(minimum_value.text, self.record_attributes['resource']['extent']['vertical']['minimum'])
+            self.assertEqual(
+                minimum_value.text,
+                str(self.record_attributes['resource']['extent']['vertical']['minimum'])
+            )
         else:
             self.assertEqual(maximum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
 
@@ -911,41 +920,18 @@ class AppTestCase(BaseTestCase):
     def test_data_distribution_distributors(self):
         expected_distributors = []
         for expected_distributor in self.record_attributes['resource']['contacts']:
-            if isinstance(expected_distributor['role'], list):
-                for role in expected_distributor['role']:
-                    if role == 'distributor':
-                        _expected_poc = expected_distributor.copy()
-                        _expected_poc['role'] = role
-                        expected_distributors.append(_expected_poc)
-            elif expected_distributor['role'] == 'distributor':
-                expected_distributors.append(expected_distributor)
+            for role in expected_distributor['role']:
+                if role == 'distributor':
+                    _expected_poc = expected_distributor.copy()
+                    _expected_poc['role'] = role
+                    expected_distributors.append(_expected_poc)
+
+        base_xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/' \
+                     'gmd:distributorContact/gmd:CI_ResponsibleParty'
 
         for expected_distributor in expected_distributors:
             with self.subTest(expected_distributor=expected_distributor):
-                if 'organisation' not in expected_distributor:
-                    self.skipTest('only distributor\'s with an organisation name may be tested')
-                if 'role' not in expected_distributor:
-                    self.skipTest('only distributor\'s with a role may be tested')
-
-                # Check the record for each expected distributor based on it's 'name' and 'role', then get the parent
-                # 'CI_ResponsibleParty' element so we can check other properties
-                value_element = 'gco:CharacterString'
-                if 'href' in expected_distributor['organisation']:
-                    value_element = 'gmx:Anchor'
-
-                xpath = f"./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/" \
-                    f"gmd:distributorContact/gmd:CI_ResponsibleParty[gmd:organisationName" \
-                    f"[{value_element}[text()=$name]] and gmd:role[gmd:CI_RoleCode[text()=$role]]]"
-
-                distributor = self.test_response.xpath(
-                    xpath,
-                    name=expected_distributor['organisation']['name'],
-                    role=expected_distributor['role'],
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(distributor), 1)
-                distributor = distributor[0]
-                self._test_responsible_party(distributor, expected_distributor)
+                self._test_contact(contact_type='distributor', contact=expected_distributor, base_xpath=base_xpath)
 
     def test_data_distribution_transfer_options(self):
         for expected_transfer_options in self.record_attributes['resource']['transfer_options']:
@@ -960,6 +946,21 @@ class AppTestCase(BaseTestCase):
                 )
                 self.assertEqual(len(transfer_option), 1)
                 transfer_option = transfer_option[0]
+
+                if 'size' in expected_transfer_options:
+                    if 'unit' in expected_transfer_options['size']:
+                        unit_value = transfer_option.find(
+                            f"{{{self.ns.gmd}}}unitsOfDistribution/{{{self.ns.gco}}}CharacterString"
+                        )
+                        self.assertIsNotNone(unit_value)
+                        self.assertEqual(unit_value.text, expected_transfer_options['size']['unit'])
+                    if 'magnitude' in expected_transfer_options['size']:
+                        unit_value = transfer_option.find(
+                            f"{{{self.ns.gmd}}}transferSize/{{{self.ns.gco}}}Real"
+                        )
+                        self.assertIsNotNone(unit_value)
+                        self.assertEqual(unit_value.text, str(expected_transfer_options['size']['magnitude']))
+
                 self._test_online_resource(transfer_option, expected_transfer_options)
 
     def test_data_quality(self):

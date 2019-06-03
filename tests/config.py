@@ -5,27 +5,29 @@ test_record = {
     'language': 'eng',
     'character_set': 'utf8',
     'hierarchy_level': 'dataset',
-    'contact': {
-        'organisation': {
-            'name': 'UK Polar Data Centre',
-            'href': 'http://isni.org/isni/0000000405983800',
-            'title': 'ISNI record'
-        },
-        'phone': '+44 (0)1223 221400',
-        'address': {
-            'delivery_point': 'British Antarctic Survey, High Cross, Madingley Road',
-            'city': 'Cambridge',
-            'administrative_area': 'Cambridgeshire',
-            'postal_code': 'CB3 0ET',
-            'country': 'United Kingdom'
-        },
-        'email': 'polardatacentre@bas.ac.uk',
-        'online_resource': {
-            'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
-            'function': 'information'
-        },
-        'role': ['pointOfContact']
-    },
+    'contacts': [
+        {
+            'organisation': {
+                'name': 'UK Polar Data Centre',
+                'href': 'http://isni.org/isni/0000000405983800',
+                'title': 'ISNI record'
+            },
+            'phone': '+44 (0)1223 221400',
+            'address': {
+                'delivery_point': 'British Antarctic Survey, High Cross, Madingley Road',
+                'city': 'Cambridge',
+                'administrative_area': 'Cambridgeshire',
+                'postal_code': 'CB3 0ET',
+                'country': 'United Kingdom'
+            },
+            'email': 'polardatacentre@bas.ac.uk',
+            'online_resource': {
+                'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
+                'function': 'information'
+            },
+            'role': ['pointOfContact']
+        }
+    ],
     'date_stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
     'maintenance': {
         'maintenance_frequency': 'asNeeded',
@@ -37,7 +39,7 @@ test_record = {
     },
     'reference_system_info': {
         'code': {
-            'value': 'urn:ogc:def:crs:EPSG:4326',
+            'value': 'urn:ogc:def:crs:EPSG::4326',
             'href': 'http://www.opengis.net/def/crs/EPSG/0/4326'
         },
         'version': '6.18.3',
@@ -100,6 +102,11 @@ test_record = {
                 'identifier': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
                 'href': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
                 'title': 'doi'
+            },
+            {
+                'identifier': 'NE/I022973/1',
+                'href': 'https://gtr.ukri.org/projects?ref=NE%2FI022973%2F1',
+                'title': 'award'
             }
         ],
         'contacts': [
@@ -187,6 +194,29 @@ test_record = {
                     'custodian',
                     'publisher',
                     'distributor'
+                ]
+            },
+            {
+                'organisation': {
+                    'name': 'Natural Environment Research Council',
+                    'href': 'http://isni.org/isni/0000000094781573',
+                    'title': 'ISNI record'
+                },
+                'phone': '+44 (0)1793 411500',
+                'address': {
+                    'delivery_point': 'Natural Environment Research Council, Polaris House, North Star Avenue',
+                    'city': 'Swindon',
+                    'administrative_area': 'Hampshire',
+                    'postal_code': 'SN2 1EU',
+                    'country': 'United Kingdom'
+                },
+                'email': 'researchgrants@nerc.ukri.org',
+                'online_resource': {
+                    'href': 'https://nerc.ukri.org',
+                    'function': 'information'
+                },
+                'role': [
+                    'funder'
                 ]
             }
         ],
@@ -325,7 +355,10 @@ test_record = {
                         'href': 'http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/',
                         'statement': 'This information is licensed under the Open Government Licence v3.0. To view this'
                                      ' licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/'
-                    },
+                    }
+                },
+                {
+                    'restriction_code': 'otherRestrictions',
                     'required_citation': 'Bougamont, M. (2018). Ice flow model output for Pine Island Glacier '
                                          '(West Antarctica), from numerical inversions of ice surface velocities '
                                          'observed in 1996 and 2014 [Data set]. UK Polar Data Centre, Natural '
@@ -334,10 +367,9 @@ test_record = {
                 }
             ]
         },
-        'supplemental_information': 'It is recommended that careful attention be paid to the contents of any data, '
-                                    'and that the originator of the data or information be contacted with any '
-                                    'questions regarding appropriate use. If you find any errors or omissions, '
-                                    'please report them to polardatacentre@bas.ac.uk.',
+        'supplemental_information': 'It is recommended that careful attention be paid to the contents of any data, and '
+                                    'that the author be contacted with any questions regarding appropriate use. If you '
+                                    'find any errors or omissions, please report them to polardatacentre@bas.ac.uk.',
         'spatial_representation_type': 'textTable',
         'language': 'eng',
         'topics': [
@@ -394,6 +426,10 @@ test_record = {
                 }
             },
             {
+                'size': {
+                    'unit': 'KB',
+                    'magnitude': 70
+                },
                 'online_resource': {
                     'href': 'https://ramadda.data.bas.ac.uk/repository/entry/show?entryid='
                             '63af1e57-8f20-4fb1-a55c-bd0e703f8a56',

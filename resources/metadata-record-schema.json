@@ -476,7 +476,7 @@
   },
   "type": "object",
   "required": [
-    "contact",
+    "contacts",
     "date_stamp",
     "resource"
   ],
@@ -512,8 +512,12 @@
         "tile"
       ]
     },
-    "contact": {
-      "$ref": "#/definitions/contact"
+    "contacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/contact"
+      },
+      "minimum": 1
     },
     "date_stamp": {
       "type": "string",
@@ -731,6 +735,19 @@
             ],
             "additionalProperties": false,
             "properties": {
+              "size": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "unit": {
+                    "type": "string"
+                  },
+                  "magnitude": {
+                    "type":  "number"
+                  }
+                }
+              },
               "online_resource": {
                 "$ref": "#/definitions/online_resource"
               }
