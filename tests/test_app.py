@@ -529,14 +529,11 @@ class AppTestCase(BaseTestCase):
     def test_data_identification_point_of_contact(self):
         expected_pocs = []
         for expected_poc in self.record_attributes['resource']['contacts']:
-            if isinstance(expected_poc['role'], list):
-                for role in expected_poc['role']:
-                    if role != 'distributor':
-                        _expected_poc = expected_poc.copy()
-                        _expected_poc['role'] = role
-                        expected_pocs.append(_expected_poc)
-            elif expected_poc['role'] != 'distributor':
-                expected_pocs.append(expected_poc)
+            for role in expected_poc['role']:
+                if role != 'distributor':
+                    _expected_poc = expected_poc.copy()
+                    _expected_poc['role'] = role
+                    expected_pocs.append(_expected_poc)
 
         base_xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty'
 
@@ -923,14 +920,11 @@ class AppTestCase(BaseTestCase):
     def test_data_distribution_distributors(self):
         expected_distributors = []
         for expected_distributor in self.record_attributes['resource']['contacts']:
-            if isinstance(expected_distributor['role'], list):
-                for role in expected_distributor['role']:
-                    if role == 'distributor':
-                        _expected_poc = expected_distributor.copy()
-                        _expected_poc['role'] = role
-                        expected_distributors.append(_expected_poc)
-            elif expected_distributor['role'] == 'distributor':
-                expected_distributors.append(expected_distributor)
+            for role in expected_distributor['role']:
+                if role == 'distributor':
+                    _expected_poc = expected_distributor.copy()
+                    _expected_poc['role'] = role
+                    expected_distributors.append(_expected_poc)
 
         base_xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/' \
                      'gmd:distributorContact/gmd:CI_ResponsibleParty'

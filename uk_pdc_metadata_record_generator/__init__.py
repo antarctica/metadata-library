@@ -1010,27 +1010,18 @@ class DataIdentification(MetadataRecordElement):
         abstract.make_element()
 
         for point_of_contact_attributes in self.attributes['resource']['contacts']:
-            if type(point_of_contact_attributes['role']) is list:
-                for role in point_of_contact_attributes['role']:
-                    if role != 'distributor':
-                        _point_of_contact = point_of_contact_attributes.copy()
-                        _point_of_contact['role'] = role
+            for role in point_of_contact_attributes['role']:
+                if role != 'distributor':
+                    _point_of_contact = point_of_contact_attributes.copy()
+                    _point_of_contact['role'] = role
 
-                        point_of_contact = PointOfContact(
-                            record=self.record,
-                            attributes=self.attributes,
-                            parent_element=data_identification_element,
-                            element_attributes=_point_of_contact
-                        )
-                        point_of_contact.make_element()
-            else:
-                point_of_contact = PointOfContact(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=data_identification_element,
-                    element_attributes=point_of_contact_attributes
-                )
-                point_of_contact.make_element()
+                    point_of_contact = PointOfContact(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=data_identification_element,
+                        element_attributes=_point_of_contact
+                    )
+                    point_of_contact.make_element()
 
         resource_maintenance = ResourceMaintenance(
             record=self.record,
@@ -1605,27 +1596,18 @@ class DataDistribution(MetadataRecordElement):
             distribution_format.make_element()
 
         for point_of_contact_attributes in self.attributes['resource']['contacts']:
-            if type(point_of_contact_attributes['role']) is list:
-                for role in point_of_contact_attributes['role']:
-                    if role == 'distributor':
-                        _point_of_contact = point_of_contact_attributes.copy()
-                        _point_of_contact['role'] = role
+            for role in point_of_contact_attributes['role']:
+                if role == 'distributor':
+                    _point_of_contact = point_of_contact_attributes.copy()
+                    _point_of_contact['role'] = role
 
-                        distributor = Distributor(
-                            record=self.record,
-                            attributes=self.attributes,
-                            parent_element=data_distribution_element,
-                            element_attributes=_point_of_contact
-                        )
-                        distributor.make_element()
-            elif point_of_contact_attributes['role'] == 'distributor':
-                distributor = Distributor(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=data_distribution_element,
-                    element_attributes=point_of_contact_attributes
-                )
-                distributor.make_element()
+                    distributor = Distributor(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=data_distribution_element,
+                        element_attributes=_point_of_contact
+                    )
+                    distributor.make_element()
 
         for transfer_attributes in self.attributes['resource']['transfer_options']:
             transfer_options = TransferOptions(
