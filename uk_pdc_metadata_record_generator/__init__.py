@@ -1260,6 +1260,8 @@ class ResourceConstraints(MetadataRecordElement):
                 use_constraint.make_element()
 
                 if 'copyright_licence' in usage_constraint_attributes:
+                    constraints_element.set('id', 'copyright')
+
                     other_constraint_element = etree.SubElement(
                         constraints_element,
                         f"{{{self.ns.gmd}}}otherConstraints"
@@ -1282,6 +1284,8 @@ class ResourceConstraints(MetadataRecordElement):
                         copyright_statement.text = usage_constraint_attributes['copyright_licence']['statement']
 
                 if 'required_citation' in usage_constraint_attributes:
+                    constraints_element.set('id', 'citation')
+
                     other_constraint_element = etree.SubElement(
                         constraints_element,
                         f"{{{self.ns.gmd}}}otherConstraints"

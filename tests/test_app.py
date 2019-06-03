@@ -635,8 +635,7 @@ class AppTestCase(BaseTestCase):
                     'href' in expected_usage_constraint['copyright_licence']:
                 constraint = self.test_response.xpath(
                     f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                    f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor"
-                    f"[@xlink:href='{expected_usage_constraint['copyright_licence']['href']}']]]",
+                    f"gmd:MD_LegalConstraints[@id='copyright']",
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(constraint), 1)
@@ -671,8 +670,7 @@ class AppTestCase(BaseTestCase):
             if 'required_citation' in expected_usage_constraint:
                 constraint = self.test_response.xpath(
                     f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                    f"gmd:MD_LegalConstraints[gmd:otherConstraints[gco:CharacterString"
-                    f"[starts-with(text(),'Cite this information as')]]]",
+                    f"gmd:MD_LegalConstraints[@id='citation']",
                     namespaces=self.ns.nsmap()
                 )
                 self.assertEqual(len(constraint), 1)
