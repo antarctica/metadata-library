@@ -396,6 +396,10 @@ test_record = {
                 }
             },
             {
+                'size': {
+                    'unit': 'KB',
+                    'magnitude': 70
+                },
                 'online_resource': {
                     'href': 'https://ramadda.data.bas.ac.uk/repository/entry/show?entryid='
                             '63af1e57-8f20-4fb1-a55c-bd0e703f8a56',

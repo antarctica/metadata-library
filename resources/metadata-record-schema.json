@@ -735,6 +735,19 @@
             ],
             "additionalProperties": false,
             "properties": {
+              "size": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "unit": {
+                    "type": "string"
+                  },
+                  "magnitude": {
+                    "type":  "number"
+                  }
+                }
+              },
               "online_resource": {
                 "$ref": "#/definitions/online_resource"
               }

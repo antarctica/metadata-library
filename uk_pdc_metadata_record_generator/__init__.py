@@ -1686,8 +1686,30 @@ class TransformOptions(MetadataRecordElement):
             transfer_options_container,
             f"{{{self.ns.gmd}}}MD_DigitalTransferOptions"
         )
-        transfer_options_element = etree.SubElement(transfer_options_wrapper, f"{{{self.ns.gmd}}}onLine")
 
+        if 'size' in self.element_attributes:
+            if 'unit' in self.element_attributes['size']:
+                transfer_size_unit_element = etree.SubElement(
+                    transfer_options_wrapper,
+                    f"{{{self.ns.gmd}}}unitsOfDistribution"
+                )
+                transfer_size_unit_value = etree.SubElement(
+                    transfer_size_unit_element,
+                    f"{{{self.ns.gco}}}CharacterString"
+                )
+                transfer_size_unit_value.text = self.element_attributes['size']['unit']
+            if 'magnitude' in self.element_attributes['size']:
+                transfer_size_magnitude_element = etree.SubElement(
+                    transfer_options_wrapper,
+                    f"{{{self.ns.gmd}}}transferSize"
+                )
+                transfer_size_magnitude_value = etree.SubElement(
+                    transfer_size_magnitude_element,
+                    f"{{{self.ns.gco}}}Real"
+                )
+                transfer_size_magnitude_value.text = str(self.element_attributes['size']['magnitude'])
+
+        transfer_options_element = etree.SubElement(transfer_options_wrapper, f"{{{self.ns.gmd}}}onLine")
         online_resource = OnlineResource(
             record=self.record,
             attributes=self.attributes,

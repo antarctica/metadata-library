@@ -943,6 +943,21 @@ class AppTestCase(BaseTestCase):
                 )
                 self.assertEqual(len(transfer_option), 1)
                 transfer_option = transfer_option[0]
+
+                if 'size' in expected_transfer_options:
+                    if 'unit' in expected_transfer_options['size']:
+                        unit_value = transfer_option.find(
+                            f"{{{self.ns.gmd}}}unitsOfDistribution/{{{self.ns.gco}}}CharacterString"
+                        )
+                        self.assertIsNotNone(unit_value)
+                        self.assertEqual(unit_value.text, expected_transfer_options['size']['unit'])
+                    if 'magnitude' in expected_transfer_options['size']:
+                        unit_value = transfer_option.find(
+                            f"{{{self.ns.gmd}}}transferSize/{{{self.ns.gco}}}Real"
+                        )
+                        self.assertIsNotNone(unit_value)
+                        self.assertEqual(unit_value.text, str(expected_transfer_options['size']['magnitude']))
+
                 self._test_online_resource(transfer_option, expected_transfer_options)
 
     def test_data_quality(self):
