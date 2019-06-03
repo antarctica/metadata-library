@@ -37,7 +37,7 @@ test_record = {
     },
     'reference_system_info': {
         'code': {
-            'value': 'urn:ogc:def:crs:EPSG:4326',
+            'value': 'urn:ogc:def:crs:EPSG::4326',
             'href': 'http://www.opengis.net/def/crs/EPSG/0/4326'
         },
         'version': '6.18.3',
