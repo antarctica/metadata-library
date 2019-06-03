@@ -337,6 +337,39 @@ class AppTestCase(BaseTestCase):
         self.assertEqual(language.attrib['codeListValue'], language_attribute)
         self.assertEqual(language.text, language_attribute)
 
+    def _test_contact(self, contact_type, contact, base_xpath):
+        if 'individual' not in contact and 'organisation' not in contact:
+            self.skipTest(f"only {contact_type}'s with an individual and/or organisation name may be tested")
+        if 'role' not in contact:
+            self.skipTest(f"only {contact_type}'s with a role may be tested")
+
+        # Check the record for each expected contact based on it's 'name' and 'role', then get the parent
+        # 'CI_ResponsibleParty' element so we can check other properties
+        name_element = 'gmd:individualName'
+        value_element = 'gco:CharacterString'
+        if 'individual' in contact:
+            name = contact['individual']['name']
+            if 'href' in contact['individual']:
+                value_element = 'gmx:Anchor'
+        else:
+            name_element = 'gmd:organisationName'
+            name = contact['organisation']['name']
+            if 'href' in contact['organisation']:
+                value_element = 'gmx:Anchor'
+
+        xpath = f"{base_xpath}[{name_element}[{value_element}[text()=$name]] and " \
+            f"gmd:role[gmd:CI_RoleCode[text()=$role]]]"
+
+        responsible_party = self.test_response.xpath(
+            xpath,
+            name=name,
+            role=contact['role'],
+            namespaces=self.ns.nsmap()
+        )
+        self.assertEqual(len(responsible_party), 1)
+        responsible_party = responsible_party[0]
+        self._test_responsible_party(responsible_party, contact)
+
     def test_app_exists(self):
         self.assertFalse(current_app is None)
 
@@ -405,13 +438,18 @@ class AppTestCase(BaseTestCase):
         self.assertEqual(hierarchy_level_name.text, self.record_attributes['hierarchy_level'])
 
     def test_record_contact(self):
-        contact = self.test_response.find(f"{{{self.ns.gmd}}}contact")
-        self.assertIsNotNone(contact)
+        expected_contacts = []
+        for expected_contact in self.record_attributes['contacts']:
+            for role in expected_contact['role']:
+                _expected_contact = expected_contact.copy()
+                _expected_contact['role'] = role
+                expected_contacts.append(_expected_contact)
 
-        responsible_party = contact.find(f"{{{self.ns.gmd}}}CI_ResponsibleParty")
-        self.assertIsNotNone(responsible_party)
+        base_xpath = './gmd:contact/gmd:CI_ResponsibleParty'
 
-        self._test_responsible_party(responsible_party, self.record_attributes['contact'])
+        for expected_contact in expected_contacts:
+            with self.subTest(expected_contact=expected_contact):
+                self._test_contact(contact_type='contact', contact=expected_contact, base_xpath=base_xpath)
 
     def test_record_date_stamp(self):
         date_stamp = self.test_response.find(f"{{{self.ns.gmd}}}dateStamp/{{{self.ns.gco}}}DateTime")
@@ -502,39 +540,7 @@ class AppTestCase(BaseTestCase):
 
         for expected_poc in expected_pocs:
             with self.subTest(expected_poc=expected_poc):
-                if 'individual' not in expected_poc and 'organisation' not in expected_poc:
-                    self.skipTest('only pointsOfContact\'s with an individual and/or organisation name may be tested')
-                if 'role' not in expected_poc:
-                    self.skipTest('only pointsOfContact\'s with a role may be tested')
-
-                # Check the record for each expected point of contact based on it's 'name' and 'role', then get the
-                # parent 'CI_ResponsibleParty' element so we can check other properties
-                name_element = 'gmd:individualName'
-                value_element = 'gco:CharacterString'
-                if 'individual' in expected_poc:
-                    name = expected_poc['individual']['name']
-                    if 'href' in expected_poc['individual']:
-                        value_element = 'gmx:Anchor'
-                else:
-                    name_element = 'gmd:organisationName'
-                    name = expected_poc['organisation']['name']
-                    if 'href' in expected_poc['organisation']:
-                        value_element = 'gmx:Anchor'
-
-                base_xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/' \
-                             'gmd:CI_ResponsibleParty'
-                xpath = f"{base_xpath}[{name_element}[{value_element}[text()=$name]] and " \
-                    f"gmd:role[gmd:CI_RoleCode[text()=$role]]]"
-
-                responsible_party = self.test_response.xpath(
-                    xpath,
-                    name=name,
-                    role=expected_poc['role'],
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(responsible_party), 1)
-                responsible_party = responsible_party[0]
-                self._test_responsible_party(responsible_party, expected_poc)
+                self._test_contact(contact_type='pointOfContact', contact=expected_poc, base_xpath=base_xpath)
 
     def test_data_identification_resource_maintenance(self):
         resource_maintenance = self.test_response.find(
@@ -922,30 +928,7 @@ class AppTestCase(BaseTestCase):
 
         for expected_distributor in expected_distributors:
             with self.subTest(expected_distributor=expected_distributor):
-                if 'organisation' not in expected_distributor:
-                    self.skipTest('only distributor\'s with an organisation name may be tested')
-                if 'role' not in expected_distributor:
-                    self.skipTest('only distributor\'s with a role may be tested')
-
-                # Check the record for each expected distributor based on it's 'name' and 'role', then get the parent
-                # 'CI_ResponsibleParty' element so we can check other properties
-                value_element = 'gco:CharacterString'
-                if 'href' in expected_distributor['organisation']:
-                    value_element = 'gmx:Anchor'
-
-                xpath = f"./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/" \
-                    f"gmd:distributorContact/gmd:CI_ResponsibleParty[gmd:organisationName" \
-                    f"[{value_element}[text()=$name]] and gmd:role[gmd:CI_RoleCode[text()=$role]]]"
-
-                distributor = self.test_response.xpath(
-                    xpath,
-                    name=expected_distributor['organisation']['name'],
-                    role=expected_distributor['role'],
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(distributor), 1)
-                distributor = distributor[0]
-                self._test_responsible_party(distributor, expected_distributor)
+                self._test_contact(contact_type='distributor', contact=expected_distributor, base_xpath=base_xpath)
 
     def test_data_distribution_transfer_options(self):
         for expected_transfer_options in self.record_attributes['resource']['transfer_options']:

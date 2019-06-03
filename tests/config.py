@@ -5,27 +5,29 @@ test_record = {
     'language': 'eng',
     'character_set': 'utf8',
     'hierarchy_level': 'dataset',
-    'contact': {
-        'organisation': {
-            'name': 'UK Polar Data Centre',
-            'href': 'http://isni.org/isni/0000000405983800',
-            'title': 'ISNI record'
-        },
-        'phone': '+44 (0)1223 221400',
-        'address': {
-            'delivery_point': 'British Antarctic Survey, High Cross, Madingley Road',
-            'city': 'Cambridge',
-            'administrative_area': 'Cambridgeshire',
-            'postal_code': 'CB3 0ET',
-            'country': 'United Kingdom'
-        },
-        'email': 'polardatacentre@bas.ac.uk',
-        'online_resource': {
-            'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
-            'function': 'information'
-        },
-        'role': ['pointOfContact']
-    },
+    'contacts': [
+        {
+            'organisation': {
+                'name': 'UK Polar Data Centre',
+                'href': 'http://isni.org/isni/0000000405983800',
+                'title': 'ISNI record'
+            },
+            'phone': '+44 (0)1223 221400',
+            'address': {
+                'delivery_point': 'British Antarctic Survey, High Cross, Madingley Road',
+                'city': 'Cambridge',
+                'administrative_area': 'Cambridgeshire',
+                'postal_code': 'CB3 0ET',
+                'country': 'United Kingdom'
+            },
+            'email': 'polardatacentre@bas.ac.uk',
+            'online_resource': {
+                'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
+                'function': 'information'
+            },
+            'role': ['pointOfContact']
+        }
+    ],
     'date_stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
     'maintenance': {
         'maintenance_frequency': 'asNeeded',

@@ -135,13 +135,18 @@ class MetadataRecord(object):
         )
         hierarchy_level.make_element()
 
-        contact = Contact(
-            record=metadata_record,
-            attributes=self.attributes,
-            parent_element=metadata_record,
-            element_attributes=self.attributes['contact']
-        )
-        contact.make_element()
+        for contact_attributes in self.attributes['contacts']:
+            for role in contact_attributes['role']:
+                _contact = contact_attributes.copy()
+                _contact['role'] = role
+
+                contact = Contact(
+                    record=metadata_record,
+                    attributes=self.attributes,
+                    parent_element=metadata_record,
+                    element_attributes=_contact
+                )
+                contact.make_element()
 
         date_stamp = DateStamp(
             record=metadata_record,
