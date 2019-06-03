@@ -102,6 +102,11 @@ test_record = {
                 'identifier': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
                 'href': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
                 'title': 'doi'
+            },
+            {
+                'identifier': 'NE/I022973/1',
+                'href': 'https://gtr.ukri.org/projects?ref=NE%2FI022973%2F1',
+                'title': 'award'
             }
         ],
         'contacts': [
@@ -189,6 +194,29 @@ test_record = {
                     'custodian',
                     'publisher',
                     'distributor'
+                ]
+            },
+            {
+                'organisation': {
+                    'name': 'Natural Environment Research Council',
+                    'href': 'http://isni.org/isni/0000000094781573',
+                    'title': 'ISNI record'
+                },
+                'phone': '+44 (0)1793 411500',
+                'address': {
+                    'delivery_point': 'Natural Environment Research Council, Polaris House, North Star Avenue',
+                    'city': 'Swindon',
+                    'administrative_area': 'Hampshire',
+                    'postal_code': 'SN2 1EU',
+                    'country': 'United Kingdom'
+                },
+                'email': 'researchgrants@nerc.ukri.org',
+                'online_resource': {
+                    'href': 'https://nerc.ukri.org',
+                    'function': 'information'
+                },
+                'role': [
+                    'funder'
                 ]
             }
         ],
