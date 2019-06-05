@@ -2,7 +2,7 @@ import os
 import sys
 import unittest
 
-from uk_pdc_metadata_record_generator import create_app
+from app import create_app
 
 app = create_app()
 
