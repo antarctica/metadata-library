@@ -9,7 +9,7 @@ from lxml.etree import ElementTree, XML, fromstring  # nosec
 
 from uk_pdc_metadata_record_generator.standards.iso_19115_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
 
-from tests.test_app import BaseTestCase
+from tests.test_base import BaseTestCase
 from tests import config
 
 
