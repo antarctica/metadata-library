@@ -40,7 +40,7 @@ test-app:
   variables:
     FLASK_ENV: testing
   script:
-    - "flask test"
+    - "flask test --test-runner junit"
 
 dependencies-app:
   stage: lint
