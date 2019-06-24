@@ -1,5 +1,5 @@
-from datetime import date, datetime
 from http import HTTPStatus
+from datetime import date, datetime
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
@@ -18,14 +18,19 @@ class MetadataStandardISO19115BaseTestCase(BaseTestCase):
         super().setUp()
 
         self.ns = Namespaces()
-        self.record_configuration = MetadataRecordConfig(**config.test_record)
+        self._set_metadata_config(configuration=config.test_record)
+
+    # Utilities
+
+    def _set_metadata_config(self, configuration: dict):
+        self.record_configuration = MetadataRecordConfig(**configuration)
         self.record_attributes = self.record_configuration.config
 
         self.test_record = MetadataRecord(self.record_configuration)
         self.test_document = self.test_record.generate_xml_document()
         self.test_response = fromstring(self.test_document)
 
-    # Common element methods
+    # Common tests
 
     @staticmethod
     def _test_date_datetime(date_datetime: str, expected_date_datetime):
@@ -349,16 +354,7 @@ class MetadataStandardISO19115BaseTestCase(BaseTestCase):
         responsible_party = responsible_party[0]
         self._test_responsible_party(responsible_party, contact)
 
-    # Element methods
-
-    def test_record_xml_response(self):
-        response = self.client.get(
-            '/standards/iso-19115/testing',
-            base_url='http://localhost:9000'
-        )
-
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(response.mimetype, 'text/xml')
+    # Document tests
 
     def test_record_xml_declaration(self):
         response_xml = ElementTree(XML(self.test_document))
@@ -369,6 +365,8 @@ class MetadataStandardISO19115BaseTestCase(BaseTestCase):
         self.assertEqual(self.test_response.tag, f"{{{self.ns.gmd}}}MD_Metadata")
         self.assertDictEqual(self.test_response.nsmap, self.ns.nsmap())
         self.assertEqual(self.test_response.attrib[f"{{{self.ns.xsi}}}schemaLocation"], self.ns.schema_locations())
+
+    # Element tests
 
     def test_record_file_identifier(self):
         file_identifier = self.test_response.find(
@@ -1021,3 +1019,15 @@ class MetadataStandardISO19115BaseTestCase(BaseTestCase):
         )
         self.assertIsNotNone(lineage)
         self.assertEqual(lineage.text, self.record_attributes['resource']['lineage'])
+
+    # Route test
+
+    def test_record_xml_response(self):
+        response = self.client.get(
+            '/standards/iso-19115',
+            base_url='http://localhost:9000'
+        )
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.mimetype, 'text/xml')
+        self.assertEqual(response.data, self.test_document)
