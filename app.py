@@ -1,6 +1,6 @@
 from flask import Flask, Response
 
-from uk_pdc_metadata_record_generator.standards.iso19115 import MetadataRecordConfig as ISO19115MetadataRecordConfig, MetadataRecord as ISO19115MetadataRecord
+from uk_pdc_metadata_record_generator.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig, MetadataRecord as ISO19115MetadataRecord
 
 from tests import config
 

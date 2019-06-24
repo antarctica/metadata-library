@@ -99,7 +99,7 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
         self.config = kwargs
         self.schema = None
-        self.schema_path = Path('resources/schemas/standards/iso19115/iso-19115-metadata-record-schema.json')
+        self.schema_path = Path('resources/schemas/standards/iso_19115_v1/iso-19115-v1-metadata-record-schema.json')
 
         self.load_schema()
         self.validate()
