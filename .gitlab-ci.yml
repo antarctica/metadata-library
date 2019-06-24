@@ -41,6 +41,10 @@ test-app:
     FLASK_ENV: testing
   script:
     - "flask test --test-runner junit"
+  artifacts:
+    paths:
+    reports:
+      junit: test-results.xml
 
 dependencies-app:
   stage: lint

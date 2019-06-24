@@ -6,7 +6,7 @@ from pathlib import Path
 from lxml.etree import Element, SubElement  # nosec
 
 from uk_pdc_metadata_record_generator import Namespaces as _Namespaces, MetadataRecordConfig as _MetadataRecordConfig, \
-    MetadataRecord as _MetadataRecord, MetadataRecordElement as _MetadataRecordElement, Utils
+    MetadataRecord as _MetadataRecord, MetadataRecordElement as _MetadataRecordElement
 
 
 # Base classes
