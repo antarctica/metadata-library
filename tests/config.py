@@ -1,5 +1,33 @@
 from datetime import datetime, timezone, date
 
+test_standard_minimal_record = {
+    'resource': {
+        'title': {
+            'value': 'Test Record'
+        }
+    }
+}
+
+test_standard_typical_record = {
+    'resource': {
+        'title': {
+            'value': 'Test Record',
+            'title': 'Test Record',
+            'href': 'https://www.example.com'
+        }
+    }
+}
+
+test_standard_complete_record = {
+    'resource': {
+        'title': {
+            'value': 'Test Record',
+            'title': 'Test Record',
+            'href': 'https://www.example.com'
+        }
+    }
+}
+
 test_record = {
     'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
     'language': 'eng',
