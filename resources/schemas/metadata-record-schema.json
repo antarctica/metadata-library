@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UK PDC Metadata Record Generator - Base configuration schema",
+  "description": "Base (abstract) metadata record configuration schema - this schema is intended to act as a base for standard specific schemas",
+  "definitions": {},
+  "type": "object",
+  "required": [
+    "resource"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "resource": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
+}
