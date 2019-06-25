@@ -133,7 +133,7 @@
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:individualName>
-            <gco:CharacterString>Constance Watson</gco:CharacterString>
+            <gco:CharacterString>Watson, Constance</gco:CharacterString>
           </gmd:individualName>
           <gmd:organisationName>
             <gco:CharacterString>British Antarctic Survey</gco:CharacterString>
