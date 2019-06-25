@@ -470,14 +470,15 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
             )
             self.assertIsNotNone(reference_system_identifier)
 
-            reference_system_authority = reference_system_identifier.find(
-                f"{{{self.ns.gmd}}}authority/{{{self.ns.gmd}}}CI_Citation"
-            )
-            self.assertIsNotNone(reference_system_authority)
-            self._test_citation(
-                reference_system_authority,
-                self.record_attributes['reference_system_info']['authority']
-            )
+            if 'authority' in self.record_attributes['reference_system_info']:
+                reference_system_authority = reference_system_identifier.find(
+                    f"{{{self.ns.gmd}}}authority/{{{self.ns.gmd}}}CI_Citation"
+                )
+                self.assertIsNotNone(reference_system_authority)
+                self._test_citation(
+                    reference_system_authority,
+                    self.record_attributes['reference_system_info']['authority']
+                )
 
             reference_system_code = reference_system_identifier.find(f"{{{self.ns.gmd}}}code/{{{self.ns.gmx}}}Anchor")
             self.assertIsNotNone(reference_system_code)
@@ -491,11 +492,12 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
                 self.record_attributes['reference_system_info']['code']['value']
             )
 
-            reference_system_version = reference_system_identifier.find(
-                f"{{{self.ns.gmd}}}version/{{{self.ns.gco}}}CharacterString"
-            )
-            self.assertIsNotNone(reference_system_version)
-            self.assertEqual(reference_system_version.text, self.record_attributes['reference_system_info']['version'])
+            if 'version' in self.record_attributes['reference_system_info']:
+                reference_system_version = reference_system_identifier.find(
+                    f"{{{self.ns.gmd}}}version/{{{self.ns.gco}}}CharacterString"
+                )
+                self.assertIsNotNone(reference_system_version)
+                self.assertEqual(reference_system_version.text, self.record_attributes['reference_system_info']['version'])
 
     def test_data_identification(self):
         data_identification = self.test_response.find(
@@ -1097,3 +1099,11 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(response.mimetype, 'text/xml')
         self.assertEqual(response.data, self.test_document)
+
+
+class BaselineMetadataRecordTestCase(MinimalMetadataRecordTestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.configuration = 'base'
+        self._set_metadata_config(configuration=config.iso_19115_v1_base_record)

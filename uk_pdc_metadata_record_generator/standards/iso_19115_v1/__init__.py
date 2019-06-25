@@ -198,14 +198,14 @@ class MetadataRecord(_MetadataRecord):
         )
         data_identification.make_element()
 
-        if 'formats' in self.attributes and 'transfer_options' in self.attributes:
+        if 'formats' in self.attributes['resource'] or 'transfer_options' in self.attributes['resource']:
             data_distribution = DataDistribution(
                 record=metadata_record,
                 attributes=self.attributes
             )
             data_distribution.make_element()
 
-        if 'measures' in self.attributes and 'lineage' in self.attributes:
+        if 'measures' in self.attributes['resource'] or 'lineage' in self.attributes['resource']:
             data_quality = DataQuality(
                 record=metadata_record,
                 attributes=self.attributes

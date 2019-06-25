@@ -16,6 +16,8 @@ def create_app():
     def standard_iso_19115(configuration: str):
         if configuration == 'minimal':
             configuration_object = config.iso_19115_v1_minimal_record
+        elif configuration == 'base':
+            configuration_object = config.iso_19115_v1_base_record
         else:
             return KeyError('Invalid configuration, valid options: [minimal]')
 

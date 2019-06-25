@@ -659,6 +659,9 @@
             "video"
           ]
         },
+        "spatial_resolution": {
+          "type": ["string", "null"]
+        },
         "language": {
           "$ref": "#/definitions/language"
         },
