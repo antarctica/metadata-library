@@ -28,6 +28,29 @@ test_standard_complete_record = {
     }
 }
 
+iso_19115_v1_minimal_record = {
+    'contacts': [
+        {
+            'role': ['pointOfContact']
+        }
+    ],
+    'date_stamp': datetime(2018, 10, 18, 14, 40, 44, tzinfo=timezone.utc),
+    'resource': {
+        'title': {
+            'value': 'Test Record'
+        },
+        'dates': [
+            {
+                'date': date(2018, 1, 1),
+                'date_precision': 'year',
+                'date_type': 'creation'
+            }
+        ],
+        'abstract': 'Test Record for ISO 19115 metadata standard (no profile) with required properties only.',
+        'language': 'eng'
+    }
+}
+
 test_record = {
     'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
     'language': 'eng',

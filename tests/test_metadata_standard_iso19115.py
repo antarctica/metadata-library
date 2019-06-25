@@ -13,12 +13,13 @@ from tests.test_base import BaseTestCase
 from tests import config
 
 
-class MetadataStandardISO19115BaseTestCase(BaseTestCase):
+class MinimalMetadataRecordTestCase(BaseTestCase):
     def setUp(self):
         super().setUp()
 
         self.ns = Namespaces()
-        self._set_metadata_config(configuration=config.test_record)
+        self.configuration = 'minimal'
+        self._set_metadata_config(configuration=config.iso_19115_v1_minimal_record)
 
     # Utilities
 
@@ -1024,7 +1025,7 @@ class MetadataStandardISO19115BaseTestCase(BaseTestCase):
 
     def test_record_xml_response(self):
         response = self.client.get(
-            '/standards/iso-19115',
+            f"/standards/iso-19115/{self.configuration}",
             base_url='http://localhost:9000'
         )
 
