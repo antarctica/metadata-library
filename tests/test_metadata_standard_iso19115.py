@@ -370,46 +370,50 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
     # Element tests
 
     def test_record_file_identifier(self):
-        file_identifier = self.test_response.find(
-            f"{{{self.ns.gmd}}}fileIdentifier/{{{self.ns.gco}}}CharacterString"
-        )
-        self.assertIsNotNone(file_identifier)
-        self.assertEqual(file_identifier.text, self.record_attributes['file_identifier'])
+        if 'file_identifier' in self.record_attributes:
+            file_identifier = self.test_response.find(
+                f"{{{self.ns.gmd}}}fileIdentifier/{{{self.ns.gco}}}CharacterString"
+            )
+            self.assertIsNotNone(file_identifier)
+            self.assertEqual(file_identifier.text, self.record_attributes['file_identifier'])
 
     def test_record_language(self):
-        language = self.test_response.find(f"{{{self.ns.gmd}}}language/{{{self.ns.gmd}}}LanguageCode")
-        self.assertIsNotNone(language)
-        self._test_language(language, self.record_attributes['language'])
+        if 'language' in self.record_attributes:
+            language = self.test_response.find(f"{{{self.ns.gmd}}}language/{{{self.ns.gmd}}}LanguageCode")
+            self.assertIsNotNone(language)
+            self._test_language(language, self.record_attributes['language'])
 
     def test_record_character_set(self):
-        character_set = self.test_response.find(
-            f"{{{self.ns.gmd}}}characterSet/{{{self.ns.gmd}}}MD_CharacterSetCode"
-        )
-        self.assertIsNotNone(character_set)
-        self.assertEqual(
-            character_set.attrib['codeList'],
-            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-            '/codelist/gmxCodelists.xml#MD_CharacterSetCode'
-        )
-        self.assertEqual(character_set.attrib['codeListValue'], self.record_attributes['character_set'])
-        self.assertEqual(character_set.text, self.record_attributes['character_set'])
+        if 'character_set' in self.record_attributes:
+            character_set = self.test_response.find(
+                f"{{{self.ns.gmd}}}characterSet/{{{self.ns.gmd}}}MD_CharacterSetCode"
+            )
+            self.assertIsNotNone(character_set)
+            self.assertEqual(
+                character_set.attrib['codeList'],
+                'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                '/codelist/gmxCodelists.xml#MD_CharacterSetCode'
+            )
+            self.assertEqual(character_set.attrib['codeListValue'], self.record_attributes['character_set'])
+            self.assertEqual(character_set.text, self.record_attributes['character_set'])
 
     def test_record_hierarchy_level(self):
-        hierarchy_level = self.test_response.find(f"{{{self.ns.gmd}}}hierarchyLevel/{{{self.ns.gmd}}}MD_ScopeCode")
-        self.assertIsNotNone(hierarchy_level)
-        self.assertEqual(
-            hierarchy_level.attrib['codeList'],
-            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-            '/codelist/gmxCodelists.xml#MD_ScopeCode'
-        )
-        self.assertEqual(hierarchy_level.attrib['codeListValue'], self.record_attributes['hierarchy_level'])
-        self.assertEqual(hierarchy_level.text, self.record_attributes['hierarchy_level'])
+        if 'hierarchy_level' in self.record_attributes:
+            hierarchy_level = self.test_response.find(f"{{{self.ns.gmd}}}hierarchyLevel/{{{self.ns.gmd}}}MD_ScopeCode")
+            self.assertIsNotNone(hierarchy_level)
+            self.assertEqual(
+                hierarchy_level.attrib['codeList'],
+                'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                '/codelist/gmxCodelists.xml#MD_ScopeCode'
+            )
+            self.assertEqual(hierarchy_level.attrib['codeListValue'], self.record_attributes['hierarchy_level'])
+            self.assertEqual(hierarchy_level.text, self.record_attributes['hierarchy_level'])
 
-        hierarchy_level_name = self.test_response.find(
-            f"{{{self.ns.gmd}}}hierarchyLevelName/{{{self.ns.gco}}}CharacterString"
-        )
-        self.assertIsNotNone(hierarchy_level_name)
-        self.assertEqual(hierarchy_level_name.text, self.record_attributes['hierarchy_level'])
+            hierarchy_level_name = self.test_response.find(
+                f"{{{self.ns.gmd}}}hierarchyLevelName/{{{self.ns.gco}}}CharacterString"
+            )
+            self.assertIsNotNone(hierarchy_level_name)
+            self.assertEqual(hierarchy_level_name.text, self.record_attributes['hierarchy_level'])
 
     def test_record_contact(self):
         expected_contacts = []
@@ -431,52 +435,61 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         self.assertEqual(datetime.fromisoformat(date_stamp.text), self.record_attributes['date_stamp'])
 
     def test_metadata_maintenance(self):
-        metadata_maintenance = self.test_response.find(
-            f"{{{self.ns.gmd}}}metadataMaintenance/{{{self.ns.gmd}}}MD_MaintenanceInformation"
-        )
-        self.assertIsNotNone(metadata_maintenance)
-        self._test_maintenance(metadata_maintenance, self.record_attributes['maintenance'])
+        if 'maintenance' in self.record_attributes:
+            metadata_maintenance = self.test_response.find(
+                f"{{{self.ns.gmd}}}metadataMaintenance/{{{self.ns.gmd}}}MD_MaintenanceInformation"
+            )
+            self.assertIsNotNone(metadata_maintenance)
+            self._test_maintenance(metadata_maintenance, self.record_attributes['maintenance'])
 
     def test_metadata_standard(self):
-        metadata_standard_name = self.test_response.find(
-            f"{{{self.ns.gmd}}}metadataStandardName/{{{self.ns.gco}}}CharacterString"
-        )
-        self.assertIsNotNone(metadata_standard_name)
-        self.assertEqual(metadata_standard_name.text, self.record_attributes['metadata_standard']['name'])
+        if 'metadata_standard' in self.record_attributes:
+            metadata_standard_name = self.test_response.find(
+                f"{{{self.ns.gmd}}}metadataStandardName/{{{self.ns.gco}}}CharacterString"
+            )
+            self.assertIsNotNone(metadata_standard_name)
+            self.assertEqual(metadata_standard_name.text, self.record_attributes['metadata_standard']['name'])
 
-        metadata_standard_version = self.test_response.find(
-            f"{{{self.ns.gmd}}}metadataStandardVersion/{{{self.ns.gco}}}CharacterString"
-        )
-        self.assertIsNotNone(metadata_standard_version)
-        self.assertEqual(metadata_standard_version.text, self.record_attributes['metadata_standard']['version'])
+            metadata_standard_version = self.test_response.find(
+                f"{{{self.ns.gmd}}}metadataStandardVersion/{{{self.ns.gco}}}CharacterString"
+            )
+            self.assertIsNotNone(metadata_standard_version)
+            self.assertEqual(metadata_standard_version.text, self.record_attributes['metadata_standard']['version'])
 
     def test_reference_system_identifier(self):
-        reference_system_identifier = self.test_response.find(
-            f"{{{self.ns.gmd}}}referenceSystemInfo/{{{self.ns.gmd}}}MD_ReferenceSystem/"
-            f"{{{self.ns.gmd}}}referenceSystemIdentifier/{{{self.ns.gmd}}}RS_Identifier"
-        )
-        self.assertIsNotNone(reference_system_identifier)
+        if 'reference_system_info' in self.record_attributes:
+            reference_system_identifier = self.test_response.find(
+                f"{{{self.ns.gmd}}}referenceSystemInfo/{{{self.ns.gmd}}}MD_ReferenceSystem/"
+                f"{{{self.ns.gmd}}}referenceSystemIdentifier/{{{self.ns.gmd}}}RS_Identifier"
+            )
+            self.assertIsNotNone(reference_system_identifier)
 
-        reference_system_authority = reference_system_identifier.find(
-            f"{{{self.ns.gmd}}}authority/{{{self.ns.gmd}}}CI_Citation"
-        )
-        self.assertIsNotNone(reference_system_authority)
-        self._test_citation(reference_system_authority, self.record_attributes['reference_system_info']['authority'])
+            reference_system_authority = reference_system_identifier.find(
+                f"{{{self.ns.gmd}}}authority/{{{self.ns.gmd}}}CI_Citation"
+            )
+            self.assertIsNotNone(reference_system_authority)
+            self._test_citation(
+                reference_system_authority,
+                self.record_attributes['reference_system_info']['authority']
+            )
 
-        reference_system_code = reference_system_identifier.find(f"{{{self.ns.gmd}}}code/{{{self.ns.gmx}}}Anchor")
-        self.assertIsNotNone(reference_system_code)
-        self.assertEqual(
-            reference_system_code.attrib[f"{{{self.ns.xlink}}}href"],
-            self.record_attributes['reference_system_info']['code']['href']
-        )
-        self.assertEqual(reference_system_code.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-        self.assertEqual(reference_system_code.text, self.record_attributes['reference_system_info']['code']['value'])
+            reference_system_code = reference_system_identifier.find(f"{{{self.ns.gmd}}}code/{{{self.ns.gmx}}}Anchor")
+            self.assertIsNotNone(reference_system_code)
+            self.assertEqual(
+                reference_system_code.attrib[f"{{{self.ns.xlink}}}href"],
+                self.record_attributes['reference_system_info']['code']['href']
+            )
+            self.assertEqual(reference_system_code.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+            self.assertEqual(
+                reference_system_code.text,
+                self.record_attributes['reference_system_info']['code']['value']
+            )
 
-        reference_system_version = reference_system_identifier.find(
-            f"{{{self.ns.gmd}}}version/{{{self.ns.gco}}}CharacterString"
-        )
-        self.assertIsNotNone(reference_system_version)
-        self.assertEqual(reference_system_version.text, self.record_attributes['reference_system_info']['version'])
+            reference_system_version = reference_system_identifier.find(
+                f"{{{self.ns.gmd}}}version/{{{self.ns.gco}}}CharacterString"
+            )
+            self.assertIsNotNone(reference_system_version)
+            self.assertEqual(reference_system_version.text, self.record_attributes['reference_system_info']['version'])
 
     def test_data_identification(self):
         data_identification = self.test_response.find(
@@ -502,194 +515,210 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
 
     def test_data_identification_point_of_contact(self):
         expected_pocs = []
-        for expected_poc in self.record_attributes['resource']['contacts']:
-            for role in expected_poc['role']:
-                if role != 'distributor':
-                    _expected_poc = expected_poc.copy()
-                    _expected_poc['role'] = role
-                    expected_pocs.append(_expected_poc)
+        if 'contacts' in self.record_attributes['resource']:
+            for expected_poc in self.record_attributes['resource']['contacts']:
+                for role in expected_poc['role']:
+                    if role != 'distributor':
+                        _expected_poc = expected_poc.copy()
+                        _expected_poc['role'] = role
+                        expected_pocs.append(_expected_poc)
 
-        base_xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty'
+            base_xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty'
 
-        for expected_poc in expected_pocs:
-            with self.subTest(expected_poc=expected_poc):
-                self._test_contact(contact_type='pointOfContact', contact=expected_poc, base_xpath=base_xpath)
+            for expected_poc in expected_pocs:
+                with self.subTest(expected_poc=expected_poc):
+                    self._test_contact(contact_type='pointOfContact', contact=expected_poc, base_xpath=base_xpath)
 
     def test_data_identification_resource_maintenance(self):
-        resource_maintenance = self.test_response.find(
-            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
-            f"{{{self.ns.gmd}}}resourceMaintenance/{{{self.ns.gmd}}}MD_MaintenanceInformation"
-        )
-        self.assertIsNotNone(resource_maintenance)
-        self._test_maintenance(resource_maintenance, self.record_attributes['resource']['maintenance'])
+        if 'maintenance' in self.record_attributes['resource']:
+            resource_maintenance = self.test_response.find(
+                f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+                f"{{{self.ns.gmd}}}resourceMaintenance/{{{self.ns.gmd}}}MD_MaintenanceInformation"
+            )
+            self.assertIsNotNone(resource_maintenance)
+            self._test_maintenance(resource_maintenance, self.record_attributes['resource']['maintenance'])
 
     def test_data_identification_keywords(self):
-        for expected_keyword in self.record_attributes['resource']['keywords']:
-            with self.subTest(expected_keyword=expected_keyword):
-                if 'thesaurus' not in expected_keyword:
-                    self.skipTest('only keywords with a thesaurus may be tested')
+        if 'keywords' in self.record_attributes['resource']:
+            for expected_keyword in self.record_attributes['resource']['keywords']:
+                with self.subTest(expected_keyword=expected_keyword):
+                    if 'thesaurus' not in expected_keyword:
+                        self.skipTest('only keywords with a thesaurus may be tested')
 
-                value_element = 'gco:CharacterString'
-                if 'href' in expected_keyword['thesaurus']['title']:
-                    value_element = 'gmx:Anchor'
-                xpath = f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords" \
-                    f"[gmd:thesaurusName[gmd:CI_Citation[gmd:title[{value_element}[text()=$name]]]]]"
-                keyword = self.test_response.xpath(
-                    xpath,
-                    name=expected_keyword['thesaurus']['title']['value'],
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(keyword), 1)
-                keyword = keyword[0]
-
-                for expected_term in expected_keyword['terms']:
                     value_element = 'gco:CharacterString'
-                    if 'href' in expected_term:
+                    if 'href' in expected_keyword['thesaurus']['title']:
                         value_element = 'gmx:Anchor'
-                    term = keyword.xpath(
-                        f"./gmd:keyword/{value_element}[text()=$term]",
-                        term=expected_term['term'],
+                    xpath = f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/" \
+                        f"gmd:MD_Keywords[gmd:thesaurusName[gmd:CI_Citation[gmd:title[{value_element}[text()=$name]]]]]"
+                    keyword = self.test_response.xpath(
+                        xpath,
+                        name=expected_keyword['thesaurus']['title']['value'],
                         namespaces=self.ns.nsmap()
                     )
-                    self.assertEqual(len(term), 1)
-                    term = term[0]
-                    self.assertEqual(term.text, expected_term['term'])
-                    if 'href' in expected_term:
-                        self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}href"], expected_term['href'])
-                        self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-                    if 'title' in expected_term:
-                        self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}title"], expected_term['title'])
+                    self.assertEqual(len(keyword), 1)
+                    keyword = keyword[0]
 
-                thesaurus_citation = keyword.find(f"{{{self.ns.gmd}}}thesaurusName/{{{self.ns.gmd}}}CI_Citation")
-                self.assertIsNotNone(thesaurus_citation)
-                self._test_citation(thesaurus_citation, expected_keyword['thesaurus'])
+                    for expected_term in expected_keyword['terms']:
+                        value_element = 'gco:CharacterString'
+                        if 'href' in expected_term:
+                            value_element = 'gmx:Anchor'
+                        term = keyword.xpath(
+                            f"./gmd:keyword/{value_element}[text()=$term]",
+                            term=expected_term['term'],
+                            namespaces=self.ns.nsmap()
+                        )
+                        self.assertEqual(len(term), 1)
+                        term = term[0]
+                        self.assertEqual(term.text, expected_term['term'])
+                        if 'href' in expected_term:
+                            self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}href"], expected_term['href'])
+                            self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                        if 'title' in expected_term:
+                            self.assertEqual(term.attrib[f"{{{self.ns.xlink}}}title"], expected_term['title'])
+
+                    thesaurus_citation = keyword.find(f"{{{self.ns.gmd}}}thesaurusName/{{{self.ns.gmd}}}CI_Citation")
+                    self.assertIsNotNone(thesaurus_citation)
+                    self._test_citation(thesaurus_citation, expected_keyword['thesaurus'])
 
     def test_data_identification_resource_constraints(self):
-        for expected_access_constraint in self.record_attributes['resource']['constraints']['access']:
-            if 'inspire_limitations_on_public_access' in expected_access_constraint:
-                constraint = self.test_response.xpath(
-                    f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                    f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor[text()=$term]]]",
-                    term=expected_access_constraint['inspire_limitations_on_public_access'],
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(constraint), 1)
-                constraint = constraint[0]
+        if 'constraints' in self.record_attributes['resource']:
+            for expected_access_constraint in self.record_attributes['resource']['constraints']['access']:
+                if 'inspire_limitations_on_public_access' in expected_access_constraint:
+                    constraint = self.test_response.xpath(
+                        f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                        f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor[text()=$term]]]",
+                        term=expected_access_constraint['inspire_limitations_on_public_access'],
+                        namespaces=self.ns.nsmap()
+                    )
+                    self.assertEqual(len(constraint), 1)
+                    constraint = constraint[0]
 
-                access_constraint = constraint.find(f"{{{self.ns.gmd}}}accessConstraints/"
-                                                    f"{{{self.ns.gmd}}}MD_RestrictionCode")
-                self.assertIsNotNone(access_constraint)
-                self.assertEqual(
-                    access_constraint.attrib['codeList'],
-                    'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-                    '/codelist/gmxCodelists.xml#MD_RestrictionCode'
-                )
-                self.assertEqual(
-                    access_constraint.attrib['codeListValue'],
-                    expected_access_constraint['restriction_code']
-                )
-                self.assertEqual(access_constraint.text, expected_access_constraint['restriction_code'])
+                    access_constraint = constraint.find(f"{{{self.ns.gmd}}}accessConstraints/"
+                                                        f"{{{self.ns.gmd}}}MD_RestrictionCode")
+                    self.assertIsNotNone(access_constraint)
+                    self.assertEqual(
+                        access_constraint.attrib['codeList'],
+                        'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                        '/codelist/gmxCodelists.xml#MD_RestrictionCode'
+                    )
+                    self.assertEqual(
+                        access_constraint.attrib['codeListValue'],
+                        expected_access_constraint['restriction_code']
+                    )
+                    self.assertEqual(access_constraint.text, expected_access_constraint['restriction_code'])
 
-                public_use_constraint = constraint.find(f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor")
-                self.assertIsNotNone(public_use_constraint)
-                self.assertEqual(
-                    public_use_constraint.attrib[f"{{{self.ns.xlink}}}href"],
-                    f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
-                    f"{expected_access_constraint['inspire_limitations_on_public_access']}"
-                )
-                self.assertEqual(public_use_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-                self.assertEqual(
-                    public_use_constraint.text,
-                    expected_access_constraint['inspire_limitations_on_public_access']
-                )
+                    public_use_constraint = constraint.find(
+                        f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor"
+                    )
+                    self.assertIsNotNone(public_use_constraint)
+                    self.assertEqual(
+                        public_use_constraint.attrib[f"{{{self.ns.xlink}}}href"],
+                        f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
+                        f"{expected_access_constraint['inspire_limitations_on_public_access']}"
+                    )
+                    self.assertEqual(public_use_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                    self.assertEqual(
+                        public_use_constraint.text,
+                        expected_access_constraint['inspire_limitations_on_public_access']
+                    )
 
-        for expected_usage_constraint in self.record_attributes['resource']['constraints']['usage']:
-            if 'copyright_licence' in expected_usage_constraint and \
-                    'href' in expected_usage_constraint['copyright_licence']:
-                constraint = self.test_response.xpath(
-                    f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                    f"gmd:MD_LegalConstraints[@id='copyright']",
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(constraint), 1)
-                constraint = constraint[0]
+            for expected_usage_constraint in self.record_attributes['resource']['constraints']['usage']:
+                if 'copyright_licence' in expected_usage_constraint and \
+                        'href' in expected_usage_constraint['copyright_licence']:
+                    constraint = self.test_response.xpath(
+                        f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                        f"gmd:MD_LegalConstraints[@id='copyright']",
+                        namespaces=self.ns.nsmap()
+                    )
+                    self.assertEqual(len(constraint), 1)
+                    constraint = constraint[0]
 
-                usage_constraint = constraint.find(f"{{{self.ns.gmd}}}useConstraints/"
-                                                   f"{{{self.ns.gmd}}}MD_RestrictionCode")
-                self.assertIsNotNone(usage_constraint)
-                self.assertEqual(
-                    usage_constraint.attrib['codeList'],
-                    'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-                    '/codelist/gmxCodelists.xml#MD_RestrictionCode'
-                )
-                self.assertEqual(
-                    usage_constraint.attrib['codeListValue'],
-                    expected_usage_constraint['restriction_code']
-                )
-                self.assertEqual(usage_constraint.text, expected_usage_constraint['restriction_code'])
+                    usage_constraint = constraint.find(f"{{{self.ns.gmd}}}useConstraints/"
+                                                       f"{{{self.ns.gmd}}}MD_RestrictionCode")
+                    self.assertIsNotNone(usage_constraint)
+                    self.assertEqual(
+                        usage_constraint.attrib['codeList'],
+                        'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                        '/codelist/gmxCodelists.xml#MD_RestrictionCode'
+                    )
+                    self.assertEqual(
+                        usage_constraint.attrib['codeListValue'],
+                        expected_usage_constraint['restriction_code']
+                    )
+                    self.assertEqual(usage_constraint.text, expected_usage_constraint['restriction_code'])
 
-                copyright_constraint = constraint.find(f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor")
-                self.assertIsNotNone(copyright_constraint)
-                self.assertEqual(
-                    copyright_constraint.attrib[f"{{{self.ns.xlink}}}href"],
-                    expected_usage_constraint['copyright_licence']['href']
-                )
-                self.assertEqual(copyright_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-                self.assertEqual(
-                    copyright_constraint.text,
-                    expected_usage_constraint['copyright_licence']['statement']
-                )
+                    copyright_constraint = constraint.find(f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor")
+                    self.assertIsNotNone(copyright_constraint)
+                    self.assertEqual(
+                        copyright_constraint.attrib[f"{{{self.ns.xlink}}}href"],
+                        expected_usage_constraint['copyright_licence']['href']
+                    )
+                    self.assertEqual(copyright_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                    self.assertEqual(
+                        copyright_constraint.text,
+                        expected_usage_constraint['copyright_licence']['statement']
+                    )
 
-            if 'required_citation' in expected_usage_constraint:
-                constraint = self.test_response.xpath(
-                    f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                    f"gmd:MD_LegalConstraints[@id='citation']",
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(constraint), 1)
-                constraint = constraint[0]
+                if 'required_citation' in expected_usage_constraint:
+                    constraint = self.test_response.xpath(
+                        f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                        f"gmd:MD_LegalConstraints[@id='citation']",
+                        namespaces=self.ns.nsmap()
+                    )
+                    self.assertEqual(len(constraint), 1)
+                    constraint = constraint[0]
 
-                citation_constraint = constraint.find(
-                    f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gco}}}CharacterString"
-                )
-                self.assertIsNotNone(citation_constraint)
-                self.assertEqual(
-                    citation_constraint.text,
-                    f"Cite this information as: \"{expected_usage_constraint['required_citation']}\""
-                )
+                    citation_constraint = constraint.find(
+                        f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gco}}}CharacterString"
+                    )
+                    self.assertIsNotNone(citation_constraint)
+                    self.assertEqual(
+                        citation_constraint.text,
+                        f"Cite this information as: \"{expected_usage_constraint['required_citation']}\""
+                    )
 
     def test_data_identification_supplemental_information(self):
-        supplemental_information = self.test_response.find(
-            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
-            f"{{{self.ns.gmd}}}supplementalInformation/{{{self.ns.gco}}}CharacterString"
-        )
-        self.assertIsNotNone(supplemental_information)
-        self.assertEqual(supplemental_information.text, self.record_attributes['resource']['supplemental_information'])
+        if 'supplemental_information' in self.record_attributes['resource']:
+            supplemental_information = self.test_response.find(
+                f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+                f"{{{self.ns.gmd}}}supplementalInformation/{{{self.ns.gco}}}CharacterString"
+            )
+            self.assertIsNotNone(supplemental_information)
+            self.assertEqual(
+                supplemental_information.text,
+                self.record_attributes['resource']['supplemental_information']
+            )
 
     def test_data_identification_spatial_representation_type(self):
-        representation_type = self.test_response.find(
-            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
-            f"{{{self.ns.gmd}}}spatialRepresentationType/{{{self.ns.gmd}}}MD_SpatialRepresentationTypeCode"
-        )
-        self.assertIsNotNone(representation_type)
-        self.assertEqual(
-            representation_type.attrib['codeList'],
-            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-            '/codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode'
-        )
-        self.assertEqual(
-            representation_type.attrib['codeListValue'],
-            self.record_attributes['resource']['spatial_representation_type']
-        )
-        self.assertEqual(representation_type.text, self.record_attributes['resource']['spatial_representation_type'])
+        if 'spatial_representation_type' in self.record_attributes['resource']:
+            representation_type = self.test_response.find(
+                f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+                f"{{{self.ns.gmd}}}spatialRepresentationType/{{{self.ns.gmd}}}MD_SpatialRepresentationTypeCode"
+            )
+            self.assertIsNotNone(representation_type)
+            self.assertEqual(
+                representation_type.attrib['codeList'],
+                'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                '/codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode'
+            )
+            self.assertEqual(
+                representation_type.attrib['codeListValue'],
+                self.record_attributes['resource']['spatial_representation_type']
+            )
+            self.assertEqual(
+                representation_type.text,
+                self.record_attributes['resource']['spatial_representation_type']
+            )
 
     def test_data_identification_spatial_resolution(self):
-        spatial_resolution = self.test_response.find(
-            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
-            f"{{{self.ns.gmd}}}spatialResolution/{{{self.ns.gmd}}}MD_Resolution/{{{self.ns.gmd}}}distance"
-        )
-        self.assertIsNotNone(spatial_resolution)
-        self.assertEqual(spatial_resolution.attrib[f"{{{self.ns.gco}}}nilReason"], 'inapplicable')
+        if 'spatial_resolution' in self.record_attributes['resource']:
+            spatial_resolution = self.test_response.find(
+                f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/"
+                f"{{{self.ns.gmd}}}spatialResolution/{{{self.ns.gmd}}}MD_Resolution/{{{self.ns.gmd}}}distance"
+            )
+            self.assertIsNotNone(spatial_resolution)
+            if self.record_attributes['resource']['spatial_resolution'] is None:
+                self.assertEqual(spatial_resolution.attrib[f"{{{self.ns.gco}}}nilReason"], 'inapplicable')
 
     def test_data_identification_language(self):
         language = self.test_response.find(
@@ -700,326 +729,356 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         self._test_language(language, self.record_attributes['resource']['language'])
 
     def test_data_identification_topic_categories(self):
-        for expected_topic in self.record_attributes['resource']['topics']:
-            with self.subTest(expected_topic=expected_topic):
-                topic = self.test_response.xpath(
-                    f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory"
-                    f"[gmd:MD_TopicCategoryCode[text()=$topic]]",
-                    topic=expected_topic,
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(topic), 1)
+        if 'topics' in self.record_attributes['resource']:
+            for expected_topic in self.record_attributes['resource']['topics']:
+                with self.subTest(expected_topic=expected_topic):
+                    topic = self.test_response.xpath(
+                        f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory"
+                        f"[gmd:MD_TopicCategoryCode[text()=$topic]]",
+                        topic=expected_topic,
+                        namespaces=self.ns.nsmap()
+                    )
+                    self.assertEqual(len(topic), 1)
 
     def test_data_identification_extent(self):
-        extent = self.test_response.find(
-            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent"
-            f"/{{{self.ns.gmd}}}EX_Extent"
-        )
-        self.assertIsNotNone(extent)
+        if 'extent' in self.record_attributes['resource']:
+            extent = self.test_response.find(
+                f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent"
+                f"/{{{self.ns.gmd}}}EX_Extent"
+            )
+            self.assertIsNotNone(extent)
 
     def test_data_identification_extent_geographic(self):
-        expected_bounding_box = self.record_attributes['resource']['extent']['geographic']['bounding_box']
-        bounding_box = self.test_response.find(
-            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent/"
-            f"{{{self.ns.gmd}}}EX_Extent/{{{self.ns.gmd}}}geographicElement/{{{self.ns.gmd}}}EX_GeographicBoundingBox"
-        )
-        self.assertIsNotNone(bounding_box)
+        if 'extent' in self.record_attributes['resource'] and 'geographic' in \
+                self.record_attributes['resource']['extent'] and 'bounding_box' in \
+                self.record_attributes['resource']['extent']['geographic']:
+            expected_bounding_box = self.record_attributes['resource']['extent']['geographic']['bounding_box']
+            bounding_box = self.test_response.find(
+                f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent/"
+                f"{{{self.ns.gmd}}}EX_Extent/{{{self.ns.gmd}}}geographicElement/"
+                f"{{{self.ns.gmd}}}EX_GeographicBoundingBox"
+            )
+            self.assertIsNotNone(bounding_box)
 
-        west = bounding_box.find(f"{{{self.ns.gmd}}}westBoundLongitude/{{{self.ns.gco}}}Decimal")
-        self.assertIsNotNone(west)
-        self.assertEqual(west.text, str(expected_bounding_box['west_longitude']))
+            west = bounding_box.find(f"{{{self.ns.gmd}}}westBoundLongitude/{{{self.ns.gco}}}Decimal")
+            self.assertIsNotNone(west)
+            self.assertEqual(west.text, str(expected_bounding_box['west_longitude']))
 
-        east = bounding_box.find(f"{{{self.ns.gmd}}}eastBoundLongitude/{{{self.ns.gco}}}Decimal")
-        self.assertIsNotNone(east)
-        self.assertEqual(east.text, str(expected_bounding_box['east_longitude']))
+            east = bounding_box.find(f"{{{self.ns.gmd}}}eastBoundLongitude/{{{self.ns.gco}}}Decimal")
+            self.assertIsNotNone(east)
+            self.assertEqual(east.text, str(expected_bounding_box['east_longitude']))
 
-        south = bounding_box.find(f"{{{self.ns.gmd}}}southBoundLatitude/{{{self.ns.gco}}}Decimal")
-        self.assertIsNotNone(south)
-        self.assertEqual(south.text, str(expected_bounding_box['south_latitude']))
+            south = bounding_box.find(f"{{{self.ns.gmd}}}southBoundLatitude/{{{self.ns.gco}}}Decimal")
+            self.assertIsNotNone(south)
+            self.assertEqual(south.text, str(expected_bounding_box['south_latitude']))
 
-        north = bounding_box.find(f"{{{self.ns.gmd}}}northBoundLatitude/{{{self.ns.gco}}}Decimal")
-        self.assertIsNotNone(north)
-        self.assertEqual(north.text, str(expected_bounding_box['north_latitude']))
+            north = bounding_box.find(f"{{{self.ns.gmd}}}northBoundLatitude/{{{self.ns.gco}}}Decimal")
+            self.assertIsNotNone(north)
+            self.assertEqual(north.text, str(expected_bounding_box['north_latitude']))
 
     def test_data_identification_extent_vertical(self):
-        vertical_extent = self.test_response.find(
-            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent/"
-            f"{{{self.ns.gmd}}}EX_Extent/{{{self.ns.gmd}}}verticalElement/{{{self.ns.gmd}}}EX_VerticalExtent"
-        )
-        self.assertIsNotNone(vertical_extent)
-
-        minimum = vertical_extent.find(f"{{{self.ns.gmd}}}minimumValue")
-        self.assertIsNotNone(minimum)
-        if 'minimum' in self.record_attributes['resource']['extent']['vertical']:
-            minimum_value = minimum.find(f"{{{self.ns.gco}}}Decimal")
-            self.assertIsNotNone(minimum_value)
-            self.assertEqual(
-                minimum_value.text,
-                str(self.record_attributes['resource']['extent']['vertical']['minimum'])
+        if 'extent' in self.record_attributes['resource'] and 'vertical' in \
+                self.record_attributes['resource']['extent']:
+            vertical_extent = self.test_response.find(
+                f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent/"
+                f"{{{self.ns.gmd}}}EX_Extent/{{{self.ns.gmd}}}verticalElement/{{{self.ns.gmd}}}EX_VerticalExtent"
             )
-        else:
-            self.assertEqual(minimum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
+            self.assertIsNotNone(vertical_extent)
 
-        maximum = vertical_extent.find(f"{{{self.ns.gmd}}}maximumValue")
-        self.assertIsNotNone(maximum)
-        if 'maximum' in self.record_attributes['resource']['extent']['vertical']:
-            minimum_value = maximum.find(f"{{{self.ns.gco}}}Decimal")
-            self.assertIsNotNone(minimum_value)
+            minimum = vertical_extent.find(f"{{{self.ns.gmd}}}minimumValue")
+            self.assertIsNotNone(minimum)
+            if 'minimum' in self.record_attributes['resource']['extent']['vertical']:
+                minimum_value = minimum.find(f"{{{self.ns.gco}}}Decimal")
+                self.assertIsNotNone(minimum_value)
+                self.assertEqual(
+                    minimum_value.text,
+                    str(self.record_attributes['resource']['extent']['vertical']['minimum'])
+                )
+            else:
+                self.assertEqual(minimum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
+
+            maximum = vertical_extent.find(f"{{{self.ns.gmd}}}maximumValue")
+            self.assertIsNotNone(maximum)
+            if 'maximum' in self.record_attributes['resource']['extent']['vertical']:
+                minimum_value = maximum.find(f"{{{self.ns.gco}}}Decimal")
+                self.assertIsNotNone(minimum_value)
+                self.assertEqual(
+                    minimum_value.text,
+                    str(self.record_attributes['resource']['extent']['vertical']['minimum'])
+                )
+            else:
+                self.assertEqual(maximum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
+
+            vertical_crs = vertical_extent.find(f"{{{self.ns.gmd}}}verticalCRS/{{{self.ns.gml}}}VerticalCRS")
+            self.assertIsNotNone(vertical_crs)
             self.assertEqual(
-                minimum_value.text,
-                str(self.record_attributes['resource']['extent']['vertical']['minimum'])
+                vertical_crs.attrib[f"{{{self.ns.gml}}}id"],
+                self.record_attributes['resource']['extent']['vertical']['identifier']
             )
-        else:
-            self.assertEqual(maximum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
 
-        vertical_crs = vertical_extent.find(f"{{{self.ns.gmd}}}verticalCRS/{{{self.ns.gml}}}VerticalCRS")
-        self.assertIsNotNone(vertical_crs)
-        self.assertEqual(
-            vertical_crs.attrib[f"{{{self.ns.gml}}}id"],
-            self.record_attributes['resource']['extent']['vertical']['identifier']
-        )
+            identifier = vertical_crs.find(f"{{{self.ns.gml}}}identifier")
+            self.assertIsNotNone(identifier)
+            self.assertEqual(identifier.attrib['codeSpace'], 'OGP')
+            self.assertEqual(identifier.text, self.record_attributes['resource']['extent']['vertical']['code'])
 
-        identifier = vertical_crs.find(f"{{{self.ns.gml}}}identifier")
-        self.assertIsNotNone(identifier)
-        self.assertEqual(identifier.attrib['codeSpace'], 'OGP')
-        self.assertEqual(identifier.text, self.record_attributes['resource']['extent']['vertical']['code'])
+            name = vertical_crs.find(f"{{{self.ns.gml}}}name")
+            self.assertIsNotNone(name)
+            self.assertEqual(name.text, self.record_attributes['resource']['extent']['vertical']['name'])
 
-        name = vertical_crs.find(f"{{{self.ns.gml}}}name")
-        self.assertIsNotNone(name)
-        self.assertEqual(name.text, self.record_attributes['resource']['extent']['vertical']['name'])
+            remarks = vertical_crs.find(f"{{{self.ns.gml}}}remarks")
+            self.assertIsNotNone(remarks)
+            self.assertEqual(remarks.text, self.record_attributes['resource']['extent']['vertical']['remarks'])
 
-        remarks = vertical_crs.find(f"{{{self.ns.gml}}}remarks")
-        self.assertIsNotNone(remarks)
-        self.assertEqual(remarks.text, self.record_attributes['resource']['extent']['vertical']['remarks'])
+            domain = vertical_crs.find(f"{{{self.ns.gml}}}domainOfValidity")
+            self.assertIsNotNone(domain)
+            self.assertEqual(
+                domain.attrib[f"{{{self.ns.xlink}}}href"],
+                self.record_attributes['resource']['extent']['vertical']['domain_of_validity']['href']
+            )
 
-        domain = vertical_crs.find(f"{{{self.ns.gml}}}domainOfValidity")
-        self.assertIsNotNone(domain)
-        self.assertEqual(
-            domain.attrib[f"{{{self.ns.xlink}}}href"],
-            self.record_attributes['resource']['extent']['vertical']['domain_of_validity']['href']
-        )
+            scope = vertical_crs.find(f"{{{self.ns.gml}}}scope")
+            self.assertIsNotNone(scope)
+            self.assertEqual(scope.text, self.record_attributes['resource']['extent']['vertical']['scope'])
 
-        scope = vertical_crs.find(f"{{{self.ns.gml}}}scope")
-        self.assertIsNotNone(scope)
-        self.assertEqual(scope.text, self.record_attributes['resource']['extent']['vertical']['scope'])
+            vertical_cs = vertical_crs.find(f"{{{self.ns.gml}}}verticalCS")
+            self.assertIsNotNone(vertical_cs)
+            self.assertEqual(
+                vertical_cs.attrib[f"{{{self.ns.xlink}}}href"],
+                self.record_attributes['resource']['extent']['vertical']['vertical_cs']['href']
+            )
 
-        vertical_cs = vertical_crs.find(f"{{{self.ns.gml}}}verticalCS")
-        self.assertIsNotNone(vertical_cs)
-        self.assertEqual(
-            vertical_cs.attrib[f"{{{self.ns.xlink}}}href"],
-            self.record_attributes['resource']['extent']['vertical']['vertical_cs']['href']
-        )
-
-        vertical_datum = vertical_crs.find(f"{{{self.ns.gml}}}verticalDatum")
-        self.assertIsNotNone(vertical_datum)
-        self.assertEqual(
-            vertical_datum.attrib[f"{{{self.ns.xlink}}}href"],
-            self.record_attributes['resource']['extent']['vertical']['vertical_datum']['href']
-        )
+            vertical_datum = vertical_crs.find(f"{{{self.ns.gml}}}verticalDatum")
+            self.assertIsNotNone(vertical_datum)
+            self.assertEqual(
+                vertical_datum.attrib[f"{{{self.ns.xlink}}}href"],
+                self.record_attributes['resource']['extent']['vertical']['vertical_datum']['href']
+            )
 
     def test_data_identification_extent_temporal(self):
-        temporal_extent = self.test_response.find(
-            f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent/"
-            f"{{{self.ns.gmd}}}EX_Extent/{{{self.ns.gmd}}}temporalElement/{{{self.ns.gmd}}}EX_TemporalExtent/"
-            f"{{{self.ns.gmd}}}extent/{{{self.ns.gml}}}TimePeriod"
-        )
-        self.assertIsNotNone(temporal_extent)
-        self.assertEqual(temporal_extent.attrib[f"{{{self.ns.gml}}}id"], 'boundingExtent')
+        if 'extent' in self.record_attributes['resource'] and 'temporal' in \
+                self.record_attributes['resource']['extent']:
+            temporal_extent = self.test_response.find(
+                f"{{{self.ns.gmd}}}identificationInfo/{{{self.ns.gmd}}}MD_DataIdentification/{{{self.ns.gmd}}}extent/"
+                f"{{{self.ns.gmd}}}EX_Extent/{{{self.ns.gmd}}}temporalElement/{{{self.ns.gmd}}}EX_TemporalExtent/"
+                f"{{{self.ns.gmd}}}extent/{{{self.ns.gml}}}TimePeriod"
+            )
+            self.assertIsNotNone(temporal_extent)
+            self.assertEqual(temporal_extent.attrib[f"{{{self.ns.gml}}}id"], 'boundingExtent')
 
-        beginning = temporal_extent.find(f"{{{self.ns.gml}}}beginPosition")
-        self.assertIsNotNone(datetime.fromisoformat(beginning.text))
-        self.assertEqual(
-            self._test_date_datetime(
-                beginning.text,
+            beginning = temporal_extent.find(f"{{{self.ns.gml}}}beginPosition")
+            self.assertIsNotNone(datetime.fromisoformat(beginning.text))
+            self.assertEqual(
+                self._test_date_datetime(
+                    beginning.text,
+                    self.record_attributes['resource']['extent']['temporal']['period']['start']
+                ),
                 self.record_attributes['resource']['extent']['temporal']['period']['start']
-            ),
-            self.record_attributes['resource']['extent']['temporal']['period']['start']
-        )
+            )
 
-        end = temporal_extent.find(f"{{{self.ns.gml}}}endPosition")
-        self.assertIsNotNone(end)
-        self.assertEqual(
-            self._test_date_datetime(
-                end.text,
+            end = temporal_extent.find(f"{{{self.ns.gml}}}endPosition")
+            self.assertIsNotNone(end)
+            self.assertEqual(
+                self._test_date_datetime(
+                    end.text,
+                    self.record_attributes['resource']['extent']['temporal']['period']['end']
+                ),
                 self.record_attributes['resource']['extent']['temporal']['period']['end']
-            ),
-            self.record_attributes['resource']['extent']['temporal']['period']['end']
-        )
+            )
 
     def test_data_distribution(self):
-        data_distribution = self.test_response.find(
-            f"{{{self.ns.gmd}}}distributionInfo/{{{self.ns.gmd}}}MD_Distribution/"
-        )
-        self.assertIsNotNone(data_distribution)
+        _has_data_distributor = False
+        if 'contacts' in self.record_attributes['resource']:
+            for expected_distributor in self.record_attributes['resource']['contacts']:
+                for role in expected_distributor['role']:
+                    if role == 'distributor':
+                        _has_data_distributor = True
+                        break
+
+        if 'formats' in self.record_attributes['resource'] or 'transfer_options' in self.record_attributes['resource'] \
+                or _has_data_distributor:
+            data_distribution = self.test_response.find(
+                f"{{{self.ns.gmd}}}distributionInfo/{{{self.ns.gmd}}}MD_Distribution/"
+            )
+            self.assertIsNotNone(data_distribution)
 
     def test_data_distribution_formats(self):
-        for expected_format in self.record_attributes['resource']['formats']:
-            with self.subTest(expected_format=expected_format):
-                base_xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format'
-                xpath = f"{base_xpath}[gmd:name[gco:CharacterString[text()=$format]]]"
-                format_identifier = expected_format['format']
+        if 'formats' in self.record_attributes['resource']:
+            for expected_format in self.record_attributes['resource']['formats']:
+                with self.subTest(expected_format=expected_format):
+                    base_xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format'
+                    xpath = f"{base_xpath}[gmd:name[gco:CharacterString[text()=$format]]]"
+                    format_identifier = expected_format['format']
 
-                if 'href' in expected_format:
-                    xpath = f"{base_xpath}[gmd:name[gmx:Anchor[@xlink:href=$format]]]"
-                    format_identifier = expected_format['href']
+                    if 'href' in expected_format:
+                        xpath = f"{base_xpath}[gmd:name[gmx:Anchor[@xlink:href=$format]]]"
+                        format_identifier = expected_format['href']
 
-                transfer_format = self.test_response.xpath(
-                    xpath,
-                    format=format_identifier,
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(transfer_format), 1)
-                transfer_format = transfer_format[0]
-
-                if 'href' in expected_format:
-                    transfer_format_value = transfer_format.find(f"{{{self.ns.gmd}}}name/{{{self.ns.gmx}}}Anchor")
-                    self.assertIsNotNone(transfer_format_value)
-                    self.assertEqual(
-                        transfer_format_value.attrib[f"{{{self.ns.xlink}}}href"],
-                        expected_format['href']
+                    transfer_format = self.test_response.xpath(
+                        xpath,
+                        format=format_identifier,
+                        namespaces=self.ns.nsmap()
                     )
-                    self.assertEqual(transfer_format_value.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-                    if 'title' in expected_format:
+                    self.assertEqual(len(transfer_format), 1)
+                    transfer_format = transfer_format[0]
+
+                    if 'href' in expected_format:
+                        transfer_format_value = transfer_format.find(f"{{{self.ns.gmd}}}name/{{{self.ns.gmx}}}Anchor")
+                        self.assertIsNotNone(transfer_format_value)
                         self.assertEqual(
-                            transfer_format_value.attrib[f"{{{self.ns.xlink}}}title"],
-                            expected_format['title']
+                            transfer_format_value.attrib[f"{{{self.ns.xlink}}}href"],
+                            expected_format['href']
                         )
-                else:
-                    transfer_format_value = transfer_format.find(
-                        f"{{{self.ns.gmd}}}name/{{{self.ns.gco}}}CharacterString"
-                    )
-                    self.assertIsNotNone(transfer_format_value)
-                self.assertEqual(transfer_format_value.text, expected_format['format'])
+                        self.assertEqual(transfer_format_value.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                        if 'title' in expected_format:
+                            self.assertEqual(
+                                transfer_format_value.attrib[f"{{{self.ns.xlink}}}title"],
+                                expected_format['title']
+                            )
+                    else:
+                        transfer_format_value = transfer_format.find(
+                            f"{{{self.ns.gmd}}}name/{{{self.ns.gco}}}CharacterString"
+                        )
+                        self.assertIsNotNone(transfer_format_value)
+                    self.assertEqual(transfer_format_value.text, expected_format['format'])
 
     def test_data_distribution_distributors(self):
         expected_distributors = []
-        for expected_distributor in self.record_attributes['resource']['contacts']:
-            for role in expected_distributor['role']:
-                if role == 'distributor':
-                    _expected_poc = expected_distributor.copy()
-                    _expected_poc['role'] = role
-                    expected_distributors.append(_expected_poc)
 
-        base_xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/' \
-                     'gmd:distributorContact/gmd:CI_ResponsibleParty'
+        if 'contacts' in self.record_attributes['resource']:
+            for expected_distributor in self.record_attributes['resource']['contacts']:
+                for role in expected_distributor['role']:
+                    if role == 'distributor':
+                        _expected_poc = expected_distributor.copy()
+                        _expected_poc['role'] = role
+                        expected_distributors.append(_expected_poc)
 
-        for expected_distributor in expected_distributors:
-            with self.subTest(expected_distributor=expected_distributor):
-                self._test_contact(contact_type='distributor', contact=expected_distributor, base_xpath=base_xpath)
+            base_xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/' \
+                         'gmd:distributorContact/gmd:CI_ResponsibleParty'
+
+            for expected_distributor in expected_distributors:
+                with self.subTest(expected_distributor=expected_distributor):
+                    self._test_contact(contact_type='distributor', contact=expected_distributor, base_xpath=base_xpath)
 
     def test_data_distribution_transfer_options(self):
-        for expected_transfer_options in self.record_attributes['resource']['transfer_options']:
-            with self.subTest(expected_transfer_options=expected_transfer_options):
-                xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions' \
-                        '[gmd:onLine[gmd:CI_OnlineResource[gmd:linkage[gmd:URL[text()=$transfer_option]]]]]'
+        if 'transfer_options' in self.record_attributes['resource']:
+            for expected_transfer_options in self.record_attributes['resource']['transfer_options']:
+                with self.subTest(expected_transfer_options=expected_transfer_options):
+                    xpath = './gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/' \
+                            'gmd:MD_DigitalTransferOptions[gmd:onLine[gmd:CI_OnlineResource' \
+                            '[gmd:linkage[gmd:URL[text()=$transfer_option]]]]]'
 
-                transfer_option = self.test_response.xpath(
-                    xpath,
-                    transfer_option=expected_transfer_options['online_resource']['href'],
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(transfer_option), 1)
-                transfer_option = transfer_option[0]
+                    transfer_option = self.test_response.xpath(
+                        xpath,
+                        transfer_option=expected_transfer_options['online_resource']['href'],
+                        namespaces=self.ns.nsmap()
+                    )
+                    self.assertEqual(len(transfer_option), 1)
+                    transfer_option = transfer_option[0]
 
-                if 'size' in expected_transfer_options:
-                    if 'unit' in expected_transfer_options['size']:
-                        unit_value = transfer_option.find(
-                            f"{{{self.ns.gmd}}}unitsOfDistribution/{{{self.ns.gco}}}CharacterString"
-                        )
-                        self.assertIsNotNone(unit_value)
-                        self.assertEqual(unit_value.text, expected_transfer_options['size']['unit'])
-                    if 'magnitude' in expected_transfer_options['size']:
-                        unit_value = transfer_option.find(
-                            f"{{{self.ns.gmd}}}transferSize/{{{self.ns.gco}}}Real"
-                        )
-                        self.assertIsNotNone(unit_value)
-                        self.assertEqual(unit_value.text, str(expected_transfer_options['size']['magnitude']))
+                    if 'size' in expected_transfer_options:
+                        if 'unit' in expected_transfer_options['size']:
+                            unit_value = transfer_option.find(
+                                f"{{{self.ns.gmd}}}unitsOfDistribution/{{{self.ns.gco}}}CharacterString"
+                            )
+                            self.assertIsNotNone(unit_value)
+                            self.assertEqual(unit_value.text, expected_transfer_options['size']['unit'])
+                        if 'magnitude' in expected_transfer_options['size']:
+                            unit_value = transfer_option.find(
+                                f"{{{self.ns.gmd}}}transferSize/{{{self.ns.gco}}}Real"
+                            )
+                            self.assertIsNotNone(unit_value)
+                            self.assertEqual(unit_value.text, str(expected_transfer_options['size']['magnitude']))
 
-                self._test_online_resource(transfer_option, expected_transfer_options)
+                    self._test_online_resource(transfer_option, expected_transfer_options)
 
     def test_data_quality(self):
-        data_quality = self.test_response.find(
-            f"{{{self.ns.gmd}}}dataQualityInfo/{{{self.ns.gmd}}}DQ_DataQuality"
-        )
-        self.assertIsNotNone(data_quality)
+        if 'measures' in self.record_attributes['resource'] or 'lineage' in self.record_attributes['resource'] or \
+                'hierarchy_level' in self.record_attributes:
+            data_quality = self.test_response.find(
+                f"{{{self.ns.gmd}}}dataQualityInfo/{{{self.ns.gmd}}}DQ_DataQuality"
+            )
+            self.assertIsNotNone(data_quality)
 
     def test_data_quality_scope(self):
-        scope = self.test_response.find(
-            f"{{{self.ns.gmd}}}dataQualityInfo/{{{self.ns.gmd}}}DQ_DataQuality/{{{self.ns.gmd}}}scope/"
-            f"{{{self.ns.gmd}}}DQ_Scope"
-        )
-        self.assertIsNotNone(scope)
+        if 'hierarchy_level' in self.record_attributes:
+            scope = self.test_response.find(
+                f"{{{self.ns.gmd}}}dataQualityInfo/{{{self.ns.gmd}}}DQ_DataQuality/{{{self.ns.gmd}}}scope/"
+                f"{{{self.ns.gmd}}}DQ_Scope"
+            )
+            self.assertIsNotNone(scope)
 
-        scope_code = scope.find(f"{{{self.ns.gmd}}}level/{{{self.ns.gmd}}}MD_ScopeCode")
-        self.assertIsNotNone(scope_code)
-        self.assertEqual(
-            scope_code.attrib['codeList'],
-            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-            '/codelist/gmxCodelists.xml#MD_ScopeCode'
-        )
-        self.assertEqual(scope_code.attrib['codeListValue'], self.record_attributes['hierarchy_level'])
-        self.assertEqual(scope_code.text, self.record_attributes['hierarchy_level'])
+            scope_code = scope.find(f"{{{self.ns.gmd}}}level/{{{self.ns.gmd}}}MD_ScopeCode")
+            self.assertIsNotNone(scope_code)
+            self.assertEqual(
+                scope_code.attrib['codeList'],
+                'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                '/codelist/gmxCodelists.xml#MD_ScopeCode'
+            )
+            self.assertEqual(scope_code.attrib['codeListValue'], self.record_attributes['hierarchy_level'])
+            self.assertEqual(scope_code.text, self.record_attributes['hierarchy_level'])
 
     def test_data_quality_measures(self):
-        for expected_measure in self.record_attributes['resource']['measures']:
-            with self.subTest(expected_measure=expected_measure):
-                xpath = './gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency' \
-                        '[gmd:measureIdentification[gmd:RS_Identifier[gmd:code[gco:CharacterString[text()=$code]] and' \
-                        ' gmd:codeSpace[gco:CharacterString[text()=$code_space]]]]]'
+        if 'measures' in self.record_attributes['resource']:
+            for expected_measure in self.record_attributes['resource']['measures']:
+                with self.subTest(expected_measure=expected_measure):
+                    xpath = './gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency' \
+                            '[gmd:measureIdentification[gmd:RS_Identifier[gmd:code[gco:CharacterString[text()=$code]]' \
+                            ' and gmd:codeSpace[gco:CharacterString[text()=$code_space]]]]]'
 
-                measure = self.test_response.xpath(
-                    xpath,
-                    code=expected_measure['code'],
-                    code_space=expected_measure['code_space'],
-                    namespaces=self.ns.nsmap()
-                )
-                self.assertEqual(len(measure), 1)
-                measure = measure[0]
+                    measure = self.test_response.xpath(
+                        xpath,
+                        code=expected_measure['code'],
+                        code_space=expected_measure['code_space'],
+                        namespaces=self.ns.nsmap()
+                    )
+                    self.assertEqual(len(measure), 1)
+                    measure = measure[0]
 
-                measure_identifier = measure.find(
-                    f"{{{self.ns.gmd}}}measureIdentification/{{{self.ns.gmd}}}RS_Identifier"
-                )
-                self.assertIsNotNone(measure_identifier)
-                measure_identifier_code = measure_identifier.find(
-                    f"{{{self.ns.gmd}}}code/{{{self.ns.gco}}}CharacterString"
-                )
-                self.assertIsNotNone(measure_identifier_code)
-                self.assertEqual(measure_identifier_code.text, expected_measure['code'])
-                measure_identifier_code_space = measure_identifier.find(
-                    f"{{{self.ns.gmd}}}codeSpace/{{{self.ns.gco}}}CharacterString"
-                )
-                self.assertIsNotNone(measure_identifier_code_space)
-                self.assertEqual(measure_identifier_code_space.text, expected_measure['code_space'])
+                    measure_identifier = measure.find(
+                        f"{{{self.ns.gmd}}}measureIdentification/{{{self.ns.gmd}}}RS_Identifier"
+                    )
+                    self.assertIsNotNone(measure_identifier)
+                    measure_identifier_code = measure_identifier.find(
+                        f"{{{self.ns.gmd}}}code/{{{self.ns.gco}}}CharacterString"
+                    )
+                    self.assertIsNotNone(measure_identifier_code)
+                    self.assertEqual(measure_identifier_code.text, expected_measure['code'])
+                    measure_identifier_code_space = measure_identifier.find(
+                        f"{{{self.ns.gmd}}}codeSpace/{{{self.ns.gco}}}CharacterString"
+                    )
+                    self.assertIsNotNone(measure_identifier_code_space)
+                    self.assertEqual(measure_identifier_code_space.text, expected_measure['code_space'])
 
-                measure_result = measure.find(
-                    f"{{{self.ns.gmd}}}result/{{{self.ns.gmd}}}DQ_ConformanceResult"
-                )
+                    measure_result = measure.find(
+                        f"{{{self.ns.gmd}}}result/{{{self.ns.gmd}}}DQ_ConformanceResult"
+                    )
 
-                measure_citation = measure_result.find(
-                    f"{{{self.ns.gmd}}}specification/{{{self.ns.gmd}}}CI_Citation"
-                )
-                self.assertIsNotNone(measure_citation)
-                self._test_citation(measure_citation, expected_measure)
+                    measure_citation = measure_result.find(
+                        f"{{{self.ns.gmd}}}specification/{{{self.ns.gmd}}}CI_Citation"
+                    )
+                    self.assertIsNotNone(measure_citation)
+                    self._test_citation(measure_citation, expected_measure)
 
-                measure_explanation = measure_result.find(
-                    f"{{{self.ns.gmd}}}explanation/{{{self.ns.gco}}}CharacterString"
-                )
-                self.assertIsNotNone(measure_explanation)
-                self.assertEqual(measure_explanation.text, expected_measure['explanation'])
+                    measure_explanation = measure_result.find(
+                        f"{{{self.ns.gmd}}}explanation/{{{self.ns.gco}}}CharacterString"
+                    )
+                    self.assertIsNotNone(measure_explanation)
+                    self.assertEqual(measure_explanation.text, expected_measure['explanation'])
 
-                measure_pass = measure_result.find(
-                    f"{{{self.ns.gmd}}}pass/{{{self.ns.gco}}}Boolean"
-                )
-                self.assertIsNotNone(measure_pass)
-                self.assertEqual(measure_pass.text, str(expected_measure['pass']).lower())
+                    measure_pass = measure_result.find(
+                        f"{{{self.ns.gmd}}}pass/{{{self.ns.gco}}}Boolean"
+                    )
+                    self.assertIsNotNone(measure_pass)
+                    self.assertEqual(measure_pass.text, str(expected_measure['pass']).lower())
 
     def test_data_quality_lineage(self):
-        lineage = self.test_response.find(
-            f"{{{self.ns.gmd}}}dataQualityInfo/{{{self.ns.gmd}}}DQ_DataQuality/{{{self.ns.gmd}}}lineage/"
-            f"{{{self.ns.gmd}}}LI_Lineage/{{{self.ns.gmd}}}statement/{{{self.ns.gco}}}CharacterString"
-        )
-        self.assertIsNotNone(lineage)
-        self.assertEqual(lineage.text, self.record_attributes['resource']['lineage'])
+        if 'lineage' in self.record_attributes['resource']:
+            lineage = self.test_response.find(
+                f"{{{self.ns.gmd}}}dataQualityInfo/{{{self.ns.gmd}}}DQ_DataQuality/{{{self.ns.gmd}}}lineage/"
+                f"{{{self.ns.gmd}}}LI_Lineage/{{{self.ns.gmd}}}statement/{{{self.ns.gco}}}CharacterString"
+            )
+            self.assertIsNotNone(lineage)
+            self.assertEqual(lineage.text, self.record_attributes['resource']['lineage'])
 
     # Route test
 

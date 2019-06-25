@@ -422,6 +422,7 @@ test_record = {
                                     'that the author be contacted with any questions regarding appropriate use. If you '
                                     'find any errors or omissions, please report them to polardatacentre@bas.ac.uk.',
         'spatial_representation_type': 'textTable',
+        'spatial_resolution': None,
         'language': 'eng',
         'topics': [
             'environment',
