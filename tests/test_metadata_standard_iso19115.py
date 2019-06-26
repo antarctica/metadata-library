@@ -480,17 +480,31 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
                     self.record_attributes['reference_system_info']['authority']
                 )
 
-            reference_system_code = reference_system_identifier.find(f"{{{self.ns.gmd}}}code/{{{self.ns.gmx}}}Anchor")
+            reference_system_code = reference_system_identifier.find(f"{{{self.ns.gmd}}}code")
             self.assertIsNotNone(reference_system_code)
-            self.assertEqual(
-                reference_system_code.attrib[f"{{{self.ns.xlink}}}href"],
-                self.record_attributes['reference_system_info']['code']['href']
-            )
-            self.assertEqual(reference_system_code.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-            self.assertEqual(
-                reference_system_code.text,
-                self.record_attributes['reference_system_info']['code']['value']
-            )
+
+            if 'href' in self.record_attributes['reference_system_info']['code']:
+                reference_system_code_anchor = reference_system_code.find(f"{{{self.ns.gmx}}}Anchor")
+                self.assertIsNotNone(reference_system_code_anchor)
+
+                self.assertEqual(
+                    reference_system_code_anchor.attrib[f"{{{self.ns.xlink}}}href"],
+                    self.record_attributes['reference_system_info']['code']['href']
+                )
+                self.assertEqual(reference_system_code_anchor.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+
+                self.assertEqual(
+                    reference_system_code_anchor.text,
+                    self.record_attributes['reference_system_info']['code']['value']
+                )
+            else:
+                reference_system_code_value = reference_system_code.find(f"{{{self.ns.gco}}}CharacterString")
+                self.assertIsNotNone(reference_system_code_value)
+
+                self.assertEqual(
+                    reference_system_code_value.text,
+                    self.record_attributes['reference_system_info']['code']['value']
+                )
 
             if 'version' in self.record_attributes['reference_system_info']:
                 reference_system_version = reference_system_identifier.find(
@@ -796,7 +810,7 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
             minimum = vertical_extent.find(f"{{{self.ns.gmd}}}minimumValue")
             self.assertIsNotNone(minimum)
             if 'minimum' in self.record_attributes['resource']['extent']['vertical']:
-                minimum_value = minimum.find(f"{{{self.ns.gco}}}Decimal")
+                minimum_value = minimum.find(f"{{{self.ns.gco}}}Real")
                 self.assertIsNotNone(minimum_value)
                 self.assertEqual(
                     minimum_value.text,
@@ -808,11 +822,11 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
             maximum = vertical_extent.find(f"{{{self.ns.gmd}}}maximumValue")
             self.assertIsNotNone(maximum)
             if 'maximum' in self.record_attributes['resource']['extent']['vertical']:
-                minimum_value = maximum.find(f"{{{self.ns.gco}}}Decimal")
-                self.assertIsNotNone(minimum_value)
+                maximum_value = maximum.find(f"{{{self.ns.gco}}}Real")
+                self.assertIsNotNone(maximum_value)
                 self.assertEqual(
-                    minimum_value.text,
-                    str(self.record_attributes['resource']['extent']['vertical']['minimum'])
+                    maximum_value.text,
+                    str(self.record_attributes['resource']['extent']['vertical']['maximum'])
                 )
             else:
                 self.assertEqual(maximum.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
@@ -1101,7 +1115,20 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         self.assertEqual(response.data, self.test_document)
 
 
-class BaselineMetadataRecordTestCase(MinimalMetadataRecordTestCase):
+class BaselineSimpleMetadataRecordTestCase(MinimalMetadataRecordTestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.configuration = 'base-simple'
+        self._set_metadata_config(configuration=config.iso_19115_v1_base_simple_record)
+
+
+class BaselineComplexMetadataRecordTestCase(MinimalMetadataRecordTestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.configuration = 'base-complex'
+        self._set_metadata_config(configuration=config.iso_19115_v1_base_complex_record)
     def setUp(self):
         super().setUp()
 

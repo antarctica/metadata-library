@@ -403,6 +403,12 @@
       "required": [],
       "additionalProperties": false,
       "properties": {
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
         "identifier": {
           "type": "string"
         },

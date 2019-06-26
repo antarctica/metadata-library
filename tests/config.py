@@ -51,7 +51,171 @@ iso_19115_v1_minimal_record = {
     }
 }
 
-iso_19115_v1_base_record = {
+iso_19115_v1_base_simple_record = {
+    'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
+    'language': 'eng',
+    'character_set': 'utf8',
+    'hierarchy_level': 'dataset',
+    'contacts': [
+        {
+            'organisation': {
+                'name': 'UK Polar Data Centre'
+            },
+            'phone': '+44 (0)1223 221400',
+            'address': {
+                'delivery_point': 'British Antarctic Survey, High Cross, Madingley Road',
+                'city': 'Cambridge',
+                'administrative_area': 'Cambridgeshire',
+                'postal_code': 'CB3 0ET',
+                'country': 'United Kingdom'
+            },
+            'email': 'polardatacentre@bas.ac.uk',
+            'role': ['pointOfContact']
+        }
+    ],
+    'date_stamp': datetime(2018, 10, 18, 14, 40, 44, tzinfo=timezone.utc),
+    'maintenance': {
+        'maintenance_frequency': 'asNeeded',
+        'progress': 'completed'
+    },
+    'metadata_standard': {
+        'name': 'ISO 19115',
+        'version': '1.0'
+    },
+    'reference_system_info': {
+        'code': {
+            'value': 'urn:ogc:def:crs:EPSG::4326'
+        }
+    },
+    'resource': {
+        'title': {
+            'value': 'Test Record'
+        },
+        'abstract': 'Test Record for ISO 19115 metadata standard (no profile) with simple baseline properties only. In '
+                    'this context baseline properties are those that are required, or have default values. Values in '
+                    'this record are non-complex, meaning they are simple character strings rather than anchors. '
+                    'Authorities are not included in elements that support citations.',
+        'dates': [
+            {
+                'date': date(2018, 1, 1),
+                'date_precision': 'year',
+                'date_type': 'creation'
+            },
+            {
+                'date': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
+                'date_type': 'publication'
+            }
+        ],
+        'contacts': [
+            {
+                'individual': {
+                    'name': 'Watson, Constance'
+                },
+                'organisation': {
+                    'name': 'British Antarctic Survey'
+                },
+                'email': 'conwat@bas.ac.uk',
+                'role': ['author']
+            },
+            {
+                'organisation': {
+                    'name': 'UK Polar Data Centre'
+                },
+                'phone': '+44 (0)1223 221400',
+                'address': {
+                    'delivery_point': 'British Antarctic Survey, High Cross, Madingley Road',
+                    'city': 'Cambridge',
+                    'administrative_area': 'Cambridgeshire',
+                    'postal_code': 'CB3 0ET',
+                    'country': 'United Kingdom'
+                },
+                'email': 'polardatacentre@bas.ac.uk',
+                'role': [
+                    'pointOfContact',
+                    'custodian',
+                    'publisher',
+                    'distributor'
+                ]
+            }
+        ],
+        'maintenance': {
+            'maintenance_frequency': 'asNeeded',
+            'progress': 'completed'
+        },
+        'keywords': [
+            {
+                'terms': [
+                    {
+                        'term': 'Atmospheric conditions'
+                    }
+                ],
+                'type': 'theme'
+            }
+        ],
+        'constraints': {
+            'access': [
+                {
+                    'restriction_code': 'otherRestrictions'
+                }
+            ],
+            'usage': [
+                {
+                    'restriction_code': 'copyright',
+                    'copyright_licence': {
+                        'code': 'OGL-UK-3.0',
+                        'statement': 'This information is licensed under the Open Government Licence v3.0. To view this'
+                                     ' licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/'
+                    }
+                }
+            ]
+        },
+        'supplemental_information': 'It is recommended that careful attention be paid to the contents of any data, and '
+                                    'that the author be contacted with any questions regarding appropriate use. If you '
+                                    'find any errors or omissions, please report them to polardatacentre@bas.ac.uk.',
+        'spatial_representation_type': 'textTable',
+        'spatial_resolution': None,
+        'language': 'eng',
+        'topics': [
+            'environment',
+            'climatologyMeteorologyAtmosphere'
+        ],
+        'extent': {
+            'geographic': {
+                'bounding_box': {
+                    'west_longitude': -45.61521,
+                    'east_longitude': -27.04976,
+                    'south_latitude': -68.1511,
+                    'north_latitude': -54.30761
+                }
+            },
+            'temporal': {
+                'period': {
+                    'start': date(2018, 9, 14),
+                    'end': date(2018, 9, 15)
+                }
+            }
+        },
+        'formats': [
+            {
+                'format': 'netCDF Classic'
+            }
+        ],
+        'transfer_options': [
+            {
+                'online_resource': {
+                    'href': 'https://ramadda.data.bas.ac.uk/repository/entry/show?entryid='
+                            'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
+                    'title': 'Get Data',
+                    'description': 'Download measurement data',
+                    'function': 'download'
+                }
+            }
+        ],
+        'lineage': 'Example lineage statement'
+    }
+}
+
+iso_19115_v1_base_complex_record = {
     'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
     'language': 'eng',
     'character_set': 'utf8',
@@ -92,15 +256,37 @@ iso_19115_v1_base_record = {
         'code': {
             'value': 'urn:ogc:def:crs:EPSG::4326',
             'href': 'http://www.opengis.net/def/crs/EPSG/0/4326'
+        },
+        'version': '6.18.3',
+        'authority': {
+            'title': {
+                'value': 'European Petroleum Survey Group (EPSG) Geodetic Parameter Registry'
+            },
+            'dates': [{
+                'date': date(2008, 11, 12),
+                'date_type': 'publication'
+            }],
+            'contact': {
+                'organisation': {
+                    'name': 'European Petroleum Survey Group'
+                },
+                'email': 'EPSGadministrator@iogp.org',
+                'online_resource': {
+                    'href': 'https://www.epsg-registry.org/',
+                    'function': 'information'
+                },
+                'role': ['publisher']
+            }
         }
     },
     'resource': {
         'title': {
             'value': 'Test Record'
         },
-        'abstract': 'Test Record for ISO 19115 metadata standard (no profile) with baseline properties only. In this '
-                    'context baseline properties are those that are required, or have default values. Non-default '
-                    'values are non-complex, meaning they are simple character strings rather than anchors.',
+        'abstract': 'Test Record for ISO 19115 metadata standard (no profile) with complex baseline properties only. '
+                    'In this context baseline properties are those that are required, or have default values. Values '
+                    'in this record are complex, meaning they use anchors where relevant rather than simple character '
+                    'strings. Authorities are included in elements that support citations.',
         'dates': [
             {
                 'date': date(2018, 1, 1),
@@ -115,13 +301,49 @@ iso_19115_v1_base_record = {
         'contacts': [
             {
                 'individual': {
-                    'name': 'Watson, Constance'
+                    'name': 'Watson, Constance',
+                    'href': 'https://sandbox.orcid.org/0000-0001-8373-6934',
+                    'title': 'ORCID record'
                 },
                 'organisation': {
                     'name': 'British Antarctic Survey'
                 },
                 'email': 'conwat@bas.ac.uk',
+                'online_resource': {
+                    'href': 'https://sandbox.orcid.org/0000-0001-8373-6934',
+                    'title': 'ORCID record',
+                    'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
+                                   'registry of unique researcher identifiers and a transparent method of linking '
+                                   'research activities and outputs to these identifiers.',
+                    'function': 'information'
+                },
                 'role': ['author']
+            },
+            {
+                'organisation': {
+                    'name': 'UK Polar Data Centre',
+                    'href': 'http://isni.org/isni/0000000405983800',
+                    'title': 'ISNI record'
+                },
+                'phone': '+44 (0)1223 221400',
+                'address': {
+                    'delivery_point': 'British Antarctic Survey, High Cross, Madingley Road',
+                    'city': 'Cambridge',
+                    'administrative_area': 'Cambridgeshire',
+                    'postal_code': 'CB3 0ET',
+                    'country': 'United Kingdom'
+                },
+                'email': 'polardatacentre@bas.ac.uk',
+                'online_resource': {
+                    'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
+                    'function': 'information'
+                },
+                'role': [
+                    'pointOfContact',
+                    'custodian',
+                    'publisher',
+                    'distributor'
+                ]
             }
         ],
         'maintenance': {
@@ -211,15 +433,12 @@ iso_19115_v1_base_record = {
         },
         'formats': [
             {
-                'format': 'netCDF 4'
+                'format': 'netCDF Classic',
+                'href': 'https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format'
             }
         ],
         'transfer_options': [
             {
-                'size': {
-                    'unit': 'MB',
-                    'magnitude': 40
-                },
                 'online_resource': {
                     'href': 'https://ramadda.data.bas.ac.uk/repository/entry/show?entryid='
                             'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
@@ -229,24 +448,15 @@ iso_19115_v1_base_record = {
                 }
             }
         ],
-        'measures': [
+        'lineage': 'Example lineage statement'
+    }
+}
+
             {
-                'code': 'Conformity_001',
-                'code_space': 'INSPIRE',
-                'pass': True,
-                'title': {
-                    'value': 'Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive '
-                             '2007/2/EC of the European Parliament and of the Council as regards interoperability of '
-                             'spatial data sets and services',
-                    'href': 'http://data.europa.eu/eli/reg/2010/1089'
                 },
-                'dates': [
                     {
-                        'date': date(2010, 12, 8),
-                        'date_type': 'publication'
                     }
                 ],
-                'explanation': 'See the referenced specification'
             }
         ],
         'lineage': 'Example lineage statement'
