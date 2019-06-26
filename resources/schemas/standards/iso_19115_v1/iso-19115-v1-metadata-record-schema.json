@@ -403,6 +403,12 @@
       "required": [],
       "additionalProperties": false,
       "properties": {
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
         "identifier": {
           "type": "string"
         },
@@ -658,6 +664,9 @@
             "steroModel",
             "video"
           ]
+        },
+        "spatial_resolution": {
+          "type": ["string", "null"]
         },
         "language": {
           "$ref": "#/definitions/language"

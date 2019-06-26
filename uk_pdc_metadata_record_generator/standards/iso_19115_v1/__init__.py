@@ -125,23 +125,26 @@ class MetadataRecord(_MetadataRecord):
         )
         identifier.make_element()
 
-        language = Language(
-            record=metadata_record,
-            attributes=self.attributes
-        )
-        language.make_element()
+        if 'language' in self.attributes:
+            language = Language(
+                record=metadata_record,
+                attributes=self.attributes
+            )
+            language.make_element()
 
-        character_set = CharacterSet(
-            record=metadata_record,
-            attributes=self.attributes
-        )
-        character_set.make_element()
+        if 'character_set' in self.attributes:
+            character_set = CharacterSet(
+                record=metadata_record,
+                attributes=self.attributes
+            )
+            character_set.make_element()
 
-        hierarchy_level = HierarchyLevel(
-            record=metadata_record,
-            attributes=self.attributes
-        )
-        hierarchy_level.make_element()
+        if 'hierarchy_level' in self.attributes:
+            hierarchy_level = HierarchyLevel(
+                record=metadata_record,
+                attributes=self.attributes
+            )
+            hierarchy_level.make_element()
 
         for contact_attributes in self.attributes['contacts']:
             for role in contact_attributes['role']:
@@ -162,29 +165,32 @@ class MetadataRecord(_MetadataRecord):
         )
         date_stamp.make_element()
 
-        metadata_maintenance = MetadataMaintenance(
-            record=metadata_record,
-            attributes=self.attributes,
-            parent_element=metadata_record,
-            element_attributes=self.attributes['maintenance']
-        )
-        metadata_maintenance.make_element()
+        if 'maintenance' in self.attributes:
+            metadata_maintenance = MetadataMaintenance(
+                record=metadata_record,
+                attributes=self.attributes,
+                parent_element=metadata_record,
+                element_attributes=self.attributes['maintenance']
+            )
+            metadata_maintenance.make_element()
 
-        metadata_standard = MetadataStandard(
-            record=metadata_record,
-            attributes=self.attributes,
-            parent_element=metadata_record,
-            element_attributes=self.attributes['metadata_standard']
-        )
-        metadata_standard.make_element()
+        if 'metadata_standard' in self.attributes:
+            metadata_standard = MetadataStandard(
+                record=metadata_record,
+                attributes=self.attributes,
+                parent_element=metadata_record,
+                element_attributes=self.attributes['metadata_standard']
+            )
+            metadata_standard.make_element()
 
-        reference_system_info = ReferenceSystemInfo(
-            record=metadata_record,
-            attributes=self.attributes,
-            parent_element=metadata_record,
-            element_attributes=self.attributes['reference_system_info']
-        )
-        reference_system_info.make_element()
+        if 'reference_system_info' in self.attributes:
+            reference_system_info = ReferenceSystemInfo(
+                record=metadata_record,
+                attributes=self.attributes,
+                parent_element=metadata_record,
+                element_attributes=self.attributes['reference_system_info']
+            )
+            reference_system_info.make_element()
 
         data_identification = DataIdentification(
             record=metadata_record,
@@ -192,17 +198,19 @@ class MetadataRecord(_MetadataRecord):
         )
         data_identification.make_element()
 
-        data_distribution = DataDistribution(
-            record=metadata_record,
-            attributes=self.attributes
-        )
-        data_distribution.make_element()
+        if 'formats' in self.attributes['resource'] or 'transfer_options' in self.attributes['resource']:
+            data_distribution = DataDistribution(
+                record=metadata_record,
+                attributes=self.attributes
+            )
+            data_distribution.make_element()
 
-        data_quality = DataQuality(
-            record=metadata_record,
-            attributes=self.attributes
-        )
-        data_quality.make_element()
+        if 'measures' in self.attributes['resource'] or 'lineage' in self.attributes['resource']:
+            data_quality = DataQuality(
+                record=metadata_record,
+                attributes=self.attributes
+            )
+            data_quality.make_element()
 
         return metadata_record
 
@@ -212,9 +220,10 @@ class MetadataRecord(_MetadataRecord):
 
 class FileIdentifier(MetadataRecordElement):
     def make_element(self):
-        file_identifier_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}fileIdentifier")
-        file_identifier_value = SubElement(file_identifier_element, f"{{{self.ns.gco}}}CharacterString")
-        file_identifier_value.text = self.attributes['file_identifier']
+        if 'file_identifier' in self.attributes:
+            file_identifier_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}fileIdentifier")
+            file_identifier_value = SubElement(file_identifier_element, f"{{{self.ns.gco}}}CharacterString")
+            file_identifier_value.text = self.attributes['file_identifier']
 
 
 class Language(CodeListElement):
@@ -376,60 +385,63 @@ class ResponsibleParty(MetadataRecordElement):
                 )
                 organisation_name_value.text = self.element_attributes['organisation']['name']
 
-        contact_wrapper = SubElement(responsible_party_element, f"{{{self.ns.gmd}}}contactInfo")
-        contact_element = SubElement(contact_wrapper, f"{{{self.ns.gmd}}}CI_Contact")
+        if 'phone' in self.element_attributes or 'address' in self.element_attributes \
+                or 'email' in self.element_attributes:
+            contact_wrapper = SubElement(responsible_party_element, f"{{{self.ns.gmd}}}contactInfo")
+            contact_element = SubElement(contact_wrapper, f"{{{self.ns.gmd}}}CI_Contact")
 
-        if 'phone' in self.element_attributes:
-            phone_wrapper = SubElement(contact_element, f"{{{self.ns.gmd}}}phone")
-            phone_element = SubElement(phone_wrapper, f"{{{self.ns.gmd}}}CI_Telephone")
-            phone_voice = SubElement(phone_element, f"{{{self.ns.gmd}}}voice")
-            phone_voice_value = SubElement(phone_voice, f"{{{self.ns.gco}}}CharacterString")
-            phone_voice_value.text = self.element_attributes['phone']
+            if 'phone' in self.element_attributes:
+                phone_wrapper = SubElement(contact_element, f"{{{self.ns.gmd}}}phone")
+                phone_element = SubElement(phone_wrapper, f"{{{self.ns.gmd}}}CI_Telephone")
+                phone_voice = SubElement(phone_element, f"{{{self.ns.gmd}}}voice")
+                phone_voice_value = SubElement(phone_voice, f"{{{self.ns.gco}}}CharacterString")
+                phone_voice_value.text = self.element_attributes['phone']
 
-        address_wrapper = SubElement(contact_element, f"{{{self.ns.gmd}}}address")
-        address_element = SubElement(address_wrapper, f"{{{self.ns.gmd}}}CI_Address")
+            if 'address' in self.element_attributes or 'email' in self.element_attributes:
+                address_wrapper = SubElement(contact_element, f"{{{self.ns.gmd}}}address")
+                address_element = SubElement(address_wrapper, f"{{{self.ns.gmd}}}CI_Address")
 
-        if 'address' in self.element_attributes:
-            if 'delivery_point' in self.element_attributes['address']:
-                delivery_point_element = SubElement(address_element, f"{{{self.ns.gmd}}}deliveryPoint")
-                delivery_point_value = SubElement(
-                    delivery_point_element,
-                    f"{{{self.ns.gco}}}CharacterString"
-                )
-                delivery_point_value.text = self.element_attributes['address']['delivery_point']
-            if 'city' in self.element_attributes['address']:
-                city_element = SubElement(address_element, f"{{{self.ns.gmd}}}city")
-                city_value = SubElement(city_element, f"{{{self.ns.gco}}}CharacterString")
-                city_value.text = self.element_attributes['address']['city']
-            if 'administrative_area' in self.element_attributes['address']:
-                administrative_area_element = SubElement(
-                    address_element,
-                    f"{{{self.ns.gmd}}}administrativeArea"
-                )
-                administrative_area_value = SubElement(
-                    administrative_area_element,
-                    f"{{{self.ns.gco}}}CharacterString"
-                )
-                administrative_area_value.text = self.element_attributes['address']['administrative_area']
-            if 'postal_code' in self.element_attributes['address']:
-                postal_code_element = SubElement(address_element, f"{{{self.ns.gmd}}}postalCode")
-                postal_code_value = SubElement(postal_code_element, f"{{{self.ns.gco}}}CharacterString")
-                postal_code_value.text = self.element_attributes['address']['postal_code']
-            if 'country' in self.element_attributes['address']:
-                country_element = SubElement(address_element, f"{{{self.ns.gmd}}}country")
-                country_value = SubElement(country_element, f"{{{self.ns.gco}}}CharacterString")
-                country_value.text = self.element_attributes['address']['country']
+                if 'address' in self.element_attributes:
+                    if 'delivery_point' in self.element_attributes['address']:
+                        delivery_point_element = SubElement(address_element, f"{{{self.ns.gmd}}}deliveryPoint")
+                        delivery_point_value = SubElement(
+                            delivery_point_element,
+                            f"{{{self.ns.gco}}}CharacterString"
+                        )
+                        delivery_point_value.text = self.element_attributes['address']['delivery_point']
+                    if 'city' in self.element_attributes['address']:
+                        city_element = SubElement(address_element, f"{{{self.ns.gmd}}}city")
+                        city_value = SubElement(city_element, f"{{{self.ns.gco}}}CharacterString")
+                        city_value.text = self.element_attributes['address']['city']
+                    if 'administrative_area' in self.element_attributes['address']:
+                        administrative_area_element = SubElement(
+                            address_element,
+                            f"{{{self.ns.gmd}}}administrativeArea"
+                        )
+                        administrative_area_value = SubElement(
+                            administrative_area_element,
+                            f"{{{self.ns.gco}}}CharacterString"
+                        )
+                        administrative_area_value.text = self.element_attributes['address']['administrative_area']
+                    if 'postal_code' in self.element_attributes['address']:
+                        postal_code_element = SubElement(address_element, f"{{{self.ns.gmd}}}postalCode")
+                        postal_code_value = SubElement(postal_code_element, f"{{{self.ns.gco}}}CharacterString")
+                        postal_code_value.text = self.element_attributes['address']['postal_code']
+                    if 'country' in self.element_attributes['address']:
+                        country_element = SubElement(address_element, f"{{{self.ns.gmd}}}country")
+                        country_value = SubElement(country_element, f"{{{self.ns.gco}}}CharacterString")
+                        country_value.text = self.element_attributes['address']['country']
 
-        if 'email' in self.element_attributes:
-            email_element = SubElement(address_element, f"{{{self.ns.gmd}}}electronicMailAddress")
-            email_value = SubElement(email_element, f"{{{self.ns.gco}}}CharacterString")
-            email_value.text = self.element_attributes['email']
-        else:
-            SubElement(
-                address_element,
-                f"{{{self.ns.gmd}}}electronicMailAddress",
-                attrib={f"{{{self.ns.gco}}}nilReason": 'unknown'}
-            )
+                if 'email' in self.element_attributes:
+                    email_element = SubElement(address_element, f"{{{self.ns.gmd}}}electronicMailAddress")
+                    email_value = SubElement(email_element, f"{{{self.ns.gco}}}CharacterString")
+                    email_value.text = self.element_attributes['email']
+                else:
+                    SubElement(
+                        address_element,
+                        f"{{{self.ns.gmd}}}electronicMailAddress",
+                        attrib={f"{{{self.ns.gco}}}nilReason": 'unknown'}
+                    )
 
         if 'online_resource' in self.element_attributes:
             online_resource_wrapper = SubElement(
@@ -577,18 +589,19 @@ class DateStamp(MetadataRecordElement):
 
 class MetadataMaintenance(MetadataRecordElement):
     def make_element(self):
-        metadata_maintenance_element = SubElement(
-            self.parent_element,
-            f"{{{self.ns.gmd}}}metadataMaintenance"
-        )
+        if 'maintenance' in self.attributes:
+            metadata_maintenance_element = SubElement(
+                self.parent_element,
+                f"{{{self.ns.gmd}}}metadataMaintenance"
+            )
 
-        maintenance_information = MaintenanceInformation(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=metadata_maintenance_element,
-            element_attributes=self.attributes['maintenance']
-        )
-        maintenance_information.make_element()
+            maintenance_information = MaintenanceInformation(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=metadata_maintenance_element,
+                element_attributes=self.attributes['maintenance']
+            )
+            maintenance_information.make_element()
 
 
 class MaintenanceInformation(MetadataRecordElement):
@@ -962,68 +975,75 @@ class DataIdentification(MetadataRecordElement):
         )
         abstract.make_element()
 
-        for point_of_contact_attributes in self.attributes['resource']['contacts']:
-            for role in point_of_contact_attributes['role']:
-                if role != 'distributor':
-                    _point_of_contact = point_of_contact_attributes.copy()
-                    _point_of_contact['role'] = role
+        if 'contacts' in self.attributes['resource']:
+            for point_of_contact_attributes in self.attributes['resource']['contacts']:
+                for role in point_of_contact_attributes['role']:
+                    if role != 'distributor':
+                        _point_of_contact = point_of_contact_attributes.copy()
+                        _point_of_contact['role'] = role
 
-                    point_of_contact = PointOfContact(
-                        record=self.record,
-                        attributes=self.attributes,
-                        parent_element=data_identification_element,
-                        element_attributes=_point_of_contact
-                    )
-                    point_of_contact.make_element()
+                        point_of_contact = PointOfContact(
+                            record=self.record,
+                            attributes=self.attributes,
+                            parent_element=data_identification_element,
+                            element_attributes=_point_of_contact
+                        )
+                        point_of_contact.make_element()
 
-        resource_maintenance = ResourceMaintenance(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.element_attributes['resource']['maintenance']
-        )
-        resource_maintenance.make_element()
-
-        for keyword_attributes in self.attributes['resource']['keywords']:
-            descriptive_keywords = DescriptiveKeywords(
+        if 'maintenance' in self.attributes['resource']:
+            resource_maintenance = ResourceMaintenance(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=data_identification_element,
-                element_attributes=keyword_attributes
+                element_attributes=self.element_attributes['resource']['maintenance']
             )
-            descriptive_keywords.make_element()
+            resource_maintenance.make_element()
 
-        constraints = ResourceConstraints(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.attributes['resource']['constraints']
-        )
-        constraints.make_element()
+        if 'keywords' in self.attributes['resource']:
+            for keyword_attributes in self.attributes['resource']['keywords']:
+                descriptive_keywords = DescriptiveKeywords(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_identification_element,
+                    element_attributes=keyword_attributes
+                )
+                descriptive_keywords.make_element()
 
-        supplemental_information = SupplementalInformation(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.attributes['resource']
-        )
-        supplemental_information.make_element()
+        if 'constraints' in self.attributes['resource']:
+            constraints = ResourceConstraints(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes['resource']['constraints']
+            )
+            constraints.make_element()
 
-        spatial_representation_type = SpatialRepresentationType(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.attributes['resource']
-        )
-        spatial_representation_type.make_element()
+        if 'supplemental_information' in self.attributes['resource']:
+            supplemental_information = SupplementalInformation(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes['resource']
+            )
+            supplemental_information.make_element()
 
-        spatial_resolution = SpatialResolution(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.attributes['resource']
-        )
-        spatial_resolution.make_element()
+        if 'spatial_representation_type' in self.attributes['resource']:
+            spatial_representation_type = SpatialRepresentationType(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes['resource']
+            )
+            spatial_representation_type.make_element()
+
+        if 'spatial_resolution' in self.attributes['resource']:
+            spatial_resolution = SpatialResolution(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes['resource']
+            )
+            spatial_resolution.make_element()
 
         language = Language(
             record=self.record,
@@ -1033,22 +1053,24 @@ class DataIdentification(MetadataRecordElement):
         )
         language.make_element()
 
-        for topic_attribute in self.attributes['resource']['topics']:
-            topic = TopicCategory(
+        if 'topics' in self.attributes['resource']:
+            for topic_attribute in self.attributes['resource']['topics']:
+                topic = TopicCategory(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_identification_element,
+                    element_attributes={'topic': topic_attribute}
+                )
+                topic.make_element()
+
+        if 'extent' in self.attributes['resource']:
+            extent = Extent(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=data_identification_element,
-                element_attributes={'topic': topic_attribute}
+                element_attributes=self.attributes['resource']['extent']
             )
-            topic.make_element()
-
-        extent = Extent(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.attributes['resource']['extent']
-        )
-        extent.make_element()
+            extent.make_element()
 
 
 class Abstract(MetadataRecordElement):
@@ -1309,9 +1331,10 @@ class InspireLimitationsOnPublicAccess(MetadataRecordElement):
 
 class SupplementalInformation(MetadataRecordElement):
     def make_element(self):
-        supplemental_info_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}supplementalInformation")
-        supplemental_info_value = SubElement(supplemental_info_element, f"{{{self.ns.gco}}}CharacterString")
-        supplemental_info_value.text = self.element_attributes['supplemental_information']
+        if 'supplemental_information' in self.element_attributes:
+            supplemental_info_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}supplementalInformation")
+            supplemental_info_value = SubElement(supplemental_info_element, f"{{{self.ns.gco}}}CharacterString")
+            supplemental_info_value.text = self.element_attributes['supplemental_information']
 
 
 class SpatialRepresentationType(CodeListElement):
@@ -1347,11 +1370,13 @@ class SpatialResolution(MetadataRecordElement):
     def make_element(self):
         resolution_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}spatialResolution")
         resolution_element = SubElement(resolution_wrapper, f"{{{self.ns.gmd}}}MD_Resolution")
-        SubElement(
-            resolution_element,
-            f"{{{self.ns.gmd}}}distance",
-            attrib={f"{{{self.ns.gco}}}nilReason": 'inapplicable'}
-        )
+
+        if self.element_attributes['spatial_resolution'] is None:
+            SubElement(
+                resolution_element,
+                f"{{{self.ns.gmd}}}distance",
+                attrib={f"{{{self.ns.gco}}}nilReason": 'inapplicable'}
+            )
 
 
 class TopicCategory(MetadataRecordElement):
@@ -1539,37 +1564,40 @@ class DataDistribution(MetadataRecordElement):
         data_distribution_wrapper = SubElement(self.record, f"{{{self.ns.gmd}}}distributionInfo")
         data_distribution_element = SubElement(data_distribution_wrapper, f"{{{self.ns.gmd}}}MD_Distribution")
 
-        for format_attributes in self.attributes['resource']['formats']:
-            distribution_format = DistributionFormat(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=data_distribution_element,
-                element_attributes=format_attributes
-            )
-            distribution_format.make_element()
+        if 'formats' in self.attributes['resource']:
+            for format_attributes in self.attributes['resource']['formats']:
+                distribution_format = DistributionFormat(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_distribution_element,
+                    element_attributes=format_attributes
+                )
+                distribution_format.make_element()
 
-        for point_of_contact_attributes in self.attributes['resource']['contacts']:
-            for role in point_of_contact_attributes['role']:
-                if role == 'distributor':
-                    _point_of_contact = point_of_contact_attributes.copy()
-                    _point_of_contact['role'] = role
+        if 'contacts' in self.attributes['resource']:
+            for point_of_contact_attributes in self.attributes['resource']['contacts']:
+                for role in point_of_contact_attributes['role']:
+                    if role == 'distributor':
+                        _point_of_contact = point_of_contact_attributes.copy()
+                        _point_of_contact['role'] = role
 
-                    distributor = Distributor(
-                        record=self.record,
-                        attributes=self.attributes,
-                        parent_element=data_distribution_element,
-                        element_attributes=_point_of_contact
-                    )
-                    distributor.make_element()
+                        distributor = Distributor(
+                            record=self.record,
+                            attributes=self.attributes,
+                            parent_element=data_distribution_element,
+                            element_attributes=_point_of_contact
+                        )
+                        distributor.make_element()
 
-        for transfer_attributes in self.attributes['resource']['transfer_options']:
-            transfer_options = TransferOptions(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=data_distribution_element,
-                element_attributes=transfer_attributes
-            )
-            transfer_options.make_element()
+        if 'transfer_options' in self.attributes['resource']:
+            for transfer_attributes in self.attributes['resource']['transfer_options']:
+                transfer_options = TransferOptions(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_distribution_element,
+                    element_attributes=transfer_attributes
+                )
+                transfer_options.make_element()
 
 
 class DistributionFormat(MetadataRecordElement):
@@ -1670,14 +1698,15 @@ class DataQuality(MetadataRecordElement):
         )
         scope.make_element()
 
-        for measure_attributes in self.attributes['resource']['measures']:
-            report = Report(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=data_quality_element,
-                element_attributes=measure_attributes
-            )
-            report.make_element()
+        if 'measures' in self.attributes['resource']:
+            for measure_attributes in self.attributes['resource']['measures']:
+                report = Report(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_quality_element,
+                    element_attributes=measure_attributes
+                )
+                report.make_element()
 
         lineage = Lineage(
             record=self.record,
@@ -1743,8 +1772,9 @@ class Report(MetadataRecordElement):
 
 class Lineage(MetadataRecordElement):
     def make_element(self):
-        lineage_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}lineage")
-        lineage_wrapper = SubElement(lineage_container, f"{{{self.ns.gmd}}}LI_Lineage")
-        lineage_element = SubElement(lineage_wrapper, f"{{{self.ns.gmd}}}statement")
-        lineage_value = SubElement(lineage_element, f"{{{self.ns.gco}}}CharacterString")
-        lineage_value.text = self.element_attributes['lineage']
+        if 'lineage' in self.element_attributes:
+            lineage_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}lineage")
+            lineage_wrapper = SubElement(lineage_container, f"{{{self.ns.gmd}}}LI_Lineage")
+            lineage_element = SubElement(lineage_wrapper, f"{{{self.ns.gmd}}}statement")
+            lineage_value = SubElement(lineage_element, f"{{{self.ns.gco}}}CharacterString")
+            lineage_value.text = self.element_attributes['lineage']
