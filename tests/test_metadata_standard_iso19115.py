@@ -1129,8 +1129,11 @@ class BaselineComplexMetadataRecordTestCase(MinimalMetadataRecordTestCase):
 
         self.configuration = 'base-complex'
         self._set_metadata_config(configuration=config.iso_19115_v1_base_complex_record)
+
+
+class CompleteMetadataRecordTestCase(MinimalMetadataRecordTestCase):
     def setUp(self):
         super().setUp()
 
-        self.configuration = 'base'
-        self._set_metadata_config(configuration=config.iso_19115_v1_base_record)
+        self.configuration = 'complete'
+        self._set_metadata_config(configuration=config.iso_19115_v1_complete_record)
