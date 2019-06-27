@@ -7,7 +7,7 @@ from datetime import date, datetime
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
 from lxml.etree import ElementTree, XML, fromstring  # nosec
 
-from uk_pdc_metadata_record_generator.standards.iso_19115_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
+from bas_metadata_library.standards.iso_19115_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
 
 from tests.test_base import BaseTestCase
 from tests import config
@@ -511,7 +511,10 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
                     f"{{{self.ns.gmd}}}version/{{{self.ns.gco}}}CharacterString"
                 )
                 self.assertIsNotNone(reference_system_version)
-                self.assertEqual(reference_system_version.text, self.record_attributes['reference_system_info']['version'])
+                self.assertEqual(
+                    reference_system_version.text,
+                    self.record_attributes['reference_system_info']['version']
+                )
 
     def test_data_identification(self):
         data_identification = self.test_response.find(

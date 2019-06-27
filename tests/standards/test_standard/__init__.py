@@ -5,7 +5,7 @@ from pathlib import Path
 # We don't currently allow untrusted/user-provided XML so this is not a risk
 from lxml.etree import Element, SubElement  # nosec
 
-from uk_pdc_metadata_record_generator import Namespaces as _Namespaces, MetadataRecordConfig as _MetadataRecordConfig, \
+from bas_metadata_library import Namespaces as _Namespaces, MetadataRecordConfig as _MetadataRecordConfig, \
     MetadataRecord as _MetadataRecord, MetadataRecordElement as _MetadataRecordElement
 
 
@@ -48,7 +48,7 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
         self.config = kwargs
         self.schema = None
-        self.schema_path = Path('tests/resources/schemas/standards/test-standard/test-standard-record-schema.json')
+        self.schema_path = Path('tests/standards/test_standard/metadata-record-schema.json')
 
         self.load_schema()
         self.validate()

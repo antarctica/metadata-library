@@ -1,71 +1,48 @@
-from datetime import datetime
+from datetime import datetime, date
 from pathlib import Path
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
+from typing import Union
+
 from lxml.etree import Element, SubElement  # nosec
 
-from uk_pdc_metadata_record_generator import Namespaces as _Namespaces, MetadataRecordConfig as _MetadataRecordConfig, \
-    MetadataRecord as _MetadataRecord, MetadataRecordElement as _MetadataRecordElement, Utils
+from bas_metadata_library import Namespaces as _Namespaces, MetadataRecordConfig as _MetadataRecordConfig, \
+    MetadataRecord as _MetadataRecord, MetadataRecordElement as _MetadataRecordElement
+
+
+# Utility classes
+
+
+class Utils(object):
+    """
+    Utility methods
+    """
+    @staticmethod
+    def format_date_string(date_datetime: Union[date, datetime]) -> str:
+        """
+        Formats a python date or datetime as an ISO 8601 date or datetime string representation
+
+        E.g. Return 'date(2012, 4, 18)' as '2012-04-18' or 'datetime(2012, 4, 18, 22, 48, 56)' as '2012-4-18T22:48:56'.
+
+        :type date_datetime: date/datetime
+        :param date_datetime: python date/datetime
+
+        :rtype str
+        :return: ISO 8601 formatted date/datetime
+        """
+        return date_datetime.isoformat()
 
 
 # Base classes
 
-
-class MetadataRecordElement(_MetadataRecordElement):
-    def __init__(
-        self,
-        record: _MetadataRecord,
-        attributes: dict,
-        parent_element: Element = None,
-        element_attributes: dict = None
-    ):
-        super().__init__(
-            record=record,
-            attributes=attributes,
-            parent_element=parent_element,
-            element_attributes=element_attributes
-        )
-        self.ns = Namespaces()
-
-
-class CodeListElement(MetadataRecordElement):
-    def __init__(
-        self,
-        record: _MetadataRecord,
-        attributes: dict,
-        parent_element: Element = None,
-        element_attributes: dict = None
-    ):
-        super().__init__(
-            record=record,
-            attributes=attributes,
-            parent_element=parent_element,
-            element_attributes=element_attributes
-        )
-        self.code_list_values = []
-        self.code_list = None
-        self.element = None
-        self.element_code = None
-        self.attribute = None
-
-    def make_element(self):
-        code_list_element = SubElement(self.parent_element, self.element)
-        if self.attribute in self.element_attributes \
-                and self.element_attributes[self.attribute] in self.code_list_values:
-            code_list_value = SubElement(
-                code_list_element,
-                self.element_code,
-                attrib={
-                    'codeList': self.code_list,
-                    'codeListValue': self.element_attributes[self.attribute]
-                }
-            )
-            code_list_value.text = self.element_attributes[self.attribute]
-
-
 class Namespaces(_Namespaces):
+    """
+    Overloaded base Namespaces class
+
+    Defines the namespaces for this standard
+    """
     gmd = 'http://www.isotc211.org/2005/gmd'
     gco = 'http://www.isotc211.org/2005/gco'
     gml = 'http://www.opengis.net/gml/3.2'
@@ -94,18 +71,28 @@ class Namespaces(_Namespaces):
 
 
 class MetadataRecordConfig(_MetadataRecordConfig):
+    """
+    Overloaded base MetadataRecordConfig class
+
+    Defines the JSON Schema used for this metadata standard
+    """
     def __init__(self, **kwargs: dict):
         super().__init__(**kwargs)
 
         self.config = kwargs
         self.schema = None
-        self.schema_path = Path('resources/schemas/standards/iso_19115_v1/iso-19115-v1-metadata-record-schema.json')
+        self.schema_path = Path('bas_metadata_library/standards/iso_19115_v1/metadata-record-schema.json')
 
         self.load_schema()
         self.validate()
 
 
 class MetadataRecord(_MetadataRecord):
+    """
+    Overloaded base MetadataRecordConfig class
+
+    Defines the root element, and it's sub-elements, for this metadata standard
+    """
     def __init__(self, configuration: MetadataRecordConfig):
         self.ns = Namespaces()
         self.attributes = configuration.config
@@ -213,6 +200,66 @@ class MetadataRecord(_MetadataRecord):
             data_quality.make_element()
 
         return metadata_record
+
+
+class MetadataRecordElement(_MetadataRecordElement):
+    """
+    Overloaded base MetadataRecordElement class
+
+    Sets the type hint of the record attribute to the MetadataRecord class for this metadata standard
+    """
+    def __init__(
+        self,
+        record: _MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.ns = Namespaces()
+
+
+class CodeListElement(MetadataRecordElement):
+    """
+    Derived MetadataRecordElement class defining an ISO code list element
+    """
+    def __init__(
+        self,
+        record: _MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes
+        )
+        self.code_list_values = []
+        self.code_list = None
+        self.element = None
+        self.element_code = None
+        self.attribute = None
+
+    def make_element(self):
+        code_list_element = SubElement(self.parent_element, self.element)
+        if self.attribute in self.element_attributes \
+                and self.element_attributes[self.attribute] in self.code_list_values:
+            code_list_value = SubElement(
+                code_list_element,
+                self.element_code,
+                attrib={
+                    'codeList': self.code_list,
+                    'codeListValue': self.element_attributes[self.attribute]
+                }
+            )
+            code_list_value.text = self.element_attributes[self.attribute]
 
 
 # Element Classes

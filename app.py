@@ -1,6 +1,7 @@
 from flask import Flask, Response, jsonify
 
-from uk_pdc_metadata_record_generator.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig, MetadataRecord as ISO19115MetadataRecord
+from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig, \
+    MetadataRecord as ISO19115MetadataRecord
 
 from tests import config
 
