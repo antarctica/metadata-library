@@ -25,7 +25,7 @@ variables:
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_DRIVER: overlay2
   GITLAB_REGISTRY: docker-registry.data.bas.ac.uk
-  APP_NAME: uk_pdc_metadata_record_generator
+  APP_NAME: bas-metadata-library
   SNYK_ORG: antarctica
   SNYK_PROJECT: uk-pdc-metadata-record-generator
 
