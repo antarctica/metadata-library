@@ -22,8 +22,11 @@ def create_app():
             configuration_object = config.iso_19115_v1_base_complex_record
         elif configuration == 'complete':
             configuration_object = config.iso_19115_v1_complete_record
+        elif configuration == 'gemini-complete':
+            configuration_object = config.iso_19115_v1_gemini_complete_record
         else:
-            return KeyError('Invalid configuration, valid options: [minimal, base-simple, base-complex, complete]')
+            return KeyError('Invalid configuration, valid options: [minimal, base-simple, base-complex, complete, '
+                            'gemini-complete]')
 
         configuration = ISO19115MetadataRecordConfig(**configuration_object)
         record = ISO19115MetadataRecord(configuration)

@@ -786,6 +786,7 @@ iso_19115_v1_complete_record = {
 }
 
 test_record = {
+iso_19115_v1_gemini_complete_record = {
     'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
     'language': 'eng',
     'character_set': 'utf8',
@@ -814,6 +815,7 @@ test_record = {
         }
     ],
     'date_stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
+    'date_stamp': datetime(2018, 10, 18, 14, 40, 44, tzinfo=timezone.utc),
     'maintenance': {
         'maintenance_frequency': 'asNeeded',
         'progress': 'completed'
@@ -853,6 +855,7 @@ test_record = {
         'title': {
             'value': 'Analysis of d18O and salinity from sea ice and meltwater pool water samples collected in April '
                      '2016 in the Weddell Sea and Scotia Sea of the Southern Ocean during the marine survey JR15006'
+            'value': 'Test Record'
         },
         'abstract': 'The dataset contains oxygen stable isotope and salinity measurements from water samples collected '
                     'from sea ice and meltwater pools in April 2016 in the region of South Georgia, Signy and deep '
@@ -861,6 +864,11 @@ test_record = {
                     'underway non-toxic flow water system on the RRS James Clark Ross during the JR15006. Establishing '
                     'd18O and salinity values for saline water and oceanic freshwater components can be used to '
                     'identify sources and changes of freshwater contributions to the ocean.',
+        'abstract': 'Test Record for ISO 19115 metadata standard (Inspire/Gemini profile) with properties that could '
+                    'typically be included in a record. This does not mean all properties permitted the standard are '
+                    'included, as these are too numerous. Values in this record are complex, meaning they use anchors '
+                    'where relevant rather than simple character strings. Authorities are included in elements that '
+                    'support citations. Identifiers in this record are fake.',
         'dates': [
             {
                 'date': date(2018, 1, 1),
@@ -878,6 +886,7 @@ test_record = {
             },
             {
                 'date': datetime(2018, 12, 8, 14, 40, 44, tzinfo=timezone.utc),
+                'date': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
                 'date_type': 'released'
             }
         ],
@@ -886,11 +895,15 @@ test_record = {
             {
                 'identifier': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
                 'href': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
+                'identifier': 'https://doi.org/10.5072/r3qz22k64',
+                'href': 'https://doi.org/10.5072/r3qz22k64',
                 'title': 'doi'
             },
             {
                 'identifier': 'NE/I022973/1',
                 'href': 'https://gtr.ukri.org/projects?ref=NE%2FI022973%2F1',
+                'identifier': 'NE/E007895/1',
+                'href': 'https://gtr.ukri.org/projects?ref=NE%2FE007895%2F1',
                 'title': 'award'
             }
         ],
@@ -899,6 +912,8 @@ test_record = {
                 'individual': {
                     'name': 'Michael Meredith',
                     'href': 'https://orcid.org/0000-0002-7342-7756',
+                    'name': 'Watson, Constance',
+                    'href': 'https://sandbox.orcid.org/0000-0001-8373-6934',
                     'title': 'ORCID record'
                 },
                 'organisation': {
@@ -925,8 +940,10 @@ test_record = {
                     'name': 'British Geological Survey'
                 },
                 'email': 'noreply@bas.ac.uk',
+                'email': 'conwat@bas.ac.uk',
                 'online_resource': {
                     'href': 'https://orcid.org/0000-0003-3849-5179',
+                    'href': 'https://sandbox.orcid.org/0000-0001-8373-6934',
                     'title': 'ORCID record',
                     'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
                                    'registry of unique researcher identifiers and a transparent method of linking '
@@ -939,14 +956,19 @@ test_record = {
                 'individual': {
                     'name': 'Melanie Leng',
                     'href': 'https://orcid.org/0000-0003-1115-5166',
+                    'name': 'Cinnamon, John',
+                    'href': 'https://sandbox.orcid.org/0000-0001-5652-1129',
                     'title': 'ORCID record'
                 },
                 'organisation': {
                     'name': 'British Geological Survey'
+                    'name': 'British Antarctic Survey'
                 },
                 'email': 'noreply@bas.ac.uk',
+                'email': 'conwat@bas.ac.uk',
                 'online_resource': {
                     'href': 'https://orcid.org/0000-0003-1115-5166',
+                    'href': 'https://sandbox.orcid.org/0000-0001-5652-1129',
                     'title': 'ORCID record',
                     'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
                                    'registry of unique researcher identifiers and a transparent method of linking '
@@ -954,6 +976,7 @@ test_record = {
                     'function': 'information'
                 },
                 'role': ['author']
+                'role': ['collaborator']
             },
             {
                 'organisation': {
@@ -1023,6 +1046,8 @@ test_record = {
                     {
                         'term': 'Land Cover',
                         'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/lc'
+                        'term': 'Atmospheric conditions',
+                        'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/ac'
                     }
                 ],
                 'type': 'theme',
@@ -1162,6 +1187,7 @@ test_record = {
             'environment',
             'inlandWaters',
             'oceans'
+            'climatologyMeteorologyAtmosphere'
         ],
         'extent': {
             'geographic': {
@@ -1176,6 +1202,11 @@ test_record = {
                 'identifier': 'ogp-crs-5715',
                 'code': 'urn:ogc:def:crs:EPSG::5715',
                 'name': 'MSL depth',
+                'minimum': 20,
+                'maximum': 40,
+                'identifier': 'ogp-crs-5714',
+                'code': 'urn:ogc:def:crs:EPSG::5714',
+                'name': 'MSL height',
                 'remarks': 'Not specific to any location or epoch.',
                 'scope': 'Hydrography.',
                 'domain_of_validity': {
@@ -1192,6 +1223,8 @@ test_record = {
                 'period': {
                     'start': date(2016, 3, 31),
                     'end': date(2016, 4, 26)
+                    'start': date(2018, 9, 14),
+                    'end': date(2018, 9, 15)
                 }
             }
         },
@@ -1200,6 +1233,8 @@ test_record = {
                 'format': 'Microsoft Excel Workbook',
                 'href': 'https://www.iana.org/assignments/media-types/application/'
                         'vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                'format': 'netCDF Classic',
+                'href': 'https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format'
             }
         ],
         'transfer_options': [
@@ -1215,15 +1250,27 @@ test_record = {
                 'size': {
                     'unit': 'KB',
                     'magnitude': 70
+                    'unit': 'MB',
+                    'magnitude': 40
                 },
                 'online_resource': {
                     'href': 'https://ramadda.data.bas.ac.uk/repository/entry/show?entryid='
                             '63af1e57-8f20-4fb1-a55c-bd0e703f8a56',
+                            'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
                     'title': 'Get Data',
                     'description': 'Download measurement data',
                     'function': 'download'
                 }
             }
+            },
+            {
+                'online_resource': {
+                    'href': 'https://www.bodc.ac.uk/data/bodc_database/nodb/data_collection/6618/',
+                    'title': 'View Information',
+                    'description': 'Download background information and context',
+                    'function': 'information'
+                }
+            },
         ],
         'measures': [
             {
@@ -1262,5 +1309,6 @@ test_record = {
                    'with international calibration and reference materials (VSMOW2, SLAP2 and GISP) and so the 18O/16O '
                    'ratios (versus VSMOW2) of the unknown samples can be calculated and are expressed in delta units, '
                    'd18O (parts per mille). Errors are < +/- 0.05 per mil.'
+        'lineage': 'Example lineage statement'
     }
 }

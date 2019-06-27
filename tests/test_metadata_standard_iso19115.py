@@ -1137,3 +1137,11 @@ class CompleteMetadataRecordTestCase(MinimalMetadataRecordTestCase):
 
         self.configuration = 'complete'
         self._set_metadata_config(configuration=config.iso_19115_v1_complete_record)
+
+
+class GeminiCompleteMetadataRecordTestCase(MinimalMetadataRecordTestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.configuration = 'gemini-complete'
+        self._set_metadata_config(configuration=config.iso_19115_v1_gemini_complete_record)
