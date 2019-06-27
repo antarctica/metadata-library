@@ -1,8 +1,56 @@
-# UK Polar Data Centre (UK PDC) Metadata Record Generator
+# BAS Metadata Library
 
-API for generating metadata records using templates and per-record data
+Python library for generating metadata records.
+
+## Purpose
+
+This library is designed to assist in generating metadata records for the discovery of datasets. As a library, this 
+package is intended to be embedded within other tools and services, to avoid the need to implement 
+the complexity and verbosity of specific metadata standards.
+
+This library is built around the needs of the British Antarctic Survey and NERC Polar Data Centre. This means only 
+standards, and elements of these standards, used by BAS or the UK PDC are supported. Additions that would enable this
+library to be useful to others are welcome as contributions.
+
+### Supported standards
+
+| Standard                                             | Implementation                                       | Library Namespace                             |
+| ---------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------- |
+| [ISO 19115](https://www.iso.org/standard/26020.html) | [ISO 19139](https://www.iso.org/standard/32557.html) | `bas_metadata_library.standards.iso_19115_v1` |
+  
+### Supported profiles
+
+| Standard  | Profile                                    | Implementation                                                               |
+| --------- | ------------------------------------------ | ---------------------------------------------------------------------------- |
+| ISO 19115 | [EU Inspire](https://inspire.ec.europa.eu) | [UK Gemini](https://www.agi.org.uk/agi-groups/standards-committee/uk-gemini) |
+
+## Installation
+
+This package can be installed using Pip from [PyPi](https://pypi.org/project/bas-metadata-library):
+
+```
+$ pip install bas-metadata-library
+```
+
+## Usage
 
 ...
+
+## Implementation
+
+This library consists of a set of base classes for generating XML based metadata records from a configuration object.
+
+Each [supported standard](#supported-standards) implements these classes to generate each supported element within the 
+standard, using values, or computed values, from the configuration object.
+
+The configuration object is a python dict, the properties and values of which, including if they are required or 
+controlled, are defined and validated by a [JSON Schema](https://json-schema.org).
+
+The class for each metadata standard will validate the configuration object against the relevant JSON schema, create a 
+XML tree of elements, and exporting the tree as an XML document. XML is generated using [lxml](https://lxml.de).
+
+See the [development](#development) section for the [base classes](#library-base-classes) used across all standards and 
+how to [add a new standard](#adding-a-new-standard).
 
 ## Setup
 
@@ -49,14 +97,28 @@ $ docker-compose run app flask
 
 ## Development
 
-This API is developed as a Flask application.
+This API is developed as a Python library. A bundled Flask application is used to simulate its usage and to act as
+framework for running tests etc.
 
-...
+### Library base classes
 
-Also ensure:
+The `bas_metadata_library` module defines a series of modules for each standard (in `bas_metadata_library.standards`) 
+as well *base' classes used across all standards and providing common functionality. See existing standards how they 
+are used.
 
-* [Integration tests](#integration-tests) are updated to prevent future regression
-* [End-user documentation](#documentation) is updated
+### Adding a new standard
+
+To add a new standard:
+
+1. create a new module in `bas_metadata_library.standards` - e.g. `bas_metadata_library.standards.foo`
+2. create a JSON schema, `metadata-record-schema.json` within this module and populate with required and permitted 
+   configuration options for the standard - e.g. `bas_metadata_library/standards/foo/metadata-record-schema.json`
+3. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in 
+   `tests/config.py`
+4. update the inbuilt Flask application in `app.py` with a route for generating test records for the new standard
+5. use the inbuilt Flask application to generate the test records and save to `tests/resources/records/[standard]`
+6. add relevant [Integration tests](#integration-tests) with methods to test each metadata element class and that the
+   generated record matches the test records saved in `tests/resources/records/[standard]`
 
 ### Code Style
 
@@ -98,7 +160,7 @@ $ docker-compose push
 ### Dependency vulnerability scanning
 
 To ensure the security of this API, all dependencies are checked against 
-[Snyk](https://app.snyk.io/org/antarctica/project/2f2ecd7e-96f3-4124-b93c-2c5325fbfff7/history) for vulnerabilities. 
+[Snyk](https://app.snyk.io/org/antarctica/project/xxx/history) for vulnerabilities. 
 
 **Warning:** Snyk relies on known vulnerabilities and can't check for issues that are not in it's database. As with all 
 security tools, Snyk is an aid for spotting common mistakes, not a guarantee of secure code.
@@ -166,7 +228,7 @@ Tests are automatically ran on each commit through [Continuous Integration](#con
 To run tests manually:
 
 ```shell
-$ docker-compose run -e FLASK_ENV=testing app flask test
+$ docker-compose run -e FLASK_ENV=testing app flask test --test-runner text
 ```
 
 To run tests using PyCharm:
@@ -183,6 +245,14 @@ In *Configuration* tab:
 
 **Note:** This configuration can be also be used to debug tests (by choosing *debug* instead of *run*).
 
+#### JUnit support
+
+To run integration tests to produce a JUnit compatible file, test-results.xml:
+
+```
+$ docker-compose run -e FLASK_ENV=testing app flask test --test-runner junit
+```
+
 ### Continuous Integration
 
 All commits will trigger a Continuous Integration process using GitLab's CI/CD platform, configured in `.gitlab-ci.yml`.
@@ -191,28 +261,65 @@ This process will run the application [Integration tests](#integration-tests).
 
 Pip dependencies are also [checked and monitored for vulnerabilities](#dependency-vulnerability-scanning).
 
-## Deployment
+## Distribution
+ 
+Both source and binary versions of the package are build using [SetupTools](https://setuptools.readthedocs.io), which 
+can then be published to the [Python package index](https://pypi.org/project/bas-metadata-library/) for use in other 
+applications. Package settings are defined in `setup.py`.
 
-### Deployment - Local development
+This project is built and published to PyPi automatically through [Continuous Deployment](#continuous-deployment).
 
-In development environments, the API is ran using the Flask development server through the project Docker container.
+To build the source and binary artifact's for this project manually:
 
-Code changes will be deployed automatically by Flask reloading the application where a source file changes.
+```shell
+$ docker-compose run app ash
+# build package to /build, /dist and /bas-metadata-library.egg-info
+$ python setup.py sdist bdist_wheel
+$ exit
+$ docker-compose down
+```
 
-See the [Local development](#local-development) sub-section in the [Setup](#setup) section for more information.
+To publish built artifact's for this project manually to [PyPi testing](https://test.pypi.org):
+
+```shell
+$ docker-compose run app ash
+$ python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+# project then available at: https://test.pypi.org/project/bas-metadata-library/
+$ exit
+$ docker-compose down
+```
+
+To publish manually to [PyPi](https://pypi.org):
+
+```shell
+$ docker-compose run app ash
+$ python -m twine upload --repository-url https://pypi.org/legacy/ dist/*
+# project then available at: https://pypi.org/project/bas-metadata-library/
+$ exit
+$ docker-compose down
+```
+
+### Continuous Deployment
+
+A Continuous Deployment process using GitLab's CI/CD platform is configured in `.gitlab-ci.yml`. This will:
+
+* build the source and binary artifact's for this project
+* publish built artifact's for this project to the relevant PyPi repository
+
+This process will deploy changes to [PyPi testing](https://test.pypi.org) on all commits to the *master* branch.
+
+This process will deploy changes to [PyPi](https://pypi.org) on all tagged commits.
 
 ## Release procedure
 
 ### At release
 
-For all releases:
-
-1. create a release branch
-2. if needed, build & push the Docker image
+1. create a `release` branch
+2. bump version in `setup.py` as per SemVer
 3. close release in `CHANGELOG.md`
-4. push changes, merge the release branch into `master` and tag with version
+4. push changes, merge the `release` branch into `master` and tag with version
 
-The application will be automatically deployed into production using [Continuous Deployment](#continuous-deployment).
+The project will be built and published to PyPi automatically through [Continuous Deployment](#continuous-deployment).
 
 ## Feedback
 
