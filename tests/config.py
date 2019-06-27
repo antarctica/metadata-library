@@ -785,7 +785,6 @@ iso_19115_v1_complete_record = {
     }
 }
 
-test_record = {
 iso_19115_v1_gemini_complete_record = {
     'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
     'language': 'eng',
@@ -814,7 +813,6 @@ iso_19115_v1_gemini_complete_record = {
             'role': ['pointOfContact']
         }
     ],
-    'date_stamp': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
     'date_stamp': datetime(2018, 10, 18, 14, 40, 44, tzinfo=timezone.utc),
     'maintenance': {
         'maintenance_frequency': 'asNeeded',
@@ -853,17 +851,8 @@ iso_19115_v1_gemini_complete_record = {
     },
     'resource': {
         'title': {
-            'value': 'Analysis of d18O and salinity from sea ice and meltwater pool water samples collected in April '
-                     '2016 in the Weddell Sea and Scotia Sea of the Southern Ocean during the marine survey JR15006'
             'value': 'Test Record'
         },
-        'abstract': 'The dataset contains oxygen stable isotope and salinity measurements from water samples collected '
-                    'from sea ice and meltwater pools in April 2016 in the region of South Georgia, Signy and deep '
-                    'within the Weddell Sea pack ice during the marine survey JR15006. The d18O and salinity '
-                    'measurements from sea ice and meltwater sources complement the same analysis from CTD casts and '
-                    'underway non-toxic flow water system on the RRS James Clark Ross during the JR15006. Establishing '
-                    'd18O and salinity values for saline water and oceanic freshwater components can be used to '
-                    'identify sources and changes of freshwater contributions to the ocean.',
         'abstract': 'Test Record for ISO 19115 metadata standard (Inspire/Gemini profile) with properties that could '
                     'typically be included in a record. This does not mean all properties permitted the standard are '
                     'included, as these are too numerous. Values in this record are complex, meaning they use anchors '
@@ -885,7 +874,6 @@ iso_19115_v1_gemini_complete_record = {
                 'date_type': 'publication'
             },
             {
-                'date': datetime(2018, 12, 8, 14, 40, 44, tzinfo=timezone.utc),
                 'date': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
                 'date_type': 'released'
             }
@@ -893,15 +881,11 @@ iso_19115_v1_gemini_complete_record = {
         'edition': '1',
         'identifiers': [
             {
-                'identifier': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
-                'href': 'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f',
                 'identifier': 'https://doi.org/10.5072/r3qz22k64',
                 'href': 'https://doi.org/10.5072/r3qz22k64',
                 'title': 'doi'
             },
             {
-                'identifier': 'NE/I022973/1',
-                'href': 'https://gtr.ukri.org/projects?ref=NE%2FI022973%2F1',
                 'identifier': 'NE/E007895/1',
                 'href': 'https://gtr.ukri.org/projects?ref=NE%2FE007895%2F1',
                 'title': 'award'
@@ -910,8 +894,6 @@ iso_19115_v1_gemini_complete_record = {
         'contacts': [
             {
                 'individual': {
-                    'name': 'Michael Meredith',
-                    'href': 'https://orcid.org/0000-0002-7342-7756',
                     'name': 'Watson, Constance',
                     'href': 'https://sandbox.orcid.org/0000-0001-8373-6934',
                     'title': 'ORCID record'
@@ -919,30 +901,8 @@ iso_19115_v1_gemini_complete_record = {
                 'organisation': {
                     'name': 'British Antarctic Survey'
                 },
-                'email': 'mmm@bas.ac.uk',
-                'online_resource': {
-                    'href': 'https://orcid.org/0000-0002-7342-7756',
-                    'title': 'ORCID record',
-                    'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
-                                   'registry of unique researcher identifiers and a transparent method of linking '
-                                   'research activities and outputs to these identifiers.',
-                    'function': 'information'
-                },
-                'role': ['author']
-            },
-            {
-                'individual': {
-                    'name': 'Carol Arrowsmith',
-                    'href': 'https://orcid.org/0000-0003-3849-5179',
-                    'title': 'ORCID record'
-                },
-                'organisation': {
-                    'name': 'British Geological Survey'
-                },
-                'email': 'noreply@bas.ac.uk',
                 'email': 'conwat@bas.ac.uk',
                 'online_resource': {
-                    'href': 'https://orcid.org/0000-0003-3849-5179',
                     'href': 'https://sandbox.orcid.org/0000-0001-8373-6934',
                     'title': 'ORCID record',
                     'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
@@ -954,20 +914,15 @@ iso_19115_v1_gemini_complete_record = {
             },
             {
                 'individual': {
-                    'name': 'Melanie Leng',
-                    'href': 'https://orcid.org/0000-0003-1115-5166',
                     'name': 'Cinnamon, John',
                     'href': 'https://sandbox.orcid.org/0000-0001-5652-1129',
                     'title': 'ORCID record'
                 },
                 'organisation': {
-                    'name': 'British Geological Survey'
                     'name': 'British Antarctic Survey'
                 },
-                'email': 'noreply@bas.ac.uk',
                 'email': 'conwat@bas.ac.uk',
                 'online_resource': {
-                    'href': 'https://orcid.org/0000-0003-1115-5166',
                     'href': 'https://sandbox.orcid.org/0000-0001-5652-1129',
                     'title': 'ORCID record',
                     'description': 'ORCID is an open, non-profit, community-driven effort to create and maintain a '
@@ -975,7 +930,6 @@ iso_19115_v1_gemini_complete_record = {
                                    'research activities and outputs to these identifiers.',
                     'function': 'information'
                 },
-                'role': ['author']
                 'role': ['collaborator']
             },
             {
@@ -1036,16 +990,6 @@ iso_19115_v1_gemini_complete_record = {
             {
                 'terms': [
                     {
-                        'term': 'Oceanographic geographical features',
-                        'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/of'
-                    },
-                    {
-                        'term': 'Sea regions',
-                        'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/sr'
-                    },
-                    {
-                        'term': 'Land Cover',
-                        'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/lc'
                         'term': 'Atmospheric conditions',
                         'href': 'https://www.eionet.europa.eu/gemet/en/inspire-theme/ac'
                     }
@@ -1077,77 +1021,6 @@ iso_19115_v1_gemini_complete_record = {
                         'role': ['publisher']
                     },
                 }
-            },
-            {
-                'terms': [
-                    {
-                        'term': 'EARTH SCIENCE > Hydrosphere > Snow/Ice > Snow Melt'
-                    },
-                    {
-                        'term': 'EARTH SCIENCE > Hydrosphere > Surface Water'
-                    },
-                    {
-                        'term': 'EARTH SCIENCE > Oceans > Sea Ice > Isotopes'
-                    },
-                    {
-                        'term': 'EARTH SCIENCE > Oceans > Sea Ice > Pack Ice'
-                    },
-                    {
-                        'term': 'EARTH SCIENCE > Oceans > Sea Ice > Salinity'
-                    }
-                ],
-                'type': 'theme',
-                'thesaurus': {
-                    'title': {
-                        'value': 'Global Change Master Directory (GCMD) Science Keywords',
-                        'href': 'https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords'
-                    },
-                    'dates': [
-                        {
-                            'date': date(2018, 3, 15),
-                            'date_type': 'publication'
-                        }
-                    ],
-                    'edition': '8.6',
-                    'contact': {
-                        'organisation': {
-                            'name': 'Global Change Data Center, Science and Exploration Directorate, Goddard Space '
-                                    'Flight Center (GSFC) National Aeronautics and Space Administration (NASA)'
-                        },
-                        "email": "support@earthdata.nasa.gov",
-                        'address': {
-                            'city': 'Greenbelt',
-                            'administrative_area': 'MD',
-                            'country': 'United States of America'
-                        },
-                        'online_resource': {
-                            'href': 'https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords',
-                            'title': 'Global Change Master Directory (GCMD) Keywords',
-                            'description': 'The information provided on this page seeks to define how the GCMD '
-                                           'Keywords are structured, used and accessed. It also provides information '
-                                           'on how users can participate in the further development of the keywords.',
-                            'function': 'information'
-                        },
-                        'role': ['publisher']
-                    }
-                }
-            },
-            {
-                'terms': [
-                    {
-                        'term': 'd18O'
-                    },
-                    {
-                        'term': 'meltwater pool'
-                    },
-                    {
-                        'term': 'salinity'
-                    },
-                    {
-                        'term': 'sea ice'
-                    }
-                ],
-                'type': 'theme'
             }
         ],
         'constraints': {
@@ -1166,14 +1039,6 @@ iso_19115_v1_gemini_complete_record = {
                         'statement': 'This information is licensed under the Open Government Licence v3.0. To view this'
                                      ' licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/'
                     }
-                },
-                {
-                    'restriction_code': 'otherRestrictions',
-                    'required_citation': 'Bougamont, M. (2018). Ice flow model output for Pine Island Glacier '
-                                         '(West Antarctica), from numerical inversions of ice surface velocities '
-                                         'observed in 1996 and 2014 [Data set]. UK Polar Data Centre, Natural '
-                                         'Environment Research Council, UK Research and Innovation. '
-                                         'https://doi.org/10.5285/3cf26ab6-7f47-4868-a87d-c62a2eefea1f'
                 }
             ]
         },
@@ -1185,8 +1050,6 @@ iso_19115_v1_gemini_complete_record = {
         'language': 'eng',
         'topics': [
             'environment',
-            'inlandWaters',
-            'oceans'
             'climatologyMeteorologyAtmosphere'
         ],
         'extent': {
@@ -1199,9 +1062,6 @@ iso_19115_v1_gemini_complete_record = {
                 }
             },
             'vertical': {
-                'identifier': 'ogp-crs-5715',
-                'code': 'urn:ogc:def:crs:EPSG::5715',
-                'name': 'MSL depth',
                 'minimum': 20,
                 'maximum': 40,
                 'identifier': 'ogp-crs-5714',
@@ -1221,8 +1081,6 @@ iso_19115_v1_gemini_complete_record = {
             },
             'temporal': {
                 'period': {
-                    'start': date(2016, 3, 31),
-                    'end': date(2016, 4, 26)
                     'start': date(2018, 9, 14),
                     'end': date(2018, 9, 15)
                 }
@@ -1230,38 +1088,23 @@ iso_19115_v1_gemini_complete_record = {
         },
         'formats': [
             {
-                'format': 'Microsoft Excel Workbook',
-                'href': 'https://www.iana.org/assignments/media-types/application/'
-                        'vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 'format': 'netCDF Classic',
                 'href': 'https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format'
             }
         ],
         'transfer_options': [
             {
-                'online_resource': {
-                    'href': 'https://www.bodc.ac.uk/data/bodc_database/nodb/data_collection/6618/',
-                    'title': 'Get Data',
-                    'description': 'Download underlying CTD data',
-                    'function': 'download'
-                }
-            },
-            {
                 'size': {
-                    'unit': 'KB',
-                    'magnitude': 70
                     'unit': 'MB',
                     'magnitude': 40
                 },
                 'online_resource': {
                     'href': 'https://ramadda.data.bas.ac.uk/repository/entry/show?entryid='
-                            '63af1e57-8f20-4fb1-a55c-bd0e703f8a56',
                             'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
                     'title': 'Get Data',
                     'description': 'Download measurement data',
                     'function': 'download'
                 }
-            }
             },
             {
                 'online_resource': {
@@ -1292,23 +1135,6 @@ iso_19115_v1_gemini_complete_record = {
                 'explanation': 'See the referenced specification'
             }
         ],
-        'lineage': 'At all sample locations, 2 or more salinity bottles and d18O vials were filled following the usual '
-                   'procedure. The d18O vials were rinsed 3 times, filled and dried before being closed with a stopper '
-                   'and sealed with the crimper. Oxygen isotope (d18O) measurements were made using the CO2 '
-                   'equilibration method with an Isoprime 100 mass spectrometer plus Aquaprep device. 90 samples '
-                   '(200µl of water) were loaded into Labco Limited exetainers (3.7ml) and placed in the heated '
-                   'sample tray at 40°C. The exetainers were then evacuated to remove atmosphere then flushed '
-                   'with CO2 and left to equilibrate for between 12 (first sample) - 37 (last sample) hours. Each '
-                   'individual gas sample was then admitted to the cryogenic water trap where any water vapour is '
-                   'removed. The dry sample gas was then expanded into the dual inlet where it was measured on the '
-                   'transducer before being expanded in the dual inlet bellows. Ionvantage software then balances the '
-                   'reference bellows relative to this volume. The sample and reference CO2 gases enter alternatively '
-                   'into the Isoprime100 through the dual changeover valve for isotope ratio measurement. In each run '
-                   'two laboratory standards (CA-HI and CA-LO) plus up to 2 secondary standards were analysed in '
-                   'triplicate. The value of these laboratory standards has been accurately determined by comparison '
-                   'with international calibration and reference materials (VSMOW2, SLAP2 and GISP) and so the 18O/16O '
-                   'ratios (versus VSMOW2) of the unknown samples can be calculated and are expressed in delta units, '
-                   'd18O (parts per mille). Errors are < +/- 0.05 per mil.'
         'lineage': 'Example lineage statement'
     }
 }
