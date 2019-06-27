@@ -5,7 +5,7 @@ import unittest
 import xmlrunner
 
 # noinspection PyPackageRequirements
-from click import option, Choice
+from click import option, Choice, echo, style
 
 from app import create_app
 
@@ -26,7 +26,7 @@ def test(test_runner: str = 'text'):
             tests_runner = xmlrunner.XMLTestRunner(output=output)
             return sys.exit(not tests_runner.run(tests).wasSuccessful())
 
-    return RuntimeError('Unknown Python unit test runner type')
+    echo(style('Unknown Python unit test runner type', fg='red'), err=True)
 
 
 if 'PYCHARM_HOSTED' in os.environ:

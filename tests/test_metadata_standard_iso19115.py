@@ -511,7 +511,10 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
                     f"{{{self.ns.gmd}}}version/{{{self.ns.gco}}}CharacterString"
                 )
                 self.assertIsNotNone(reference_system_version)
-                self.assertEqual(reference_system_version.text, self.record_attributes['reference_system_info']['version'])
+                self.assertEqual(
+                    reference_system_version.text,
+                    self.record_attributes['reference_system_info']['version']
+                )
 
     def test_data_identification(self):
         data_identification = self.test_response.find(
