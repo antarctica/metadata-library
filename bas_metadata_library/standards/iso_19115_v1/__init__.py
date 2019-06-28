@@ -1,5 +1,4 @@
 from datetime import datetime, date
-from pathlib import Path
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
@@ -80,10 +79,817 @@ class MetadataRecordConfig(_MetadataRecordConfig):
         super().__init__(**kwargs)
 
         self.config = kwargs
-        self.schema = None
-        self.schema_path = Path('bas_metadata_library/standards/iso_19115_v1/metadata-record-schema.json')
+        self.schema = {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "title": "UK PDC Metadata Record Generator - ISO 19115 v1 configuration schema",
+            "description": "Metadata record configuration schema for the ISO 19115 (v1) metadata standard",
+            "definitions": {
+                "language": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "delivery_point": {
+                            "type": "string"
+                        },
+                        "city": {
+                            "type": "string"
+                        },
+                        "administrative_area": {
+                            "type": "string"
+                        },
+                        "postal_code": {
+                            "type": "string"
+                        },
+                        "country": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "online_resource": {
+                    "type": "object",
+                    "required": [
+                        "href"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "href": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "title": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "function": {
+                            "type": "string",
+                            "enum": [
+                                "download",
+                                "information",
+                                "offlineAccess",
+                                "order",
+                                "search"
+                            ]
+                        }
+                    }
+                },
+                "contact_identity": {
+                    "type": "object",
+                    "required": [
+                        "name"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "href": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "title": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "contact": {
+                    "type": "object",
+                    "required": [
+                        "role"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "individual": {
+                            "$ref": "#/definitions/contact_identity"
+                        },
+                        "organisation": {
+                            "$ref": "#/definitions/contact_identity"
+                        },
+                        "email": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "phone": {
+                            "type": "string"
+                        },
+                        "address": {
+                            "$ref": "#/definitions/address"
+                        },
+                        "online_resource": {
+                            "$ref": "#/definitions/online_resource"
+                        },
+                        "role": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "author",
+                                    "custodian",
+                                    "distributor",
+                                    "originator",
+                                    "owner",
+                                    "pointOfContact",
+                                    "principalInvestigator",
+                                    "processor",
+                                    "publisher",
+                                    "resourceProvider",
+                                    "sponsor",
+                                    "user",
+                                    "coAuthor",
+                                    "collaborator",
+                                    "contributor",
+                                    "editor",
+                                    "funder",
+                                    "mediator",
+                                    "rightsHolder",
+                                    "stakeholder"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "maintenance": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "maintenance_frequency": {
+                            "type": "string",
+                            "enum": [
+                                "continual",
+                                "daily",
+                                "weekly",
+                                "fortnightly",
+                                "monthly",
+                                "quarterly",
+                                "biannually",
+                                "annually",
+                                "asNeeded",
+                                "irregular",
+                                "notPlanned",
+                                "unknown"
+                            ]
+                        },
+                        "progress": {
+                            "type": "string",
+                            "enum": [
+                                "completed",
+                                "historicalArchive",
+                                "obsolete",
+                                "onGoing",
+                                "planned",
+                                "required",
+                                "underDevelopment"
+                            ]
+                        }
+                    }
+                },
+                "title": {
+                    "type": "object",
+                    "required": [
+                        "value"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "dates": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "date",
+                            "date_type"
+                        ],
+                        "additionalProperties": False,
+                        "properties": {
+                            "date": {
+                                "$ref": "#/definitions/date"
+                            },
+                            "date_precision": {
+                                "type": "string",
+                                "enum": [
+                                    "month",
+                                    "year"
+                                ]
+                            },
+                            "date_type": {
+                                "type": "string",
+                                "enum": [
+                                    "creation",
+                                    "publication",
+                                    "revision",
+                                    "adopted",
+                                    "deprecated",
+                                    "distribution",
+                                    "expiry",
+                                    "inForce",
+                                    "lastRevision",
+                                    "lastUpdate",
+                                    "nextUpdate",
+                                    "released",
+                                    "superseded",
+                                    "unavailable",
+                                    "validityBegins",
+                                    "validityExpires"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "edition": {
+                    "type": "string"
+                },
+                "identifier": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "identifier": {
+                            "type": "string"
+                        },
+                        "href": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "title": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "keywords": {
+                    "type": "object",
+                    "required": [
+                        "terms"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "terms": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "term"
+                                ],
+                                "additionalProperties": False,
+                                "properties": {
+                                    "term": {
+                                        "type": "string"
+                                    },
+                                    "href": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    }
+                                }
+                            }
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "discipline",
+                                "place",
+                                "stratum",
+                                "temporal",
+                                "theme"
+                            ]
+                        },
+                        "thesaurus": {
+                            "$ref": "#/definitions/thesaurus"
+                        }
+                    }
+                },
+                "thesaurus": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "title": {
+                            "anyOf": [
+                                {"$ref": "#/definitions/title"},
+                                {
+                                    "properties": {
+                                        "href": {
+                                            "type": "string",
+                                            "format": "uri"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "dates": {
+                            "$ref": "#/definitions/dates"
+                        },
+                        "edition": {
+                            "$ref": "#/definitions/edition"
+                        },
+                        "contact": {
+                            "$ref": "#/definitions/contact"
+                        }
+                    }
+                },
+                "constraint": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "restriction_code": {
+                            "type": "string",
+                            "enum": [
+                                "copyright",
+                                "patent",
+                                "patentPending",
+                                "trademark",
+                                "license",
+                                "intellectualPropertyRights",
+                                "restricted",
+                                "otherRestrictions"
+                            ]
+                        },
+                        "inspire_limitations_on_public_access": {
+                            "type": "string",
+                            "enum": [
+                                "noLimitations"
+                            ]
+                        },
+                        "copyright_licence": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "code": {
+                                    "type": "string"
+                                },
+                                "href": {
+                                    "type": "string",
+                                    "format": "uri"
+                                },
+                                "statement": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required_citation": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "geographic_extent": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "bounding_box": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "west_longitude": {
+                                    "type": "number",
+                                    "maximum": 180,
+                                    "minimum": -180
+                                },
+                                "east_longitude": {
+                                    "type": "number",
+                                    "maximum": 180,
+                                    "minimum": -180
+                                },
+                                "south_latitude": {
+                                    "type": "number",
+                                    "maximum": 90,
+                                    "minimum": -90
+                                },
+                                "north_latitude": {
+                                    "type": "number",
+                                    "maximum": 90,
+                                    "minimum": -90
+                                }
+                            }
+                        }
+                    }
+                },
+                "vertical_extent": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "minimum": {
+                            "type": "number"
+                        },
+                        "maximum": {
+                            "type": "number"
+                        },
+                        "identifier": {
+                            "type": "string"
+                        },
+                        "code": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "remarks": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        },
+                        "domain_of_validity": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "href": {
+                                    "type": "string",
+                                    "format": "uri"
+                                }
+                            }
+                        },
+                        "vertical_cs": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "href": {
+                                    "type": "string",
+                                    "format": "uri"
+                                }
+                            }
+                        },
+                        "vertical_datum": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "href": {
+                                    "type": "string",
+                                    "format": "uri"
+                                }
+                            }
+                        }
+                    }
+                },
+                "temporal_extent": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "period": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "start": {
+                                    "$ref": "#/definitions/date"
+                                },
+                                "end": {
+                                    "$ref": "#/definitions/date"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "type": "object",
+            "required": [
+                "contacts",
+                "date_stamp",
+                "resource"
+            ],
+            "additionalProperties": False,
+            "properties": {
+                "file_identifier": {
+                    "type": "string"
+                },
+                "language": {
+                    "$ref": "#/definitions/language"
+                },
+                "character_set": {
+                    "type": "string"
+                },
+                "hierarchy_level": {
+                    "type": "string",
+                    "enum": [
+                        "attribute",
+                        "attributeType",
+                        "collectionHardware",
+                        "collectionSession",
+                        "dataset",
+                        "series",
+                        "nonGeographicDataset",
+                        "dimensionGroup",
+                        "feature",
+                        "featureType",
+                        "propertyType",
+                        "fieldSession",
+                        "software",
+                        "service",
+                        "model",
+                        "tile"
+                    ]
+                },
+                "contacts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/contact"
+                    },
+                    "minimum": 1
+                },
+                "date_stamp": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "maintenance": {
+                    "$ref": "#/definitions/maintenance"
+                },
+                "metadata_standard": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "reference_system_info": {
+                    "type": "object",
+                    "required": [
+                        "code"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "code": {
+                            "type": "object",
+                            "required": [
+                                "value"
+                            ],
+                            "additionalProperties": False,
+                            "properties": {
+                                "value": {
+                                    "type": "string"
+                                },
+                                "href": {
+                                    "type": "string",
+                                    "format": "uri"
+                                }
+                            }
+                        },
+                        "version": {
+                            "type": "string"
+                        },
+                        "authority": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "title": {
+                                    "$ref": "#/definitions/title"
+                                },
+                                "dates": {
+                                    "$ref": "#/definitions/dates"
+                                },
+                                "contact": {
+                                    "$ref": "#/definitions/contact"
+                                }
+                            }
+                        }
+                    }
+                },
+                "resource": {
+                    "type": "object",
+                    "required": [
+                        "title",
+                        "dates",
+                        "abstract",
+                        "language"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "title": {
+                            "$ref": "#/definitions/title"
+                        },
+                        "abstract": {
+                            "type": "string"
+                        },
+                        "dates": {
+                            "$ref": "#/definitions/dates"
+                        },
+                        "edition": {
+                            "$ref": "#/definitions/edition"
+                        },
+                        "identifiers": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/identifier"
+                            }
+                        },
+                        "contacts": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/contact"
+                            }
+                        },
+                        "maintenance": {
+                            "$ref": "#/definitions/maintenance"
+                        },
+                        "keywords": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/keywords"
+                            }
+                        },
+                        "constraints": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "access": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/constraint"
+                                    }
+                                },
+                                "usage": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/constraint"
+                                    }
+                                }
+                            }
+                        },
+                        "supplemental_information": {
+                            "type": "string"
+                        },
+                        "spatial_representation_type": {
+                            "type": "string",
+                            "enum": [
+                                "vector",
+                                "grid",
+                                "textTable",
+                                "tin",
+                                "steroModel",
+                                "video"
+                            ]
+                        },
+                        "spatial_resolution": {
+                            "type": ["string", "null"]
+                        },
+                        "language": {
+                            "$ref": "#/definitions/language"
+                        },
+                        "topics": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "farming",
+                                    "biota",
+                                    "boundaries",
+                                    "climatologyMeteorologyAtmosphere",
+                                    "economy",
+                                    "elevation",
+                                    "environment",
+                                    "geoscientificInformation",
+                                    "health",
+                                    "imageryBaseMapsEarthCover",
+                                    "intelligenceMilitary",
+                                    "inlandWaters",
+                                    "location",
+                                    "oceans",
+                                    "planningCadastre",
+                                    "society",
+                                    "structure",
+                                    "transportation",
+                                    "utilitiesCommunication",
+                                    "extraTerrestrial",
+                                    "disaster"
+                                ]
+                            }
+                        },
+                        "extent": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "geographic": {
+                                    "$ref": "#/definitions/geographic_extent"
+                                },
+                                "vertical": {
+                                    "$ref": "#/definitions/vertical_extent"
+                                },
+                                "temporal": {
+                                    "$ref": "#/definitions/temporal_extent"
+                                }
+                            }
+                        },
+                        "formats": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "format"
+                                ],
+                                "additionalProperties": False,
+                                "properties": {
+                                    "format": {
+                                        "type": "string"
+                                    },
+                                    "href": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    }
+                                }
+                            }
+                        },
+                        "transfer_options": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "online_resource"
+                                ],
+                                "additionalProperties": False,
+                                "properties": {
+                                    "size": {
+                                        "type": "object",
+                                        "additionalProperties": False,
+                                        "required": [],
+                                        "properties": {
+                                            "unit": {
+                                                "type": "string"
+                                            },
+                                            "magnitude": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    },
+                                    "online_resource": {
+                                        "$ref": "#/definitions/online_resource"
+                                    }
+                                }
+                            }
+                        },
+                        "measures": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [],
+                                "additionalProperties": False,
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "code_space": {
+                                        "type": "string"
+                                    },
+                                    "pass": {
+                                        "type": "boolean"
+                                    },
+                                    "title": {
+                                        "anyOf": [
+                                            {"$ref": "#/definitions/title"},
+                                            {
+                                                "properties": {
+                                                    "href": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "dates": {
+                                        "$ref": "#/definitions/dates"
+                                    },
+                                    "explanation": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "lineage": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
 
-        self.load_schema()
         self.validate()
 
 

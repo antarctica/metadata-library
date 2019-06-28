@@ -73,9 +73,7 @@ class MetadataRecordConfig(object):
         """
         self.config = kwargs
         self.schema = None
-        self.schema_path = None
 
-        self.load_schema()
         self.validate()
 
     def config(self) -> dict:
@@ -86,14 +84,6 @@ class MetadataRecordConfig(object):
         :return: configuration dictionary
         """
         return self.config
-
-    def load_schema(self) -> None:
-        """
-        Loads the JSON Schema that validates a configuration
-        """
-        if self.schema_path is not None:
-            with open(self.schema_path) as schema_file:
-                self.schema = json.load(schema_file)
 
     def validate(self) -> None:
         """
