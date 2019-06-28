@@ -1,5 +1,3 @@
-from pathlib import Path
-
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
@@ -47,10 +45,26 @@ class MetadataRecordConfig(_MetadataRecordConfig):
         super().__init__(**kwargs)
 
         self.config = kwargs
-        self.schema = None
-        self.schema_path = Path('tests/standards/test_standard/metadata-record-schema.json')
+        self.schema = {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "title": "UK PDC Metadata Record Generator - Test Standard configuration schema",
+            "description": "Metadata record configuration schema for the 'Test Standard' metadata standard",
+            "definitions": {},
+            "type": "object",
+            "required": [
+                "resource"
+            ],
+            "additionalProperties": True,
+            "properties": {
+                "resource": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": True,
+                    "properties": {}
+                }
+            }
+        }
 
-        self.load_schema()
         self.validate()
 
 
