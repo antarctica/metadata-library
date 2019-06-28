@@ -790,10 +790,10 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                                     "$ref": "#/definitions/geographic_extent"
                                 },
                                 "vertical": {
-                                    "$ref":  "#/definitions/vertical_extent"
+                                    "$ref": "#/definitions/vertical_extent"
                                 },
                                 "temporal": {
-                                    "$ref":  "#/definitions/temporal_extent"
+                                    "$ref": "#/definitions/temporal_extent"
                                 }
                             }
                         },
@@ -834,7 +834,7 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                                                 "type": "string"
                                             },
                                             "magnitude": {
-                                                "type":  "number"
+                                                "type": "number"
                                             }
                                         }
                                     },
