@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+* adding missing change log header
+
 ## [0.1.0] 2019-06-28
+
+### Added
 
 * Initial version with support for ISO 19115
 
