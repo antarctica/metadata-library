@@ -197,7 +197,7 @@ iso_19115_v1_base_simple_record = {
         },
         'formats': [
             {
-                'format': 'netCDF Classic'
+                'format': 'netCDF'
             }
         ],
         'transfer_options': [
@@ -433,8 +433,8 @@ iso_19115_v1_base_complex_record = {
         },
         'formats': [
             {
-                'format': 'netCDF Classic',
-                'href': 'https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format'
+                'format': 'netCDF',
+                'href': 'https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca'
             }
         ],
         'transfer_options': [
@@ -754,8 +754,8 @@ iso_19115_v1_complete_record = {
         },
         'formats': [
             {
-                'format': 'netCDF Classic',
-                'href': 'https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format'
+                'format': 'netCDF',
+                'href': 'https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca'
             }
         ],
         'transfer_options': [
@@ -1088,8 +1088,8 @@ iso_19115_v1_gemini_complete_record = {
         },
         'formats': [
             {
-                'format': 'netCDF Classic',
-                'href': 'https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format'
+                'format': 'netCDF',
+                'href': 'https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca'
             }
         ],
         'transfer_options': [

@@ -367,7 +367,7 @@
       <gmd:distributionFormat>
         <gmd:MD_Format>
           <gmd:name>
-            <gco:CharacterString>netCDF Classic</gco:CharacterString>
+            <gco:CharacterString>netCDF</gco:CharacterString>
           </gmd:name>
           <gmd:version gco:nilReason="unknown"/>
         </gmd:MD_Format>

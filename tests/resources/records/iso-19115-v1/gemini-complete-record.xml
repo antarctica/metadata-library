@@ -678,7 +678,7 @@
       <gmd:distributionFormat>
         <gmd:MD_Format>
           <gmd:name>
-            <gmx:Anchor xlink:actuate="onRequest" xlink:href="https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format">netCDF Classic</gmx:Anchor>
+            <gmx:Anchor xlink:actuate="onRequest" xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca">netCDF</gmx:Anchor>
           </gmd:name>
           <gmd:version gco:nilReason="unknown"/>
         </gmd:MD_Format>

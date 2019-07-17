@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+* adding better URL for netCDF MIME type
 * adding missing change log header
 
 ## [0.1.0] 2019-06-28
