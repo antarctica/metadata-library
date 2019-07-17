@@ -197,7 +197,7 @@ iso_19115_v1_base_simple_record = {
         },
         'formats': [
             {
-                'format': 'netCDF Classic'
+                'format': 'netCDF'
             }
         ],
         'transfer_options': [
@@ -225,7 +225,7 @@ iso_19115_v1_base_complex_record = {
             'organisation': {
                 'name': 'UK Polar Data Centre',
                 'href': 'http://isni.org/isni/0000000405983800',
-                'title': 'ISNI record'
+                'title': 'isni'
             },
             'phone': '+44 (0)1223 221400',
             'address': {
@@ -303,7 +303,7 @@ iso_19115_v1_base_complex_record = {
                 'individual': {
                     'name': 'Watson, Constance',
                     'href': 'https://sandbox.orcid.org/0000-0001-8373-6934',
-                    'title': 'ORCID record'
+                    'title': 'orcid'
                 },
                 'organisation': {
                     'name': 'British Antarctic Survey'
@@ -323,7 +323,7 @@ iso_19115_v1_base_complex_record = {
                 'organisation': {
                     'name': 'UK Polar Data Centre',
                     'href': 'http://isni.org/isni/0000000405983800',
-                    'title': 'ISNI record'
+                    'title': 'isni'
                 },
                 'phone': '+44 (0)1223 221400',
                 'address': {
@@ -433,8 +433,8 @@ iso_19115_v1_base_complex_record = {
         },
         'formats': [
             {
-                'format': 'netCDF Classic',
-                'href': 'https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format'
+                'format': 'netCDF',
+                'href': 'https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca'
             }
         ],
         'transfer_options': [
@@ -462,7 +462,7 @@ iso_19115_v1_complete_record = {
             'organisation': {
                 'name': 'UK Polar Data Centre',
                 'href': 'http://isni.org/isni/0000000405983800',
-                'title': 'ISNI record'
+                'title': 'isni'
             },
             'phone': '+44 (0)1223 221400',
             'address': {
@@ -545,7 +545,7 @@ iso_19115_v1_complete_record = {
                 'date_type': 'released'
             }
         ],
-        'edition': '1',
+        'edition': '2',
         'identifiers': [
             {
                 'identifier': 'https://doi.org/10.5072/r3qz22k64',
@@ -563,7 +563,7 @@ iso_19115_v1_complete_record = {
                 'individual': {
                     'name': 'Watson, Constance',
                     'href': 'https://sandbox.orcid.org/0000-0001-8373-6934',
-                    'title': 'ORCID record'
+                    'title': 'orcid'
                 },
                 'organisation': {
                     'name': 'British Antarctic Survey'
@@ -583,7 +583,7 @@ iso_19115_v1_complete_record = {
                 'individual': {
                     'name': 'Cinnamon, John',
                     'href': 'https://sandbox.orcid.org/0000-0001-5652-1129',
-                    'title': 'ORCID record'
+                    'title': 'orcid'
                 },
                 'organisation': {
                     'name': 'British Antarctic Survey'
@@ -603,7 +603,7 @@ iso_19115_v1_complete_record = {
                 'organisation': {
                     'name': 'UK Polar Data Centre',
                     'href': 'http://isni.org/isni/0000000405983800',
-                    'title': 'ISNI record'
+                    'title': 'isni'
                 },
                 'phone': '+44 (0)1223 221400',
                 'address': {
@@ -629,7 +629,7 @@ iso_19115_v1_complete_record = {
                 'organisation': {
                     'name': 'Natural Environment Research Council',
                     'href': 'http://isni.org/isni/0000000094781573',
-                    'title': 'ISNI record'
+                    'title': 'isni'
                 },
                 'phone': '+44 (0)1793 411500',
                 'address': {
@@ -754,8 +754,8 @@ iso_19115_v1_complete_record = {
         },
         'formats': [
             {
-                'format': 'netCDF Classic',
-                'href': 'https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format'
+                'format': 'netCDF',
+                'href': 'https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca'
             }
         ],
         'transfer_options': [
@@ -795,7 +795,7 @@ iso_19115_v1_gemini_complete_record = {
             'organisation': {
                 'name': 'UK Polar Data Centre',
                 'href': 'http://isni.org/isni/0000000405983800',
-                'title': 'ISNI record'
+                'title': 'isni'
             },
             'phone': '+44 (0)1223 221400',
             'address': {
@@ -878,7 +878,7 @@ iso_19115_v1_gemini_complete_record = {
                 'date_type': 'released'
             }
         ],
-        'edition': '1',
+        'edition': '2',
         'identifiers': [
             {
                 'identifier': 'https://doi.org/10.5072/r3qz22k64',
@@ -896,7 +896,7 @@ iso_19115_v1_gemini_complete_record = {
                 'individual': {
                     'name': 'Watson, Constance',
                     'href': 'https://sandbox.orcid.org/0000-0001-8373-6934',
-                    'title': 'ORCID record'
+                    'title': 'orcid'
                 },
                 'organisation': {
                     'name': 'British Antarctic Survey'
@@ -916,7 +916,7 @@ iso_19115_v1_gemini_complete_record = {
                 'individual': {
                     'name': 'Cinnamon, John',
                     'href': 'https://sandbox.orcid.org/0000-0001-5652-1129',
-                    'title': 'ORCID record'
+                    'title': 'orcid'
                 },
                 'organisation': {
                     'name': 'British Antarctic Survey'
@@ -936,7 +936,7 @@ iso_19115_v1_gemini_complete_record = {
                 'organisation': {
                     'name': 'UK Polar Data Centre',
                     'href': 'http://isni.org/isni/0000000405983800',
-                    'title': 'ISNI record'
+                    'title': 'isni'
                 },
                 'phone': '+44 (0)1223 221400',
                 'address': {
@@ -962,7 +962,7 @@ iso_19115_v1_gemini_complete_record = {
                 'organisation': {
                     'name': 'Natural Environment Research Council',
                     'href': 'http://isni.org/isni/0000000094781573',
-                    'title': 'ISNI record'
+                    'title': 'isni'
                 },
                 'phone': '+44 (0)1793 411500',
                 'address': {
@@ -1088,8 +1088,8 @@ iso_19115_v1_gemini_complete_record = {
         },
         'formats': [
             {
-                'format': 'netCDF Classic',
-                'href': 'https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format'
+                'format': 'netCDF',
+                'href': 'https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca'
             }
         ],
         'transfer_options': [

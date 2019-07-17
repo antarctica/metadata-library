@@ -18,7 +18,7 @@
   <gmd:contact>
     <gmd:CI_ResponsibleParty>
       <gmd:organisationName>
-        <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://isni.org/isni/0000000405983800" xlink:title="ISNI record">UK Polar Data Centre</gmx:Anchor>
+        <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://isni.org/isni/0000000405983800" xlink:title="isni">UK Polar Data Centre</gmx:Anchor>
       </gmd:organisationName>
       <gmd:contactInfo>
         <gmd:CI_Contact>
@@ -182,7 +182,7 @@
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:individualName>
-            <gmx:Anchor xlink:actuate="onRequest" xlink:href="https://sandbox.orcid.org/0000-0001-8373-6934" xlink:title="ORCID record">Watson, Constance</gmx:Anchor>
+            <gmx:Anchor xlink:actuate="onRequest" xlink:href="https://sandbox.orcid.org/0000-0001-8373-6934" xlink:title="orcid">Watson, Constance</gmx:Anchor>
           </gmd:individualName>
           <gmd:organisationName>
             <gco:CharacterString>British Antarctic Survey</gco:CharacterString>
@@ -222,7 +222,7 @@
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName>
-            <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://isni.org/isni/0000000405983800" xlink:title="ISNI record">UK Polar Data Centre</gmx:Anchor>
+            <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://isni.org/isni/0000000405983800" xlink:title="isni">UK Polar Data Centre</gmx:Anchor>
           </gmd:organisationName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
@@ -275,7 +275,7 @@
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName>
-            <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://isni.org/isni/0000000405983800" xlink:title="ISNI record">UK Polar Data Centre</gmx:Anchor>
+            <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://isni.org/isni/0000000405983800" xlink:title="isni">UK Polar Data Centre</gmx:Anchor>
           </gmd:organisationName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
@@ -328,7 +328,7 @@
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName>
-            <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://isni.org/isni/0000000405983800" xlink:title="ISNI record">UK Polar Data Centre</gmx:Anchor>
+            <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://isni.org/isni/0000000405983800" xlink:title="isni">UK Polar Data Centre</gmx:Anchor>
           </gmd:organisationName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
@@ -524,7 +524,7 @@
       <gmd:distributionFormat>
         <gmd:MD_Format>
           <gmd:name>
-            <gmx:Anchor xlink:actuate="onRequest" xlink:href="https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html#classic_format">netCDF Classic</gmx:Anchor>
+            <gmx:Anchor xlink:actuate="onRequest" xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca">netCDF</gmx:Anchor>
           </gmd:name>
           <gmd:version gco:nilReason="unknown"/>
         </gmd:MD_Format>
@@ -534,7 +534,7 @@
           <gmd:distributorContact>
             <gmd:CI_ResponsibleParty>
               <gmd:organisationName>
-                <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://isni.org/isni/0000000405983800" xlink:title="ISNI record">UK Polar Data Centre</gmx:Anchor>
+                <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://isni.org/isni/0000000405983800" xlink:title="isni">UK Polar Data Centre</gmx:Anchor>
               </gmd:organisationName>
               <gmd:contactInfo>
                 <gmd:CI_Contact>
