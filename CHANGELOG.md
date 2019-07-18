@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+* Adding missing ID to `InspireLimitationsOnPublicAccess` access constraint elements
 * The wrong code list was checked for ResponsibleParty roles
 * Roles were not correctly outputted in cited ResponsibleParty elements
 * Incorrect namespace used for OnlineResource FunctionCode test

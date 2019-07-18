@@ -2067,6 +2067,8 @@ class ResourceConstraints(MetadataRecordElement):
                 access_constraint.make_element()
 
                 if 'inspire_limitations_on_public_access' in access_constraint_attributes:
+                    constraints_element.set('id', 'InspireLimitationsOnPublicAccess')
+
                     public_access_limitation = InspireLimitationsOnPublicAccess(
                         record=self.record,
                         attributes=self.attributes,
