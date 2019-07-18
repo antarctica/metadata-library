@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 * controlled titles in responsible parties (ISNI and ORCID) following 
+* The wrong code list was checked for ResponsibleParty roles
+* Roles were not correctly outputted in cited ResponsibleParty elements
 * Incorrect namespace used for OnlineResource FunctionCode test
 * OnlineResources were incorrectly placed in ResponsibleParties, rather than inside a ContentInfo element [#33]
   [uk-pdc/metadata-infrastructure/metadata-standards#92]

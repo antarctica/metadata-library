@@ -132,7 +132,9 @@
                       </gmd:onlineResource>
                     </gmd:CI_Contact>
                   </gmd:contactInfo>
-                  <gmd:role/>
+                  <gmd:role>
+                    <gmd:CI_RoleCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="publisher">publisher</gmd:CI_RoleCode>
+                  </gmd:role>
                 </gmd:CI_ResponsibleParty>
               </gmd:citedResponsibleParty>
             </gmd:CI_Citation>
@@ -443,7 +445,9 @@
                       </gmd:onlineResource>
                     </gmd:CI_Contact>
                   </gmd:contactInfo>
-                  <gmd:role/>
+                  <gmd:role>
+                    <gmd:CI_RoleCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="publisher">publisher</gmd:CI_RoleCode>
+                  </gmd:role>
                 </gmd:CI_ResponsibleParty>
               </gmd:citedResponsibleParty>
             </gmd:CI_Citation>
