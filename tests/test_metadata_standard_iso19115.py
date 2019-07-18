@@ -169,10 +169,9 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         else:
             self.assertEqual(email.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
 
-        if 'online_resource' in responsible_party:
+        if 'online_resource' in responsible_party_attributes:
             online_resource = contact_info.find(
                 f"{{{self.ns.gmd}}}onlineResource/{{{self.ns.gmd}}}CI_OnlineResource"
-
             )
             self.assertIsNotNone(online_resource)
             self._test_online_resource(online_resource, responsible_party_attributes['online_resource'])

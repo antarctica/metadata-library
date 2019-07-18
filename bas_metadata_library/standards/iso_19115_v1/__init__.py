@@ -1239,7 +1239,7 @@ class ResponsibleParty(MetadataRecordElement):
                 organisation_name_value.text = self.element_attributes['organisation']['name']
 
         if 'phone' in self.element_attributes or 'address' in self.element_attributes \
-                or 'email' in self.element_attributes:
+                or 'email' in self.element_attributes or 'online_resource' in self.element_attributes:
             contact_wrapper = SubElement(responsible_party_element, f"{{{self.ns.gmd}}}contactInfo")
             contact_element = SubElement(contact_wrapper, f"{{{self.ns.gmd}}}CI_Contact")
 
@@ -1296,18 +1296,18 @@ class ResponsibleParty(MetadataRecordElement):
                         attrib={f"{{{self.ns.gco}}}nilReason": 'unknown'}
                     )
 
-        if 'online_resource' in self.element_attributes:
-            online_resource_wrapper = SubElement(
-                responsible_party_element,
-                f"{{{self.ns.gmd}}}onlineResource"
-            )
-            online_resource = OnlineResource(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=online_resource_wrapper,
-                element_attributes=self.element_attributes['online_resource']
-            )
-            online_resource.make_element()
+            if 'online_resource' in self.element_attributes:
+                online_resource_wrapper = SubElement(
+                    contact_element,
+                    f"{{{self.ns.gmd}}}onlineResource"
+                )
+                online_resource = OnlineResource(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=online_resource_wrapper,
+                    element_attributes=self.element_attributes['online_resource']
+                )
+                online_resource.make_element()
 
         if 'role' in self.element_attributes:
             role = Role(
