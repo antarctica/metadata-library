@@ -1,3 +1,4 @@
+from copy import deepcopy
 from http import HTTPStatus
 from datetime import date, datetime
 
@@ -59,7 +60,7 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
             self.assertEqual(description.text, online_resource_attributes['description'])
 
         if 'function' in online_resource_attributes:
-            function = online_resource.find(f"{{{self.ns.gmd}}}function/{{{self.ns.gco}}}CI_OnLineFunctionCode")
+            function = online_resource.find(f"{{{self.ns.gmd}}}function/{{{self.ns.gmd}}}CI_OnLineFunctionCode")
             self.assertIsNotNone(function)
             self.assertEqual(
                 function.attrib['codeList'],
@@ -169,21 +170,19 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         else:
             self.assertEqual(email.attrib[f"{{{self.ns.gco}}}nilReason"], 'unknown')
 
-        if 'online_resource' in responsible_party:
+        if 'online_resource' in responsible_party_attributes:
             online_resource = contact_info.find(
                 f"{{{self.ns.gmd}}}onlineResource/{{{self.ns.gmd}}}CI_OnlineResource"
-
             )
             self.assertIsNotNone(online_resource)
             self._test_online_resource(online_resource, responsible_party_attributes['online_resource'])
 
-        if 'role' in responsible_party:
+        if 'role' in responsible_party_attributes:
             role = responsible_party.find(f"{{{self.ns.gmd}}}role/{{{self.ns.gmd}}}CI_RoleCode")
             self.assertIsNotNone(role)
             self.assertEqual(
                 role.attrib['codeList'],
-                'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-                '/codelist/gmxCodelists.xml#CI_RoleCode'
+                'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode'
             )
             self.assertEqual(role.attrib['codeListValue'], responsible_party_attributes['role'])
             self.assertEqual(role.text, responsible_party_attributes['role'])
@@ -290,7 +289,15 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
             responsible_party = cited_responsible_party.find(f"{{{self.ns.gmd}}}CI_ResponsibleParty")
             self.assertIsNotNone(responsible_party)
 
-            self._test_responsible_party(responsible_party, citation_attributes['contact'])
+            # Citations can only have a single contact so collapse roles array down to a single value
+            _citation_contacts_attributes = citation_attributes['contact']
+            if type(citation_attributes['contact']['role']) is list:
+                if len(citation_attributes['contact']['role']) > 1:
+                    raise ValueError('Contacts can only have a single role. Citations can only have a single contact.')
+                _citation_contacts_attributes = deepcopy(citation_attributes['contact'])
+                _citation_contacts_attributes['role'] = _citation_contacts_attributes['role'][0]
+
+            self._test_responsible_party(responsible_party, _citation_contacts_attributes)
 
     def _test_maintenance(self, maintenance, maintenance_attributes):
         maintenance_frequency = maintenance.find(

@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import datetime, date
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
@@ -1239,7 +1240,7 @@ class ResponsibleParty(MetadataRecordElement):
                 organisation_name_value.text = self.element_attributes['organisation']['name']
 
         if 'phone' in self.element_attributes or 'address' in self.element_attributes \
-                or 'email' in self.element_attributes:
+                or 'email' in self.element_attributes or 'online_resource' in self.element_attributes:
             contact_wrapper = SubElement(responsible_party_element, f"{{{self.ns.gmd}}}contactInfo")
             contact_element = SubElement(contact_wrapper, f"{{{self.ns.gmd}}}CI_Contact")
 
@@ -1296,18 +1297,18 @@ class ResponsibleParty(MetadataRecordElement):
                         attrib={f"{{{self.ns.gco}}}nilReason": 'unknown'}
                     )
 
-        if 'online_resource' in self.element_attributes:
-            online_resource_wrapper = SubElement(
-                responsible_party_element,
-                f"{{{self.ns.gmd}}}onlineResource"
-            )
-            online_resource = OnlineResource(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=online_resource_wrapper,
-                element_attributes=self.element_attributes['online_resource']
-            )
-            online_resource.make_element()
+            if 'online_resource' in self.element_attributes:
+                online_resource_wrapper = SubElement(
+                    contact_element,
+                    f"{{{self.ns.gmd}}}onlineResource"
+                )
+                online_resource = OnlineResource(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=online_resource_wrapper,
+                    element_attributes=self.element_attributes['online_resource']
+                )
+                online_resource.make_element()
 
         if 'role' in self.element_attributes:
             role = Role(
@@ -1678,11 +1679,20 @@ class Citation(MetadataRecordElement):
                 citation_element,
                 f"{{{self.ns.gmd}}}citedResponsibleParty"
             )
+
+            # Citations can only have a single contact so collapse roles array down to a single value
+            _contact_element_attributes = self.element_attributes['contact']
+            if type(self.element_attributes['contact']['role']) is list:
+                if len(self.element_attributes['contact']['role']) > 1:
+                    raise ValueError('Contacts can only have a single role. Citations can only have a single contact.')
+                _contact_element_attributes = deepcopy(self.element_attributes['contact'])
+                _contact_element_attributes['role'] = _contact_element_attributes['role'][0]
+
             responsible_party = ResponsibleParty(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=citated_responsible_party_element,
-                element_attributes=self.element_attributes['contact']
+                element_attributes=_contact_element_attributes
             )
             responsible_party.make_element()
 
