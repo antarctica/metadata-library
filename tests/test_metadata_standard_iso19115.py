@@ -625,6 +625,8 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
                     self.assertEqual(len(constraint), 1)
                     constraint = constraint[0]
 
+                    self.assertEqual(constraint.attrib['id'], 'InspireLimitationsOnPublicAccess')
+
                     access_constraint = constraint.find(f"{{{self.ns.gmd}}}accessConstraints/"
                                                         f"{{{self.ns.gmd}}}MD_RestrictionCode")
                     self.assertIsNotNone(access_constraint)
@@ -665,6 +667,8 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
                     self.assertEqual(len(constraint), 1)
                     constraint = constraint[0]
 
+                    self.assertEqual(constraint.attrib['id'], 'copyright')
+
                     usage_constraint = constraint.find(f"{{{self.ns.gmd}}}useConstraints/"
                                                        f"{{{self.ns.gmd}}}MD_RestrictionCode")
                     self.assertIsNotNone(usage_constraint)
@@ -699,6 +703,8 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
                     )
                     self.assertEqual(len(constraint), 1)
                     constraint = constraint[0]
+
+                    self.assertEqual(constraint.attrib['id'], 'citation')
 
                     citation_constraint = constraint.find(
                         f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gco}}}CharacterString"
