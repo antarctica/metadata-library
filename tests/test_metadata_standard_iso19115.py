@@ -59,7 +59,7 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
             self.assertEqual(description.text, online_resource_attributes['description'])
 
         if 'function' in online_resource_attributes:
-            function = online_resource.find(f"{{{self.ns.gmd}}}function/{{{self.ns.gco}}}CI_OnLineFunctionCode")
+            function = online_resource.find(f"{{{self.ns.gmd}}}function/{{{self.ns.gmd}}}CI_OnLineFunctionCode")
             self.assertIsNotNone(function)
             self.assertEqual(
                 function.attrib['codeList'],
