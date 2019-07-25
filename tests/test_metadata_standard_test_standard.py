@@ -20,8 +20,10 @@ def test_standard_route(configuration: str):
         configuration_object = config.test_standard_typical_record
     elif configuration == 'complete':
         configuration_object = config.test_standard_complete_record
+    elif configuration == 'entities':
+        configuration_object = config.test_standard_record_with_entities
     else:
-        return KeyError('Invalid configuration, valid options: [minimal, typical, complete]')
+        return KeyError('Invalid configuration, valid options: [minimal, typical, complete, entities]')
 
     configuration = MetadataRecordConfig(**configuration_object)
     record = MetadataRecord(configuration)
@@ -119,3 +121,11 @@ class CompleteMetadataRecordTestCase(MinimalMetadataRecordTestCase):
 
         self.configuration = 'complete'
         self._set_metadata_config(configuration=config.test_standard_complete_record)
+
+
+class MetadataRecordWithEntitiesTestCase(MinimalMetadataRecordTestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.configuration = 'entities'
+        self._set_metadata_config(configuration=config.test_standard_record_with_entities)
