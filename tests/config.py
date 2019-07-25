@@ -28,6 +28,14 @@ test_standard_complete_record = {
     }
 }
 
+test_standard_record_with_entities = {
+    'resource': {
+        'title': {
+            'value': 'Test Record with entites: \'>\' (greater than), \'å\' (accent [a-ring]) and \'µ\' (micro)'
+        }
+    }
+}
+
 iso_19115_v1_minimal_record = {
     'contacts': [
         {

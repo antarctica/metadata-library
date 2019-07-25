@@ -34,7 +34,15 @@ $ pip install bas-metadata-library
 
 ## Usage
 
-...
+### HTML entites
+
+Do not include HTML entities in input to this generator, as it will be douple escaped by [Lxml](https://lxml.de), the 
+underlying XML processing library.
+
+This means `&gt;`, the HTML entity for `>`, will be escaped again to `&amp;gt;` which will not be correctly 
+interpreted when decoded. Instead the literal character should be used (e.g. `>`), which Lxml will escape if needed.
+
+This applies to any unicode character, such as accents (e.g. `å`) and symbols (e.g. `µ`).
 
 ## Implementation
 
