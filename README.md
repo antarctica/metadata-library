@@ -17,7 +17,7 @@ library to be useful to others are welcome as contributions.
 | Standard                                             | Implementation                                       | Library Namespace                             |
 | ---------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------- |
 | [ISO 19115](https://www.iso.org/standard/26020.html) | [ISO 19139](https://www.iso.org/standard/32557.html) | `bas_metadata_library.standards.iso_19115_v1` |
-  
+
 ### Supported profiles
 
 | Standard  | Profile                                    | Implementation                                                               |
@@ -33,6 +33,27 @@ $ pip install bas-metadata-library
 ```
 
 ## Usage
+
+To generate an ISO 19115 metadata record and return it as an XML document:
+
+```python
+import metadata_configs
+
+from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig, \
+    MetadataRecord as ISO19115MetadataRecord
+
+configuration_object = metadata_config.record
+configuration = ISO19115MetadataRecordConfig(**configuration_object)
+
+record = ISO19115MetadataRecord(configuration)
+document = record.generate_xml_document()
+
+# output document
+print(document)
+```
+
+Where `metadata_configs.record` is a Python dictionary implementing the BAS metadata generic schema, documented in the
+[BAS Metadata Standards](https://metadata-standards.data.bas.ac.uk) project.
 
 ### HTML entites
 
