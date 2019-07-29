@@ -959,15 +959,6 @@ class MetadataRecord(_MetadataRecord):
         )
         date_stamp.make_element()
 
-        if 'maintenance' in self.attributes:
-            metadata_maintenance = MetadataMaintenance(
-                record=metadata_record,
-                attributes=self.attributes,
-                parent_element=metadata_record,
-                element_attributes=self.attributes['maintenance']
-            )
-            metadata_maintenance.make_element()
-
         if 'metadata_standard' in self.attributes:
             metadata_standard = MetadataStandard(
                 record=metadata_record,
@@ -1005,6 +996,15 @@ class MetadataRecord(_MetadataRecord):
                 attributes=self.attributes
             )
             data_quality.make_element()
+
+        if 'maintenance' in self.attributes:
+            metadata_maintenance = MetadataMaintenance(
+                record=metadata_record,
+                attributes=self.attributes,
+                parent_element=metadata_record,
+                element_attributes=self.attributes['maintenance']
+            )
+            metadata_maintenance.make_element()
 
         return metadata_record
 
@@ -1881,15 +1881,6 @@ class DataIdentification(MetadataRecordElement):
             )
             constraints.make_element()
 
-        if 'supplemental_information' in self.attributes['resource']:
-            supplemental_information = SupplementalInformation(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=data_identification_element,
-                element_attributes=self.attributes['resource']
-            )
-            supplemental_information.make_element()
-
         if 'spatial_representation_type' in self.attributes['resource']:
             spatial_representation_type = SpatialRepresentationType(
                 record=self.record,
@@ -1934,6 +1925,15 @@ class DataIdentification(MetadataRecordElement):
                 element_attributes=self.attributes['resource']['extent']
             )
             extent.make_element()
+
+        if 'supplemental_information' in self.attributes['resource']:
+            supplemental_information = SupplementalInformation(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes['resource']
+            )
+            supplemental_information.make_element()
 
 
 class Abstract(MetadataRecordElement):
@@ -2265,15 +2265,6 @@ class Extent(MetadataRecordElement):
             )
             geographic_extent.make_element()
 
-        if 'vertical' in self.element_attributes:
-            vertical_extent = VerticalExtent(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=extent_element,
-                element_attributes=self.element_attributes['vertical']
-            )
-            vertical_extent.make_element()
-
         if 'temporal' in self.element_attributes:
             temporal_extent = TemporalExtent(
                 record=self.record,
@@ -2282,6 +2273,15 @@ class Extent(MetadataRecordElement):
                 element_attributes=self.element_attributes['temporal']
             )
             temporal_extent.make_element()
+
+        if 'vertical' in self.element_attributes:
+            vertical_extent = VerticalExtent(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=extent_element,
+                element_attributes=self.element_attributes['vertical']
+            )
+            vertical_extent.make_element()
 
 
 class GeographicExtent(MetadataRecordElement):
