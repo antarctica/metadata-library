@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 * correcting ISO 19115 service namespace to use ISO hosted schema rather an Inspire draft
+* correcting ISO 19115 namespaces to use HTTPS endpoints
 
 ## [0.1.1] 2019-07-18
 
