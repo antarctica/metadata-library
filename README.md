@@ -248,6 +248,13 @@ In *Configuration* tab:
 This project uses integration tests to ensure features work as expected and to guard against regressions and 
 vulnerabilities.
 
+Tests are written to create metadata records based on a series of configurations defined in `tests/config.py`. These
+define 'minimal' to 'complete' test records, intended to test different ways a standard can be used, both for 
+individual elements and whole records.
+
+Test case methods are used to test individual elements. Comparisons against static records are used to test whole 
+records.
+
 The Python [UnitTest](https://docs.python.org/3/library/unittest.html) library is used for running tests using Flask's 
 test framework. Test cases are defined in files within `tests/` and are automatically loaded when using the 
 `test` Flask CLI command.
@@ -259,6 +266,25 @@ To run tests manually:
 ```shell
 $ docker-compose run -e FLASK_ENV=testing app flask test --test-runner text
 ```
+
+#### Capturing static test records
+
+To capture static test records, which verify how records are assembled correctly, a custom Flask CLI command,
+`capture-test-records` is available. This requires the Flask application to first be running. The Requests library is
+used to make requests against application routes and save the response to a relevant directory in 
+`tests/resources/records`.
+
+```shell
+# start Flask application
+$ docker-compose up
+# in a separate terminal
+$ docker-compose run app flask capture-test-records
+```
+
+It is intended that this command will update pre-existing static records, with differences captured in version control
+and reviewed manually to ensure they are correct.
+
+#### PyCharm support
 
 To run tests using PyCharm:
 

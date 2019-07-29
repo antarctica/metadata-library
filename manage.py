@@ -1,7 +1,9 @@
 import os
 import sys
 import unittest
+from pathlib import Path
 
+import requests
 import xmlrunner
 
 # noinspection PyPackageRequirements
@@ -10,6 +12,32 @@ from click import option, Choice, echo, style
 from app import create_app
 
 app = create_app()
+
+
+@app.cli.command()
+def capture_test_records():
+    """Capture records for use in tests."""
+    standards = {
+        'iso-19115': {
+            'version': 'v1',
+            'configurations': [
+                'minimal',
+                'base-simple',
+                'base-complex',
+                'complete',
+                'gemini-complete'
+            ]
+        }
+    }
+    for standard, options in standards.items():
+        for config in options['configurations']:
+            print(f"saving record for 'standards/{standard}/{config}'")
+            response = requests.get(f"http://host.docker.internal:9000/standards/{standard}/{config}")
+            response.raise_for_status()
+
+            response_file_path = Path(f"./tests/resources/records/{standard}-{options['version']}/{config}-record.xml")
+            with open(response_file_path, mode='w') as response_file:
+                response_file.write(response.text)
 
 
 @app.cli.command()

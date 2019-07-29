@@ -3,9 +3,6 @@
 # == Notes ==
 
 # - GitLab automatically passes artifacts from previous stages by default
-# - This project requires runners with specific tags to execute specific jobs
-# - This project includes variables specific to using 'Docker In Docker'
-# - This project uses additional services ran alongside the job images
 # - Set required secret variables at: https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/settings/ci_cd
 
 # = Secret variables
@@ -30,9 +27,6 @@ stages:
   - publish
 
 variables:
-  DOCKER_HOST: tcp://docker:2375/
-  DOCKER_DRIVER: overlay2
-  GITLAB_REGISTRY: docker-registry.data.bas.ac.uk
   APP_NAME: bas-metadata-library
   SNYK_ORG: antarctica
   SNYK_PROJECT: uk-pdc-metadata-record-generator

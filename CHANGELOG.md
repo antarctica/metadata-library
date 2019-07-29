@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * documenting not to use HTML entities in input
 * documenting how to use this project to generate an ISO 19115 record
 * test case to ensure unicode entities are encoded correctly in XML
+* `capture-test-records` command to streamline updating static test records
+* documentation on how tests are used for this library
 
 ## [0.1.1] 2019-07-18
 
