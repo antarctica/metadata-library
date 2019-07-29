@@ -52,10 +52,10 @@ class Namespaces(_Namespaces):
     xsi = 'http://www.w3.org/2001/XMLSchema-instance'
 
     _schema_locations = {
-        'gmd': 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd',
+        'gmd': 'https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd',
         'gco': 'https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd',
-        'gmx': 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmx/gmx.xsd',
-        'srv': 'http://inspire.ec.europa.eu/draft-schemas/inspire-md-schemas/srv/1.0/srv.xsd'
+        'gmx': 'https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmx/gmx.xsd',
+        'srv': 'https://standards.iso.org/iso/19119/srv/srv.xsd'
     }
 
     def __init__(self):
