@@ -713,6 +713,11 @@ iso_19115_v1_complete_record = {
                         'statement': 'This information is licensed under the Open Government Licence v3.0. To view this'
                                      ' licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/'
                     }
+                },
+                {
+                    'restriction_code': 'otherRestrictions',
+                    'required_citation': 'Campbell, S. (2014). Auster Antarctic aircraft. University of Alberta '
+                                         'Libraries. https://doi.org/10.7939/r3qz22k64'
                 }
             ]
         },
