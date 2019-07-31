@@ -614,106 +614,123 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
 
     def test_data_identification_resource_constraints(self):
         if 'constraints' in self.record_attributes['resource']:
-            for expected_access_constraint in self.record_attributes['resource']['constraints']['access']:
-                if 'inspire_limitations_on_public_access' in expected_access_constraint:
-                    constraint = self.test_response.xpath(
-                        f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                        f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor[text()=$term]]]",
-                        term=expected_access_constraint['inspire_limitations_on_public_access'],
-                        namespaces=self.ns.nsmap()
-                    )
-                    self.assertEqual(len(constraint), 1)
-                    constraint = constraint[0]
+            if 'access' in self.record_attributes['resource']['constraints']:
+                for expected_access_constraint in self.record_attributes['resource']['constraints']['access']:
+                    if 'inspire_limitations_on_public_access' in expected_access_constraint:
+                        constraint = self.test_response.xpath(
+                            f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                            f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor[text()=$term]]]",
+                            term=expected_access_constraint['inspire_limitations_on_public_access'],
+                            namespaces=self.ns.nsmap()
+                        )
+                        self.assertEqual(len(constraint), 1)
+                        constraint = constraint[0]
 
-                    self.assertEqual(constraint.attrib['id'], 'InspireLimitationsOnPublicAccess')
+                        self.assertEqual(constraint.attrib['id'], 'InspireLimitationsOnPublicAccess')
 
-                    access_constraint = constraint.find(f"{{{self.ns.gmd}}}accessConstraints/"
-                                                        f"{{{self.ns.gmd}}}MD_RestrictionCode")
-                    self.assertIsNotNone(access_constraint)
-                    self.assertEqual(
-                        access_constraint.attrib['codeList'],
-                        'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-                        '/codelist/gmxCodelists.xml#MD_RestrictionCode'
-                    )
-                    self.assertEqual(
-                        access_constraint.attrib['codeListValue'],
-                        expected_access_constraint['restriction_code']
-                    )
-                    self.assertEqual(access_constraint.text, expected_access_constraint['restriction_code'])
+                        access_constraint = constraint.find(f"{{{self.ns.gmd}}}accessConstraints/"
+                                                            f"{{{self.ns.gmd}}}MD_RestrictionCode")
+                        self.assertIsNotNone(access_constraint)
+                        self.assertEqual(
+                            access_constraint.attrib['codeList'],
+                            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                            '/codelist/gmxCodelists.xml#MD_RestrictionCode'
+                        )
+                        self.assertEqual(
+                            access_constraint.attrib['codeListValue'],
+                            expected_access_constraint['restriction_code']
+                        )
+                        self.assertEqual(access_constraint.text, expected_access_constraint['restriction_code'])
 
-                    public_use_constraint = constraint.find(
-                        f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor"
-                    )
-                    self.assertIsNotNone(public_use_constraint)
-                    self.assertEqual(
-                        public_use_constraint.attrib[f"{{{self.ns.xlink}}}href"],
-                        f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
-                        f"{expected_access_constraint['inspire_limitations_on_public_access']}"
-                    )
-                    self.assertEqual(public_use_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-                    self.assertEqual(
-                        public_use_constraint.text,
-                        expected_access_constraint['inspire_limitations_on_public_access']
-                    )
+                        public_use_constraint = constraint.find(
+                            f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor"
+                        )
+                        self.assertIsNotNone(public_use_constraint)
+                        self.assertEqual(
+                            public_use_constraint.attrib[f"{{{self.ns.xlink}}}href"],
+                            f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
+                            f"{expected_access_constraint['inspire_limitations_on_public_access']}"
+                        )
+                        self.assertEqual(public_use_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                        self.assertEqual(
+                            public_use_constraint.text,
+                            expected_access_constraint['inspire_limitations_on_public_access']
+                        )
 
-            for expected_usage_constraint in self.record_attributes['resource']['constraints']['usage']:
-                if 'copyright_licence' in expected_usage_constraint and \
-                        'href' in expected_usage_constraint['copyright_licence']:
-                    constraint = self.test_response.xpath(
-                        f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                        f"gmd:MD_LegalConstraints[@id='copyright']",
-                        namespaces=self.ns.nsmap()
-                    )
-                    self.assertEqual(len(constraint), 1)
-                    constraint = constraint[0]
+            if 'usage' in self.record_attributes['resource']['constraints']:
+                for expected_usage_constraint in self.record_attributes['resource']['constraints']['usage']:
+                    if 'copyright_licence' in expected_usage_constraint and \
+                            'href' in expected_usage_constraint['copyright_licence']:
+                        constraint = self.test_response.xpath(
+                            f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                            f"gmd:MD_LegalConstraints[@id='copyright']",
+                            namespaces=self.ns.nsmap()
+                        )
+                        self.assertEqual(len(constraint), 1)
+                        constraint = constraint[0]
 
-                    self.assertEqual(constraint.attrib['id'], 'copyright')
+                        self.assertEqual(constraint.attrib['id'], 'copyright')
 
-                    usage_constraint = constraint.find(f"{{{self.ns.gmd}}}useConstraints/"
-                                                       f"{{{self.ns.gmd}}}MD_RestrictionCode")
-                    self.assertIsNotNone(usage_constraint)
-                    self.assertEqual(
-                        usage_constraint.attrib['codeList'],
-                        'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-                        '/codelist/gmxCodelists.xml#MD_RestrictionCode'
-                    )
-                    self.assertEqual(
-                        usage_constraint.attrib['codeListValue'],
-                        expected_usage_constraint['restriction_code']
-                    )
-                    self.assertEqual(usage_constraint.text, expected_usage_constraint['restriction_code'])
+                        usage_constraint = constraint.find(f"{{{self.ns.gmd}}}useConstraints/"
+                                                           f"{{{self.ns.gmd}}}MD_RestrictionCode")
+                        self.assertIsNotNone(usage_constraint)
+                        self.assertEqual(
+                            usage_constraint.attrib['codeList'],
+                            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+                            '/codelist/gmxCodelists.xml#MD_RestrictionCode'
+                        )
+                        self.assertEqual(
+                            usage_constraint.attrib['codeListValue'],
+                            expected_usage_constraint['restriction_code']
+                        )
+                        self.assertEqual(usage_constraint.text, expected_usage_constraint['restriction_code'])
 
-                    copyright_constraint = constraint.find(f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor")
-                    self.assertIsNotNone(copyright_constraint)
-                    self.assertEqual(
-                        copyright_constraint.attrib[f"{{{self.ns.xlink}}}href"],
-                        expected_usage_constraint['copyright_licence']['href']
-                    )
-                    self.assertEqual(copyright_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-                    self.assertEqual(
-                        copyright_constraint.text,
-                        expected_usage_constraint['copyright_licence']['statement']
-                    )
+                        copyright_constraint = constraint.find(
+                            f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor"
+                        )
+                        self.assertIsNotNone(copyright_constraint)
+                        self.assertEqual(
+                            copyright_constraint.attrib[f"{{{self.ns.xlink}}}href"],
+                            expected_usage_constraint['copyright_licence']['href']
+                        )
+                        self.assertEqual(copyright_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                        self.assertEqual(
+                            copyright_constraint.text,
+                            expected_usage_constraint['copyright_licence']['statement']
+                        )
 
-                if 'required_citation' in expected_usage_constraint:
-                    constraint = self.test_response.xpath(
-                        f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                        f"gmd:MD_LegalConstraints[@id='citation']",
-                        namespaces=self.ns.nsmap()
-                    )
-                    self.assertEqual(len(constraint), 1)
-                    constraint = constraint[0]
+                    if 'required_citation' in expected_usage_constraint:
+                        constraint = self.test_response.xpath(
+                            f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                            f"gmd:MD_LegalConstraints[@id='citation']",
+                            namespaces=self.ns.nsmap()
+                        )
+                        self.assertEqual(len(constraint), 1)
+                        constraint = constraint[0]
 
-                    self.assertEqual(constraint.attrib['id'], 'citation')
+                        self.assertEqual(constraint.attrib['id'], 'citation')
 
-                    citation_constraint = constraint.find(
-                        f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gco}}}CharacterString"
-                    )
-                    self.assertIsNotNone(citation_constraint)
-                    self.assertEqual(
-                        citation_constraint.text,
-                        f"Cite this information as: \"{expected_usage_constraint['required_citation']}\""
-                    )
+                        citation_constraint = constraint.find(
+                            f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gco}}}CharacterString"
+                        )
+                        self.assertIsNotNone(citation_constraint)
+
+                        if 'statement' in expected_usage_constraint['required_citation']:
+                            self.assertEqual(
+                                citation_constraint.text,
+                                expected_usage_constraint['required_citation']['statement']
+                            )
+                        elif 'doi' in expected_usage_constraint['required_citation']:
+                            expected_citation = None
+                            if expected_usage_constraint['required_citation']['doi'] == \
+                                    'https://doi.org/10.7939/r3qz22k64':
+                                expected_citation = 'Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. ' \
+                                                    'University of Alberta Libraries. https://doi.org/10.7939/r3qz22k64'
+
+                            self.assertEqual(
+                                citation_constraint.text,
+                                f"Cite this information as \"{expected_citation}\""
+                            )
 
     def test_data_identification_supplemental_information(self):
         if 'supplemental_information' in self.record_attributes['resource']:
@@ -1129,6 +1146,14 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(response.mimetype, 'text/xml')
         self.assertEqual(response.data, self.test_document)
+
+
+class MinimalMetadataRecordWithRequiredDoiCitationTestCase(MinimalMetadataRecordTestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.configuration = 'minimal-required-doi-citation'
+        self._set_metadata_config(configuration=config.iso_19115_v1_minimal_record_with_required_doi_citation)
 
 
 class BaselineSimpleMetadataRecordTestCase(MinimalMetadataRecordTestCase):

@@ -59,6 +59,39 @@ iso_19115_v1_minimal_record = {
     }
 }
 
+iso_19115_v1_minimal_record_with_required_doi_citation = {
+    'contacts': [
+        {
+            'role': ['pointOfContact']
+        }
+    ],
+    'date_stamp': datetime(2018, 10, 18, 14, 40, 44, tzinfo=timezone.utc),
+    'resource': {
+        'title': {
+            'value': 'Test Record'
+        },
+        'dates': [
+            {
+                'date': date(2018, 1, 1),
+                'date_precision': 'year',
+                'date_type': 'creation'
+            }
+        ],
+        'abstract': 'Test Record for ISO 19115 metadata standard (no profile) with required properties only.',
+        'language': 'eng',
+        'constraints': {
+            'usage': [
+                {
+                    'restriction_code': 'otherRestrictions',
+                    'required_citation': {
+                        'doi': 'https://doi.org/10.7939/r3qz22k64'
+                    }
+                }
+            ]
+        }
+    }
+}
+
 iso_19115_v1_base_simple_record = {
     'file_identifier': 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
     'language': 'eng',
@@ -716,8 +749,10 @@ iso_19115_v1_complete_record = {
                 },
                 {
                     'restriction_code': 'otherRestrictions',
-                    'required_citation': 'Campbell, S. (2014). Auster Antarctic aircraft. University of Alberta '
-                                         'Libraries. https://doi.org/10.7939/r3qz22k64'
+                    'required_citation': {
+                        'statement': 'Cite this information as: "Campbell, S. (2014). Auster Antarctic aircraft. '
+                                     'University of Alberta Libraries. https://doi.org/10.7939/r3qz22k64"'
+                    }
                 }
             ]
         },
