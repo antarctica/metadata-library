@@ -22,6 +22,7 @@ def capture_test_records():
             'version': 'v1',
             'configurations': [
                 'minimal',
+                'minimal-required-doi-citation',
                 'base-simple',
                 'base-complex',
                 'complete',

@@ -1,11 +1,12 @@
+import requests
+
 from copy import deepcopy
 from datetime import datetime, date
+from typing import Union
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
-from typing import Union
-
 from lxml.etree import Element, SubElement  # nosec
 
 from bas_metadata_library import Namespaces as _Namespaces, MetadataRecordConfig as _MetadataRecordConfig, \
@@ -442,7 +443,27 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                             }
                         },
                         "required_citation": {
-                            "type": "string"
+                            "type": "object",
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "statement": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": ["statement"],
+                                    "additionalProperties": False
+                                },
+                                {
+                                    "properties": {
+                                        "doi": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": ["doi"],
+                                    "additionalProperties": False
+                                }
+                            ]
                         }
                     }
                 },
@@ -2125,8 +2146,32 @@ class ResourceConstraints(MetadataRecordElement):
                         other_constraint_element,
                         f"{{{self.ns.gco}}}CharacterString"
                     )
-                    other_constraint_wrapper.text = f"Cite this information as: " \
-                        f"\"{usage_constraint_attributes['required_citation']}\""
+
+                    if 'statement' in usage_constraint_attributes['required_citation']:
+                        other_constraint_wrapper.text = usage_constraint_attributes['required_citation']['statement']
+                    elif 'doi' in usage_constraint_attributes['required_citation']:
+                        citation = self._get_doi_citation(doi=usage_constraint_attributes['required_citation']['doi'])
+                        other_constraint_wrapper.text = f"Cite this information as \"{citation}\""
+
+    @staticmethod
+    def _get_doi_citation(doi: str) -> str:
+        """
+        Get citation for a DOI using crosscite.org
+
+        This is a standalone method to allow for mocking during tests.
+
+        @:type doi: str
+        @:param doi: DOI to get citation for
+
+        @:rtype: str
+        @:return APA style citation for DOI
+        """
+        citation_response = requests.get(
+            doi,
+            headers={'Accept': 'text/x-bibliography; style=apa; locale=en-GB'}
+        )
+        citation_response.raise_for_status()
+        return citation_response.text
 
 
 class AccessConstraint(CodeListElement):

@@ -17,6 +17,8 @@ def create_app():
     def standard_iso_19115(configuration: str):
         if configuration == 'minimal':
             configuration_object = config.iso_19115_v1_minimal_record
+        elif configuration == 'minimal-required-doi-citation':
+            configuration_object = config.iso_19115_v1_minimal_record_with_required_doi_citation
         elif configuration == 'base-simple':
             configuration_object = config.iso_19115_v1_base_simple_record
         elif configuration == 'base-complex':
@@ -26,8 +28,8 @@ def create_app():
         elif configuration == 'gemini-complete':
             configuration_object = config.iso_19115_v1_gemini_complete_record
         else:
-            return KeyError('Invalid configuration, valid options: [minimal, base-simple, base-complex, complete, '
-                            'gemini-complete]')
+            return KeyError('Invalid configuration, valid options: [minimal, minimal-required-doi-citation, '
+                            'base-simple, base-complex, complete, gemini-complete]')
 
         configuration = ISO19115MetadataRecordConfig(**configuration_object)
         record = ISO19115MetadataRecord(configuration)
