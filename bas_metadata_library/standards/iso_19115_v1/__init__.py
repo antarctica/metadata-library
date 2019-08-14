@@ -2103,55 +2103,37 @@ class ResourceConstraints(MetadataRecordElement):
                 constraints_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceConstraints")
                 constraints_element = SubElement(constraints_wrapper, f"{{{self.ns.gmd}}}MD_LegalConstraints")
 
-                use_constraint = UseConstraint(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=constraints_element,
-                    element_attributes=usage_constraint_attributes
-                )
-                use_constraint.make_element()
-
                 if 'copyright_licence' in usage_constraint_attributes:
                     constraints_element.set('id', 'copyright')
 
-                    other_constraint_element = SubElement(
-                        constraints_element,
-                        f"{{{self.ns.gmd}}}otherConstraints"
-                    )
+                    element_attributes = deepcopy(usage_constraint_attributes['copyright_licence'])
+                    element_attributes['value'] = element_attributes['statement']
 
-                    if 'href' in usage_constraint_attributes['copyright_licence']:
-                        copyright_statement = AnchorElement(
-                            record=self.record,
-                            attributes=self.attributes,
-                            parent_element=other_constraint_element,
-                            element_attributes=usage_constraint_attributes['copyright_licence'],
-                            element_value=usage_constraint_attributes['copyright_licence']['statement']
-                        )
-                        copyright_statement.make_element()
-                    else:
-                        copyright_statement = SubElement(
-                            other_constraint_element,
-                            f"{{{self.ns.gco}}}CharacterString"
-                        )
-                        copyright_statement.text = usage_constraint_attributes['copyright_licence']['statement']
+                    use_limitation = UseLimitation(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=constraints_element,
+                        element_attributes=element_attributes
+                    )
+                    use_limitation.make_element()
 
                 if 'required_citation' in usage_constraint_attributes:
                     constraints_element.set('id', 'citation')
 
-                    other_constraint_element = SubElement(
-                        constraints_element,
-                        f"{{{self.ns.gmd}}}otherConstraints"
-                    )
-                    other_constraint_wrapper = SubElement(
-                        other_constraint_element,
-                        f"{{{self.ns.gco}}}CharacterString"
-                    )
-
+                    element_attributes = {}
                     if 'statement' in usage_constraint_attributes['required_citation']:
-                        other_constraint_wrapper.text = usage_constraint_attributes['required_citation']['statement']
+                        element_attributes['value'] = usage_constraint_attributes['required_citation']['statement']
                     elif 'doi' in usage_constraint_attributes['required_citation']:
                         citation = self._get_doi_citation(doi=usage_constraint_attributes['required_citation']['doi'])
-                        other_constraint_wrapper.text = f"Cite this information as \"{citation}\""
+                        element_attributes['value'] = f"Cite this information as \"{citation}\""
+
+                    use_limitation = UseLimitation(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=constraints_element,
+                        element_attributes=element_attributes
+                    )
+                    use_limitation.make_element()
 
     @staticmethod
     def _get_doi_citation(doi: str) -> str:
@@ -2205,23 +2187,6 @@ class AccessConstraint(CodeListElement):
         self.attribute = 'restriction_code'
 
 
-class UseConstraint(AccessConstraint):
-    def __init__(
-        self,
-        record: MetadataRecord,
-        attributes: dict,
-        parent_element: Element = None,
-        element_attributes: dict = None
-    ):
-        super().__init__(
-            record=record,
-            attributes=attributes,
-            parent_element=parent_element,
-            element_attributes=element_attributes
-        )
-        self.element = f"{{{self.ns.gmd}}}useConstraints"
-
-
 class InspireLimitationsOnPublicAccess(MetadataRecordElement):
     def make_element(self):
         other_constraints_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}otherConstraints")
@@ -2237,6 +2202,24 @@ class InspireLimitationsOnPublicAccess(MetadataRecordElement):
             element_value=self.element_attributes['inspire_limitations_on_public_access']
         )
         other_constraints_value.make_element()
+
+
+class UseLimitation(MetadataRecordElement):
+    def make_element(self):
+        use_limitation_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}useLimitation")
+
+        if 'href' in self.element_attributes:
+            use_limitation_value = AnchorElement(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=use_limitation_element,
+                element_attributes=self.element_attributes,
+                element_value=self.element_attributes['value']
+            )
+            use_limitation_value.make_element()
+        else:
+            use_limitation_value = SubElement(use_limitation_element, f"{{{self.ns.gco}}}CharacterString")
+            use_limitation_value.text = self.element_attributes['value']
 
 
 class SupplementalInformation(MetadataRecordElement):

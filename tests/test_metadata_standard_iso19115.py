@@ -659,8 +659,7 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
 
             if 'usage' in self.record_attributes['resource']['constraints']:
                 for expected_usage_constraint in self.record_attributes['resource']['constraints']['usage']:
-                    if 'copyright_licence' in expected_usage_constraint and \
-                            'href' in expected_usage_constraint['copyright_licence']:
+                    if 'copyright_licence' in expected_usage_constraint:
                         constraint = self.test_response.xpath(
                             f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
                             f"gmd:MD_LegalConstraints[@id='copyright']",
@@ -671,33 +670,30 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
 
                         self.assertEqual(constraint.attrib['id'], 'copyright')
 
-                        usage_constraint = constraint.find(f"{{{self.ns.gmd}}}useConstraints/"
-                                                           f"{{{self.ns.gmd}}}MD_RestrictionCode")
-                        self.assertIsNotNone(usage_constraint)
-                        self.assertEqual(
-                            usage_constraint.attrib['codeList'],
-                            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-                            '/codelist/gmxCodelists.xml#MD_RestrictionCode'
-                        )
-                        self.assertEqual(
-                            usage_constraint.attrib['codeListValue'],
-                            expected_usage_constraint['restriction_code']
-                        )
-                        self.assertEqual(usage_constraint.text, expected_usage_constraint['restriction_code'])
+                        use_limitation = constraint.find(f"{{{self.ns.gmd}}}useLimitation")
+                        self.assertIsNotNone(use_limitation)
 
-                        copyright_constraint = constraint.find(
-                            f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor"
-                        )
-                        self.assertIsNotNone(copyright_constraint)
-                        self.assertEqual(
-                            copyright_constraint.attrib[f"{{{self.ns.xlink}}}href"],
-                            expected_usage_constraint['copyright_licence']['href']
-                        )
-                        self.assertEqual(copyright_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
-                        self.assertEqual(
-                            copyright_constraint.text,
-                            expected_usage_constraint['copyright_licence']['statement']
-                        )
+                        if 'href' in expected_usage_constraint['copyright_licence']:
+                            copyright_constraint = use_limitation.find(f"{{{self.ns.gmx}}}Anchor")
+                            self.assertIsNotNone(copyright_constraint)
+
+                            self.assertEqual(
+                                copyright_constraint.attrib[f"{{{self.ns.xlink}}}href"],
+                                expected_usage_constraint['copyright_licence']['href']
+                            )
+                            self.assertEqual(copyright_constraint.attrib[f"{{{self.ns.xlink}}}actuate"], 'onRequest')
+                            self.assertEqual(
+                                copyright_constraint.text,
+                                expected_usage_constraint['copyright_licence']['statement']
+                            )
+                        else:
+                            copyright_constraint = use_limitation.find(f"{{{self.ns.gco}}}CharacterString")
+                            self.assertIsNotNone(copyright_constraint)
+
+                            self.assertEqual(
+                                copyright_constraint.text,
+                                expected_usage_constraint['copyright_licence']['statement']
+                            )
 
                     if 'required_citation' in expected_usage_constraint:
                         constraint = self.test_response.xpath(
@@ -711,7 +707,7 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
                         self.assertEqual(constraint.attrib['id'], 'citation')
 
                         citation_constraint = constraint.find(
-                            f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gco}}}CharacterString"
+                            f"{{{self.ns.gmd}}}useLimitation/{{{self.ns.gco}}}CharacterString"
                         )
                         self.assertIsNotNone(citation_constraint)
 

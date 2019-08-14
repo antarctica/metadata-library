@@ -453,12 +453,9 @@
       </gmd:resourceConstraints>
       <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints id="copyright">
-          <gmd:useConstraints>
-            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="copyright">copyright</gmd:MD_RestrictionCode>
-          </gmd:useConstraints>
-          <gmd:otherConstraints>
+          <gmd:useLimitation>
             <gmx:Anchor xlink:actuate="onRequest" xlink:href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/</gmx:Anchor>
-          </gmd:otherConstraints>
+          </gmd:useLimitation>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
       <gmd:spatialRepresentationType>
