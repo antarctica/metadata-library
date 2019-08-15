@@ -124,6 +124,51 @@ $ docker-compose run app flask test
 $ docker-compose run app flask
 ```
 
+### Staging and production
+
+Terraform is used to provision resources required to operate this application in staging and production environments.
+
+These resources allow [Configuration schemas](#configuration-schemas) for each standard to be accessed externally.
+
+Access to the [BAS AWS account](https://gitlab.data.bas.ac.uk/WSF/bas-aws) is needed to provisioning these resources.
+
+**Note:** This provisioning should have already been performed (and applies globally). If changes are made to this 
+provisioning it only needs to be applied once.
+
+```shell
+# start terraform inside a docker container
+$ cd provisioning/terraform
+$ docker-compose run terraform
+# setup terraform
+$ terraform init
+# apply changes
+$ terraform validate
+$ terraform fmt
+$ terraform apply
+# exit container
+$ exit
+$ docker-compose down
+```
+
+#### Teraform remote state
+
+State information for this project is stored remotely using a 
+[Backend](https://www.terraform.io/docs/backends/index.html).
+
+Specifically the [AWS S3](https://www.terraform.io/docs/backends/types/s3.html) backend as part of the 
+[BAS Terraform Remote State](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project.
+
+Remote state storage will be automatically initialised when running `terraform init`. Any changes to remote state will
+be automatically saved to the remote backend, there is no need to push or pull changes.
+
+##### Remote state authentication
+
+Permission to read and/or write remote state information for this project is restricted to authorised users. Contact
+the [BAS Web & Applications Team](mailto:servicedesk@bas.ac.uk) to request access.
+
+See the [BAS Terraform Remote State](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project for how these
+permissions to remote state are enforced.
+
 ## Development
 
 This API is developed as a Python library. A bundled Flask application is used to simulate its usage and to act as
