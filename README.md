@@ -55,7 +55,7 @@ print(document)
 Where `metadata_configs.record` is a Python dictionary implementing the BAS metadata generic schema, documented in the
 [BAS Metadata Standards](https://metadata-standards.data.bas.ac.uk) project.
 
-### HTML entites
+### HTML entities
 
 Do not include HTML entities in input to this generator, as it will be douple escaped by [Lxml](https://lxml.de), the 
 underlying XML processing library.
@@ -132,16 +132,39 @@ framework for running tests etc.
 ### Library base classes
 
 The `bas_metadata_library` module defines a series of modules for each standard (in `bas_metadata_library.standards`) 
-as well *base' classes used across all standards and providing common functionality. See existing standards how they 
-are used.
+as well  as *base* classes used across all standards, that providing common functionality. See existing standards for 
+how these are used.
+
+### Configuration schemas
+
+This library accepts a 'configuration' for each metadata record. This contains values for elements, or values that are 
+used to compute values. For example, a *title* element would use a value taken directly from the record configuration.
+
+To ensure all required configuration attributes are included, and where relevant that their values are allowed, this
+configuration is validated against a schema. This schema uses the [JSON Schema](https://json-schema.org) standard.
+
+These schemas are made available externally through the BAS Metadata Standards website 
+[metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk). This to allow:
+ 
+1. other applications that wish to ensure their output will be compatible with this library, but that do not or cannot 
+  use this library themselves (i.e. if they don't use Python)
+2. to allow schema inheritance/extension where used for standards that inherit from other standards (such as profiles)
+
+A custom Flask CLI command, `output-config-schemas`, is used to generate these schema files from the various standards 
+supported by this project. It will create JSON files for each configuration schema in `build/config_schemas`. These are
+then uploaded to the Metadata Standards website through [Continuous Deployment](#continuous-deployment).
+
+**Note:** The build directory, and schema's it contains, is ignored in this repository. Outputted schemas are 
+considered ephemeral and should be trivial to recreate from modules in this library. The module versions of schemas act 
+as the source of truth as they are used for performing validation.
 
 ### Adding a new standard
 
 To add a new standard:
 
-1. create a new module in `bas_metadata_library.standards` - e.g. `bas_metadata_library.standards.foo`
-2. create a JSON schema, `metadata-record-schema.json` within this module and populate with required and permitted 
-   configuration options for the standard - e.g. `bas_metadata_library/standards/foo/metadata-record-schema.json`
+1. create a new module in `bas_metadata_library.standards` - e.g. `bas_metadata_library.standards.foo/__init__.py`
+2. in this module overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed, ensuring 
+   to include a suitable schema property in `MetadataRecordConfig`
 3. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in 
    `tests/config.py`
 4. update the inbuilt Flask application in `app.py` with a route for generating test records for the new standard

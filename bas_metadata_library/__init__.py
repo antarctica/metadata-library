@@ -2,7 +2,7 @@ import json
 
 from typing import Optional
 
-from jsonschema import validate
+from jsonschema import validate, ValidationError
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
@@ -63,8 +63,10 @@ class MetadataRecordConfig(object):
     """
     Manages the configuration for a metadata record
 
-    This configuration is used as direct, or computed, values in elements in a metadata record. The configuration is
-    first validated against a JSON Schema.
+    Values in this configuration are used direct or computed values in elements in a metadata record.
+
+    The structure and values of this configuration are specified by a JSON schema, and which should be used to validate
+    configuration instances using the 'validate()' method.
     """
     def __init__(self, **kwargs: dict):
         """
@@ -74,8 +76,6 @@ class MetadataRecordConfig(object):
         self.config = kwargs
         self.schema = None
 
-        self.validate()
-
     def config(self) -> dict:
         """
         Gets the configuration dictionary
@@ -84,6 +84,15 @@ class MetadataRecordConfig(object):
         :return: configuration dictionary
         """
         return self.config
+
+    def schema(self) -> dict:
+        """
+        Gets the configuration schema
+
+        :rtype dict
+        :return: configuration schema
+        """
+        return self.schema
 
     def validate(self) -> None:
         """
@@ -108,8 +117,9 @@ class MetadataRecord(object):
         :type configuration: MetadataRecordConfig
         :param configuration: Metadata record configuration object
         """
-        self.ns = Namespaces()
+        configuration.validate()
         self.attributes = configuration.config
+        self.ns = Namespaces()
         self.record = self.make_element()
 
     def make_element(self) -> Optional[Element]:

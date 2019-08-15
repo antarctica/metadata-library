@@ -1,15 +1,18 @@
 import os
 import sys
 import unittest
-from pathlib import Path
+import json
 
 import requests
 import xmlrunner
+
+from pathlib import Path
 
 # noinspection PyPackageRequirements
 from click import option, Choice, echo, style
 
 from app import create_app
+from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig
 
 app = create_app()
 
@@ -39,6 +42,17 @@ def capture_test_records():
             response_file_path = Path(f"./tests/resources/records/{standard}-{options['version']}/{config}-record.xml")
             with open(response_file_path, mode='w') as response_file:
                 response_file.write(response.text)
+
+
+@app.cli.command()
+def output_config_schemas():
+    """Save configuration schemas as files."""
+    iso_19115_v1 = Path('./build/config_schemas/iso-19115-v1')
+    iso_19115_v1.mkdir(parents=True, exist_ok=True)
+    iso_19115_v1_file_path = Path.joinpath(iso_19115_v1, 'configuration_schema.json')
+    with open(iso_19115_v1_file_path, mode='w') as config_schema_file:
+        config_schema = ISO19115MetadataRecordConfig()
+        json.dump(config_schema.schema, config_schema_file, indent=4)
 
 
 @app.cli.command()
