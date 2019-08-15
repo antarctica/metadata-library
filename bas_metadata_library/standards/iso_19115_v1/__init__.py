@@ -132,6 +132,9 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                                 "noLimitations"
                             ]
                         },
+                        "statement": {
+                            'type': 'string'
+                        },
                         "copyright_licence": {
                             "type": "object",
                             "required": [],
@@ -2087,6 +2090,19 @@ class ResourceConstraints(MetadataRecordElement):
                 )
                 access_constraint.make_element()
 
+                if 'statement' in access_constraint_attributes:
+                    element_attributes = {
+                        'value': deepcopy(access_constraint_attributes['statement'])
+                    }
+
+                    other_constraint = OtherConstraints(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=constraints_element,
+                        element_attributes=element_attributes
+                    )
+                    other_constraint.make_element()
+
                 if 'inspire_limitations_on_public_access' in access_constraint_attributes:
                     constraints_element.set('id', 'InspireLimitationsOnPublicAccess')
 
@@ -2102,6 +2118,19 @@ class ResourceConstraints(MetadataRecordElement):
             for usage_constraint_attributes in self.element_attributes['usage']:
                 constraints_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceConstraints")
                 constraints_element = SubElement(constraints_wrapper, f"{{{self.ns.gmd}}}MD_LegalConstraints")
+
+                if 'statement' in usage_constraint_attributes:
+                    element_attributes = {
+                        'value': deepcopy(usage_constraint_attributes['statement'])
+                    }
+
+                    use_limitation = UseLimitation(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=constraints_element,
+                        element_attributes=element_attributes
+                    )
+                    use_limitation.make_element()
 
                 if 'copyright_licence' in usage_constraint_attributes:
                     constraints_element.set('id', 'copyright')
@@ -2202,6 +2231,24 @@ class InspireLimitationsOnPublicAccess(MetadataRecordElement):
             element_value=self.element_attributes['inspire_limitations_on_public_access']
         )
         other_constraints_value.make_element()
+
+
+class OtherConstraints(MetadataRecordElement):
+    def make_element(self):
+        other_constraints_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}otherConstraints")
+
+        if 'href' in self.element_attributes:
+            other_constraints_value = AnchorElement(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=other_constraints_element,
+                element_attributes=self.element_attributes,
+                element_value=self.element_attributes['value']
+            )
+            other_constraints_value.make_element()
+        else:
+            other_constraints_value = SubElement(other_constraints_element, f"{{{self.ns.gco}}}CharacterString")
+            other_constraints_value.text = self.element_attributes['value']
 
 
 class UseLimitation(MetadataRecordElement):

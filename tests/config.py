@@ -732,7 +732,8 @@ iso_19115_v1_complete_record = {
         'constraints': {
             'access': [
                 {
-                    'restriction_code': 'otherRestrictions'
+                    'restriction_code': 'otherRestrictions',
+                    'statement': 'Custom access restrictions statement'
                 }
             ],
             'usage': [
@@ -749,6 +750,9 @@ iso_19115_v1_complete_record = {
                         'statement': 'Cite this information as: "Campbell, S. (2014). Auster Antarctic aircraft. '
                                      'University of Alberta Libraries. https://doi.org/10.7939/r3qz22k64"'
                     }
+                },
+                {
+                    'statement': 'Custom use limitations statement'
                 }
             ]
         },

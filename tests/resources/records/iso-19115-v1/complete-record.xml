@@ -579,6 +579,9 @@
           <gmd:accessConstraints>
             <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</gmd:MD_RestrictionCode>
           </gmd:accessConstraints>
+          <gmd:otherConstraints>
+            <gco:CharacterString>Custom access restrictions statement</gco:CharacterString>
+          </gmd:otherConstraints>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
       <gmd:resourceConstraints>
@@ -592,6 +595,13 @@
         <gmd:MD_LegalConstraints id="citation">
           <gmd:useLimitation>
             <gco:CharacterString>Cite this information as: "Campbell, S. (2014). Auster Antarctic aircraft. University of Alberta Libraries. https://doi.org/10.7939/r3qz22k64"</gco:CharacterString>
+          </gmd:useLimitation>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+      <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+          <gmd:useLimitation>
+            <gco:CharacterString>Custom use limitations statement</gco:CharacterString>
           </gmd:useLimitation>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
