@@ -201,7 +201,6 @@ iso_19115_v1_base_simple_record = {
             ],
             'usage': [
                 {
-                    'restriction_code': 'copyright',
                     'copyright_licence': {
                         'code': 'OGL-UK-3.0',
                         'statement': 'This information is licensed under the Open Government Licence v3.0. To view this'
@@ -436,7 +435,6 @@ iso_19115_v1_base_complex_record = {
             ],
             'usage': [
                 {
-                    'restriction_code': 'copyright',
                     'copyright_licence': {
                         'code': 'OGL-UK-3.0',
                         'href': 'http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/',
@@ -734,12 +732,12 @@ iso_19115_v1_complete_record = {
         'constraints': {
             'access': [
                 {
-                    'restriction_code': 'otherRestrictions'
+                    'restriction_code': 'otherRestrictions',
+                    'statement': 'Custom access restrictions statement'
                 }
             ],
             'usage': [
                 {
-                    'restriction_code': 'copyright',
                     'copyright_licence': {
                         'code': 'OGL-UK-3.0',
                         'href': 'http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/',
@@ -748,11 +746,13 @@ iso_19115_v1_complete_record = {
                     }
                 },
                 {
-                    'restriction_code': 'otherRestrictions',
                     'required_citation': {
                         'statement': 'Cite this information as: "Campbell, S. (2014). Auster Antarctic aircraft. '
                                      'University of Alberta Libraries. https://doi.org/10.7939/r3qz22k64"'
                     }
+                },
+                {
+                    'statement': 'Custom use limitations statement'
                 }
             ]
         },
@@ -1080,7 +1080,6 @@ iso_19115_v1_gemini_complete_record = {
             ],
             'usage': [
                 {
-                    'restriction_code': 'otherRestrictions',
                     'copyright_licence': {
                         'code': 'OGL-UK-3.0',
                         'href': 'http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/',

@@ -362,6 +362,22 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         responsible_party = responsible_party[0]
         self._test_responsible_party(responsible_party, contact)
 
+    def _test_access_constraint(self, constraint, expected_access_constraint):
+        access_constraint = constraint.find(f"{{{self.ns.gmd}}}accessConstraints/"
+                                            f"{{{self.ns.gmd}}}MD_RestrictionCode")
+        self.assertIsNotNone(access_constraint)
+
+        self.assertEqual(
+            access_constraint.attrib['codeList'],
+            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
+            '/codelist/gmxCodelists.xml#MD_RestrictionCode'
+        )
+        self.assertEqual(
+            access_constraint.attrib['codeListValue'],
+            expected_access_constraint['restriction_code']
+        )
+        self.assertEqual(access_constraint.text, expected_access_constraint['restriction_code'])
+
     # Document tests
 
     def test_record_xml_declaration(self):
@@ -616,6 +632,40 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         if 'constraints' in self.record_attributes['resource']:
             if 'access' in self.record_attributes['resource']['constraints']:
                 for expected_access_constraint in self.record_attributes['resource']['constraints']['access']:
+                    if 'statement' in expected_access_constraint:
+                        if 'href' in expected_access_constraint:
+                            constraint = self.test_response.xpath(
+                                f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                                f"gmd:MD_LegalConstraints[gmd:otherConstraints[gmx:Anchor[text()=$term]]]",
+                                term=expected_access_constraint['statement'],
+                                namespaces=self.ns.nsmap()
+                            )
+                            self.assertEqual(len(constraint), 1)
+                            constraint = constraint[0]
+
+                            constraint_value = constraint.find(f"{{{self.ns.gmd}}}otherConstraints/"
+                                                               f"{{{self.ns.gmx}}}Anchor")
+                        else:
+                            constraint = self.test_response.xpath(
+                                f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                                f"gmd:MD_LegalConstraints[gmd:otherConstraints[gco:CharacterString[text()=$term]]]",
+                                term=expected_access_constraint['statement'],
+                                namespaces=self.ns.nsmap()
+                            )
+                            self.assertEqual(len(constraint), 1)
+                            constraint = constraint[0]
+
+                            constraint_value = constraint.find(f"{{{self.ns.gmd}}}otherConstraints/"
+                                                               f"{{{self.ns.gco}}}CharacterString")
+
+                        self._test_access_constraint(
+                            constraint=constraint,
+                            expected_access_constraint=expected_access_constraint
+                        )
+
+                        self.assertIsNotNone(constraint_value)
+                        self.assertEqual(constraint_value.text, expected_access_constraint['statement'])
+
                     if 'inspire_limitations_on_public_access' in expected_access_constraint:
                         constraint = self.test_response.xpath(
                             f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
@@ -628,19 +678,10 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
 
                         self.assertEqual(constraint.attrib['id'], 'InspireLimitationsOnPublicAccess')
 
-                        access_constraint = constraint.find(f"{{{self.ns.gmd}}}accessConstraints/"
-                                                            f"{{{self.ns.gmd}}}MD_RestrictionCode")
-                        self.assertIsNotNone(access_constraint)
-                        self.assertEqual(
-                            access_constraint.attrib['codeList'],
-                            'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources'
-                            '/codelist/gmxCodelists.xml#MD_RestrictionCode'
+                        self._test_access_constraint(
+                            constraint=constraint,
+                            expected_access_constraint=expected_access_constraint
                         )
-                        self.assertEqual(
-                            access_constraint.attrib['codeListValue'],
-                            expected_access_constraint['restriction_code']
-                        )
-                        self.assertEqual(access_constraint.text, expected_access_constraint['restriction_code'])
 
                         public_use_constraint = constraint.find(
                             f"{{{self.ns.gmd}}}otherConstraints/{{{self.ns.gmx}}}Anchor"
@@ -659,6 +700,35 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
 
             if 'usage' in self.record_attributes['resource']['constraints']:
                 for expected_usage_constraint in self.record_attributes['resource']['constraints']['usage']:
+                    if 'statement' in expected_usage_constraint:
+                        if 'href' in expected_usage_constraint:
+                            constraint = self.test_response.xpath(
+                                f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                                f"gmd:MD_LegalConstraints[gmd:useLimitation[gmx:Anchor[text()=$term]]]",
+                                term=expected_usage_constraint['statement'],
+                                namespaces=self.ns.nsmap()
+                            )
+                            self.assertEqual(len(constraint), 1)
+                            constraint = constraint[0]
+
+                            constraint_value = constraint.find(f"{{{self.ns.gmd}}}useLimitation/"
+                                                               f"{{{self.ns.gmx}}}Anchor")
+                        else:
+                            constraint = self.test_response.xpath(
+                                f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                                f"gmd:MD_LegalConstraints[gmd:useLimitation[gco:CharacterString[text()=$term]]]",
+                                term=expected_usage_constraint['statement'],
+                                namespaces=self.ns.nsmap()
+                            )
+                            self.assertEqual(len(constraint), 1)
+                            constraint = constraint[0]
+
+                            constraint_value = constraint.find(f"{{{self.ns.gmd}}}useLimitation/"
+                                                               f"{{{self.ns.gco}}}CharacterString")
+
+                        self.assertIsNotNone(constraint_value)
+                        self.assertEqual(constraint_value.text, expected_usage_constraint['statement'])
+
                     if 'copyright_licence' in expected_usage_constraint:
                         constraint = self.test_response.xpath(
                             f"./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"

@@ -86,9 +86,6 @@ class MetadataRecordConfig(_MetadataRecordConfig):
             "title": "UK PDC Metadata Record Generator - ISO 19115 v1 configuration schema",
             "description": "Metadata record configuration schema for the ISO 19115 (v1) metadata standard",
             "definitions": {
-                "language": {
-                    "type": "string"
-                },
                 "address": {
                     "type": "object",
                     "required": [],
@@ -111,51 +108,72 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                         }
                     }
                 },
-                "online_resource": {
+                "constraint": {
                     "type": "object",
-                    "required": [
-                        "href"
-                    ],
+                    "required": [],
                     "additionalProperties": False,
                     "properties": {
-                        "href": {
-                            "type": "string",
-                            "format": "uri"
-                        },
-                        "title": {
-                            "type": "string"
-                        },
-                        "description": {
-                            "type": "string"
-                        },
-                        "function": {
+                        "restriction_code": {
                             "type": "string",
                             "enum": [
-                                "download",
-                                "information",
-                                "offlineAccess",
-                                "order",
-                                "search"
+                                "copyright",
+                                "patent",
+                                "patentPending",
+                                "trademark",
+                                "license",
+                                "intellectualPropertyRights",
+                                "restricted",
+                                "otherRestrictions"
                             ]
-                        }
-                    }
-                },
-                "contact_identity": {
-                    "type": "object",
-                    "required": [
-                        "name"
-                    ],
-                    "additionalProperties": False,
-                    "properties": {
-                        "name": {
-                            "type": "string"
                         },
-                        "href": {
+                        "inspire_limitations_on_public_access": {
                             "type": "string",
-                            "format": "uri"
+                            "enum": [
+                                "noLimitations"
+                            ]
                         },
-                        "title": {
-                            "type": "string"
+                        "statement": {
+                            'type': 'string'
+                        },
+                        "copyright_licence": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "code": {
+                                    "type": "string"
+                                },
+                                "href": {
+                                    "type": "string",
+                                    "format": "uri"
+                                },
+                                "statement": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required_citation": {
+                            "type": "object",
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "statement": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": ["statement"],
+                                    "additionalProperties": False
+                                },
+                                {
+                                    "properties": {
+                                        "doi": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": ["doi"],
+                                    "additionalProperties": False
+                                }
+                            ]
                         }
                     }
                 },
@@ -215,53 +233,28 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                         }
                     }
                 },
-                "maintenance": {
-                    "type": "object",
-                    "required": [],
-                    "additionalProperties": False,
-                    "properties": {
-                        "maintenance_frequency": {
-                            "type": "string",
-                            "enum": [
-                                "continual",
-                                "daily",
-                                "weekly",
-                                "fortnightly",
-                                "monthly",
-                                "quarterly",
-                                "biannually",
-                                "annually",
-                                "asNeeded",
-                                "irregular",
-                                "notPlanned",
-                                "unknown"
-                            ]
-                        },
-                        "progress": {
-                            "type": "string",
-                            "enum": [
-                                "completed",
-                                "historicalArchive",
-                                "obsolete",
-                                "onGoing",
-                                "planned",
-                                "required",
-                                "underDevelopment"
-                            ]
-                        }
-                    }
-                },
-                "title": {
+                "contact_identity": {
                     "type": "object",
                     "required": [
-                        "value"
+                        "name"
                     ],
                     "additionalProperties": False,
                     "properties": {
-                        "value": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "href": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "title": {
                             "type": "string"
                         }
                     }
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "dates": {
                     "type": "array",
@@ -307,12 +300,42 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                         }
                     }
                 },
-                "date": {
-                    "type": "string",
-                    "format": "date-time"
-                },
                 "edition": {
                     "type": "string"
+                },
+                "geographic_extent": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "bounding_box": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "west_longitude": {
+                                    "type": "number",
+                                    "maximum": 180,
+                                    "minimum": -180
+                                },
+                                "east_longitude": {
+                                    "type": "number",
+                                    "maximum": 180,
+                                    "minimum": -180
+                                },
+                                "south_latitude": {
+                                    "type": "number",
+                                    "maximum": 90,
+                                    "minimum": -90
+                                },
+                                "north_latitude": {
+                                    "type": "number",
+                                    "maximum": 90,
+                                    "minimum": -90
+                                }
+                            }
+                        }
+                    }
                 },
                 "identifier": {
                     "type": "object",
@@ -372,6 +395,94 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                         }
                     }
                 },
+                "language": {
+                    "type": "string"
+                },
+                "maintenance": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "maintenance_frequency": {
+                            "type": "string",
+                            "enum": [
+                                "continual",
+                                "daily",
+                                "weekly",
+                                "fortnightly",
+                                "monthly",
+                                "quarterly",
+                                "biannually",
+                                "annually",
+                                "asNeeded",
+                                "irregular",
+                                "notPlanned",
+                                "unknown"
+                            ]
+                        },
+                        "progress": {
+                            "type": "string",
+                            "enum": [
+                                "completed",
+                                "historicalArchive",
+                                "obsolete",
+                                "onGoing",
+                                "planned",
+                                "required",
+                                "underDevelopment"
+                            ]
+                        }
+                    }
+                },
+                "online_resource": {
+                    "type": "object",
+                    "required": [
+                        "href"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "href": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "title": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "function": {
+                            "type": "string",
+                            "enum": [
+                                "download",
+                                "information",
+                                "offlineAccess",
+                                "order",
+                                "search"
+                            ]
+                        }
+                    }
+                },
+                "temporal_extent": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "period": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "start": {
+                                    "$ref": "#/definitions/date"
+                                },
+                                "end": {
+                                    "$ref": "#/definitions/date"
+                                }
+                            }
+                        }
+                    }
+                },
                 "thesaurus": {
                     "type": "object",
                     "required": [],
@@ -401,103 +512,15 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                         }
                     }
                 },
-                "constraint": {
+                "title": {
                     "type": "object",
-                    "required": [],
+                    "required": [
+                        "value"
+                    ],
                     "additionalProperties": False,
                     "properties": {
-                        "restriction_code": {
-                            "type": "string",
-                            "enum": [
-                                "copyright",
-                                "patent",
-                                "patentPending",
-                                "trademark",
-                                "license",
-                                "intellectualPropertyRights",
-                                "restricted",
-                                "otherRestrictions"
-                            ]
-                        },
-                        "inspire_limitations_on_public_access": {
-                            "type": "string",
-                            "enum": [
-                                "noLimitations"
-                            ]
-                        },
-                        "copyright_licence": {
-                            "type": "object",
-                            "required": [],
-                            "additionalProperties": False,
-                            "properties": {
-                                "code": {
-                                    "type": "string"
-                                },
-                                "href": {
-                                    "type": "string",
-                                    "format": "uri"
-                                },
-                                "statement": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "required_citation": {
-                            "type": "object",
-                            "oneOf": [
-                                {
-                                    "properties": {
-                                        "statement": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "required": ["statement"],
-                                    "additionalProperties": False
-                                },
-                                {
-                                    "properties": {
-                                        "doi": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "required": ["doi"],
-                                    "additionalProperties": False
-                                }
-                            ]
-                        }
-                    }
-                },
-                "geographic_extent": {
-                    "type": "object",
-                    "required": [],
-                    "additionalProperties": False,
-                    "properties": {
-                        "bounding_box": {
-                            "type": "object",
-                            "required": [],
-                            "additionalProperties": False,
-                            "properties": {
-                                "west_longitude": {
-                                    "type": "number",
-                                    "maximum": 180,
-                                    "minimum": -180
-                                },
-                                "east_longitude": {
-                                    "type": "number",
-                                    "maximum": 180,
-                                    "minimum": -180
-                                },
-                                "south_latitude": {
-                                    "type": "number",
-                                    "maximum": 90,
-                                    "minimum": -90
-                                },
-                                "north_latitude": {
-                                    "type": "number",
-                                    "maximum": 90,
-                                    "minimum": -90
-                                }
-                            }
+                        "value": {
+                            "type": "string"
                         }
                     }
                 },
@@ -557,26 +580,6 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                                 "href": {
                                     "type": "string",
                                     "format": "uri"
-                                }
-                            }
-                        }
-                    }
-                },
-                "temporal_extent": {
-                    "type": "object",
-                    "required": [],
-                    "additionalProperties": False,
-                    "properties": {
-                        "period": {
-                            "type": "object",
-                            "required": [],
-                            "additionalProperties": False,
-                            "properties": {
-                                "start": {
-                                    "$ref": "#/definitions/date"
-                                },
-                                "end": {
-                                    "$ref": "#/definitions/date"
                                 }
                             }
                         }
@@ -2087,6 +2090,19 @@ class ResourceConstraints(MetadataRecordElement):
                 )
                 access_constraint.make_element()
 
+                if 'statement' in access_constraint_attributes:
+                    element_attributes = {
+                        'value': deepcopy(access_constraint_attributes['statement'])
+                    }
+
+                    other_constraint = OtherConstraints(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=constraints_element,
+                        element_attributes=element_attributes
+                    )
+                    other_constraint.make_element()
+
                 if 'inspire_limitations_on_public_access' in access_constraint_attributes:
                     constraints_element.set('id', 'InspireLimitationsOnPublicAccess')
 
@@ -2102,6 +2118,19 @@ class ResourceConstraints(MetadataRecordElement):
             for usage_constraint_attributes in self.element_attributes['usage']:
                 constraints_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceConstraints")
                 constraints_element = SubElement(constraints_wrapper, f"{{{self.ns.gmd}}}MD_LegalConstraints")
+
+                if 'statement' in usage_constraint_attributes:
+                    element_attributes = {
+                        'value': deepcopy(usage_constraint_attributes['statement'])
+                    }
+
+                    use_limitation = UseLimitation(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=constraints_element,
+                        element_attributes=element_attributes
+                    )
+                    use_limitation.make_element()
 
                 if 'copyright_licence' in usage_constraint_attributes:
                     constraints_element.set('id', 'copyright')
@@ -2202,6 +2231,24 @@ class InspireLimitationsOnPublicAccess(MetadataRecordElement):
             element_value=self.element_attributes['inspire_limitations_on_public_access']
         )
         other_constraints_value.make_element()
+
+
+class OtherConstraints(MetadataRecordElement):
+    def make_element(self):
+        other_constraints_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}otherConstraints")
+
+        if 'href' in self.element_attributes:
+            other_constraints_value = AnchorElement(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=other_constraints_element,
+                element_attributes=self.element_attributes,
+                element_value=self.element_attributes['value']
+            )
+            other_constraints_value.make_element()
+        else:
+            other_constraints_value = SubElement(other_constraints_element, f"{{{self.ns.gco}}}CharacterString")
+            other_constraints_value.text = self.element_attributes['value']
 
 
 class UseLimitation(MetadataRecordElement):
