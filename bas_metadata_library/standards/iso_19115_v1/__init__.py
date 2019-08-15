@@ -86,9 +86,6 @@ class MetadataRecordConfig(_MetadataRecordConfig):
             "title": "UK PDC Metadata Record Generator - ISO 19115 v1 configuration schema",
             "description": "Metadata record configuration schema for the ISO 19115 (v1) metadata standard",
             "definitions": {
-                "language": {
-                    "type": "string"
-                },
                 "address": {
                     "type": "object",
                     "required": [],
@@ -108,296 +105,6 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                         },
                         "country": {
                             "type": "string"
-                        }
-                    }
-                },
-                "online_resource": {
-                    "type": "object",
-                    "required": [
-                        "href"
-                    ],
-                    "additionalProperties": False,
-                    "properties": {
-                        "href": {
-                            "type": "string",
-                            "format": "uri"
-                        },
-                        "title": {
-                            "type": "string"
-                        },
-                        "description": {
-                            "type": "string"
-                        },
-                        "function": {
-                            "type": "string",
-                            "enum": [
-                                "download",
-                                "information",
-                                "offlineAccess",
-                                "order",
-                                "search"
-                            ]
-                        }
-                    }
-                },
-                "contact_identity": {
-                    "type": "object",
-                    "required": [
-                        "name"
-                    ],
-                    "additionalProperties": False,
-                    "properties": {
-                        "name": {
-                            "type": "string"
-                        },
-                        "href": {
-                            "type": "string",
-                            "format": "uri"
-                        },
-                        "title": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "contact": {
-                    "type": "object",
-                    "required": [
-                        "role"
-                    ],
-                    "additionalProperties": False,
-                    "properties": {
-                        "individual": {
-                            "$ref": "#/definitions/contact_identity"
-                        },
-                        "organisation": {
-                            "$ref": "#/definitions/contact_identity"
-                        },
-                        "email": {
-                            "type": "string",
-                            "format": "email"
-                        },
-                        "phone": {
-                            "type": "string"
-                        },
-                        "address": {
-                            "$ref": "#/definitions/address"
-                        },
-                        "online_resource": {
-                            "$ref": "#/definitions/online_resource"
-                        },
-                        "role": {
-                            "type": "array",
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "author",
-                                    "custodian",
-                                    "distributor",
-                                    "originator",
-                                    "owner",
-                                    "pointOfContact",
-                                    "principalInvestigator",
-                                    "processor",
-                                    "publisher",
-                                    "resourceProvider",
-                                    "sponsor",
-                                    "user",
-                                    "coAuthor",
-                                    "collaborator",
-                                    "contributor",
-                                    "editor",
-                                    "funder",
-                                    "mediator",
-                                    "rightsHolder",
-                                    "stakeholder"
-                                ]
-                            }
-                        }
-                    }
-                },
-                "maintenance": {
-                    "type": "object",
-                    "required": [],
-                    "additionalProperties": False,
-                    "properties": {
-                        "maintenance_frequency": {
-                            "type": "string",
-                            "enum": [
-                                "continual",
-                                "daily",
-                                "weekly",
-                                "fortnightly",
-                                "monthly",
-                                "quarterly",
-                                "biannually",
-                                "annually",
-                                "asNeeded",
-                                "irregular",
-                                "notPlanned",
-                                "unknown"
-                            ]
-                        },
-                        "progress": {
-                            "type": "string",
-                            "enum": [
-                                "completed",
-                                "historicalArchive",
-                                "obsolete",
-                                "onGoing",
-                                "planned",
-                                "required",
-                                "underDevelopment"
-                            ]
-                        }
-                    }
-                },
-                "title": {
-                    "type": "object",
-                    "required": [
-                        "value"
-                    ],
-                    "additionalProperties": False,
-                    "properties": {
-                        "value": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "dates": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": [
-                            "date",
-                            "date_type"
-                        ],
-                        "additionalProperties": False,
-                        "properties": {
-                            "date": {
-                                "$ref": "#/definitions/date"
-                            },
-                            "date_precision": {
-                                "type": "string",
-                                "enum": [
-                                    "month",
-                                    "year"
-                                ]
-                            },
-                            "date_type": {
-                                "type": "string",
-                                "enum": [
-                                    "creation",
-                                    "publication",
-                                    "revision",
-                                    "adopted",
-                                    "deprecated",
-                                    "distribution",
-                                    "expiry",
-                                    "inForce",
-                                    "lastRevision",
-                                    "lastUpdate",
-                                    "nextUpdate",
-                                    "released",
-                                    "superseded",
-                                    "unavailable",
-                                    "validityBegins",
-                                    "validityExpires"
-                                ]
-                            }
-                        }
-                    }
-                },
-                "date": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "edition": {
-                    "type": "string"
-                },
-                "identifier": {
-                    "type": "object",
-                    "required": [],
-                    "additionalProperties": False,
-                    "properties": {
-                        "identifier": {
-                            "type": "string"
-                        },
-                        "href": {
-                            "type": "string",
-                            "format": "uri"
-                        },
-                        "title": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "keywords": {
-                    "type": "object",
-                    "required": [
-                        "terms"
-                    ],
-                    "additionalProperties": False,
-                    "properties": {
-                        "terms": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "required": [
-                                    "term"
-                                ],
-                                "additionalProperties": False,
-                                "properties": {
-                                    "term": {
-                                        "type": "string"
-                                    },
-                                    "href": {
-                                        "type": "string",
-                                        "format": "uri"
-                                    }
-                                }
-                            }
-                        },
-                        "type": {
-                            "type": "string",
-                            "enum": [
-                                "discipline",
-                                "place",
-                                "stratum",
-                                "temporal",
-                                "theme"
-                            ]
-                        },
-                        "thesaurus": {
-                            "$ref": "#/definitions/thesaurus"
-                        }
-                    }
-                },
-                "thesaurus": {
-                    "type": "object",
-                    "required": [],
-                    "additionalProperties": False,
-                    "properties": {
-                        "title": {
-                            "anyOf": [
-                                {"$ref": "#/definitions/title"},
-                                {
-                                    "properties": {
-                                        "href": {
-                                            "type": "string",
-                                            "format": "uri"
-                                        }
-                                    }
-                                }
-                            ]
-                        },
-                        "dates": {
-                            "$ref": "#/definitions/dates"
-                        },
-                        "edition": {
-                            "$ref": "#/definitions/edition"
-                        },
-                        "contact": {
-                            "$ref": "#/definitions/contact"
                         }
                     }
                 },
@@ -467,6 +174,132 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                         }
                     }
                 },
+                "contact": {
+                    "type": "object",
+                    "required": [
+                        "role"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "individual": {
+                            "$ref": "#/definitions/contact_identity"
+                        },
+                        "organisation": {
+                            "$ref": "#/definitions/contact_identity"
+                        },
+                        "email": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "phone": {
+                            "type": "string"
+                        },
+                        "address": {
+                            "$ref": "#/definitions/address"
+                        },
+                        "online_resource": {
+                            "$ref": "#/definitions/online_resource"
+                        },
+                        "role": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "author",
+                                    "custodian",
+                                    "distributor",
+                                    "originator",
+                                    "owner",
+                                    "pointOfContact",
+                                    "principalInvestigator",
+                                    "processor",
+                                    "publisher",
+                                    "resourceProvider",
+                                    "sponsor",
+                                    "user",
+                                    "coAuthor",
+                                    "collaborator",
+                                    "contributor",
+                                    "editor",
+                                    "funder",
+                                    "mediator",
+                                    "rightsHolder",
+                                    "stakeholder"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "contact_identity": {
+                    "type": "object",
+                    "required": [
+                        "name"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "href": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "title": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "dates": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "date",
+                            "date_type"
+                        ],
+                        "additionalProperties": False,
+                        "properties": {
+                            "date": {
+                                "$ref": "#/definitions/date"
+                            },
+                            "date_precision": {
+                                "type": "string",
+                                "enum": [
+                                    "month",
+                                    "year"
+                                ]
+                            },
+                            "date_type": {
+                                "type": "string",
+                                "enum": [
+                                    "creation",
+                                    "publication",
+                                    "revision",
+                                    "adopted",
+                                    "deprecated",
+                                    "distribution",
+                                    "expiry",
+                                    "inForce",
+                                    "lastRevision",
+                                    "lastUpdate",
+                                    "nextUpdate",
+                                    "released",
+                                    "superseded",
+                                    "unavailable",
+                                    "validityBegins",
+                                    "validityExpires"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "edition": {
+                    "type": "string"
+                },
                 "geographic_extent": {
                     "type": "object",
                     "required": [],
@@ -498,6 +331,193 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                                     "minimum": -90
                                 }
                             }
+                        }
+                    }
+                },
+                "identifier": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "identifier": {
+                            "type": "string"
+                        },
+                        "href": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "title": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "keywords": {
+                    "type": "object",
+                    "required": [
+                        "terms"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "terms": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "term"
+                                ],
+                                "additionalProperties": False,
+                                "properties": {
+                                    "term": {
+                                        "type": "string"
+                                    },
+                                    "href": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    }
+                                }
+                            }
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "discipline",
+                                "place",
+                                "stratum",
+                                "temporal",
+                                "theme"
+                            ]
+                        },
+                        "thesaurus": {
+                            "$ref": "#/definitions/thesaurus"
+                        }
+                    }
+                },
+                "language": {
+                    "type": "string"
+                },
+                "maintenance": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "maintenance_frequency": {
+                            "type": "string",
+                            "enum": [
+                                "continual",
+                                "daily",
+                                "weekly",
+                                "fortnightly",
+                                "monthly",
+                                "quarterly",
+                                "biannually",
+                                "annually",
+                                "asNeeded",
+                                "irregular",
+                                "notPlanned",
+                                "unknown"
+                            ]
+                        },
+                        "progress": {
+                            "type": "string",
+                            "enum": [
+                                "completed",
+                                "historicalArchive",
+                                "obsolete",
+                                "onGoing",
+                                "planned",
+                                "required",
+                                "underDevelopment"
+                            ]
+                        }
+                    }
+                },
+                "online_resource": {
+                    "type": "object",
+                    "required": [
+                        "href"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "href": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "title": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "function": {
+                            "type": "string",
+                            "enum": [
+                                "download",
+                                "information",
+                                "offlineAccess",
+                                "order",
+                                "search"
+                            ]
+                        }
+                    }
+                },
+                "temporal_extent": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "period": {
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": False,
+                            "properties": {
+                                "start": {
+                                    "$ref": "#/definitions/date"
+                                },
+                                "end": {
+                                    "$ref": "#/definitions/date"
+                                }
+                            }
+                        }
+                    }
+                },
+                "thesaurus": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": False,
+                    "properties": {
+                        "title": {
+                            "anyOf": [
+                                {"$ref": "#/definitions/title"},
+                                {
+                                    "properties": {
+                                        "href": {
+                                            "type": "string",
+                                            "format": "uri"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "dates": {
+                            "$ref": "#/definitions/dates"
+                        },
+                        "edition": {
+                            "$ref": "#/definitions/edition"
+                        },
+                        "contact": {
+                            "$ref": "#/definitions/contact"
+                        }
+                    }
+                },
+                "title": {
+                    "type": "object",
+                    "required": [
+                        "value"
+                    ],
+                    "additionalProperties": False,
+                    "properties": {
+                        "value": {
+                            "type": "string"
                         }
                     }
                 },
@@ -557,26 +577,6 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                                 "href": {
                                     "type": "string",
                                     "format": "uri"
-                                }
-                            }
-                        }
-                    }
-                },
-                "temporal_extent": {
-                    "type": "object",
-                    "required": [],
-                    "additionalProperties": False,
-                    "properties": {
-                        "period": {
-                            "type": "object",
-                            "required": [],
-                            "additionalProperties": False,
-                            "properties": {
-                                "start": {
-                                    "$ref": "#/definitions/date"
-                                },
-                                "end": {
-                                    "$ref": "#/definitions/date"
                                 }
                             }
                         }
