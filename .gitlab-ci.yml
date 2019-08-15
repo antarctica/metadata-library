@@ -9,6 +9,10 @@
 # - Variables are grouped by section in KEY: "value" format (e.g. FOO: "bar")
 #   Sensitive values are represented by "[Sensitive]"
 #
+# - AWS IAM id/secret keys for 'bas-gitlab-ci-bas-metadata-generator' user
+# > AWS_ACCESS_KEY_ID: "[Sensetive]"
+# > AWS_SECRET_ACCESS_KEY: "[Sensetive]"
+#
 # - Snyk
 # > SNYK_TOKEN: "[Sensitive]"
 #
