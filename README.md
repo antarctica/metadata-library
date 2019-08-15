@@ -428,10 +428,19 @@ A Continuous Deployment process using GitLab's CI/CD platform is configured in `
 
 * build the source and binary artifact's for this project
 * publish built artifact's for this project to the relevant PyPi repository
+* publish the [JSON Schemas](#configuration-schemas) for this libraries internal configuration format
 
-This process will deploy changes to [PyPi testing](https://test.pypi.org) on all commits to the *master* branch.
+On commits to the *master* branch:
 
-This process will deploy changes to [PyPi](https://pypi.org) on all tagged commits.
+* changes will be deployed to [PyPi testing](https://test.pypi.org)
+* configuration schemas will be published to the 
+  [Metadata Standards testing](https://metadata-standards-testing.data.bas.ac.uk) website
+
+On tagged commits:
+
+* changes will be deployed to [PyPi](https://pypi.org)
+* configuration schemas will be published to the [Metadata Standards](https://metadata-standards.data.bas.ac.uk) 
+  website
 
 ## Release procedure
 
