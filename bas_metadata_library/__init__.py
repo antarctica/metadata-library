@@ -2,7 +2,7 @@ import json
 
 from typing import Optional
 
-from jsonschema import validate, ValidationError
+from jsonschema import validate
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
