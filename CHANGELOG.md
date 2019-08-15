@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * test case to ensure unicode entities are encoded correctly in XML
 * `capture-test-records` command to streamline updating static test records
 * documentation on how tests are used for this library
+* custom Flask command to output internal configuration JSON schemas
+* copying internal configuration JSON schemas to Metadata Standards website as part of CD
 
 ### Fixed
 

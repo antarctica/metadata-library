@@ -32,6 +32,8 @@ variables:
   SNYK_PROJECT: uk-pdc-metadata-record-generator
   PYPI_USERNAME: british-antarctic-survey
   PYPI_TEST_USERNAME: british-antarctic-survey
+  S3_SCHEMA_BUCKET_STAGE: metadata-standards-testing.data.bas.ac.uk
+  S3_SCHEMA_BUCKET_PROD: metadata-standards.data.bas.ac.uk
 
 image:
   name: docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator:latest
@@ -82,6 +84,18 @@ build-app:
       - dist
     expire_in: 1 month
 
+build-schemas:
+  stage: build
+  script:
+    - "flask output-config-schemas"
+  artifacts:
+    name: "$CI_BUILD_TOKEN-schemas"
+    paths:
+      - build/config_schemas
+    expire_in: 1 month
+  only:
+    - master
+
 publish-app-stage:
   stage: publish
   script:
@@ -101,3 +115,23 @@ publish-app-prod:
   environment:
     name: production
     url: https://pypi.org/project/bas-metadata-library/
+
+publish-schemas-stage:
+  stage: publish
+  image:
+    name: governmentpaas/awscli:latest
+    entrypoint: [""]
+  script:
+    - "aws s3 sync --delete build/config_schemas s3://$S3_SCHEMA_BUCKET_STAGE/generic-configuration-schemas/"
+  only:
+    - master
+
+publish-schemas-prod:
+  stage: publish
+  image:
+    name: governmentpaas/awscli:latest
+    entrypoint: [""]
+  script:
+    - "aws s3 sync --delete build/config_schemas s3://$S3_SCHEMA_BUCKET_PROD/generic-configuration-schemas/"
+  only:
+    - tags

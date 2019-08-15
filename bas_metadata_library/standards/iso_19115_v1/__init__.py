@@ -915,8 +915,6 @@ class MetadataRecordConfig(_MetadataRecordConfig):
             }
         }
 
-        self.validate()
-
 
 class MetadataRecord(_MetadataRecord):
     """
@@ -926,6 +924,7 @@ class MetadataRecord(_MetadataRecord):
     """
     def __init__(self, configuration: MetadataRecordConfig):
         self.ns = Namespaces()
+        configuration.validate()
         self.attributes = configuration.config
         self.record = self.make_element()
 

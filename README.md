@@ -55,7 +55,7 @@ print(document)
 Where `metadata_configs.record` is a Python dictionary implementing the BAS metadata generic schema, documented in the
 [BAS Metadata Standards](https://metadata-standards.data.bas.ac.uk) project.
 
-### HTML entites
+### HTML entities
 
 Do not include HTML entities in input to this generator, as it will be douple escaped by [Lxml](https://lxml.de), the 
 underlying XML processing library.
@@ -124,6 +124,51 @@ $ docker-compose run app flask test
 $ docker-compose run app flask
 ```
 
+### Staging and production
+
+Terraform is used to provision resources required to operate this application in staging and production environments.
+
+These resources allow [Configuration schemas](#configuration-schemas) for each standard to be accessed externally.
+
+Access to the [BAS AWS account](https://gitlab.data.bas.ac.uk/WSF/bas-aws) is needed to provisioning these resources.
+
+**Note:** This provisioning should have already been performed (and applies globally). If changes are made to this 
+provisioning it only needs to be applied once.
+
+```shell
+# start terraform inside a docker container
+$ cd provisioning/terraform
+$ docker-compose run terraform
+# setup terraform
+$ terraform init
+# apply changes
+$ terraform validate
+$ terraform fmt
+$ terraform apply
+# exit container
+$ exit
+$ docker-compose down
+```
+
+#### Teraform remote state
+
+State information for this project is stored remotely using a 
+[Backend](https://www.terraform.io/docs/backends/index.html).
+
+Specifically the [AWS S3](https://www.terraform.io/docs/backends/types/s3.html) backend as part of the 
+[BAS Terraform Remote State](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project.
+
+Remote state storage will be automatically initialised when running `terraform init`. Any changes to remote state will
+be automatically saved to the remote backend, there is no need to push or pull changes.
+
+##### Remote state authentication
+
+Permission to read and/or write remote state information for this project is restricted to authorised users. Contact
+the [BAS Web & Applications Team](mailto:servicedesk@bas.ac.uk) to request access.
+
+See the [BAS Terraform Remote State](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project for how these
+permissions to remote state are enforced.
+
 ## Development
 
 This API is developed as a Python library. A bundled Flask application is used to simulate its usage and to act as
@@ -132,16 +177,39 @@ framework for running tests etc.
 ### Library base classes
 
 The `bas_metadata_library` module defines a series of modules for each standard (in `bas_metadata_library.standards`) 
-as well *base' classes used across all standards and providing common functionality. See existing standards how they 
-are used.
+as well  as *base* classes used across all standards, that providing common functionality. See existing standards for 
+how these are used.
+
+### Configuration schemas
+
+This library accepts a 'configuration' for each metadata record. This contains values for elements, or values that are 
+used to compute values. For example, a *title* element would use a value taken directly from the record configuration.
+
+To ensure all required configuration attributes are included, and where relevant that their values are allowed, this
+configuration is validated against a schema. This schema uses the [JSON Schema](https://json-schema.org) standard.
+
+These schemas are made available externally through the BAS Metadata Standards website 
+[metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk). This to allow:
+ 
+1. other applications that wish to ensure their output will be compatible with this library, but that do not or cannot 
+  use this library themselves (i.e. if they don't use Python)
+2. to allow schema inheritance/extension where used for standards that inherit from other standards (such as profiles)
+
+A custom Flask CLI command, `output-config-schemas`, is used to generate these schema files from the various standards 
+supported by this project. It will create JSON files for each configuration schema in `build/config_schemas`. These are
+then uploaded to the Metadata Standards website through [Continuous Deployment](#continuous-deployment).
+
+**Note:** The build directory, and schema's it contains, is ignored in this repository. Outputted schemas are 
+considered ephemeral and should be trivial to recreate from modules in this library. The module versions of schemas act 
+as the source of truth as they are used for performing validation.
 
 ### Adding a new standard
 
 To add a new standard:
 
-1. create a new module in `bas_metadata_library.standards` - e.g. `bas_metadata_library.standards.foo`
-2. create a JSON schema, `metadata-record-schema.json` within this module and populate with required and permitted 
-   configuration options for the standard - e.g. `bas_metadata_library/standards/foo/metadata-record-schema.json`
+1. create a new module in `bas_metadata_library.standards` - e.g. `bas_metadata_library.standards.foo/__init__.py`
+2. in this module overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed, ensuring 
+   to include a suitable schema property in `MetadataRecordConfig`
 3. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in 
    `tests/config.py`
 4. update the inbuilt Flask application in `app.py` with a route for generating test records for the new standard
@@ -360,10 +428,19 @@ A Continuous Deployment process using GitLab's CI/CD platform is configured in `
 
 * build the source and binary artifact's for this project
 * publish built artifact's for this project to the relevant PyPi repository
+* publish the [JSON Schemas](#configuration-schemas) for this libraries internal configuration format
 
-This process will deploy changes to [PyPi testing](https://test.pypi.org) on all commits to the *master* branch.
+On commits to the *master* branch:
 
-This process will deploy changes to [PyPi](https://pypi.org) on all tagged commits.
+* changes will be deployed to [PyPi testing](https://test.pypi.org)
+* configuration schemas will be published to the 
+  [Metadata Standards testing](https://metadata-standards-testing.data.bas.ac.uk) website
+
+On tagged commits:
+
+* changes will be deployed to [PyPi](https://pypi.org)
+* configuration schemas will be published to the [Metadata Standards](https://metadata-standards.data.bas.ac.uk) 
+  website
 
 ## Release procedure
 
