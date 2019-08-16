@@ -12,8 +12,8 @@
                 "s3:PutObjectAcl"
             ],
             "Resource": [
-                "arn:aws:s3:::metadata-standards.data.bas.ac.uk/generic-configuration-schemas",
-                "arn:aws:s3:::metadata-standards.data.bas.ac.uk/generic-configuration-schemas/*"
+                "arn:aws:s3:::metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas",
+                "arn:aws:s3:::metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/*"
             ]
         }
     ]
