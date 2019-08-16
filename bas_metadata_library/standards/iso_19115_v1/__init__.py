@@ -82,8 +82,8 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
         self.config = kwargs
         self.schema = {
-            "$id": "https://metadata-standards-testing.data.bas.ac.uk/generic-configuration-schemas/iso-19115-v1/"
-                   "configuration_schema.json",
+            "$id": "https://metadata-standards-testing.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/"
+                   "iso-19115-v1/configuration-schema.json",
             "$schema": "http://json-schema.org/draft-07/schema#",
             "title": "UK PDC Metadata Record Generator - ISO 19115 v1 configuration schema",
             "description": "Metadata record configuration schema for the ISO 19115 (v1) metadata standard",

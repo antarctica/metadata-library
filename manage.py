@@ -50,7 +50,7 @@ def capture_test_records():
 @app.cli.command()
 def output_config_schemas():
     """Save configuration schemas as files."""
-    iso_19115_v1 = Path('./build/config_schemas/iso-19115-v1')
+    iso_19115_v1 = Path('./build/config-schemas/iso-19115-v1')
     iso_19115_v1_profiles = Path.joinpath(iso_19115_v1, 'profiles')
     iso_19115_v1_profiles_inspire = Path.joinpath(iso_19115_v1_profiles, 'inspire-v1_3')
 
