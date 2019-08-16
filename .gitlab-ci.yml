@@ -95,7 +95,7 @@ build-schemas:
   artifacts:
     name: "$CI_BUILD_TOKEN-schemas"
     paths:
-      - build/config_schemas
+      - build/config-schemas
     expire_in: 1 month
   only:
     - master
