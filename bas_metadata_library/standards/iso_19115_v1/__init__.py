@@ -256,10 +256,7 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                 },
                 "date": {
                     "type": "string",
-                    "format": [
-                        "date-time",
-                        "date"
-                    ]
+                    "format": "date-time"
                 },
                 "dates": {
                     "type": "array",
