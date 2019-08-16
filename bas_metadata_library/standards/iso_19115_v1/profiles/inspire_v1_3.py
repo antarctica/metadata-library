@@ -14,7 +14,8 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
         self.config = kwargs
         self.schema = {
-            "$id": "",
+            "$id": "https://metadata-standards-testing.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/"
+                   "iso-19115-v1/profiles/inspire-v1_3/configuration-schema.json",
             "$schema": "http://json-schema.org/draft-07/schema#",
             "title": "UK PDC Metadata Record Generator - ISO 19115 v1 Inspire configuration schema",
             "description": "Metadata record configuration schema for the Inspire profile of the ISO 19115 (v1) "
@@ -47,8 +48,8 @@ class MetadataRecordConfig(_MetadataRecordConfig):
             },
             "allOf": [
                 {
-                    "$ref": "https://metadata-standards.data.bas.ac.uk/generic-configuration-schemas/iso-19115-v1/"
-                            "configuration_schema.json"
+                    "$ref": "https://metadata-standards-testing.data.bas.ac.uk/"
+                            "bas-metadata-generator-configuration-schemas/iso-19115-v1/configuration-schema.json"
                 },
                 {
                     "required": [
@@ -82,7 +83,9 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                         "resource": {
                             "required": [
                                 "extent",
-                                "constraints"
+                                "constraints",
+                                "topics",
+                                "lineage"
                             ],
                             "properties": {
                                 "dates": {
@@ -95,6 +98,9 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                                             }
                                         }
                                     }
+                                },
+                                "identifiers": {
+                                    "minItems": 1
                                 },
                                 "contacts": {
                                     "items": {
@@ -134,8 +140,39 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                                         }
                                     }
                                 },
-                                "identifiers": {
+                                "topics": {
                                     "minItems": 1
+                                },
+                                "constraints": {
+                                    "required": [
+                                        "access",
+                                        "usage"
+                                    ],
+                                    "properties": {
+                                        "access": {
+                                            "contains": {
+                                                "required": [
+                                                    "inspire_limitations_on_public_access"
+                                                ]
+                                            }
+                                        },
+                                        "usage": {
+                                            "contains": {
+                                                "anyOf": [
+                                                    {
+                                                        "required": [
+                                                            "copyright_licence"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "required": [
+                                                            "statement"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
                                 },
                                 "extent": {
                                     "anyOf": [
