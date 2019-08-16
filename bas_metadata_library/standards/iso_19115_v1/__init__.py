@@ -82,6 +82,8 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
         self.config = kwargs
         self.schema = {
+            "$id": "https://metadata-standards-testing.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/"
+                   "iso-19115-v1/configuration-schema.json",
             "$schema": "http://json-schema.org/draft-07/schema#",
             "title": "UK PDC Metadata Record Generator - ISO 19115 v1 configuration schema",
             "description": "Metadata record configuration schema for the ISO 19115 (v1) metadata standard",
@@ -298,7 +300,8 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                                 ]
                             }
                         }
-                    }
+                    },
+                    "minItems": 1
                 },
                 "edition": {
                     "type": "string"
@@ -629,7 +632,7 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                     "items": {
                         "$ref": "#/definitions/contact"
                     },
-                    "minimum": 1
+                    "minItems": 1
                 },
                 "date_stamp": {
                     "type": "string",

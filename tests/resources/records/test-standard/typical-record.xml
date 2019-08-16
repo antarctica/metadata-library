@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <MetadataRecord xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
   <Resource>
-    <Title xlink:actuate="onRequest" xlink:href="https://www.example.com" xlink:title="Test Record">Test Record</Title>
+    <Title xlink:actuate="onRequest" xlink:href="https://www.example.com">Test Record</Title>
   </Resource>
 </MetadataRecord>

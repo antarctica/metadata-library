@@ -13,6 +13,8 @@ from click import option, Choice, echo, style
 
 from app import create_app
 from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig
+from bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3 import MetadataRecordConfig as \
+    ISO19115InspireMetadataRecordConfig
 
 app = create_app()
 
@@ -29,7 +31,7 @@ def capture_test_records():
                 'base-simple',
                 'base-complex',
                 'complete',
-                'gemini-complete'
+                'inspire-minimal'
             ]
         }
     }
@@ -47,11 +49,22 @@ def capture_test_records():
 @app.cli.command()
 def output_config_schemas():
     """Save configuration schemas as files."""
-    iso_19115_v1 = Path('./build/config_schemas/iso-19115-v1')
+    iso_19115_v1 = Path('./build/config-schemas/iso-19115-v1')
+    iso_19115_v1_profiles = Path.joinpath(iso_19115_v1, 'profiles')
+    iso_19115_v1_profiles_inspire = Path.joinpath(iso_19115_v1_profiles, 'inspire-v1_3')
+
     iso_19115_v1.mkdir(parents=True, exist_ok=True)
-    iso_19115_v1_file_path = Path.joinpath(iso_19115_v1, 'configuration_schema.json')
+    iso_19115_v1_profiles.mkdir(parents=True, exist_ok=True)
+    iso_19115_v1_profiles_inspire.mkdir(parents=True, exist_ok=True)
+
+    iso_19115_v1_file_path = Path.joinpath(iso_19115_v1, 'configuration-schema.json')
     with open(iso_19115_v1_file_path, mode='w') as config_schema_file:
         config_schema = ISO19115MetadataRecordConfig()
+        json.dump(config_schema.schema, config_schema_file, indent=4)
+
+    iso_19115_v1_inspire_v1_3_file_path = Path.joinpath(iso_19115_v1_profiles_inspire, 'configuration-schema.json')
+    with open(iso_19115_v1_inspire_v1_3_file_path, mode='w') as config_schema_file:
+        config_schema = ISO19115InspireMetadataRecordConfig()
         json.dump(config_schema.schema, config_schema_file, indent=4)
 
 

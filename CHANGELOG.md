@@ -30,6 +30,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * correcting ISO 19115 namespaces to use HTTPS endpoints
 * correcting test for non-Anchor copyright elements
 
+### Changed
+
+* replaced Gemini typical record configuration with minimal Inspire configuration (validated against Inspire validator)
+
 ## [0.1.1] 2019-07-18
 
 ### Fixed
@@ -49,4 +53,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 * Initial version with support for ISO 19115
-
