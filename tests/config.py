@@ -400,6 +400,102 @@ iso_19115_v1_complete_record['resource']['transfer_options'].append({
 
 # ISO 19115 Standard - Inspire profile
 
+iso_19115_v1_inspire_v1_3_minimal_record = deepcopy(iso_19115_v1_minimal_record)
+iso_19115_v1_inspire_v1_3_minimal_record['language'] = 'eng'
+iso_19115_v1_inspire_v1_3_minimal_record['hierarchy_level'] = 'dataset'
+iso_19115_v1_inspire_v1_3_minimal_record['contacts'][0]['organisation'] = {
+    'name': 'UK Polar Data Centre'
+}
+iso_19115_v1_inspire_v1_3_minimal_record['contacts'][0]['email'] = 'polardatacentre@bas.ac.uk'
+iso_19115_v1_inspire_v1_3_minimal_record['resource']['identifiers'] = [
+    {
+        'identifier': 'https://doi.org/10.5072/r3qz22k64',
+        'href': 'https://doi.org/10.5072/r3qz22k64',
+        'title': 'doi'
+    }
+]
+iso_19115_v1_inspire_v1_3_minimal_record['resource']['contacts'] = [{
+    'organisation': {
+        'name': 'UK Polar Data Centre'
+    },
+    'email': 'polardatacentre@bas.ac.uk',
+    'role': [
+        'pointOfContact'
+    ]
+}]
+iso_19115_v1_inspire_v1_3_minimal_record['resource']['keywords'] = [
+    {
+        'terms': [
+            {
+                'term': 'Atmospheric conditions'
+            }
+        ],
+        'type': 'theme',
+        'thesaurus': {
+            'title': {
+                'value': 'General Multilingual Environmental Thesaurus - INSPIRE themes'
+            },
+            'dates': [
+                {
+                    'date': date(2018, 8, 16),
+                    'date_type': 'publication'
+                }
+            ]
+        }
+    }
+]
+iso_19115_v1_inspire_v1_3_minimal_record['resource']['constraints'] = {
+    'access': [
+        {
+            'restriction_code': 'otherRestrictions',
+            'inspire_limitations_on_public_access': 'noLimitations'
+        }
+    ],
+    'usage': [
+        {
+            'copyright_licence': {
+                'code': 'OGL-UK-3.0',
+                'statement': 'This information is licensed under the Open Government Licence v3.0. To view this'
+                             ' licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/'
+            }
+        }
+    ]
+}
+iso_19115_v1_inspire_v1_3_minimal_record['resource']['topics'] = [
+    "environment"
+]
+iso_19115_v1_inspire_v1_3_minimal_record['resource']['extent'] = {
+    'geographic': {
+        'bounding_box': {
+            'west_longitude': -45.61521,
+            'east_longitude': -27.04976,
+            'south_latitude': -68.1511,
+            'north_latitude': -54.30761
+        }
+    }
+}
+iso_19115_v1_inspire_v1_3_minimal_record['resource']['measures'] = [
+    {
+        'code': 'Conformity_001',
+        'code_space': 'INSPIRE',
+        'pass': True,
+        'title': {
+            'value': 'Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive '
+                     '2007/2/EC of the European Parliament and of the Council as regards interoperability of '
+                     'spatial data sets and services',
+            'href': 'http://data.europa.eu/eli/reg/2010/1089'
+        },
+        'dates': [
+            {
+                'date': date(2010, 12, 8),
+                'date_type': 'publication'
+            }
+        ],
+        'explanation': 'See the referenced specification'
+    }
+]
+iso_19115_v1_inspire_v1_3_minimal_record['resource']['lineage'] = 'Example lineage statement'
+
 iso_19115_v1_gemini_complete_record = deepcopy(iso_19115_v1_complete_record)
 iso_19115_v1_gemini_complete_record['metadata_standard'] = {
     'name': 'ISO 19115 (UK GEMINI)',

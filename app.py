@@ -2,6 +2,8 @@ from flask import Flask, Response, jsonify
 
 from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig, \
     MetadataRecord as ISO19115MetadataRecord
+from bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3 import MetadataRecordConfig as \
+    ISO19115InspireMetadataRecordConfig
 
 from tests import config
 
@@ -25,13 +27,19 @@ def create_app():
             configuration_object = config.iso_19115_v1_base_complex_record
         elif configuration == 'complete':
             configuration_object = config.iso_19115_v1_complete_record
+        elif configuration == 'inspire-minimal':
+            configuration_object = config.iso_19115_v1_inspire_v1_3_minimal_record
         elif configuration == 'gemini-complete':
             configuration_object = config.iso_19115_v1_gemini_complete_record
         else:
             return KeyError('Invalid configuration, valid options: [minimal, minimal-required-doi-citation, '
-                            'base-simple, base-complex, complete, gemini-complete]')
+                            'base-simple, base-complex, complete, inspire-minimal, gemini-complete]')
 
-        configuration = ISO19115MetadataRecordConfig(**configuration_object)
+        if configuration == 'inspire-minimal':
+            configuration = ISO19115InspireMetadataRecordConfig(**configuration_object)
+        else:
+            configuration = ISO19115MetadataRecordConfig(**configuration_object)
+
         record = ISO19115MetadataRecord(configuration)
 
         return Response(record.generate_xml_document(), mimetype='text/xml')

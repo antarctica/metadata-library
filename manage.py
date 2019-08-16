@@ -13,6 +13,8 @@ from click import option, Choice, echo, style
 
 from app import create_app
 from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig
+from bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3 import MetadataRecordConfig as \
+    ISO19115InspireMetadataRecordConfig
 
 app = create_app()
 
@@ -29,6 +31,7 @@ def capture_test_records():
                 'base-simple',
                 'base-complex',
                 'complete',
+                'inspire-minimal',
                 'gemini-complete'
             ]
         }

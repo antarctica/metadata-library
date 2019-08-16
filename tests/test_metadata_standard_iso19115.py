@@ -8,7 +8,10 @@ from datetime import date, datetime
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
 from lxml.etree import ElementTree, XML, fromstring  # nosec
 
-from bas_metadata_library.standards.iso_19115_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
+from bas_metadata_library.standards.iso_19115_v1 import Namespaces, MetadataRecordConfig as \
+    ISO19115MetadataRecordConfig, MetadataRecord
+from bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3 import MetadataRecordConfig as \
+    ISO19115InspireMetadataRecordConfig
 
 from tests.test_base import BaseTestCase
 from tests import config
@@ -19,15 +22,22 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         super().setUp()
 
         self.ns = Namespaces()
-        self.configuration = 'minimal'
-        self._set_metadata_config(configuration=config.iso_19115_v1_minimal_record)
+        self._set_metadata_config(
+            configuration_name='minimal',
+            configuration=config.iso_19115_v1_minimal_record
+        )
 
     # Utilities
 
-    def _set_metadata_config(self, configuration: dict):
-        self.record_configuration = MetadataRecordConfig(**configuration)
-        self.record_attributes = self.record_configuration.config
+    def _set_metadata_config(self, configuration_name: str, configuration: dict):
+        self.configuration_name = configuration_name
 
+        if self.configuration_name == 'inspire-minimal':
+            self.record_configuration = ISO19115InspireMetadataRecordConfig(**configuration)
+        else:
+            self.record_configuration = ISO19115MetadataRecordConfig(**configuration)
+
+        self.record_attributes = self.record_configuration.config
         self.test_record = MetadataRecord(self.record_configuration)
         self.test_document = self.test_record.generate_xml_document()
         self.test_response = fromstring(self.test_document)
@@ -391,7 +401,8 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         self.assertEqual(self.test_response.attrib[f"{{{self.ns.xsi}}}schemaLocation"], self.ns.schema_locations())
 
     def test_record_contents(self):
-        with open(f"tests/resources/records/iso-19115-v1/{self.configuration}-record.xml") as expected_contents_file:
+        with open(f"tests/resources/records/iso-19115-v1/{self.configuration_name}-record.xml") as \
+                expected_contents_file:
             expected_contents = expected_contents_file.read()
             # noinspection PyUnresolvedReferences
             self.assertEqual(expected_contents, self.test_document.decode())
@@ -1205,7 +1216,7 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
 
     def test_record_xml_response(self):
         response = self.client.get(
-            f"/standards/iso-19115/{self.configuration}",
+            f"/standards/iso-19115/{self.configuration_name}",
             base_url='http://localhost:9000'
         )
 
@@ -1218,37 +1229,57 @@ class MinimalMetadataRecordWithRequiredDoiCitationTestCase(MinimalMetadataRecord
     def setUp(self):
         super().setUp()
 
-        self.configuration = 'minimal-required-doi-citation'
-        self._set_metadata_config(configuration=config.iso_19115_v1_minimal_record_with_required_doi_citation)
+        self._set_metadata_config(
+            configuration_name='minimal-required-doi-citation',
+            configuration=config.iso_19115_v1_minimal_record_with_required_doi_citation
+        )
 
 
 class BaselineSimpleMetadataRecordTestCase(MinimalMetadataRecordTestCase):
     def setUp(self):
         super().setUp()
 
-        self.configuration = 'base-simple'
-        self._set_metadata_config(configuration=config.iso_19115_v1_base_simple_record)
+        self._set_metadata_config(
+            configuration_name='base-simple',
+            configuration=config.iso_19115_v1_base_simple_record
+        )
 
 
 class BaselineComplexMetadataRecordTestCase(MinimalMetadataRecordTestCase):
     def setUp(self):
         super().setUp()
 
-        self.configuration = 'base-complex'
-        self._set_metadata_config(configuration=config.iso_19115_v1_base_complex_record)
+        self._set_metadata_config(
+            configuration_name='base-complex',
+            configuration=config.iso_19115_v1_base_complex_record
+        )
 
 
 class CompleteMetadataRecordTestCase(MinimalMetadataRecordTestCase):
     def setUp(self):
         super().setUp()
 
-        self.configuration = 'complete'
-        self._set_metadata_config(configuration=config.iso_19115_v1_complete_record)
+        self._set_metadata_config(
+            configuration_name='complete',
+            configuration=config.iso_19115_v1_complete_record
+        )
+
+
+class InspireMinimalMetadataRecordTestCase(MinimalMetadataRecordTestCase):
+    def setUp(self):
+        super().setUp()
+
+        self._set_metadata_config(
+            configuration_name='inspire-minimal',
+            configuration=config.iso_19115_v1_inspire_v1_3_minimal_record
+        )
 
 
 class GeminiCompleteMetadataRecordTestCase(MinimalMetadataRecordTestCase):
     def setUp(self):
         super().setUp()
 
-        self.configuration = 'gemini-complete'
-        self._set_metadata_config(configuration=config.iso_19115_v1_gemini_complete_record)
+        self._set_metadata_config(
+            configuration_name='gemini-complete',
+            configuration=config.iso_19115_v1_gemini_complete_record
+        )
