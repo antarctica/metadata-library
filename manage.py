@@ -31,8 +31,7 @@ def capture_test_records():
                 'base-simple',
                 'base-complex',
                 'complete',
-                'inspire-minimal',
-                'gemini-complete'
+                'inspire-minimal'
             ]
         }
     }

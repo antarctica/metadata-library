@@ -29,11 +29,9 @@ def create_app():
             configuration_object = config.iso_19115_v1_complete_record
         elif configuration == 'inspire-minimal':
             configuration_object = config.iso_19115_v1_inspire_v1_3_minimal_record
-        elif configuration == 'gemini-complete':
-            configuration_object = config.iso_19115_v1_gemini_complete_record
         else:
             return KeyError('Invalid configuration, valid options: [minimal, minimal-required-doi-citation, '
-                            'base-simple, base-complex, complete, inspire-minimal, gemini-complete]')
+                            'base-simple, base-complex, complete, inspire-minimal]')
 
         if configuration == 'inspire-minimal':
             configuration = ISO19115InspireMetadataRecordConfig(**configuration_object)

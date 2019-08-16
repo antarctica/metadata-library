@@ -495,36 +495,3 @@ iso_19115_v1_inspire_v1_3_minimal_record['resource']['measures'] = [
     }
 ]
 iso_19115_v1_inspire_v1_3_minimal_record['resource']['lineage'] = 'Example lineage statement'
-
-iso_19115_v1_gemini_complete_record = deepcopy(iso_19115_v1_complete_record)
-iso_19115_v1_gemini_complete_record['metadata_standard'] = {
-    'name': 'ISO 19115 (UK GEMINI)',
-    'version': '1.0 (2.3)'
-}
-iso_19115_v1_gemini_complete_record['resource']['abstract'] = 'Test Record for ISO 19115 metadata standard ' \
-    '(Inspire/Gemini profile) with properties that could typically be included in a record. This does not mean all ' \
-    'properties permitted the standard are included, as these are too numerous. Values in this record are complex, ' \
-    'meaning they use anchors where relevant rather than simple character strings. Authorities are included in ' \
-    'elements that support citations. Identifiers in this record are fake.'
-iso_19115_v1_gemini_complete_record['resource']['constraints']['access'][0]['inspire_limitations_on_public_access'] = \
-    'noLimitations'
-iso_19115_v1_gemini_complete_record['resource']['measures'] = [
-    {
-        'code': 'Conformity_001',
-        'code_space': 'INSPIRE',
-        'pass': True,
-        'title': {
-            'value': 'Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive '
-                     '2007/2/EC of the European Parliament and of the Council as regards interoperability of '
-                     'spatial data sets and services',
-            'href': 'http://data.europa.eu/eli/reg/2010/1089'
-        },
-        'dates': [
-            {
-                'date': date(2010, 12, 8),
-                'date_type': 'publication'
-            }
-        ],
-        'explanation': 'See the referenced specification'
-    }
-]
