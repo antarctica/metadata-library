@@ -50,4 +50,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 * Initial version with support for ISO 19115
-

@@ -386,9 +386,9 @@ iso_19115_v1_complete_record['resource']['extent']['vertical'] = {
     }
 }
 iso_19115_v1_complete_record['resource']['transfer_options'][0]['size'] = {
-                    'unit': 'MB',
-                    'magnitude': 40
-                }
+    'unit': 'MB',
+    'magnitude': 40
+}
 iso_19115_v1_complete_record['resource']['transfer_options'].append({
     'online_resource': {
         'href': 'https://www.bodc.ac.uk/data/bodc_database/nodb/data_collection/6618/',
