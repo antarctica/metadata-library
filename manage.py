@@ -51,20 +51,24 @@ def output_config_schemas():
     """Save configuration schemas as files."""
     iso_19115_v1 = Path('./build/config-schemas/iso-19115-v1')
     iso_19115_v1_profiles = Path.joinpath(iso_19115_v1, 'profiles')
-    iso_19115_v1_profiles_inspire = Path.joinpath(iso_19115_v1_profiles, 'inspire-v1_3')
+    iso_19115_v1_profiles_inspire_v1_3 = Path.joinpath(iso_19115_v1_profiles, 'inspire-v1_3')
 
     iso_19115_v1.mkdir(parents=True, exist_ok=True)
     iso_19115_v1_profiles.mkdir(parents=True, exist_ok=True)
-    iso_19115_v1_profiles_inspire.mkdir(parents=True, exist_ok=True)
+    iso_19115_v1_profiles_inspire_v1_3.mkdir(parents=True, exist_ok=True)
 
     iso_19115_v1_file_path = Path.joinpath(iso_19115_v1, 'configuration-schema.json')
     with open(iso_19115_v1_file_path, mode='w') as config_schema_file:
         config_schema = ISO19115MetadataRecordConfig()
+        print(f"saving configuration schema '{iso_19115_v1_file_path}'")
         json.dump(config_schema.schema, config_schema_file, indent=4)
 
-    iso_19115_v1_inspire_v1_3_file_path = Path.joinpath(iso_19115_v1_profiles_inspire, 'configuration-schema.json')
+    iso_19115_v1_inspire_v1_3_file_path = Path.joinpath(
+        iso_19115_v1_profiles_inspire_v1_3, 'configuration-schema.json')
     with open(iso_19115_v1_inspire_v1_3_file_path, mode='w') as config_schema_file:
         config_schema = ISO19115InspireMetadataRecordConfig()
+        print(f"saving configuration schema '{iso_19115_v1_inspire_v1_3_file_path}'")
+        json.dump(config_schema.schema, config_schema_file, indent=4)
         json.dump(config_schema.schema, config_schema_file, indent=4)
 
 
