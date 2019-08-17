@@ -22,7 +22,7 @@ library to be useful to others are welcome as contributions.
 
 | Standard  | Profile                                    | Implementation                                                               | Library Namespace                                                          | Introduced In                                                                                    |
 | --------- | ------------------------------------------ | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| ISO 19115 | [EU Inspire](https://inspire.ec.europa.eu) | [UK Gemini](https://www.agi.org.uk/agi-groups/standards-committee/uk-gemini) | `bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3`        | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/40) |
+| ISO 19115 | [EU Inspire](https://inspire.ec.europa.eu) | [UK Gemini](https://www.agi.org.uk/agi-groups/standards-committee/uk-gemini) | `bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3`        | [#40](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/40) |
 | ISO 19115 | UK Polar Data Centre Discovery Metadata    | -                                                                            | `bas_metadata_library.standards.iso_19115_v1.profiles.uk_pdc_discovery_v1` | [#45](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/45) |
 
 ## Installation
