@@ -15,6 +15,8 @@ from app import create_app
 from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig
 from bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3 import MetadataRecordConfig as \
     ISO19115InspireMetadataRecordConfig
+from bas_metadata_library.standards.iso_19115_v1.profiles.uk_pdc_discovery_v1 import MetadataRecordConfig as \
+    ISO19115UKPDCDiscoveryMetadataRecordConfig
 
 app = create_app()
 
@@ -31,7 +33,8 @@ def capture_test_records():
                 'base-simple',
                 'base-complex',
                 'complete',
-                'inspire-minimal'
+                'inspire-minimal',
+                'uk-pdc-discovery-minimal'
             ]
         }
     }
@@ -52,10 +55,12 @@ def output_config_schemas():
     iso_19115_v1 = Path('./build/config-schemas/iso-19115-v1')
     iso_19115_v1_profiles = Path.joinpath(iso_19115_v1, 'profiles')
     iso_19115_v1_profiles_inspire_v1_3 = Path.joinpath(iso_19115_v1_profiles, 'inspire-v1_3')
+    iso_19115_v1_profiles_uk_pdc_discovery_v1 = Path.joinpath(iso_19115_v1_profiles, 'uk-pdc-discovery-v1')
 
     iso_19115_v1.mkdir(parents=True, exist_ok=True)
     iso_19115_v1_profiles.mkdir(parents=True, exist_ok=True)
     iso_19115_v1_profiles_inspire_v1_3.mkdir(parents=True, exist_ok=True)
+    iso_19115_v1_profiles_uk_pdc_discovery_v1.mkdir(parents=True, exist_ok=True)
 
     iso_19115_v1_file_path = Path.joinpath(iso_19115_v1, 'configuration-schema.json')
     with open(iso_19115_v1_file_path, mode='w') as config_schema_file:
@@ -69,6 +74,12 @@ def output_config_schemas():
         config_schema = ISO19115InspireMetadataRecordConfig()
         print(f"saving configuration schema '{iso_19115_v1_inspire_v1_3_file_path}'")
         json.dump(config_schema.schema, config_schema_file, indent=4)
+
+    iso_19115_v1_uk_pdc_discovery_v1_file_path = Path.joinpath(
+        iso_19115_v1_profiles_uk_pdc_discovery_v1, 'configuration-schema.json')
+    with open(iso_19115_v1_uk_pdc_discovery_v1_file_path, mode='w') as config_schema_file:
+        config_schema = ISO19115UKPDCDiscoveryMetadataRecordConfig()
+        print(f"saving configuration schema '{iso_19115_v1_uk_pdc_discovery_v1_file_path}'")
         json.dump(config_schema.schema, config_schema_file, indent=4)
 
 

@@ -12,6 +12,8 @@ from bas_metadata_library.standards.iso_19115_v1 import Namespaces, MetadataReco
     ISO19115MetadataRecordConfig, MetadataRecord
 from bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3 import MetadataRecordConfig as \
     ISO19115InspireMetadataRecordConfig
+from bas_metadata_library.standards.iso_19115_v1.profiles.uk_pdc_discovery_v1 import MetadataRecordConfig as \
+    ISO19115UKPDCDiscoveryMetadataRecordConfig
 
 from tests.test_base import BaseTestCase
 from tests import config
@@ -34,6 +36,8 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
 
         if self.configuration_name == 'inspire-minimal':
             self.record_configuration = ISO19115InspireMetadataRecordConfig(**configuration)
+        elif self.configuration_name == 'uk-pdc-discovery-minimal':
+            self.record_configuration = ISO19115UKPDCDiscoveryMetadataRecordConfig(**configuration)
         else:
             self.record_configuration = ISO19115MetadataRecordConfig(**configuration)
 
@@ -1272,4 +1276,14 @@ class InspireMinimalMetadataRecordTestCase(MinimalMetadataRecordTestCase):
         self._set_metadata_config(
             configuration_name='inspire-minimal',
             configuration=config.iso_19115_v1_inspire_v1_3_minimal_record
+        )
+
+
+class UKPDCDiscoveryMinimalMetadataRecordTestCase(MinimalMetadataRecordTestCase):
+    def setUp(self):
+        super().setUp()
+
+        self._set_metadata_config(
+            configuration_name='uk-pdc-discovery-minimal',
+            configuration=config.iso_19115_v1_uk_pdc_discovery_v1_minimal_record
         )

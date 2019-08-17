@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+* support for UK PDC Discovery profile for ISO 19115 and Inspire
 * support for custom access and use constraints
 * support for `gmd:useLimitation` elements
 * CrossRef support for DOI citations
