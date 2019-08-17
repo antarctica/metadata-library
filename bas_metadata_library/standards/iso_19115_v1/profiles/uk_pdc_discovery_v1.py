@@ -14,7 +14,7 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
         self.config = kwargs
         self.schema = {
-            "$id": "https://metadata-standards-testing.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/"
+            "$id": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/"
                    "iso-19115-v1/profiles/uk-pdc-discovery-v1/configuration-schema.json",
             "$schema": "http://json-schema.org/draft-07/schema#",
             "title": "UK PDC Metadata Record Generator - ISO 19115 v1 UK PDC Discovery v1 configuration schema",
@@ -86,7 +86,7 @@ class MetadataRecordConfig(_MetadataRecordConfig):
             },
             "allOf": [
                 {
-                    "$ref": "https://metadata-standards-testing.data.bas.ac.uk/"
+                    "$ref": "https://metadata-standards.data.bas.ac.uk/"
                             "bas-metadata-generator-configuration-schemas/iso-19115-v1/profiles/inspire-v1_3/"
                             "configuration-schema.json"
                 },
