@@ -17,8 +17,8 @@ class MetadataRecordConfig(_MetadataRecordConfig):
             "$id": "https://metadata-standards-testing.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/"
                    "iso-19115-v1/profiles/inspire-v1_3/configuration-schema.json",
             "$schema": "http://json-schema.org/draft-07/schema#",
-            "title": "UK PDC Metadata Record Generator - ISO 19115 v1 Inspire configuration schema",
-            "description": "Metadata record configuration schema for the Inspire profile of the ISO 19115 (v1) "
+            "title": "UK PDC Metadata Record Generator - ISO 19115 v1 Inspire v1.3 configuration schema",
+            "description": "Metadata record configuration schema for the Inspire profile (v1.3) of the ISO 19115 (v1) "
                            "metadata standard",
             "definitions": {
                 "contact": {

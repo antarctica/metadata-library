@@ -4,6 +4,8 @@ from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as 
     MetadataRecord as ISO19115MetadataRecord
 from bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3 import MetadataRecordConfig as \
     ISO19115InspireMetadataRecordConfig
+from bas_metadata_library.standards.iso_19115_v1.profiles.uk_pdc_discovery_v1 import MetadataRecordConfig as \
+    ISO19115UKPDCDiscoveryMetadataRecordConfig
 
 from tests import config
 
@@ -29,12 +31,16 @@ def create_app():
             configuration_object = config.iso_19115_v1_complete_record
         elif configuration == 'inspire-minimal':
             configuration_object = config.iso_19115_v1_inspire_v1_3_minimal_record
+        elif configuration == 'uk-pdc-discovery-minimal':
+            configuration_object = config.iso_19115_v1_uk_pdc_discovery_v1_minimal_record
         else:
             return KeyError('Invalid configuration, valid options: [minimal, minimal-required-doi-citation, '
-                            'base-simple, base-complex, complete, inspire-minimal]')
+                            'base-simple, base-complex, complete, inspire-minimal, uk-pdc-discovery-minimal]')
 
         if configuration == 'inspire-minimal':
             configuration = ISO19115InspireMetadataRecordConfig(**configuration_object)
+        elif configuration == 'uk-pdc-discovery-minimal':
+            configuration = ISO19115UKPDCDiscoveryMetadataRecordConfig(**configuration_object)
         else:
             configuration = ISO19115MetadataRecordConfig(**configuration_object)
 

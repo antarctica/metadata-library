@@ -14,15 +14,16 @@ library to be useful to others are welcome as contributions.
 
 ### Supported standards
 
-| Standard                                             | Implementation                                       | Library Namespace                             |
-| ---------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------- |
-| [ISO 19115](https://www.iso.org/standard/26020.html) | [ISO 19139](https://www.iso.org/standard/32557.html) | `bas_metadata_library.standards.iso_19115_v1` |
+| Standard                                             | Implementation                                       | Library Namespace                             | Introduced In                                                                                    |
+| ---------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [ISO 19115](https://www.iso.org/standard/26020.html) | [ISO 19139](https://www.iso.org/standard/32557.html) | `bas_metadata_library.standards.iso_19115_v1` | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/46) |
 
 ### Supported profiles
 
-| Standard  | Profile                                    | Implementation                                                               |
-| --------- | ------------------------------------------ | ---------------------------------------------------------------------------- |
-| ISO 19115 | [EU Inspire](https://inspire.ec.europa.eu) | [UK Gemini](https://www.agi.org.uk/agi-groups/standards-committee/uk-gemini) |
+| Standard  | Profile                                    | Implementation                                                               | Library Namespace                                                          | Introduced In                                                                                    |
+| --------- | ------------------------------------------ | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| ISO 19115 | [EU Inspire](https://inspire.ec.europa.eu) | [UK Gemini](https://www.agi.org.uk/agi-groups/standards-committee/uk-gemini) | `bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3`        | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/40) |
+| ISO 19115 | UK Polar Data Centre Discovery Metadata    | -                                                                            | `bas_metadata_library.standards.iso_19115_v1.profiles.uk_pdc_discovery_v1` | [#45](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/45) |
 
 ## Installation
 
@@ -104,8 +105,6 @@ $ docker-compose pull
 # If you don't have access
 $ docker-compose build
 ```
-
-Copy `.env.example` to `.env` and edit the file to set at least any required (uncommented) options.
 
 To run the application using the Flask development server (which reloads automatically if source files are changed):
 

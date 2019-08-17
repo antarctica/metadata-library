@@ -495,3 +495,52 @@ iso_19115_v1_inspire_v1_3_minimal_record['resource']['measures'] = [
     }
 ]
 iso_19115_v1_inspire_v1_3_minimal_record['resource']['lineage'] = 'Example lineage statement'
+
+# ISO 19115 Standard - UK PDC Discovery profile
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record = deepcopy(iso_19115_v1_inspire_v1_3_minimal_record)
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['file_identifier'] = 'b1a7d1b5-c419-41e7-9178-b1ffd76d5371'
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['character_set'] = 'utf8'
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['contacts'][0]['organisation']['href'] = \
+    'http://isni.org/isni/0000000405983800'
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['contacts'][0]['organisation']['title'] = 'isni'
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['contacts'][0]['online_resource'] = {
+    'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
+    'function': 'information'
+}
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['metadata_standard'] = {
+    'name': 'ISO 19115 (UK GEMINI)',
+    'version': '1.0 (2.3)'
+}
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['maintenance'] = {
+    'maintenance_frequency': 'asNeeded',
+    'progress': 'completed'
+}
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['dates'].append({
+    'date': datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc),
+    'date_type': 'released'
+})
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['edition'] = '2'
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['supplemental_information'] = 'It is recommended that ' \
+    'careful attention be paid to the contents of any data, and that the author be contacted with any questions ' \
+    'regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.'
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['identifiers'] = [
+    {
+        'identifier': 'https://data.bas.ac.uk/item/b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
+        'href': 'https://data.bas.ac.uk/item/b1a7d1b5-c419-41e7-9178-b1ffd76d5371',
+        'title': 'self'
+    }
+]
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['contacts'][0]['organisation']['href'] = \
+    'http://isni.org/isni/0000000405983800'
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['contacts'][0]['organisation']['title'] = 'isni'
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['contacts'][0]['online_resource'] = {
+    'href': 'https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/',
+    'function': 'information'
+}
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['contacts'][0]['role'].append('custodian')
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['contacts'][0]['role'].append('publisher')
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['contacts'][0]['role'].append('distributor')
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record['resource']['maintenance'] = {
+    'maintenance_frequency': 'asNeeded',
+    'progress': 'completed'
+}

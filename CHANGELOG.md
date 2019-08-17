@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+* support for UK PDC Discovery profile for ISO 19115 and Inspire
 * support for custom access and use constraints
 * support for `gmd:useLimitation` elements
 * CrossRef support for DOI citations
@@ -26,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+* correcting support for ISO distribution info elements that only contain distributors
 * correcting ISO 19115 service namespace to use ISO hosted schema rather an Inspire draft
 * correcting ISO 19115 namespaces to use HTTPS endpoints
 * correcting test for non-Anchor copyright elements

@@ -35,6 +35,27 @@ class Utils(object):
         """
         return date_datetime.isoformat()
 
+    @staticmethod
+    def contacts_have_role(contacts: list, role: str) -> bool:
+        """
+        Checks if at least one contact has a given role
+
+        E.g. in all the contacts in a resource, do any have the 'distributor' role?
+
+        :type contacts: list
+        :param contacts: list of contacts (point of contacts)
+        :type role: str
+        :param role: role to check for
+
+        :rtype bool
+        :return True if at least one contact has the given role, otherwise False
+        """
+        for contact in contacts:
+            if role in contact['role']:
+                return True
+
+        return False
+
 
 # Base classes
 
@@ -1009,7 +1030,12 @@ class MetadataRecord(_MetadataRecord):
         )
         data_identification.make_element()
 
-        if 'formats' in self.attributes['resource'] or 'transfer_options' in self.attributes['resource']:
+        if 'formats' in self.attributes['resource'] or \
+                'transfer_options' in self.attributes['resource'] or \
+                ('contacts' in self.attributes['resource'] and Utils.contacts_have_role(
+                    contacts=self.attributes['resource']['contacts'],
+                    role='distributor'
+                )):
             data_distribution = DataDistribution(
                 record=metadata_record,
                 attributes=self.attributes
