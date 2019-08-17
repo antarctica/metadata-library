@@ -99,6 +99,7 @@ build-schemas:
     expire_in: 1 month
   only:
     - master
+    - tags
 
 publish-app-stage:
   stage: publish
