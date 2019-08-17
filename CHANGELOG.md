@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+* updated configuration schema references to use production metadata standards website
 * correcting CD to generate configuration schemas for tagged releases as well as master branch commits
 
 ## [0.2.0] 2019-08-17 [BREAKING!]
