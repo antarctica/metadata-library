@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+* Recording missing requests dependency
+
 ### Changed
 
 * Removed 'funder' contact from examples as per Metadata Standards project decision not to include these for awards
