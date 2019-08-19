@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+* Removed 'funder' contact from examples as per Metadata Standards project decision not to include these for awards
+
 ## [0.2.1] 2019-08-17
 
 ### Fixed
