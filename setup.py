@@ -21,7 +21,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/antarctica/metadata-library",
     license='Open Government Licence v3.0',
-    install_requires=['jsonschema', 'lxml', 'rfc3987', 'strict-rfc3339'],
+    install_requires=['jsonschema', 'lxml', 'rfc3987', 'strict-rfc3339', 'requests'],
     packages=find_packages(exclude=['tests']),
     classifiers=[
         "Programming Language :: Python :: 3",
