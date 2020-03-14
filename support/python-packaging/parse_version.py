@@ -7,8 +7,8 @@ Script to generate a PEP 440 (Post) version from `git-describe` output
 
 == Purpose ==
 
-This script facilitates a form of automatic versioning where the current version is read from its source code 
-repository, rather than being defined within the project itself. This approach ensures package versions keep in step 
+This script facilitates a form of automatic versioning where the current version is read from its source code
+repository, rather than being defined within the project itself. This approach ensures package versions keep in step
 with the source repository and are always unique.
 
 Versions are based on the output from `git-describe', itself dependent on Git tags, and formed into a 'PEP 440 (Post)'
@@ -24,13 +24,13 @@ python support/python-packaging/parse_version.py [git describe output] [--pyproj
 ```
 
 Where: `[git describe output]` should be replaced by the output of `git describe --tags`. This output can be passed
-directly using: 
+directly using:
 
 ```
 python support/python-packaging/parse_version.py $(git describe --tags)
 ```
 
-The generated version string will be written to *stdout*. If the `--pyproject` flag is set the `tool.poetry.version` 
+The generated version string will be written to *stdout*. If the `--pyproject` flag is set the `tool.poetry.version`
 variable in `pyproject.toml` file.
 
 == Implementation ==
@@ -40,7 +40,7 @@ Where a commit is a tagged version (e.g. a final release) the version is the sam
 Example input: 'v0.3.0'
 Example output: '0.3.0'
 
-Otherwise, the commit will be treated as a post development release for/from the most recent tag plus the distance to 
+Otherwise, the commit will be treated as a post development release for/from the most recent tag plus the distance to
 the head commit (e.g. head might be 3 commits ahead of the most recent tag).
 
 Example input:  'v0.3.0-5-g345C2B1'
