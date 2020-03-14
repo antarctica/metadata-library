@@ -46,7 +46,7 @@ test-app:
   variables:
     FLASK_ENV: testing
   script:
-    - "ls -la
+    - "ls -la"
     - "flask"
     - "flask test --test-runner junit"
   artifacts:
