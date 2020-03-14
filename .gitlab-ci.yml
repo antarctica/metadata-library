@@ -15,12 +15,14 @@
 #
 # - Snyk
 # > SNYK_TOKEN: "[Sensitive]"
+# - PyPi (production) - create tokens at https://pypi.org/manage/account/
+# > PYPI_TOKEN (protected): "[Sensitive]"
 #
-# - PyPi (production)
-# > PYPI_PASSWORD: "[Sensitive]"
+# - PyPi (staging) - create tokens at https://test.pypi.org/manage/account/
+# > PYPI_TEST_TOKEN (protected): "[Sensitive]"
 #
-# - PyPi (staging)
-# > PYPI_TEST_PASSWORD: "[Sensitive]"
+# - GitLab - create token as the 'bot_magic_ci' user
+# > GITLAB_ACCESS_TOKEN: "[Sensitive]"
 
 # == Global settings ==
 
@@ -34,8 +36,6 @@ variables:
   APP_NAME: bas-metadata-library
   SNYK_ORG: antarctica
   SNYK_PROJECT: uk-pdc-metadata-record-generator
-  PYPI_USERNAME: british-antarctic-survey
-  PYPI_TEST_USERNAME: british-antarctic-survey
   S3_SCHEMA_BUCKET_STAGE: metadata-standards-testing.data.bas.ac.uk
   S3_SCHEMA_BUCKET_PROD: metadata-standards.data.bas.ac.uk
 

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Python updated to 3.8
 * Switching to a mulit-stage Dockerfile using a virtual environment and non-root user
 * Switching from Pip, SetupTools and Twine to Poetry
+* Using scoped API tokens to upload packages to PyPi in CD
 
 ## [0.2.2] 2019-08-19
 
