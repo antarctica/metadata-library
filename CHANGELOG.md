@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Including PyCharm setting in version control, including run/debug/test configurations
 
+### Fixed
+
+* incorrect DOI used in tests
+
 ### Changed
 
 * Python updated to 3.8

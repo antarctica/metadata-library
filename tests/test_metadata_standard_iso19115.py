@@ -804,10 +804,10 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
                         elif 'doi' in expected_usage_constraint['required_citation']:
                             expected_citation = None
                             if expected_usage_constraint['required_citation']['doi'] == \
-                                    'https://doi.org/10.7939/r3qz22k64':
+                                    'https://doi.org/10.7939/R3QZ22K64':
                                 expected_citation = 'Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. ' \
-                                                    'University of Alberta Libraries. https://doi.org/10.7939/r3qz22k64'
-
+                                                    'University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64'
+                            self.assertIsNotNone(expected_citation)
                             self.assertEqual(
                                 citation_constraint.text,
                                 f"Cite this information as \"{expected_citation}\""
