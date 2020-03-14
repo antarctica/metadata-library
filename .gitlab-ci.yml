@@ -78,15 +78,18 @@ bandit-app:
   script:
     - "bandit -r ."
 
-build-app:
   stage: build
+build-dev:
   script:
-    - "python setup.py sdist bdist_wheel"
+    - 'poetry build'
   artifacts:
     name: "$CI_BUILD_TOKEN-build"
     paths:
       - dist
     expire_in: 1 month
+  except:
+    - master
+    - tags
 
 build-schemas:
   stage: build
@@ -103,8 +106,16 @@ build-schemas:
 
 publish-app-stage:
   stage: publish
+  before_script:
+    - "poetry config pypi-token.pypi-testing $PYPI_TEST_TOKEN --local"
+    - "python support/python-packaging/parse_version.py $(git describe --tags) --pyproject"
   script:
-    - "python -m twine upload --repository-url https://test.pypi.org/legacy/ --username $PYPI_TEST_USERNAME --password $PYPI_TEST_PASSWORD --disable-progress-bar --verbose dist/*"
+    - "poetry publish --build --repository pypi-testing --no-interaction"
+  artifacts:
+    name: "$CI_BUILD_TOKEN-build"
+    paths:
+      - dist
+    expire_in: 1 month
   only:
     - master
   environment:
@@ -113,8 +124,16 @@ publish-app-stage:
 
 publish-app-prod:
   stage: publish
+  before_script:
+    - "poetry config pypi-token.pypi $PYPI_TOKEN --local"
+    - "python support/python-packaging/parse_version.py $(git describe --tags) --pyproject"
   script:
-    - "python -m twine upload --username $PYPI_USERNAME --password $PYPI_PASSWORD --disable-progress-bar --verbose dist/*"
+    - "poetry publish --build --repository pypi --no-interaction"
+  artifacts:
+    name: "$CI_BUILD_TOKEN-build"
+    paths:
+      - dist
+    expire_in: 1 month
   only:
     - tags
   environment:
