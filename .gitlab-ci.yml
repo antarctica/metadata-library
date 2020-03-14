@@ -13,8 +13,6 @@
 # > AWS_ACCESS_KEY_ID: "[Sensetive]"
 # > AWS_SECRET_ACCESS_KEY: "[Sensetive]"
 #
-# - Snyk
-# > SNYK_TOKEN: "[Sensitive]"
 # - PyPi (production) - create tokens at https://pypi.org/manage/account/
 # > PYPI_TOKEN (protected): "[Sensitive]"
 #
@@ -34,8 +32,6 @@ stages:
 
 variables:
   APP_NAME: bas-metadata-library
-  SNYK_ORG: antarctica
-  SNYK_PROJECT: uk-pdc-metadata-record-generator
   S3_SCHEMA_BUCKET_STAGE: metadata-standards-testing.data.bas.ac.uk
   S3_SCHEMA_BUCKET_PROD: metadata-standards.data.bas.ac.uk
 
@@ -55,18 +51,6 @@ test-app:
     paths:
     reports:
       junit: test-results.xml
-
-dependencies-app:
-  stage: lint
-  image:
-    name: antarctica/snyk-cli:python-3
-    entrypoint: [""]
-  script:
-   - "pip install -r requirements.txt"
-   - "snyk test"
-   - "snyk monitor --project-name=$SNYK_PROJECT --org=$SNYK_ORG"
-  only:
-    - master
 
 pep8-app:
   stage: lint

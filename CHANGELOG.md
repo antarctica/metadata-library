@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Switching from Pip, SetupTools and Twine to Poetry
 * Using scoped API tokens to upload packages to PyPi in CD
 
+### Removed
+
+* Synk monitoring
+
 ## [0.2.2] 2019-08-19
 
 ### Fixed
