@@ -45,8 +45,8 @@ test-app:
   stage: 🧪 test
   variables:
     FLASK_ENV: testing
+    FLASK_APP: ./manage.py
   script:
-    - "ls -la"
     - "flask"
     - "flask test --test-runner junit"
   artifacts:
