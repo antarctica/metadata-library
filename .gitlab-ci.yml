@@ -46,6 +46,7 @@ test-app:
   variables:
     FLASK_ENV: testing
   script:
+    - "flask"
     - "flask test --test-runner junit"
   artifacts:
     paths:
