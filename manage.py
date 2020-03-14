@@ -25,6 +25,15 @@ app = create_app()
 def capture_test_records():
     """Capture records for use in tests."""
     standards = {
+        'test-standard': {
+            'version': 'v1',
+            'configurations': [
+                'minimal',
+                'entities',
+                'typical',
+                'complete'
+            ]
+        },
         'iso-19115': {
             'version': 'v1',
             'configurations': [

@@ -8,6 +8,8 @@ from bas_metadata_library.standards.iso_19115_v1.profiles.uk_pdc_discovery_v1 im
     ISO19115UKPDCDiscoveryMetadataRecordConfig
 
 from tests import config
+from tests.standards.test_standard import MetadataRecordConfig as TestStandardMetadataRecordConfig, \
+    MetadataRecord as TestStandardMetadataRecord
 
 
 def create_app():
@@ -16,9 +18,26 @@ def create_app():
     @app.route('/')
     def index():
         return jsonify({'meta': 'root endpoint for Metadata Generator internal app'})
+    @app.route('/standards/test-standard/<configuration>')
+    def standard_test_standard_v1(configuration: str):
+        if configuration == 'minimal':
+            configuration_object = config.test_standard_minimal_record
+        elif configuration == 'entities':
+            configuration_object = config.test_standard_record_with_entities
+        elif configuration == 'typical':
+            configuration_object = config.test_standard_typical_record
+        elif configuration == 'complete':
+            configuration_object = config.test_standard_complete_record
+        else:
+            return KeyError('Invalid configuration, valid options: [minimal, entities, typical, complete]')
+
+        configuration = TestStandardMetadataRecordConfig(**configuration_object)
+        record = TestStandardMetadataRecord(configuration)
+
+        return Response(record.generate_xml_document(), mimetype='text/xml')
 
     @app.route('/standards/iso-19115/<configuration>')
-    def standard_iso_19115(configuration: str):
+    def standard_iso_19115_v1(configuration: str):
         if configuration == 'minimal':
             configuration_object = config.iso_19115_v1_minimal_record
         elif configuration == 'minimal-required-doi-citation':
