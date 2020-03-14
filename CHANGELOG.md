@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Switching to a mulit-stage Dockerfile using a virtual environment and non-root user
 * Switching from Pip, SetupTools and Twine to Poetry
 * Using scoped API tokens to upload packages to PyPi in CD
+* Updating project licence years
 
 ### Removed
 
