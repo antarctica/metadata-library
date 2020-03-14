@@ -28,6 +28,7 @@ stages:
   - 🧪 test
   - 🏗 build
   - 🚚 publish
+  - 🚀 release
 
 variables:
   APP_NAME: bas-metadata-library
@@ -140,5 +141,24 @@ publish-schemas-prod:
     entrypoint: [""]
   script:
     - "aws s3 sync --delete build/config-schemas s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/"
+  only:
+    - tags
+
+gitlab-prod:
+  stage: 🚀 release
+  image:
+    name: byrnedo/alpine-curl:0.1.8
+    entrypoint: [""]
+  script:
+    - curl --request POST
+      --header 'Content-Type:application/json'
+      --header "PRIVATE-TOKEN:$GITLAB_ACCESS_TOKEN"
+      --data '{"name":"'$CI_COMMIT_TAG'","tag_name":"'$CI_COMMIT_TAG'","description":"...","milestones":["'$CI_COMMIT_TAG'"]}'
+      "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases"
+    - curl --request POST
+      --header "PRIVATE-TOKEN:$GITLAB_ACCESS_TOKEN"
+      --data name="PyPi package"
+      --data url="https://pypi.org/project/$APP_NAME/${CI_COMMIT_TAG:1}"
+      "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases/$CI_COMMIT_TAG/assets/links"
   only:
     - tags
