@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 * Python updated to 3.8
+* Switching to a mulit-stage Dockerfile using a virtual environment and non-root user
 * Switching from Pip, SetupTools and Twine to Poetry
 
 ## [0.2.2] 2019-08-19
