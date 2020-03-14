@@ -19,5 +19,5 @@ class AppTestCase(BaseTestCase):
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(response.mimetype, 'application/json')
-        expected_response = {'meta': 'root endpoint for Metadata Generator internal app'}
+        expected_response = {'meta': 'Root endpoint for Metadata Generator internal API'}
         self.assertDictEqual(response.json, expected_response)

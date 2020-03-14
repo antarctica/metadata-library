@@ -52,7 +52,7 @@ iso_19115_v1_minimal_record_with_required_doi_citation['resource']['constraints'
         {
             'restriction_code': 'otherRestrictions',
             'required_citation': {
-                'doi': 'https://doi.org/10.7939/r3qz22k64'
+                'doi': 'https://doi.org/10.7939/R3QZ22K64'
             }
         }
     ]

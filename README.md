@@ -84,46 +84,7 @@ how to [add a new standard](#adding-a-new-standard).
 
 ## Setup
 
-```shell
-$ git clone https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator.git
-$ cd metadata-generator
-```
-
-### Local development
-
-Docker and Docker Compose are required to setup a local development environment of this application.
-
-#### Local development - Docker Compose
-
-If you have access to the [BAS GitLab instance](https://gitlab.data.bas.ac.uk), you can pull the application Docker 
-image from the BAS Docker Registry. Otherwise you will need to build the Docker image locally.
-
-```shell
-# If you have access to gitlab.data.bas.ac.uk
-$ docker login docker-registry.data.bas.ac.uk
-$ docker-compose pull
-# If you don't have access
-$ docker-compose build
-```
-
-To run the application using the Flask development server (which reloads automatically if source files are changed):
-
-```shell
-$ docker-compose up
-```
-
-To run other commands against the Flask application (such as [Integration tests](#integration-tests)):
-
-```shell
-# in a separate terminal to `docker-compose up`
-$ docker-compose run app flask [command]
-# E.g.
-$ docker-compose run app flask test
-# List all available commands
-$ docker-compose run app flask
-```
-
-### Staging and production
+### Terraform
 
 Terraform is used to provision resources required to operate this application in staging and production environments.
 
@@ -173,6 +134,43 @@ permissions to remote state are enforced.
 This API is developed as a Python library. A bundled Flask application is used to simulate its usage and to act as
 framework for running tests etc.
 
+```shell
+$ git clone https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator.git
+$ cd metadata-generator
+```
+
+### Development environment
+
+Docker and Docker Compose are required to setup a local development environment of this application.
+
+If you have access to the [BAS GitLab instance](https://gitlab.data.bas.ac.uk), you can pull the application Docker 
+image from the BAS Docker Registry. Otherwise you will need to build the Docker image locally.
+
+```shell
+# If you have access to gitlab.data.bas.ac.uk:
+$ docker login docker-registry.data.bas.ac.uk
+$ docker-compose pull
+# If you don't have access:
+$ docker-compose build
+```
+
+To run the application using the Flask development server (which reloads automatically if source files are changed):
+
+```shell
+$ docker-compose up
+```
+
+To run other commands against the Flask application (such as [Integration tests](#integration-tests)):
+
+```shell
+# in a separate terminal to `docker-compose up`
+$ docker-compose run app flask [command]
+# E.g.
+$ docker-compose run app flask test
+# List all available commands
+$ docker-compose run app flask
+```
+
 ### Library base classes
 
 The `bas_metadata_library` module defines a series of modules for each standard (in `bas_metadata_library.standards`) 
@@ -201,6 +199,8 @@ then uploaded to the Metadata Standards website through [Continuous Deployment](
 **Note:** The build directory, and schema's it contains, is ignored in this repository. Outputted schemas are 
 considered ephemeral and should be trivial to recreate from modules in this library. The module versions of schemas act 
 as the source of truth as they are used for performing validation.
+
+JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsonschemavalidator.net).
 
 ### Adding a new standard
 
@@ -231,52 +231,24 @@ $ docker-compose run app flake8 . --ignore=E501
 
 ### Dependencies
 
-Python dependencies should be defined using Pip through the `requirements.txt` file. The Docker image is configured to
-install these dependencies into the application image for consistency across different environments. Dependencies should
-be periodically reviewed and updated as new versions are released.
+Python dependencies for this project are managed with [Poetry](https://python-poetry.org) in `pyproject.toml`.
 
-To add a new dependency:
+Non-code files, such as static files, can also be included in the [Python package](#python-package) using the
+`include` key in `pyproject.toml`.
+
+To add a new (development) dependency:
 
 ```shell
 $ docker-compose run app ash
-$ pip install [dependency]==
-# this will display a list of available versions, add the latest to `requirements.txt`
-$ exit
-$ docker-compose down
-$ docker-compose build
+$ poetry add [dependency] (--dev)
 ```
 
-If you have access to the BAS GitLab instance, push the rebuilt Docker image to the BAS Docker Registry:
+Then rebuild the development container, and if you can, push to GitLab:
 
 ```shell
-$ docker login docker-registry.data.bas.ac.uk
-$ docker-compose push
+$ docker-compose build app
+$ docker-compose push app
 ```
-
-### Dependency vulnerability scanning
-
-To ensure the security of this API, all dependencies are checked against 
-[Snyk](https://app.snyk.io/org/antarctica/project/xxx/history) for vulnerabilities. 
-
-**Warning:** Snyk relies on known vulnerabilities and can't check for issues that are not in it's database. As with all 
-security tools, Snyk is an aid for spotting common mistakes, not a guarantee of secure code.
-
-Some vulnerabilities have been ignored in this project, see `.snyk` for definitions and the 
-[Dependency exceptions](#dependency-vulnerability-exceptions) section for more information.
-
-Through [Continuous Integration](#continuous-integration), on each commit current dependencies are tested and a snapshot
-uploaded to Snyk. This snapshot is then monitored for vulnerabilities.
-
-#### Dependency vulnerability exceptions
-
-This project contains known vulnerabilities that have been ignored for a specific reason.
-
-* [Py-Yaml `yaml.load()` function allows Arbitrary Code Execution](https://snyk.io/vuln/SNYK-PYTHON-PYYAML-42159)
-    * currently no known or planned resolution
-    * indirect dependency, required through the `bandit` package
-    * severity is rated *high*
-    * risk judged to be *low* as we don't use the Yaml module in this application
-    * ignored for 1 year for re-review
 
 ### Static security scanning
 
@@ -294,19 +266,11 @@ To check locally:
 $ docker-compose run app bandit -r .
 ```
 
-### Debugging
+### Editor support
 
-To debug using PyCharm:
+#### PyCharm
 
-* *Run* -> *Edit Configurations*
-* *Add New Configuration* -> *Python*
-
-In *Configuration* tab:
-
-* Script path: `[absolute path to project]/manage.py`
-* Python interpreter: *Project interpreter* (*app* service in project Docker Compose)
-* Working directory: `[absolute path to project]`
-* Path mappings: `[absolute path to project]=/usr/src/app`
+A run/debug configuration, *App*, is included in the project.
 
 ## Testing
 
@@ -335,6 +299,7 @@ $ docker-compose run -e FLASK_ENV=testing app flask test --test-runner text
 ```
 
 #### Capturing static test records
+To run tests manually using PyCharm, use the included *App (Tests)* run/debug configuration.
 
 To capture static test records, which verify how records are assembled correctly, a custom Flask CLI command,
 `capture-test-records` is available. This requires the Flask application to first be running. The Requests library is
@@ -351,21 +316,9 @@ $ docker-compose run app flask capture-test-records
 It is intended that this command will update pre-existing static records, with differences captured in version control
 and reviewed manually to ensure they are correct.
 
-#### PyCharm support
 
-To run tests using PyCharm:
 
-* *Run* -> *Edit Configurations*
-* *Add New Configuration* -> *Python Tests* -> *Unittests*
 
-In *Configuration* tab:
-
-* Script path: `[absolute path to project]/tests`
-* Python interpreter: *Project interpreter* (*app* service in project Docker Compose)
-* Working directory: `[absolute path to project]`
-* Path mappings: `[absolute path to project]=/usr/src/app`
-
-**Note:** This configuration can be also be used to debug tests (by choosing *debug* instead of *run*).
 
 #### JUnit support
 
@@ -383,74 +336,28 @@ This process will run the application [Integration tests](#integration-tests).
 
 Pip dependencies are also [checked and monitored for vulnerabilities](#dependency-vulnerability-scanning).
 
-## Distribution
- 
-Both source and binary versions of the package are build using [SetupTools](https://setuptools.readthedocs.io), which 
-can then be published to the [Python package index](https://pypi.org/project/bas-metadata-library/) for use in other 
-applications. Package settings are defined in `setup.py`.
+## Deployment
 
-This project is built and published to PyPi automatically through [Continuous Deployment](#continuous-deployment).
+### Python package
 
-To build the source and binary artifact's for this project manually:
+This project is distributed as a Python package, hosted in [PyPi](https://pypi.org/project/bas-metadata-library).
 
-```shell
-$ docker-compose run app ash
-# build package to /build, /dist and /bas-metadata-library.egg-info
-$ python setup.py sdist bdist_wheel
-$ exit
-$ docker-compose down
-```
+Source and binary packages are built and published automatically using
+[Poetry](https://python-poetry.org/docs/cli/#publish) in [Continuous Delivery](#continuous-deployment).
 
-To publish built artifact's for this project manually to [PyPi testing](https://test.pypi.org):
-
-```shell
-$ docker-compose run app ash
-$ python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-# project then available at: https://test.pypi.org/project/bas-metadata-library/
-$ exit
-$ docker-compose down
-```
-
-To publish manually to [PyPi](https://pypi.org):
-
-```shell
-$ docker-compose run app ash
-$ python -m twine upload --repository-url https://pypi.org/legacy/ dist/*
-# project then available at: https://pypi.org/project/bas-metadata-library/
-$ exit
-$ docker-compose down
-```
+Package versions are determined automatically using the `support/python-packaging/parse_version.py` script.
 
 ### Continuous Deployment
 
-A Continuous Deployment process using GitLab's CI/CD platform is configured in `.gitlab-ci.yml`. This will:
-
-* build the source and binary artifact's for this project
-* publish built artifact's for this project to the relevant PyPi repository
-* publish the [JSON Schemas](#configuration-schemas) for this libraries internal configuration format
-
-On commits to the *master* branch:
-
-* changes will be deployed to [PyPi testing](https://test.pypi.org)
-* configuration schemas will be published to the 
-  [Metadata Standards testing](https://metadata-standards-testing.data.bas.ac.uk) website
-
-On tagged commits:
-
-* changes will be deployed to [PyPi](https://pypi.org)
-* configuration schemas will be published to the [Metadata Standards](https://metadata-standards.data.bas.ac.uk) 
-  website
+A Continuous Deployment process using GitLab's CI/CD platform is configured in `.gitlab-ci.yml`.
 
 ## Release procedure
 
-### At release
+For all releases:
 
-1. create a `release` branch
-2. bump version in `setup.py` as per SemVer
-3. close release in `CHANGELOG.md`
-4. push changes, merge the `release` branch into `master` and tag with version
-
-The project will be built and published to PyPi automatically through [Continuous Deployment](#continuous-deployment).
+1. create a release branch
+2. close release in `CHANGELOG.md`
+3. push changes, merge the release branch into `master` and tag with version
 
 ## Feedback
 
@@ -467,7 +374,7 @@ information.
 
 ## License
 
-© UK Research and Innovation (UKRI), 2019, British Antarctic Survey.
+© UK Research and Innovation (UKRI), 2019 - 2020, British Antarctic Survey.
 
 You may use and re-use this software and associated documentation files free of charge in any format or medium, under 
 the terms of the Open Government Licence v3.0.

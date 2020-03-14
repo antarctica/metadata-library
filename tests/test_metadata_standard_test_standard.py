@@ -64,7 +64,7 @@ class MinimalMetadataRecordTestCase(BaseTestCase):
         self.assertEqual(self.test_response.attrib[f"{{{self.ns.xsi}}}schemaLocation"], self.ns.schema_locations())
 
     def test_record_contents(self):
-        with open(f"tests/resources/records/test-standard/{self.configuration}-record.xml") as expected_contents_file:
+        with open(f"tests/resources/records/test-standard-v1/{self.configuration}-record.xml") as expected_contents_file:
             expected_contents = expected_contents_file.read()
             # noinspection PyUnresolvedReferences
             self.assertEqual(expected_contents, self.test_document.decode())

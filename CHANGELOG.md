@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* Including PyCharm setting in version control, including run/debug/test configurations
+* CD job to create a GitLab release for each tag with link to Python package
+
+### Fixed
+
+* incorrect DOI used in tests
+
+### Changed
+
+* Python updated to 3.8
+* Python dependencies updated (notably lxml)
+* Switching to a mulit-stage Dockerfile using a virtual environment and non-root user
+* Switching from Pip, SetupTools and Twine to Poetry
+* Using scoped API tokens to upload packages to PyPi in CD
+* Updating project licence years
+
+### Removed
+
+* Synk monitoring
+
 ## [0.2.2] 2019-08-19
 
 ### Fixed
