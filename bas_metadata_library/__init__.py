@@ -22,6 +22,7 @@ class Namespaces(object):
 
     This class is intended to be overridden in each metadata standard's module. See existing standards for examples.
     """
+
     _schema_locations = {}
 
     def __init__(self):
@@ -52,7 +53,7 @@ class Namespaces(object):
         :rtype str
         :return: schema location attribute value
         """
-        schema_locations = ''
+        schema_locations = ""
         for prefix, location in self._schema_locations.items():
             schema_locations = f"{schema_locations} {self._namespaces[prefix]} {location}"
 
@@ -68,6 +69,7 @@ class MetadataRecordConfig(object):
     The structure and values of this configuration are specified by a JSON schema, and which should be used to validate
     configuration instances using the 'validate()' method.
     """
+
     def __init__(self, **kwargs: dict):
         """
         :type kwargs: dict
@@ -112,6 +114,7 @@ class MetadataRecord(object):
     Builds an XML tree as a series of XML elements. Element values and attributes are used directly, or computed, from
     a configuration object.
     """
+
     def __init__(self, configuration: MetadataRecordConfig):
         """
         :type configuration: MetadataRecordConfig
@@ -151,12 +154,9 @@ class MetadataRecordElement(object):
     """
     Creates an XML element
     """
+
     def __init__(
-        self,
-        record: MetadataRecord,
-        attributes: dict,
-        parent_element: Element = None,
-        element_attributes: dict = None
+        self, record: MetadataRecord, attributes: dict, parent_element: Element = None, element_attributes: dict = None
     ):
         """
         :type record: MetadataRecord
