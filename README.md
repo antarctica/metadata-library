@@ -264,19 +264,11 @@ To check locally:
 $ docker-compose run app bandit -r .
 ```
 
-### Debugging
+### Editor support
 
-To debug using PyCharm:
+#### PyCharm
 
-* *Run* -> *Edit Configurations*
-* *Add New Configuration* -> *Python*
-
-In *Configuration* tab:
-
-* Script path: `[absolute path to project]/manage.py`
-* Python interpreter: *Project interpreter* (*app* service in project Docker Compose)
-* Working directory: `[absolute path to project]`
-* Path mappings: `[absolute path to project]=/usr/src/app`
+A run/debug configuration, *App*, is included in the project.
 
 ## Testing
 
@@ -305,6 +297,7 @@ $ docker-compose run -e FLASK_ENV=testing app flask test --test-runner text
 ```
 
 #### Capturing static test records
+To run tests manually using PyCharm, use the included *App (Tests)* run/debug configuration.
 
 To capture static test records, which verify how records are assembled correctly, a custom Flask CLI command,
 `capture-test-records` is available. This requires the Flask application to first be running. The Requests library is
@@ -321,21 +314,9 @@ $ docker-compose run app flask capture-test-records
 It is intended that this command will update pre-existing static records, with differences captured in version control
 and reviewed manually to ensure they are correct.
 
-#### PyCharm support
 
-To run tests using PyCharm:
 
-* *Run* -> *Edit Configurations*
-* *Add New Configuration* -> *Python Tests* -> *Unittests*
 
-In *Configuration* tab:
-
-* Script path: `[absolute path to project]/tests`
-* Python interpreter: *Project interpreter* (*app* service in project Docker Compose)
-* Working directory: `[absolute path to project]`
-* Path mappings: `[absolute path to project]=/usr/src/app`
-
-**Note:** This configuration can be also be used to debug tests (by choosing *debug* instead of *run*).
 
 #### JUnit support
 
