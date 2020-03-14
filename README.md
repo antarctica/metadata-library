@@ -200,6 +200,8 @@ then uploaded to the Metadata Standards website through [Continuous Deployment](
 considered ephemeral and should be trivial to recreate from modules in this library. The module versions of schemas act 
 as the source of truth as they are used for performing validation.
 
+JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsonschemavalidator.net).
+
 ### Adding a new standard
 
 To add a new standard:
