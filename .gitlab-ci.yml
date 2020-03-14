@@ -47,7 +47,6 @@ test-app:
     FLASK_ENV: testing
     FLASK_APP: ./manage.py
   script:
-    - "flask"
     - "flask test --test-runner junit"
   artifacts:
     paths:
@@ -79,6 +78,8 @@ build-dev:
 
 build-schemas:
   stage: 🏗 build
+  variables:
+      FLASK_APP: ./manage.py
   script:
     - "flask output-config-schemas"
   artifacts:
