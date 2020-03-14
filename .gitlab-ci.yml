@@ -56,7 +56,7 @@ test-app:
 pep8-app:
   stage: 🧪 test
   script:
-    - "flake8 . --ignore=E501"
+    - "black --check bas_metadata_library/"
 
 bandit-app:
   stage: 🧪 test
