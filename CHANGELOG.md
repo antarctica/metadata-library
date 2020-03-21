@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Using scoped API tokens to upload packages to PyPi in CD
 * Updating project licence years
 * Switching from Flake8 to Black
+* Switching from UnitTest to PyTest and refactoring tests
 
 ### Removed
 

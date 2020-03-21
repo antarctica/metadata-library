@@ -78,24 +78,6 @@ class MetadataRecordConfig(object):
         self.config = kwargs
         self.schema = None
 
-    def config(self) -> dict:
-        """
-        Gets the configuration dictionary
-
-        :rtype dict
-        :return: configuration dictionary
-        """
-        return self.config
-
-    def schema(self) -> dict:
-        """
-        Gets the configuration schema
-
-        :rtype dict
-        :return: configuration schema
-        """
-        return self.schema
-
     def validate(self) -> None:
         """
         Ensures the configuration is valid against the relevant JSON Schema

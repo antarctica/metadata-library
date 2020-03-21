@@ -569,6 +569,7 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                                 "properties": {
                                     "format": {"type": "string"},
                                     "href": {"type": "string", "format": "uri"},
+                                    "version": {"type": "string"},
                                 },
                             },
                         },
@@ -1783,19 +1784,8 @@ class InspireLimitationsOnPublicAccess(MetadataRecordElement):
 class OtherConstraints(MetadataRecordElement):
     def make_element(self):
         other_constraints_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}otherConstraints")
-
-        if "href" in self.element_attributes:
-            other_constraints_value = AnchorElement(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=other_constraints_element,
-                element_attributes=self.element_attributes,
-                element_value=self.element_attributes["value"],
-            )
-            other_constraints_value.make_element()
-        else:
-            other_constraints_value = SubElement(other_constraints_element, f"{{{self.ns.gco}}}CharacterString")
-            other_constraints_value.text = self.element_attributes["value"]
+        other_constraints_value = SubElement(other_constraints_element, f"{{{self.ns.gco}}}CharacterString")
+        other_constraints_value.text = self.element_attributes["value"]
 
 
 class UseLimitation(MetadataRecordElement):
@@ -1936,23 +1926,11 @@ class VerticalExtent(MetadataRecordElement):
             minimum_element = SubElement(vertical_extent_element, f"{{{self.ns.gmd}}}minimumValue")
             minimum_value = SubElement(minimum_element, f"{{{self.ns.gco}}}Real")
             minimum_value.text = str(self.element_attributes["minimum"])
-        else:
-            SubElement(
-                vertical_extent_element,
-                f"{{{self.ns.gmd}}}minimumValue",
-                attrib={f"{{{self.ns.gco}}}nilReason": "unknown"},
-            )
 
         if "maximum" in self.element_attributes:
             maximum_element = SubElement(vertical_extent_element, f"{{{self.ns.gmd}}}maximumValue")
             maximum_value = SubElement(maximum_element, f"{{{self.ns.gco}}}Real")
             maximum_value.text = str(self.element_attributes["maximum"])
-        else:
-            SubElement(
-                vertical_extent_element,
-                f"{{{self.ns.gmd}}}maximumValue",
-                attrib={f"{{{self.ns.gco}}}nilReason": "unknown"},
-            )
 
         if "code" in self.element_attributes:
             vertical_crs = VerticalCRS(

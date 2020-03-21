@@ -47,11 +47,24 @@ test-app:
     FLASK_ENV: testing
     FLASK_APP: ./manage.py
   script:
-    - "flask test --test-runner junit"
+    - "pytest -o junit_family=xunit2 --junitxml=test-results.xml --random-order"
   artifacts:
-    paths:
     reports:
       junit: test-results.xml
+
+coverage-app:
+  stage: 🧪 test
+  variables:
+    FLASK_ENV: testing
+    FLASK_APP: ./manage.py
+  script:
+    - "pytest --random-order --cov=bas_metadata_library --cov-fail-under=100 ."
+    - "coverage html"
+  artifacts:
+    name: "$CI_BUILD_TOKEN-coverage"
+    paths:
+      - htmlcov
+    expire_in: 1 month
 
 pep8-app:
   stage: 🧪 test
