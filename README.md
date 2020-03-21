@@ -284,67 +284,64 @@ A run/debug configuration, *App*, is included in the project.
 
 ## Testing
 
-### Integration tests
-
-This project uses integration tests to ensure features work as expected and to guard against regressions and 
-vulnerabilities.
+All code in the `bas_metadata_library` module must be covered by tests, defined in `tests/`. This project uses
+[PyTest](https://docs.pytest.org/en/latest/) which should be ran in a random order using
+[pytest-random-order](https://pypi.org/project/pytest-random-order/).
 
 Tests are written to create metadata records based on a series of configurations defined in `tests/config.py`. These
 define 'minimal' to 'complete' test records, intended to test different ways a standard can be used, both for 
-individual elements and whole records.
+individual elements and whole records. These tests are designed to ensure that records are generally well-formed and
+that where config options are used the corresponding elements in the metadata record are generated.
 
-Test case methods are used to test individual elements. Comparisons against static records are used to test whole 
-records.
+As this library does not seek to support all possible elements and variations within each standard, these tests are 
+similarly not exhaustive, nor are they a substitute for formal metadata validation.
 
-The Python [UnitTest](https://docs.python.org/3/library/unittest.html) library is used for running tests using Flask's 
-test framework. Test cases are defined in files within `tests/` and are automatically loaded when using the 
-`test` Flask CLI command.
+Test methods are used to test individual elements are formed correctly. Comparisons against static records are used to 
+test the structure of whole records.
 
-Tests are automatically ran on each commit through [Continuous Integration](#continuous-integration).
-
-To run tests manually:
+To run tests manually from the command line:
 
 ```shell
-$ docker-compose run -e FLASK_ENV=testing app flask test --test-runner text
+$ docker-compose run app pytest --random-order
 ```
 
-#### Capturing static test records
 To run tests manually using PyCharm, use the included *App (Tests)* run/debug configuration.
 
-To capture static test records, which verify how records are assembled correctly, a custom Flask CLI command,
+Tests are ran automatically in [Continuous Integration](#continuous-integration).
+
+### Capturing static test records
+
+To capture static test records, which verify complete records are assembled correctly, a custom Flask CLI command,
 `capture-test-records` is available. This requires the Flask application to first be running. The Requests library is
-used to make requests against application routes and save the response to a relevant directory in 
-`tests/resources/records`.
+used to make requests against the Flask app save responses to a relevant directory in `tests/resources/records`.
 
 ```shell
-# start Flask application
+# start Flask application:
 $ docker-compose up
-# in a separate terminal
+# then in a separate terminal:
 $ docker-compose run app flask capture-test-records
 ```
 
 It is intended that this command will update pre-existing static records, with differences captured in version control
 and reviewed manually to ensure they are correct.
 
+### Test coverage
 
+[pytest-cov](https://pypi.org/project/pytest-cov/) is used to measure test coverage.
 
+To prevent noise, `.coveragerc` is used to omit empty `__init__.py` files from reports.
 
+To measure coverage manually:
 
-#### JUnit support
-
-To run integration tests to produce a JUnit compatible file, test-results.xml:
-
+```shell
+$ docker-compose run app pytest --random-order --cov=bas_metadata_library --cov-fail-under=100 --cov-report=html .
 ```
-$ docker-compose run -e FLASK_ENV=testing app flask test --test-runner junit
-```
+
+[Continuous Integration](#continuous-integration) will check coverage automatically and fail if less than 100%.
 
 ### Continuous Integration
 
 All commits will trigger a Continuous Integration process using GitLab's CI/CD platform, configured in `.gitlab-ci.yml`.
-
-This process will run the application [Integration tests](#integration-tests).
-
-Pip dependencies are also [checked and monitored for vulnerabilities](#dependency-vulnerability-scanning).
 
 ## Deployment
 
