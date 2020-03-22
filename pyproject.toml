@@ -21,7 +21,6 @@ classifiers = [
 
 packages = [
     {include = "bas_metadata_library"},
-    {include = "tests", format = "sdist"},
 ]
 
 [tool.poetry.dependencies]

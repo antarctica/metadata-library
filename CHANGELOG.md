@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Updating project licence years
 * Switching from Flake8 to Black
 * Switching from UnitTest to PyTest and refactoring tests
+* Extracted metadata configuration JSON Schemas to standalone files
 
 ### Removed
 

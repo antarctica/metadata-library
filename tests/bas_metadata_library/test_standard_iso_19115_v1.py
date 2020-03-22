@@ -1,3 +1,4 @@
+# noinspection PyUnresolvedReferences
 import pytest
 
 from copy import deepcopy
@@ -10,6 +11,7 @@ from http import HTTPStatus
 #
 # This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
+from jsonschema import ValidationError
 from lxml.etree import ElementTree, XML, fromstring
 
 from bas_metadata_library.standards.iso_19115_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
@@ -24,6 +26,14 @@ from tests.resources.configs.iso19115_v1_standard import configs_safe as configs
 
 standard = "iso-19115"
 namespaces = Namespaces()
+
+
+def test_invalid_configuration(client):
+    config = {"invalid-configuration": "invalid-configuration"}
+    with pytest.raises(ValidationError) as e:
+        configuration = MetadataRecordConfig(**config)
+        configuration.validate()
+    assert "'contacts' is a required property" in str(e.value)
 
 
 @pytest.mark.usefixtures("app_client")
@@ -1024,7 +1034,8 @@ def test_edgecase_contact_without_email_address():
     record = MetadataRecord(configuration)
     document = fromstring(record.generate_xml_document())
     contact_email_value = document.xpath(
-        "/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/@gco:nilReason = 'unknown'",
+        "/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/"
+        "gmd:CI_Address/gmd:electronicMailAddress/@gco:nilReason = 'unknown'",
         namespaces=namespaces.nsmap(),
     )
     assert contact_email_value is True
@@ -1038,7 +1049,7 @@ def test_edgecase_citation_with_multiple_roles():
     }
     configuration = MetadataRecordConfig(**config)
     with pytest.raises(ValueError) as e:
-        record = MetadataRecord(configuration)
+        MetadataRecord(configuration)
     assert str(e.value) == "Contacts can only have a single role. Citations can only have a single contact."
 
 
@@ -1051,7 +1062,9 @@ def test_edgecase_identifier_without_href():
     record = MetadataRecord(configuration)
     document = fromstring(record.generate_xml_document())
     identifier_value = document.xpath(
-        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString/text() = '{config['resource']['identifiers'][0]['identifier']}'",
+        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/"
+        f"gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString/text() = "
+        f"'{config['resource']['identifiers'][0]['identifier']}'",
         namespaces=namespaces.nsmap(),
     )
     assert identifier_value is True
@@ -1061,10 +1074,15 @@ class MockResponse:
     def raise_for_status(self):
         pass
 
+    # noinspection PyMethodMayBeStatic
     def text(self):
-        return "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"
+        return (
+            "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. University of Alberta Libraries. "
+            "https://doi.org/10.7939/R3QZ22K64"
+        )
 
 
+# noinspection PyUnusedLocal
 def mock_response(*args, **kwargs):
     return MockResponse()
 
