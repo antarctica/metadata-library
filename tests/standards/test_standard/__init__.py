@@ -1,10 +1,16 @@
+import json
+
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
 from lxml.etree import Element, SubElement  # nosec
 
-from bas_metadata_library import Namespaces as _Namespaces, MetadataRecordConfig as _MetadataRecordConfig, \
-    MetadataRecord as _MetadataRecord, MetadataRecordElement as _MetadataRecordElement
+from bas_metadata_library import (
+    Namespaces as _Namespaces,
+    MetadataRecordConfig as _MetadataRecordConfig,
+    MetadataRecord as _MetadataRecord,
+    MetadataRecordElement as _MetadataRecordElement,
+)
 
 
 # Base classes
@@ -12,32 +18,22 @@ from bas_metadata_library import Namespaces as _Namespaces, MetadataRecordConfig
 
 class MetadataRecordElement(_MetadataRecordElement):
     def __init__(
-        self,
-        record: _MetadataRecord,
-        attributes: dict,
-        parent_element: Element = None,
-        element_attributes: dict = None
+        self, record: _MetadataRecord, attributes: dict, parent_element: Element = None, element_attributes: dict = None
     ):
         super().__init__(
-            record=record,
-            attributes=attributes,
-            parent_element=parent_element,
-            element_attributes=element_attributes
+            record=record, attributes=attributes, parent_element=parent_element, element_attributes=element_attributes
         )
         self.ns = Namespaces()
 
 
 class Namespaces(_Namespaces):
-    xlink = 'http://www.w3.org/1999/xlink'
-    xsi = 'http://www.w3.org/2001/XMLSchema-instance'
+    xlink = "http://www.w3.org/1999/xlink"
+    xsi = "http://www.w3.org/2001/XMLSchema-instance"
 
     _schema_locations = {}
 
     def __init__(self):
-        self._namespaces = {
-            'xlink': self.xlink,
-            'xsi': self.xsi
-        }
+        self._namespaces = {"xlink": self.xlink, "xsi": self.xsi}
 
 
 class MetadataRecordConfig(_MetadataRecordConfig):
@@ -45,25 +41,10 @@ class MetadataRecordConfig(_MetadataRecordConfig):
         super().__init__(**kwargs)
 
         self.config = kwargs
-        self.schema = {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "title": "UK PDC Metadata Record Generator - Test Standard configuration schema",
-            "description": "Metadata record configuration schema for the 'Test Standard' metadata standard",
-            "definitions": {},
-            "type": "object",
-            "required": [
-                "resource"
-            ],
-            "additionalProperties": True,
-            "properties": {
-                "resource": {
-                    "type": "object",
-                    "required": [],
-                    "additionalProperties": True,
-                    "properties": {}
-                }
-            }
-        }
+
+        with open(f"tests/standards_schemas/test_standard_v1/configuration-schema.json") as configuration_schema_file:
+            configuration_schema_data = json.load(configuration_schema_file)
+        self.schema = configuration_schema_data
 
         self.validate()
 
@@ -78,14 +59,14 @@ class MetadataRecord(_MetadataRecord):
         metadata_record = Element(
             f"MetadataRecord",
             attrib={f"{{{ self.ns.xsi }}}schemaLocation": self.ns.schema_locations()},
-            nsmap=self.ns.nsmap()
+            nsmap=self.ns.nsmap(),
         )
 
         resource = ResourceElement(
             record=metadata_record,
             attributes=self.attributes,
             parent_element=metadata_record,
-            element_attributes=self.attributes['resource']
+            element_attributes=self.attributes["resource"],
         )
         resource.make_element()
 
@@ -103,7 +84,7 @@ class ResourceElement(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=resource_element,
-            element_attributes=self.element_attributes['title']
+            element_attributes=self.element_attributes["title"],
         )
         title.make_element()
 
@@ -112,12 +93,12 @@ class TitleElement(MetadataRecordElement):
     def make_element(self):
         attributes = {}
 
-        if 'href' in self.element_attributes:
-            attributes[f"{{{self.ns.xlink}}}href"] = self.element_attributes['href']
-            attributes[f"{{{self.ns.xlink}}}actuate"] = 'onRequest'
-        if 'title' in self.element_attributes:
-            attributes[f"{{{self.ns.xlink}}}title"] = self.element_attributes['title']
+        if "href" in self.element_attributes:
+            attributes[f"{{{self.ns.xlink}}}href"] = self.element_attributes["href"]
+            attributes[f"{{{self.ns.xlink}}}actuate"] = "onRequest"
+        if "title" in self.element_attributes:
+            attributes[f"{{{self.ns.xlink}}}title"] = self.element_attributes["title"]
 
         title = SubElement(self.parent_element, f"Title", attrib=attributes)
-        if 'value' in self.element_attributes:
-            title.text = self.element_attributes['value']
+        if "value" in self.element_attributes:
+            title.text = self.element_attributes["value"]

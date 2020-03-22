@@ -1,3 +1,4 @@
+# noinspection PyUnresolvedReferences
 import pytest
 
 from http import HTTPStatus
@@ -6,12 +7,20 @@ from http import HTTPStatus
 #
 # This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
+from jsonschema import ValidationError
 from lxml.etree import ElementTree, XML
 
 from tests.resources.configs.test_metadata_standard import configs_all as configs
-from tests.standards.test_standard import Namespaces, MetadataRecordConfig, MetadataRecord, MetadataRecordElement
+from tests.standards.test_standard import Namespaces, MetadataRecordConfig
 
 standard = "test-standard"
+
+
+def test_invalid_configuration(client):
+    config = {"invalid-configuration": "invalid-configuration"}
+    with pytest.raises(ValidationError) as e:
+        MetadataRecordConfig(**config)
+    assert "'resource' is a required property" in str(e.value)
 
 
 @pytest.mark.usefixtures("app_client")
@@ -20,6 +29,16 @@ def test_response(client, config_name):
     response = client.get(f"/standards/{standard}/{config_name}")
     assert response.status_code == HTTPStatus.OK
     assert response.mimetype == "text/xml"
+
+
+@pytest.mark.usefixtures("app_client")
+@pytest.mark.parametrize("config_name", list(configs.keys()))
+def test_complete_record(client, config_name):
+    with open(f"tests/resources/records/test-standard-v1/{config_name}-record.xml") as expected_contents_file:
+        expected_contents = expected_contents_file.read()
+
+    response = client.get(f"/standards/{standard}/{config_name}")
+    assert response.data.decode() == expected_contents
 
 
 @pytest.mark.usefixtures("app_client")

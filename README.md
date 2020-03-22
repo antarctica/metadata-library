@@ -185,20 +185,12 @@ used to compute values. For example, a *title* element would use a value taken d
 To ensure all required configuration attributes are included, and where relevant that their values are allowed, this
 configuration is validated against a schema. This schema uses the [JSON Schema](https://json-schema.org) standard.
 
-These schemas are made available externally through the BAS Metadata Standards website 
-[metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk). This to allow:
+Configuration schemas are stored as JSON files in `bas_metadata_library.standards_schemas` and loaded as resource files
+within this package. Schemas are also made available externally through the BAS Metadata Standards website 
+[metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk) to allow:
  
-1. other applications that wish to ensure their output will be compatible with this library, but that do not or cannot 
-  use this library themselves (i.e. if they don't use Python)
+1. other applications to ensure their output will be compatible with this library, but that can't use this library
 2. to allow schema inheritance/extension where used for standards that inherit from other standards (such as profiles)
-
-A custom Flask CLI command, `output-config-schemas`, is used to generate these schema files from the various standards 
-supported by this project. It will create JSON files for each configuration schema in `build/config_schemas`. These are
-then uploaded to the Metadata Standards website through [Continuous Deployment](#continuous-deployment).
-
-**Note:** The build directory, and schema's it contains, is ignored in this repository. Outputted schemas are 
-considered ephemeral and should be trivial to recreate from modules in this library. The module versions of schemas act 
-as the source of truth as they are used for performing validation.
 
 JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsonschemavalidator.net).
 
@@ -206,15 +198,17 @@ JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsons
 
 To add a new standard:
 
-1. create a new module in `bas_metadata_library.standards` - e.g. `bas_metadata_library.standards.foo/__init__.py`
-2. in this module overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed, ensuring 
-   to include a suitable schema property in `MetadataRecordConfig`
-3. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in 
-   `tests/config.py`
-4. update the inbuilt Flask application in `app.py` with a route for generating test records for the new standard
-5. use the inbuilt Flask application to generate the test records and save to `tests/resources/records/[standard]`
-6. add relevant [Integration tests](#integration-tests) with methods to test each metadata element class and that the
-   generated record matches the test records saved in `tests/resources/records/[standard]`
+1. create a new module in `bas_metadata_library.standards/` e.g. `bas_metadata_library.standards.foo_v1/__init__.py`
+2. in this module, overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed
+3. create a suitable metadata configuration JSON schema in `bas_metadata_library.standards_schemas/` 
+   e.g. `bas_metadata_library.standards_schemas/foo_v1/configuration-schema.json`
+4. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` to copy the configuration schema to the
+   relevant S3 buckets for external access 
+5. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in 
+   `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
+6. update the inbuilt Flask application in `app.py` with a route for generating test records for the new standard
+7. use the inbuilt Flask application to generate the test records and save to `tests/resources/records/`
+8. add relevant [tests](#testing) with methods to test each metadata element class and test records
 
 ### Code Style
 

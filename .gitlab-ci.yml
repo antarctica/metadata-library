@@ -89,21 +89,6 @@ build-dev:
     - master
     - tags
 
-build-schemas:
-  stage: 🏗 build
-  variables:
-      FLASK_APP: ./manage.py
-  script:
-    - "flask output-config-schemas"
-  artifacts:
-    name: "$CI_BUILD_TOKEN-schemas"
-    paths:
-      - build/config-schemas
-    expire_in: 1 month
-  only:
-    - master
-    - tags
-
 publish-app-stage:
   stage: 🚚 publish
   before_script:
@@ -146,7 +131,7 @@ publish-schemas-stage:
     name: governmentpaas/awscli:latest
     entrypoint: [""]
   script:
-    - "aws s3 sync --delete build/config-schemas s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/"
+    - "aws s3 cp bas_metadata_library/standards_schemas/iso_19115_v1/configuration-schema.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/iso-19115-v1/configuration-schema.json"
   only:
     - master
 
@@ -156,7 +141,7 @@ publish-schemas-prod:
     name: governmentpaas/awscli:latest
     entrypoint: [""]
   script:
-    - "aws s3 sync --delete build/config-schemas s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/"
+    - "aws s3 cp bas_metadata_library/standards_schemas/iso_19115_v1/configuration-schema.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/iso-19115-v1/configuration-schema.json"
   only:
     - tags
 
