@@ -16,6 +16,27 @@ def responsible_party(element: Element, config: dict):
         )
         assert roles_element is True
 
+    if "individual" in config:
+        individual_elements = element.xpath(
+            "./gmd:individualName/gmx:Anchor | ./gmd:individualName/gco:CharacterString", namespaces=namespaces.nsmap(),
+        )
+        assert len(individual_elements) == 1
+
+        if "name" in config["individual"]:
+            individual_values = individual_elements[0].xpath("text()", namespaces=namespaces.nsmap())
+            assert len(individual_values) == 1
+            assert individual_values[0] == config["individual"]["name"]
+
+        if "href" in config["individual"]:
+            individual_hrefs = individual_elements[0].xpath("@xlink:href", namespaces=namespaces.nsmap())
+            assert len(individual_hrefs) == 1
+            assert individual_hrefs[0] == config["individual"]["href"]
+
+        if "title" in config["individual"]:
+            individual_titles = individual_elements[0].xpath("@xlink:title", namespaces=namespaces.nsmap())
+            assert len(individual_titles) == 1
+            assert individual_titles[0] == config["individual"]["title"]
+
     if "organisation" in config:
         organisation_elements = element.xpath(
             "./gmd:organisationName/gmx:Anchor | ./gmd:organisationName/gco:CharacterString",

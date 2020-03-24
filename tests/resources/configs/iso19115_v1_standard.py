@@ -77,7 +77,6 @@ base_simple_record["resource"]["constraints"] = {
     "usage": [
         {
             "copyright_licence": {
-                "code": "OGL-UK-3.0",
                 "statement": "This information is licensed under the Open Government Licence v3.0. To view this"
                 " licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
             }
@@ -90,7 +89,6 @@ base_simple_record["resource"]["supplemental_information"] = (
     "use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk."
 )
 base_simple_record["resource"]["spatial_representation_type"] = "textTable"
-base_simple_record["resource"]["spatial_resolution"] = None
 base_simple_record["resource"]["topics"] = ["environment", "climatologyMeteorologyAtmosphere"]
 base_simple_record["resource"]["extent"] = {
     "geographic": {
@@ -101,7 +99,7 @@ base_simple_record["resource"]["extent"] = {
             "north_latitude": -54.30761,
         }
     },
-    "temporal": {"period": {"start": date(2018, 9, 14), "end": date(2018, 9, 15)}},
+    "temporal": {"period": {"start": datetime(2018, 9, 14, 0, 0), "end": datetime(2018, 9, 15, 0, 0)}},
 }
 base_simple_record["resource"]["formats"] = [{"format": "netCDF"}]
 base_simple_record["resource"]["transfer_options"] = [
@@ -182,6 +180,7 @@ base_complex_record["resource"]["keywords"][0]["thesaurus"] = {
         "role": ["publisher"],
     },
 }
+base_complex_record["resource"]["constraints"]["usage"][0]["copyright_licence"]["code"] = "OGL-UK-3.0"
 base_complex_record["resource"]["constraints"]["usage"][0]["copyright_licence"][
     "href"
 ] = "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
@@ -240,8 +239,8 @@ complete_record["resource"]["constraints"]["usage"].append(
 )
 complete_record["resource"]["constraints"]["usage"].append({"statement": "Custom use limitations statement"})
 complete_record["resource"]["extent"]["vertical"] = {
-    "minimum": 20,
-    "maximum": 40,
+    "minimum": 20.0,
+    "maximum": 40.0,
     "identifier": "ogp-crs-5714",
     "code": "urn:ogc:def:crs:EPSG::5714",
     "name": "MSL height",
@@ -251,7 +250,7 @@ complete_record["resource"]["extent"]["vertical"] = {
     "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
     "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
 }
-complete_record["resource"]["transfer_options"][0]["size"] = {"unit": "MB", "magnitude": 40}
+complete_record["resource"]["transfer_options"][0]["size"] = {"unit": "MB", "magnitude": 40.0}
 complete_record["resource"]["transfer_options"].append(
     {
         "online_resource": {
@@ -293,6 +292,7 @@ iso_19115_v1_inspire_v1_3_minimal_record["resource"]["constraints"] = {
                 "code": "OGL-UK-3.0",
                 "statement": "This information is licensed under the Open Government Licence v3.0. To view this"
                 " licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
+                "href": "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
             }
         }
     ],

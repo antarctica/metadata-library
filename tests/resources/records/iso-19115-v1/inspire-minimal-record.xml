@@ -123,7 +123,7 @@
       <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints id="copyright">
           <gmd:useLimitation>
-            <gco:CharacterString>This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/</gco:CharacterString>
+            <gmx:Anchor xlink:href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" xlink:actuate="onRequest">This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/</gmx:Anchor>
           </gmd:useLimitation>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>

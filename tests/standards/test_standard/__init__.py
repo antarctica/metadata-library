@@ -3,7 +3,7 @@ import json
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import Element, SubElement  # nosec
+from lxml.etree import Element, SubElement, fromstring  # nosec
 
 from bas_metadata_library import (
     Namespaces as _Namespaces,
@@ -50,10 +50,24 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
 
 class MetadataRecord(_MetadataRecord):
-    def __init__(self, configuration: MetadataRecordConfig):
+    def __init__(self, configuration: MetadataRecordConfig = None, record: str = None):
         self.ns = Namespaces()
-        self.attributes = configuration.config
-        self.record = self.make_element()
+        self.attributes = {}
+        self.record = None
+
+        if configuration is not None:
+            configuration.validate()
+            self.attributes = configuration.config
+
+        if record is not None:
+            self.record = fromstring(record.encode())
+
+    def make_config(self) -> MetadataRecordConfig:
+        resource = ResourceElement(record=self.record, attributes=self.attributes)
+        _resource = resource.make_config()
+        self.attributes["resource"] = _resource
+
+        return MetadataRecordConfig(**self.attributes)
 
     def make_element(self) -> Element:
         metadata_record = Element(
@@ -77,6 +91,12 @@ class MetadataRecord(_MetadataRecord):
 
 
 class ResourceElement(MetadataRecordElement):
+    def make_config(self):
+        title = TitleElement(record=self.record, attributes=self.attributes,)
+        _title = title.make_config()
+
+        return {"title": _title}
+
     def make_element(self):
         resource_element = SubElement(self.parent_element, f"Resource")
 
@@ -90,6 +110,24 @@ class ResourceElement(MetadataRecordElement):
 
 
 class TitleElement(MetadataRecordElement):
+    def make_config(self):
+        _ = {}
+        base_xpath = "/MetadataRecord/Resource/Title"
+
+        value = self.record.xpath(f"{base_xpath}/text()", namespaces=self.ns.nsmap())
+        if len(value) == 1:
+            _["value"] = value[0]
+
+        href = self.record.xpath(f"{base_xpath}/@xlink:href", namespaces=self.ns.nsmap())
+        if len(href) == 1:
+            _["href"] = href[0]
+
+        title = self.record.xpath(f"{base_xpath}/@xlink:title", namespaces=self.ns.nsmap())
+        if len(title) == 1:
+            _["title"] = title[0]
+
+        return _
+
     def make_element(self):
         attributes = {}
 

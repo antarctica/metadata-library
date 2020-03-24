@@ -12,7 +12,7 @@ from http import HTTPStatus
 # This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
 from jsonschema import ValidationError
-from lxml.etree import ElementTree, XML, fromstring
+from lxml.etree import ElementTree, XML, fromstring, tostring
 
 from bas_metadata_library.standards.iso_19115_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
 from tests.bas_metadata_library.standard_iso_19115_v1_common import (
@@ -28,7 +28,7 @@ standard = "iso-19115"
 namespaces = Namespaces()
 
 
-def test_invalid_configuration(client):
+def test_invalid_configuration():
     config = {"invalid-configuration": "invalid-configuration"}
     with pytest.raises(ValidationError) as e:
         configuration = MetadataRecordConfig(**config)
@@ -1048,8 +1048,10 @@ def test_edgecase_citation_with_multiple_roles():
         "authority": {"contact": {"role": ["publisher", "author"]}},
     }
     configuration = MetadataRecordConfig(**config)
+    record = MetadataRecord(configuration)
     with pytest.raises(ValueError) as e:
-        MetadataRecord(configuration)
+        record.generate_xml_document()
+
     assert str(e.value) == "Contacts can only have a single role. Citations can only have a single contact."
 
 
@@ -1109,3 +1111,34 @@ def test_edgecase_distribution_format_with_version():
         namespaces=namespaces.nsmap(),
     )
     assert format_version is True
+
+
+@pytest.mark.parametrize("config_name", list(configs.keys()))
+def test_parse_existing_record(config_name):
+    with open(f"tests/resources/records/iso-19115-v1/{config_name}-record.xml") as record_file:
+        record_data = record_file.read()
+
+    record = MetadataRecord(record=record_data)
+    configuration = record.make_config()
+    config = configuration.config
+    assert config == configs[config_name]
+
+
+@pytest.mark.usefixtures("get_record_response")
+@pytest.mark.parametrize("config_name", list(configs.keys()))
+def test_lossless_conversion(get_record_response, config_name):
+    _record = tostring(
+        get_record_response(standard=standard, config=config_name),
+        pretty_print=True,
+        xml_declaration=True,
+        encoding="utf-8",
+    ).decode()
+    _config = configs[config_name]
+
+    record = MetadataRecord(record=_record)
+    config_ = record.make_config().config
+
+    config = MetadataRecordConfig(**config_)
+    record_ = MetadataRecord(configuration=config).generate_xml_document().decode()
+    assert _record == record_
+    assert _config == config_
