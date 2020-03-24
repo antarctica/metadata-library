@@ -555,11 +555,6 @@
       <gmd:spatialRepresentationType>
         <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="textTable">textTable</gmd:MD_SpatialRepresentationTypeCode>
       </gmd:spatialRepresentationType>
-      <gmd:spatialResolution>
-        <gmd:MD_Resolution>
-          <gmd:distance gco:nilReason="inapplicable"/>
-        </gmd:MD_Resolution>
-      </gmd:spatialResolution>
       <gmd:language>
         <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng">eng</gmd:LanguageCode>
       </gmd:language>
@@ -591,8 +586,8 @@
             <gmd:EX_TemporalExtent>
               <gmd:extent>
                 <gml:TimePeriod gml:id="boundingExtent">
-                  <gml:beginPosition>2018-09-14</gml:beginPosition>
-                  <gml:endPosition>2018-09-15</gml:endPosition>
+                  <gml:beginPosition>2018-09-14T00:00:00</gml:beginPosition>
+                  <gml:endPosition>2018-09-15T00:00:00</gml:endPosition>
                 </gml:TimePeriod>
               </gmd:extent>
             </gmd:EX_TemporalExtent>
@@ -600,10 +595,10 @@
           <gmd:verticalElement>
             <gmd:EX_VerticalExtent>
               <gmd:minimumValue>
-                <gco:Real>20</gco:Real>
+                <gco:Real>20.0</gco:Real>
               </gmd:minimumValue>
               <gmd:maximumValue>
-                <gco:Real>40</gco:Real>
+                <gco:Real>40.0</gco:Real>
               </gmd:maximumValue>
               <gmd:verticalCRS>
                 <gml:VerticalCRS gml:id="ogp-crs-5714">
@@ -698,7 +693,7 @@
             <gco:CharacterString>MB</gco:CharacterString>
           </gmd:unitsOfDistribution>
           <gmd:transferSize>
-            <gco:Real>40</gco:Real>
+            <gco:Real>40.0</gco:Real>
           </gmd:transferSize>
           <gmd:onLine>
             <gmd:CI_OnlineResource>

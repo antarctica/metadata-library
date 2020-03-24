@@ -7,7 +7,7 @@ from jsonschema import validate
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import Element, ElementTree, tostring as element_string  # nosec
+from lxml.etree import Element, ElementTree, tostring as element_string, fromstring  # nosec
 
 
 # Base classes
@@ -91,21 +91,45 @@ class MetadataRecordConfig(object):
 
 class MetadataRecord(object):
     """
-    Generates a metadata record using a configuration
+    Generates a metadata record using a configuration, or a configuration using a record
 
-    Builds an XML tree as a series of XML elements. Element values and attributes are used directly, or computed, from
-    a configuration object.
+    If a configuration is given, an XML tree of elements is built using the configuration object, typically for output
+    as a complete record.
+
+    If a record is given, the XML tree is parsed to reverse engineer a configuration object that describes it.
+
+    These processes are designed to be lossless, meaning if a record is made from a configuration object, that record
+    should be able to create exactly the same configuration object again without loosing any information.
     """
 
-    def __init__(self, configuration: MetadataRecordConfig):
+    def __init__(self, configuration: MetadataRecordConfig = None, record: str = None):
         """
         :type configuration: MetadataRecordConfig
         :param configuration: Metadata record configuration object
+        :type record: str
+        :param record: XML document string representing a record
         """
-        configuration.validate()
-        self.attributes = configuration.config
         self.ns = Namespaces()
-        self.record = self.make_element()
+        self.attributes = {}
+        self.record = None
+
+        if configuration is not None:
+            configuration.validate()
+            self.attributes = configuration.config
+
+        if record is not None:
+            self.record = fromstring(record.encode())
+
+    def make_config(self) -> MetadataRecordConfig:
+        """
+        Builds a metadata configuration object by parsing an existing XML record
+
+        This method is effectively the reverse of make_element() and generate_xml_document().
+
+        :rtype: MetadataRecordConfig
+        :return: Metadata record configuration object
+        """
+        return MetadataRecordConfig(**self.attributes)
 
     def make_element(self) -> Optional[Element]:
         """
@@ -113,12 +137,13 @@ class MetadataRecord(object):
 
         Elements are added to this root element defining the contents of the record.
 
+        :rtype: Element
         :return: XML element representing the root of a metadata record
         """
         metadata_record = None
         return metadata_record
 
-    def generate_xml_document(self) -> str:
+    def generate_xml_document(self) -> bytes:
         """
         Generates an XML document and tree from an XML element defining a record
 
@@ -127,6 +152,7 @@ class MetadataRecord(object):
         :rtype str
         :return: XML document string representing a record
         """
+        self.record = self.make_element()
         document = ElementTree(self.record)
 
         return element_string(document, pretty_print=True, xml_declaration=True, encoding="utf-8")
@@ -138,7 +164,12 @@ class MetadataRecordElement(object):
     """
 
     def __init__(
-        self, record: MetadataRecord, attributes: dict, parent_element: Element = None, element_attributes: dict = None
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None,
+        xpath: str = None,
     ):
         """
         :type record: MetadataRecord
@@ -149,17 +180,26 @@ class MetadataRecordElement(object):
         :param parent_element: immediate parent of the current element
         :type element_attributes: dict
         :param element_attributes: attributes for the current element, taken from a record's configuration
+        :type xpath: str
+        :param xpath: Absolute XML XPath selecting the value of the element created
         """
         self.ns = Namespaces()
         self.record = record
         self.attributes = attributes
         self.parent_element = parent_element
         self.element_attributes = element_attributes
+        self.xpath = xpath
 
         if self.parent_element is None:
             self.parent_element = self.record
         if self.element_attributes is None:
             self.element_attributes = self.attributes
+
+    def make_config(self) -> None:
+        """
+        Parses an XML element to reverse engineer a partial configuration object
+        """
+        pass
 
     def make_element(self) -> None:
         """

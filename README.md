@@ -38,15 +38,22 @@ $ pip install bas-metadata-library
 To generate an ISO 19115 metadata record and return it as an XML document:
 
 ```python
-import metadata_configs
-
 from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig, \
     MetadataRecord as ISO19115MetadataRecord
 
-configuration_object = metadata_config.record
-configuration = ISO19115MetadataRecordConfig(**configuration_object)
+minimal_record_config = {
+    "contacts": [{"role": ["pointOfContact"]}],
+    "date_stamp": datetime(2018, 10, 18, 14, 40, 44, tzinfo=timezone.utc),
+    "resource": {
+        "title": {"value": "Test Record"},
+        "dates": [{"date": date(2018, 1, 1), "date_precision": "year", "date_type": "creation"}],
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "language": "eng",
+    },
+}
 
-record = ISO19115MetadataRecord(configuration)
+configuration = ISO19115MetadataRecordConfig(**minimal_record_config)
+record = ISO19115MetadataRecord(configuration=configuration)
 document = record.generate_xml_document()
 
 # output document
@@ -55,6 +62,23 @@ print(document)
 
 Where `metadata_configs.record` is a Python dictionary implementing the BAS metadata generic schema, documented in the
 [BAS Metadata Standards](https://metadata-standards.data.bas.ac.uk) project.
+
+To reverse this process and convert an XML record into a configuration object:
+
+```python
+from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig, \
+    MetadataRecord as ISO19115MetadataRecord
+
+with open(f"minimal-record.xml") as record_file:
+    record_data = record_file.read()
+
+record = ISO19115MetadataRecord(record=record_data)
+configuration = record.make_config()
+minimal_record_config = configuration.config
+
+# output configuration
+print(minimal_record_config)
+```
 
 ### HTML entities
 
@@ -68,19 +92,19 @@ This applies to any unicode character, such as accents (e.g. `å`) and symbols (
 
 ## Implementation
 
-This library consists of a set of base classes for generating XML based metadata records from a configuration object.
+This library consists of a set of base classes using [lxml](https://lxml.de) for generating XML based metadata records 
+from a configuration object, or generating a configuration object from an XML record.
 
-Each [supported standard](#supported-standards) implements these classes to generate each supported element within the 
-standard, using values, or computed values, from the configuration object.
+Each [supported standard](#supported-standards) implements these classes for supported elements as per their respective 
+standard. Two methods are implemented, `make_element()` builds an XML element using values from a configuration object, 
+`make_config()` typically uses XPath expressions to build a configuration object from XML. These element classes are 
+combined to generate complete metadata records or configuration objects.
 
-The configuration object is a python dict, the properties and values of which, including if they are required or 
-controlled, are defined and validated by a [JSON Schema](https://json-schema.org).
+Configuration objects are python dicts, the properties and values of which are defined by, and validated against, a 
+[JSON Schema](https://json-schema.org).
 
-The class for each metadata standard will validate the configuration object against the relevant JSON schema, create a 
-XML tree of elements, and exporting the tree as an XML document. XML is generated using [lxml](https://lxml.de).
-
-See the [development](#development) section for the [base classes](#library-base-classes) used across all standards and 
-how to [add a new standard](#adding-a-new-standard).
+See the [development](#development) section for more information on the [base classes](#library-base-classes) used 
+across all standards and how to [add a new standard](#adding-a-new-standard).
 
 ## Setup
 
