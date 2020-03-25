@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Including PyCharm setting in version control, including run/debug/test configurations
 * CD job to create a GitLab release for each tag with link to Python package
 * Ability to generate configuration objects from existing metadata records
+* Support for Research Organisation Registry (ROR) identifiers
 
 ### Fixed
 
