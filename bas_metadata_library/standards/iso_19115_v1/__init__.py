@@ -2818,7 +2818,8 @@ class DataDistribution(MetadataRecordElement):
         _distributors = []
         distributors_length = int(
             self.record.xpath(
-                f"count(/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact)",
+                f"count(/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/"
+                f"gmd:distributorContact)",
                 namespaces=self.ns.nsmap(),
             )
         )
@@ -3101,14 +3102,16 @@ class Report(MetadataRecordElement):
         _ = {}
 
         report_code = self.record.xpath(
-            f"{self.xpath}/gmd:DQ_DomainConsistency/gmd:measureIdentification/gmd:RS_Identifier/gmd:code/gco:CharacterString/text()",
+            f"{self.xpath}/gmd:DQ_DomainConsistency/gmd:measureIdentification/gmd:RS_Identifier/gmd:code/"
+            f"gco:CharacterString/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(report_code) == 1:
             _["code"] = report_code[0]
 
         report_code_space = self.record.xpath(
-            f"{self.xpath}/gmd:DQ_DomainConsistency/gmd:measureIdentification/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString/text()",
+            f"{self.xpath}/gmd:DQ_DomainConsistency/gmd:measureIdentification/gmd:RS_Identifier/gmd:codeSpace/"
+            f"gco:CharacterString/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(report_code_space) == 1:
@@ -3124,7 +3127,8 @@ class Report(MetadataRecordElement):
             _ = {**_, **_specification}
 
         report_explanation = self.record.xpath(
-            f"{self.xpath}/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:explanation/gco:CharacterString/text()",
+            f"{self.xpath}/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:explanation/"
+            f"gco:CharacterString/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(report_explanation) == 1:
