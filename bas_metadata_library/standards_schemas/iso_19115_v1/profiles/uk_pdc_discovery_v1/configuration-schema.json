@@ -14,7 +14,7 @@
         },
         "contact_identity": {
             "required": ["href", "title"],
-            "properties": {"title": {"enum": ["isni", "orcid"]}}
+            "properties": {"title": {"enum": ["isni", "orcid", "ror"]}}
         },
         "keywords": {"properties": {"thesaurus": {"$ref": "#/definitions/thesaurus"}}},
         "thesaurus": {

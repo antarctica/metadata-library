@@ -18,7 +18,7 @@
   <gmd:contact>
     <gmd:CI_ResponsibleParty>
       <gmd:organisationName>
-        <gmx:Anchor xlink:href="http://isni.org/isni/0000000405983800" xlink:actuate="onRequest" xlink:title="isni">UK Polar Data Centre</gmx:Anchor>
+        <gmx:Anchor xlink:href="https://ror.org/01rhff309" xlink:actuate="onRequest" xlink:title="ror">UK Polar Data Centre</gmx:Anchor>
       </gmd:organisationName>
       <gmd:contactInfo>
         <gmd:CI_Contact>
@@ -100,7 +100,7 @@
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName>
-            <gmx:Anchor xlink:href="http://isni.org/isni/0000000405983800" xlink:actuate="onRequest" xlink:title="isni">UK Polar Data Centre</gmx:Anchor>
+            <gmx:Anchor xlink:href="https://ror.org/01rhff309" xlink:actuate="onRequest" xlink:title="ror">UK Polar Data Centre</gmx:Anchor>
           </gmd:organisationName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
@@ -131,7 +131,7 @@
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName>
-            <gmx:Anchor xlink:href="http://isni.org/isni/0000000405983800" xlink:actuate="onRequest" xlink:title="isni">UK Polar Data Centre</gmx:Anchor>
+            <gmx:Anchor xlink:href="https://ror.org/01rhff309" xlink:actuate="onRequest" xlink:title="ror">UK Polar Data Centre</gmx:Anchor>
           </gmd:organisationName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
@@ -162,7 +162,7 @@
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName>
-            <gmx:Anchor xlink:href="http://isni.org/isni/0000000405983800" xlink:actuate="onRequest" xlink:title="isni">UK Polar Data Centre</gmx:Anchor>
+            <gmx:Anchor xlink:href="https://ror.org/01rhff309" xlink:actuate="onRequest" xlink:title="ror">UK Polar Data Centre</gmx:Anchor>
           </gmd:organisationName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
@@ -282,7 +282,7 @@
           <gmd:distributorContact>
             <gmd:CI_ResponsibleParty>
               <gmd:organisationName>
-                <gmx:Anchor xlink:href="http://isni.org/isni/0000000405983800" xlink:actuate="onRequest" xlink:title="isni">UK Polar Data Centre</gmx:Anchor>
+                <gmx:Anchor xlink:href="https://ror.org/01rhff309" xlink:actuate="onRequest" xlink:title="ror">UK Polar Data Centre</gmx:Anchor>
               </gmd:organisationName>
               <gmd:contactInfo>
                 <gmd:CI_Contact>

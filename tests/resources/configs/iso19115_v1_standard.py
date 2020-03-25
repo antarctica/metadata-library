@@ -116,8 +116,8 @@ base_simple_record["resource"]["transfer_options"] = [
 base_simple_record["resource"]["lineage"] = "Example lineage statement"
 
 base_complex_record = deepcopy(base_simple_record)  # type: dict
-base_complex_record["contacts"][0]["organisation"]["href"] = "http://isni.org/isni/0000000405983800"
-base_complex_record["contacts"][0]["organisation"]["title"] = "isni"
+base_complex_record["contacts"][0]["organisation"]["href"] = "https://ror.org/01rhff309"
+base_complex_record["contacts"][0]["organisation"]["title"] = "ror"
 base_complex_record["contacts"][0]["online_resource"] = {
     "href": "https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/",
     "function": "information",
@@ -150,8 +150,8 @@ base_complex_record["resource"]["contacts"][0]["online_resource"] = {
     "research activities and outputs to these identifiers.",
     "function": "information",
 }
-base_complex_record["resource"]["contacts"][1]["organisation"]["href"] = "http://isni.org/isni/0000000405983800"
-base_complex_record["resource"]["contacts"][1]["organisation"]["title"] = "isni"
+base_complex_record["resource"]["contacts"][1]["organisation"]["href"] = "https://ror.org/01rhff309"
+base_complex_record["resource"]["contacts"][1]["organisation"]["title"] = "ror"
 base_complex_record["resource"]["contacts"][1]["online_resource"] = {
     "href": "https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/",
     "function": "information",
@@ -328,10 +328,8 @@ iso_19115_v1_inspire_v1_3_minimal_record["resource"]["lineage"] = "Example linea
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record = deepcopy(iso_19115_v1_inspire_v1_3_minimal_record)
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record["file_identifier"] = "b1a7d1b5-c419-41e7-9178-b1ffd76d5371"
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record["character_set"] = "utf8"
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["organisation"][
-    "href"
-] = "http://isni.org/isni/0000000405983800"
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["organisation"]["title"] = "isni"
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["organisation"]["href"] = "https://ror.org/01rhff309"
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["organisation"]["title"] = "ror"
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["online_resource"] = {
     "href": "https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/",
     "function": "information",
@@ -362,8 +360,8 @@ iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["identifiers"] = [
 ]
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["contacts"][0]["organisation"][
     "href"
-] = "http://isni.org/isni/0000000405983800"
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["contacts"][0]["organisation"]["title"] = "isni"
+] = "https://ror.org/01rhff309"
+iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["contacts"][0]["organisation"]["title"] = "ror"
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["contacts"][0]["online_resource"] = {
     "href": "https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/",
     "function": "information",
