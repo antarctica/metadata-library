@@ -6,7 +6,7 @@ from pathlib import Path
 
 from app import create_app
 
-from tests.resources.configs.iso19115_v1_standard import configs_all as iso19115_v1_standard_configs
+from tests.resources.configs.iso19115_v1_1_standard import configs_all as iso19115_1_v1_standard_configs
 from tests.resources.configs.test_metadata_standard import configs_all as test_metadata_standard_configs
 
 app = create_app()
@@ -17,7 +17,7 @@ def capture_test_records():
     """Capture records for use in tests."""
     standards = {
         "test-standard": {"version": "v1", "configurations": list(test_metadata_standard_configs.keys())},
-        "iso-19115": {"version": "v1", "configurations": list(iso19115_v1_standard_configs.keys())},
+        "iso-19115-1": {"version": "v1", "configurations": list(iso19115_1_v1_standard_configs.keys())},
     }
     for standard, options in standards.items():
         for config in options["configurations"]:
