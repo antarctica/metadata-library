@@ -14,17 +14,17 @@ from http import HTTPStatus
 from jsonschema import ValidationError
 from lxml.etree import ElementTree, XML, fromstring, tostring
 
-from bas_metadata_library.standards.iso_19115_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
-from tests.bas_metadata_library.standard_iso_19115_v1_common import (
+from bas_metadata_library.standards.iso_19115_1_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
+from tests.bas_metadata_library.standard_iso_19115_1_v1_common import (
     responsible_party,
     maintenance,
     citation,
     online_resource,
 )
 
-from tests.resources.configs.iso19115_v1_standard import configs_safe as configs, configs_unsafe as unsafe_configs
+from tests.resources.configs.iso19115_v1_1_standard import configs_safe as configs, configs_unsafe as unsafe_configs
 
-standard = "iso-19115"
+standard = "iso-19115-1"
 namespaces = Namespaces()
 
 
@@ -39,7 +39,7 @@ def test_invalid_configuration():
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(list(configs.keys()) + list(unsafe_configs.keys())))
 def test_response(client, config_name):
-    with patch("bas_metadata_library.standards.iso_19115_v1.ResourceConstraints._get_doi_citation") as doi_citation:
+    with patch("bas_metadata_library.standards.iso_19115_1_v1.ResourceConstraints._get_doi_citation") as doi_citation:
         doi_citation.return_value = (
             "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. "
             "University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"
@@ -53,10 +53,10 @@ def test_response(client, config_name):
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(list(configs.keys()) + list(unsafe_configs.keys())))
 def test_complete_record(client, config_name):
-    with open(f"tests/resources/records/iso-19115-v1/{config_name}-record.xml") as expected_contents_file:
+    with open(f"tests/resources/records/iso-19115-1-v1/{config_name}-record.xml") as expected_contents_file:
         expected_contents = expected_contents_file.read()
 
-    with patch("bas_metadata_library.standards.iso_19115_v1.ResourceConstraints._get_doi_citation") as doi_citation:
+    with patch("bas_metadata_library.standards.iso_19115_1_v1.ResourceConstraints._get_doi_citation") as doi_citation:
         doi_citation.return_value = (
             "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. "
             "University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"
@@ -519,7 +519,7 @@ def _resolve_resource_constraints(constraint_type, config):
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(list(configs.keys()) + list(unsafe_configs.keys())))
 def test_identification_resource_constraints(client, config_name):
-    with patch("bas_metadata_library.standards.iso_19115_v1.ResourceConstraints._get_doi_citation") as doi_citation:
+    with patch("bas_metadata_library.standards.iso_19115_1_v1.ResourceConstraints._get_doi_citation") as doi_citation:
         doi_citation.return_value = (
             "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. "
             "University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"
@@ -1090,7 +1090,7 @@ def mock_response(*args, **kwargs):
 
 
 def test_edgecase_mocked_doi_lookup():
-    with patch("bas_metadata_library.standards.iso_19115_v1.requests.get", side_effect=mock_response):
+    with patch("bas_metadata_library.standards.iso_19115_1_v1.requests.get", side_effect=mock_response):
         config = deepcopy(unsafe_configs["minimal-required-doi-citation"])
         configuration = MetadataRecordConfig(**config)
         record = MetadataRecord(configuration)
@@ -1115,7 +1115,7 @@ def test_edgecase_distribution_format_with_version():
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
 def test_parse_existing_record(config_name):
-    with open(f"tests/resources/records/iso-19115-v1/{config_name}-record.xml") as record_file:
+    with open(f"tests/resources/records/iso-19115-1-v1/{config_name}-record.xml") as record_file:
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)

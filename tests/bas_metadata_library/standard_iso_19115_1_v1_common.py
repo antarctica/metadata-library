@@ -2,7 +2,7 @@ from datetime import date as _date, datetime as _datetime
 
 from lxml.etree import Element
 
-from bas_metadata_library.standards.iso_19115_v1 import Namespaces
+from bas_metadata_library.standards.iso_19115_1_v1 import Namespaces
 
 namespaces = Namespaces()
 
