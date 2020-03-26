@@ -7,12 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed [BREAKING!]
+
+* Namespace for ISO 19115(-0) changed from `bas_metadata_library.standards.iso_19115_v1` to 
+  `bas_metadata_library.standards.iso_19115_1_v1`
+
 ### Added
 
 * Including PyCharm setting in version control, including run/debug/test configurations
 * CD job to create a GitLab release for each tag with link to Python package
 * Ability to generate configuration objects from existing metadata records
 * Support for Research Organisation Registry (ROR) identifiers
+* Support for ISO 19115-2 standard
 
 ### Fixed
 

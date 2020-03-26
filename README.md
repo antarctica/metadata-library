@@ -14,16 +14,24 @@ library to be useful to others are welcome as contributions.
 
 ### Supported standards
 
-| Standard                                             | Implementation                                       | Library Namespace                             | Introduced In                                                                                    |
-| ---------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| [ISO 19115](https://www.iso.org/standard/26020.html) | [ISO 19139](https://www.iso.org/standard/32557.html) | `bas_metadata_library.standards.iso_19115_v1` | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/46) |
+| Standard                                                    | Implementation                                              | Library Namespace                               | Introduced In                                                                                    |
+| ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [ISO 19115:2003](https://www.iso.org/standard/26020.html)   | [ISO 19139:2007](https://www.iso.org/standard/32557.html)   | `bas_metadata_library.standards.iso_19115_1_v1` | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/46) |
+| [ISO 19115-2:2009](https://www.iso.org/standard/39229.html) | [ISO 19139-2:2012](https://www.iso.org/standard/57104.html) | `bas_metadata_library.standards.iso_19115_2_v1` | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50) |
+
+**Note:** In this library *ISO 19115:2003* is referred to as *ISO-19115-1* (`iso_19115_1_v1`) for consistency with 
+*ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_v1`). As ISO have subsequently created 
+[ISO 19115-1:2014](https://www.iso.org/standard/53798.html) this creates a conflict/ambiguity. To resolve this 
+without making breaking changes, *ISO 19115-1:2014* will be referred to as *ISO-19115-3* when added to this library.
 
 ### Supported profiles
 
-| Standard  | Profile                                    | Implementation                                                               | Library Namespace                                                          | Introduced In                                                                                    |
-| --------- | ------------------------------------------ | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| ISO 19115 | [EU Inspire](https://inspire.ec.europa.eu) | [UK Gemini](https://www.agi.org.uk/agi-groups/standards-committee/uk-gemini) | `bas_metadata_library.standards.iso_19115_v1.profiles.inspire_v1_3`        | [#40](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/40) |
-| ISO 19115 | UK Polar Data Centre Discovery Metadata    | -                                                                            | `bas_metadata_library.standards.iso_19115_v1.profiles.uk_pdc_discovery_v1` | [#45](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/45) |
+| Standard         | Profile                                    | Implementation                                                               | Library Namespace                                                            | Introduced In                                                                                    |
+| ---------------- | ------------------------------------------ | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| ISO 19115:2003   | [EU Inspire](https://inspire.ec.europa.eu) | [UK Gemini](https://www.agi.org.uk/agi-groups/standards-committee/uk-gemini) | `bas_metadata_library.standards.iso_19115_1_v1.profiles.inspire_v1_3`        | [#40](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/40) |
+| ISO 19115:2003   | UK Polar Data Centre Discovery Metadata    | -                                                                            | `bas_metadata_library.standards.iso_19115_1_v1.profiles.uk_pdc_discovery_v1` | [#45](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/45) |
+| ISO 19115-2:2009 | [EU Inspire](https://inspire.ec.europa.eu) | [UK Gemini](https://www.agi.org.uk/agi-groups/standards-committee/uk-gemini) | `bas_metadata_library.standards.iso_19115_2_v1.profiles.inspire_v1_3`        | [#40](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50) |
+| ISO 19115-2:2009 | UK Polar Data Centre Discovery Metadata    | -                                                                            | `bas_metadata_library.standards.iso_19115_2_v1.profiles.uk_pdc_discovery_v1` | [#45](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50) |
 
 ## Installation
 
@@ -38,8 +46,7 @@ $ pip install bas-metadata-library
 To generate an ISO 19115 metadata record and return it as an XML document:
 
 ```python
-from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig, \
-    MetadataRecord as ISO19115MetadataRecord
+from bas_metadata_library.standards.iso_19115_2_v1 import MetadataRecordConfig, MetadataRecord
 
 minimal_record_config = {
     "contacts": [{"role": ["pointOfContact"]}],
@@ -47,13 +54,13 @@ minimal_record_config = {
     "resource": {
         "title": {"value": "Test Record"},
         "dates": [{"date": date(2018, 1, 1), "date_precision": "year", "date_type": "creation"}],
-        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "abstract": "Test Record for ISO 19115-2:2009 metadata standard (no profile) with required properties only.",
         "language": "eng",
     },
 }
 
-configuration = ISO19115MetadataRecordConfig(**minimal_record_config)
-record = ISO19115MetadataRecord(configuration=configuration)
+configuration = MetadataRecordConfig(**minimal_record_config)
+record = MetadataRecord(configuration=configuration)
 document = record.generate_xml_document()
 
 # output document
@@ -66,13 +73,12 @@ Where `metadata_configs.record` is a Python dictionary implementing the BAS meta
 To reverse this process and convert an XML record into a configuration object:
 
 ```python
-from bas_metadata_library.standards.iso_19115_v1 import MetadataRecordConfig as ISO19115MetadataRecordConfig, \
-    MetadataRecord as ISO19115MetadataRecord
+from bas_metadata_library.standards.iso_19115_2_v1 import MetadataRecord
 
 with open(f"minimal-record.xml") as record_file:
     record_data = record_file.read()
 
-record = ISO19115MetadataRecord(record=record_data)
+record = MetadataRecord(record=record_data)
 configuration = record.make_config()
 minimal_record_config = configuration.config
 
@@ -134,7 +140,7 @@ $ exit
 $ docker-compose down
 ```
 
-#### Teraform remote state
+#### Terraform remote state
 
 State information for this project is stored remotely using a 
 [Backend](https://www.terraform.io/docs/backends/index.html).

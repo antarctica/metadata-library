@@ -1,0 +1,12 @@
+{
+  "$id": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/iso-19115-1-v1/profiles/uk-pdc-discovery-v1/configuration-schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UK PDC Metadata Record Generator - ISO 19115-2 v1 UK PDC Discovery v1 configuration schema",
+  "description": "Metadata record configuration schema for the UK PDC Discovery metadata profile (v1) of the ISO 19115-2 (v1) metadata standard",
+  "definitions": {},
+  "allOf": [
+    {
+      "$ref": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/iso-19115-2-v1/profiles/inspire-v1_3/configuration-schema.json"
+    }
+  ]
+}
