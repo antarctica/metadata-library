@@ -831,7 +831,7 @@ def test_identification_supplemental_info(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs[config_name]
 
-    if "resource" not in config or "supplemental" not in config["resource"]:
+    if "resource" not in config or "supplemental_information" not in config["resource"]:
         pytest.skip("record does not contain supplemental information")
 
     supplemental_info_value = record.xpath(
