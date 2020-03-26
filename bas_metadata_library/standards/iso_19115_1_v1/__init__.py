@@ -37,7 +37,7 @@ class Namespaces(_Namespaces):
         "srv": "https://standards.iso.org/iso/19119/srv/srv.xsd",
     }
 
-    def __init__(self, namespaces: dict = None):
+    def __init__(self):
         self._namespaces = {
             "gmd": self.gmd,
             "gco": self.gco,
@@ -47,8 +47,6 @@ class Namespaces(_Namespaces):
             "xlink": self.xlink,
             "xsi": self.xsi,
         }
-        if namespaces is not None:
-            self._namespaces = {**self._namespaces, **namespaces}
         super().__init__(namespaces=self._namespaces)
 
 
