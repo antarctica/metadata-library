@@ -25,8 +25,14 @@ class Namespaces(object):
 
     _schema_locations = {}
 
-    def __init__(self):
+    def __init__(self, namespaces: dict = None):
+        """
+        @type namespaces: dict
+        @param namespaces: dictionary of namespaces to add
+        """
         self._namespaces = {}
+        if namespaces is not None:
+            self._namespaces = {**self._namespaces, **namespaces}
 
     def nsmap(self) -> dict:
         """
