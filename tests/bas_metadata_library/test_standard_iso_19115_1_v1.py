@@ -7,11 +7,12 @@ from typing import List
 from unittest.mock import patch
 from http import HTTPStatus
 
+from jsonschema import ValidationError
+
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
-from jsonschema import ValidationError
 from lxml.etree import ElementTree, XML, fromstring, tostring
 
 from bas_metadata_library.standards.iso_19115_1_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
