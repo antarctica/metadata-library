@@ -7,11 +7,12 @@ from typing import List
 from unittest.mock import patch
 from http import HTTPStatus
 
+from jsonschema import ValidationError
+
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
-from jsonschema import ValidationError
 from lxml.etree import ElementTree, XML, fromstring, tostring
 
 from bas_metadata_library.standards.iso_19115_1_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
@@ -22,7 +23,7 @@ from tests.bas_metadata_library.standard_iso_19115_1_v1_common import (
     online_resource,
 )
 
-from tests.resources.configs.iso19115_v1_1_standard import configs_safe as configs, configs_unsafe as unsafe_configs
+from tests.resources.configs.iso19115_1_v1_standard import configs_safe as configs, configs_unsafe as unsafe_configs
 
 standard = "iso-19115-1"
 namespaces = Namespaces()
@@ -39,7 +40,10 @@ def test_invalid_configuration():
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(list(configs.keys()) + list(unsafe_configs.keys())))
 def test_response(client, config_name):
-    with patch("bas_metadata_library.standards.iso_19115_1_v1.ResourceConstraints._get_doi_citation") as doi_citation:
+    with patch(
+        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraints."
+        "_get_doi_citation"
+    ) as doi_citation:
         doi_citation.return_value = (
             "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. "
             "University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"
@@ -56,7 +60,10 @@ def test_complete_record(client, config_name):
     with open(f"tests/resources/records/iso-19115-1-v1/{config_name}-record.xml") as expected_contents_file:
         expected_contents = expected_contents_file.read()
 
-    with patch("bas_metadata_library.standards.iso_19115_1_v1.ResourceConstraints._get_doi_citation") as doi_citation:
+    with patch(
+        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraints."
+        "_get_doi_citation"
+    ) as doi_citation:
         doi_citation.return_value = (
             "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. "
             "University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"
@@ -519,7 +526,10 @@ def _resolve_resource_constraints(constraint_type, config):
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(list(configs.keys()) + list(unsafe_configs.keys())))
 def test_identification_resource_constraints(client, config_name):
-    with patch("bas_metadata_library.standards.iso_19115_1_v1.ResourceConstraints._get_doi_citation") as doi_citation:
+    with patch(
+        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraints."
+        "_get_doi_citation"
+    ) as doi_citation:
         doi_citation.return_value = (
             "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. "
             "University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"
@@ -821,7 +831,7 @@ def test_identification_supplemental_info(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs[config_name]
 
-    if "resource" not in config or "supplemental" not in config["resource"]:
+    if "resource" not in config or "supplemental_information" not in config["resource"]:
         pytest.skip("record does not contain supplemental information")
 
     supplemental_info_value = record.xpath(
@@ -1090,7 +1100,10 @@ def mock_response(*args, **kwargs):
 
 
 def test_edgecase_mocked_doi_lookup():
-    with patch("bas_metadata_library.standards.iso_19115_1_v1.requests.get", side_effect=mock_response):
+    with patch(
+        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.requests.get",
+        side_effect=mock_response,
+    ):
         config = deepcopy(unsafe_configs["minimal-required-doi-citation"])
         configuration = MetadataRecordConfig(**config)
         record = MetadataRecord(configuration)
