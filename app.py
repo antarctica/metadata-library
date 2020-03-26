@@ -49,14 +49,11 @@ def create_app():
         configuration_object = iso19115_1_v1_standard_configs[configuration]
         if configuration == "inspire-minimal":
             configuration = ISO19115_1_InspireMetadataRecordConfig(**configuration_object)
+        elif configuration == "uk-pdc-discovery-minimal":
             configuration = ISO19115_1_UKPDCDiscoveryMetadataRecordConfig(**configuration_object)
+        else:
             configuration = ISO19115_1_MetadataRecordConfig(**configuration_object)
         record = ISO19115_1_MetadataRecord(configuration)
-        elif configuration == "uk-pdc-discovery-minimal":
-            configuration = ISO19115UKPDCDiscoveryMetadataRecordConfig(**configuration_object)
-        else:
-            configuration = ISO19115MetadataRecordConfig(**configuration_object)
-        record = ISO19115MetadataRecord(configuration)
 
         return Response(record.generate_xml_document(), mimetype="text/xml")
 
