@@ -180,7 +180,11 @@ class ISOMetadataRecord(MetadataRecordElement):
             data_distribution = DataDistribution(record=self.record, attributes=self.attributes)
             data_distribution.make_element()
 
-        if "measures" in self.attributes["resource"] or "lineage" in self.attributes["resource"]:
+        if (
+            "hierarchy_level" in self.attributes
+            or "measures" in self.attributes["resource"]
+            or "lineage" in self.attributes["resource"]
+        ):
             data_quality = DataQuality(record=self.record, attributes=self.attributes)
             data_quality.make_element()
 

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 * incorrect DOI used in tests
+* incorrect minimal record configuration for ISO 19115 standards family 
 
 ### Changed
 
