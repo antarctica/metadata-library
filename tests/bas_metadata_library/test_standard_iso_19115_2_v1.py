@@ -33,7 +33,7 @@ def test_invalid_configuration(config_class):
     with pytest.raises(ValidationError) as e:
         configuration = config_class(**config)
         configuration.validate()
-    assert "'contacts' is a required property" in str(e.value)
+    assert "'language' is a required property" in str(e.value)
 
 
 @pytest.mark.usefixtures("app_client")
