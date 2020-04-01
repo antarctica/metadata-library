@@ -2,13 +2,28 @@ from copy import deepcopy
 from datetime import datetime, timezone, date
 
 minimal_record = {
-    "contacts": [{"role": ["pointOfContact"]}],
+    "language": "eng",
+    "character_set": "utf8",
+    "hierarchy_level": "dataset",
+    "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
     "date_stamp": datetime(2018, 10, 18, 14, 40, 44, tzinfo=timezone.utc),
     "resource": {
         "title": {"value": "Test Record"},
         "dates": [{"date": date(2018, 1, 1), "date_precision": "year", "date_type": "creation"}],
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "character_set": "utf8",
         "language": "eng",
+        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+        "extent": {
+            "geographic": {
+                "bounding_box": {
+                    "west_longitude": -45.61521,
+                    "east_longitude": -27.04976,
+                    "south_latitude": -68.1511,
+                    "north_latitude": -54.30761,
+                }
+            }
+        },
     },
 }
 
@@ -21,10 +36,6 @@ minimal_record_with_required_doi_citation["resource"]["constraints"] = {
 
 base_simple_record = deepcopy(minimal_record)  # type: dict
 base_simple_record["file_identifier"] = "b1a7d1b5-c419-41e7-9178-b1ffd76d5371"
-base_simple_record["language"] = "eng"
-base_simple_record["character_set"] = "utf8"
-base_simple_record["hierarchy_level"] = "dataset"
-base_simple_record["contacts"][0]["organisation"] = {"name": "UK Polar Data Centre"}
 base_simple_record["contacts"][0]["phone"] = "+44 (0)1223 221400"
 base_simple_record["contacts"][0]["address"] = {
     "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
@@ -89,18 +100,11 @@ base_simple_record["resource"]["supplemental_information"] = (
     "use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk."
 )
 base_simple_record["resource"]["spatial_representation_type"] = "textTable"
-base_simple_record["resource"]["topics"] = ["environment", "climatologyMeteorologyAtmosphere"]
-base_simple_record["resource"]["extent"] = {
-    "geographic": {
-        "bounding_box": {
-            "west_longitude": -45.61521,
-            "east_longitude": -27.04976,
-            "south_latitude": -68.1511,
-            "north_latitude": -54.30761,
-        }
-    },
-    "temporal": {"period": {"start": datetime(2018, 9, 14, 0, 0), "end": datetime(2018, 9, 15, 0, 0)}},
+# fmt: off
+base_simple_record["resource"]["extent"]["temporal"] = {
+    "period": {"start": datetime(2018, 9, 14, 0, 0), "end": datetime(2018, 9, 15, 0, 0)}
 }
+# fmt: on
 base_simple_record["resource"]["formats"] = [{"format": "netCDF"}]
 base_simple_record["resource"]["transfer_options"] = [
     {
@@ -264,9 +268,6 @@ complete_record["resource"]["transfer_options"].append(
 
 
 iso_19115_v1_inspire_v1_3_minimal_record = deepcopy(minimal_record)  # type: dict
-iso_19115_v1_inspire_v1_3_minimal_record["language"] = "eng"
-iso_19115_v1_inspire_v1_3_minimal_record["hierarchy_level"] = "dataset"
-iso_19115_v1_inspire_v1_3_minimal_record["contacts"][0]["organisation"] = {"name": "UK Polar Data Centre"}
 iso_19115_v1_inspire_v1_3_minimal_record["contacts"][0]["email"] = "polardatacentre@bas.ac.uk"
 iso_19115_v1_inspire_v1_3_minimal_record["resource"]["identifiers"] = [
     {"identifier": "https://doi.org/10.5072/r3qz22k64", "href": "https://doi.org/10.5072/r3qz22k64", "title": "doi"}
@@ -297,17 +298,6 @@ iso_19115_v1_inspire_v1_3_minimal_record["resource"]["constraints"] = {
         }
     ],
 }
-iso_19115_v1_inspire_v1_3_minimal_record["resource"]["topics"] = ["environment"]
-iso_19115_v1_inspire_v1_3_minimal_record["resource"]["extent"] = {
-    "geographic": {
-        "bounding_box": {
-            "west_longitude": -45.61521,
-            "east_longitude": -27.04976,
-            "south_latitude": -68.1511,
-            "north_latitude": -54.30761,
-        }
-    }
-}
 iso_19115_v1_inspire_v1_3_minimal_record["resource"]["measures"] = [
     {
         "code": "Conformity_001",
@@ -327,7 +317,6 @@ iso_19115_v1_inspire_v1_3_minimal_record["resource"]["lineage"] = "Example linea
 
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record = deepcopy(iso_19115_v1_inspire_v1_3_minimal_record)
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record["file_identifier"] = "b1a7d1b5-c419-41e7-9178-b1ffd76d5371"
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["character_set"] = "utf8"
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["organisation"]["href"] = "https://ror.org/01rhff309"
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["organisation"]["title"] = "ror"
 iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["online_resource"] = {

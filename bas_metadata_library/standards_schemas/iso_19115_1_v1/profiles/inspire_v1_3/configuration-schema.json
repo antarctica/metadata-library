@@ -6,7 +6,6 @@
   "definitions": {
     "contact": {
       "required": [
-        "organisation",
         "email"
       ]
     },
@@ -34,10 +33,6 @@
       "$ref": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/iso-19115-1-v1/configuration-schema.json"
     },
     {
-      "required": [
-        "language",
-        "hierarchy_level"
-      ],
       "properties": {
         "hierarchy_level": {
           "enum": [
@@ -64,9 +59,7 @@
         },
         "resource": {
           "required": [
-            "extent",
             "constraints",
-            "topics",
             "lineage"
           ],
           "properties": {
@@ -121,9 +114,6 @@
                   }
                 }
               }
-            },
-            "topics": {
-              "minItems": 1
             },
             "constraints": {
               "required": [
