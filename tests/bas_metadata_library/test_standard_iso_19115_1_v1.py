@@ -34,7 +34,7 @@ def test_invalid_configuration():
     with pytest.raises(ValidationError) as e:
         configuration = MetadataRecordConfig(**config)
         configuration.validate()
-    assert "'contacts' is a required property" in str(e.value)
+    assert "'language' is a required property" in str(e.value)
 
 
 @pytest.mark.usefixtures("app_client")
@@ -1055,7 +1055,7 @@ def test_edgecase_citation_with_multiple_roles():
     config = deepcopy(configs["minimal"])
     config["reference_system_info"] = {
         "code": {"value": "urn:ogc:def:crs:EPSG::4326"},
-        "authority": {"contact": {"role": ["publisher", "author"]}},
+        "authority": {"contact": {"individual": {"name": "foo"}, "role": ["publisher", "author"]}},
     }
     configuration = MetadataRecordConfig(**config)
     record = MetadataRecord(configuration)

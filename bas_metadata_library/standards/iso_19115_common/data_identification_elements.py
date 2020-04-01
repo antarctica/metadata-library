@@ -33,8 +33,6 @@ class DataIdentification(MetadataRecordElement):
         _citation = citation.make_config()
         if bool(_citation):
             _ = {**_, **_citation}
-        # # Remove erroneous citation contact
-        # del _["contact"]
 
         abstract = Abstract(
             record=self.record,
@@ -272,6 +270,14 @@ class DataIdentification(MetadataRecordElement):
                 element_attributes=self.attributes["resource"],
             )
             spatial_resolution.make_element()
+
+        character_set = CharacterSet(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes["resource"],
+        )
+        character_set.make_element()
 
         language = Language(
             record=self.record,
