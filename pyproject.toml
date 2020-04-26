@@ -27,8 +27,8 @@ packages = [
 python = "^3.8"
 jsonschema = "^3.2.0"
 lxml = "4.5.0"
-rfc3987 = "^1.3.8"
-strict-rfc3339 = "^0.7"
+rfc3987 = "^1.3.8"  # jsonschema indirect dependency
+strict-rfc3339 = "^0.7"  # jsonschema indirect dependency
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
