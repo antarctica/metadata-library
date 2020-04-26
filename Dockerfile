@@ -37,13 +37,7 @@ ENV APPVENV=/usr/local/virtualenvs/bas_metadata_library
 ENV PATH="$APPVENV/bin:$PATH"
 ENV FLASK_APP=/usr/src/app/manage.py
 ENV FLASK_ENV=development
-ENV USER=app
 
 COPY --from=build $APPVENV/ $APPVENV/
-
-RUN adduser -D $USER
-RUN chown $USER:$USER $APPPATH && \
-    chown $USER:$USER -R $APPVENV
-USER $USER
 
 ENTRYPOINT []
