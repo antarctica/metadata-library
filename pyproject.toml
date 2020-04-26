@@ -40,7 +40,6 @@ pytest-flask = "^0.15.0"
 pytest-random-order = "^1.0.4"
 requests = "^2.23.0"
 tomlkit = "^0.5.8"
-unittest-xml-reporting = "^2.5.1"
 
 [tool.black]
 line-length = 120
