@@ -22,8 +22,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 * Python updated to 3.8
-* Python dependencies updated (notably lxml)
-* Switching to a mulit-stage Dockerfile using a virtual environment and non-root user
+* Python dependencies updated (notably `lxml`)
+* Switching to a multi-stage Dockerfile using a virtual environment and non-root user
 * Switching from Pip, SetupTools and Twine to Poetry
 * Using scoped API tokens to upload packages to PyPi in CD
 * Updating project licence years
