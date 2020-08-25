@@ -1,6 +1,6 @@
 import json
 
-from importlib.resources import path as resource_path
+from importlib_resources import path as resource_path
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #

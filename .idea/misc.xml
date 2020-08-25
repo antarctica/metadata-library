@@ -3,5 +3,5 @@
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="BAS Metadata Generator" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="BAS Metadata Library" project-jdk-type="Python SDK" />
 </project>

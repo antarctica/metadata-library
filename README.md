@@ -17,7 +17,7 @@ library to be useful to others are welcome as contributions.
 | Standard                                                    | Implementation                                              | Library Namespace                               | Introduced In                                                                                    |
 | ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | [ISO 19115:2003](https://www.iso.org/standard/26020.html)   | [ISO 19139:2007](https://www.iso.org/standard/32557.html)   | `bas_metadata_library.standards.iso_19115_1_v1` | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/46) |
-| [ISO 19115-2:2009](https://www.iso.org/standard/39229.html) | [ISO 19139-2:2012](https://www.iso.org/standard/57104.html) | `bas_metadata_library.standards.iso_19115_2_v1` | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50) |
+| [ISO 19115-2:2009](https://www.iso.org/standard/39229.html) | [ISO 19139-2:2012](https://www.iso.org/standard/57104.html) | `bas_metadata_library.standards.iso_19115_2_v1` | [#50](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50) |
 
 **Note:** In this library *ISO 19115:2003* is referred to as *ISO-19115-1* (`iso_19115_1_v1`) for consistency with 
 *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_v1`). As ISO have subsequently created 
@@ -270,11 +270,27 @@ Python dependencies for this project are managed with [Poetry](https://python-po
 Non-code files, such as static files, can also be included in the [Python package](#python-package) using the
 `include` key in `pyproject.toml`.
 
+#### Adding new dependencies
+
 To add a new (development) dependency:
 
 ```shell
 $ docker-compose run app ash
 $ poetry add [dependency] (--dev)
+```
+
+Then rebuild the development container, and if you can, push to GitLab:
+
+```shell
+$ docker-compose build app
+$ docker-compose push app
+```
+
+#### Updating dependencies
+
+```shell
+$ docker-compose run app ash
+$ poetry update
 ```
 
 Then rebuild the development container, and if you can, push to GitLab:

@@ -24,11 +24,13 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.6"
 jsonschema = "^3.2.0"
-lxml = "4.5.0"
+lxml = "4.5.2"
 rfc3987 = "^1.3.8"  # jsonschema indirect dependency
 strict-rfc3339 = "^0.7"  # jsonschema indirect dependency
+importlib-resources = "^3.0.0"
+backports-datetime-fromisoformat = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
@@ -43,7 +45,7 @@ tomlkit = "^0.5.8"
 
 [tool.black]
 line-length = 120
-target-version = ['py38']
+target-version = ['py36']
 include = '\.pyi?$'
 exclude = ''
 
