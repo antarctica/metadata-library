@@ -14,7 +14,7 @@ class Namespaces(_Namespaces):
     """
     Overloaded base Namespaces class
 
-    Defines overall namespaces for this family of standards
+    Defines the namespaces for this standard
     """
 
     gmd = "http://www.isotc211.org/2005/gmd"
@@ -24,12 +24,20 @@ class Namespaces(_Namespaces):
     srv = "http://www.isotc211.org/2005/srv"
     xlink = "http://www.w3.org/1999/xlink"
     xsi = "http://www.w3.org/2001/XMLSchema-instance"
+    gmi = "http://www.isotc211.org/2005/gmi"
+    gss = "http://www.isotc211.org/2005/gss"
+    gsr = "http://www.isotc211.org/2005/gsr"
+    gts = "http://www.isotc211.org/2005/gts"
 
     _schema_locations = {
         "gmd": "https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd",
         "gco": "https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd",
         "gmx": "https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmx/gmx.xsd",
         "srv": "https://standards.iso.org/iso/19119/srv/srv.xsd",
+        "gmi": "https://standards.iso.org/iso/19115/-2/gmi/1.0/gmi.xsd",
+        "gss": "https://standards.iso.org/iso/19139/Schemas/gss/gss.xsd",
+        "gsr": "https://standards.iso.org/iso/19139/Schemas/gsr/gsr.xsd",
+        "gts": "https://standards.iso.org/iso/19139/Schemas/gts/gts.xsd",
     }
 
     def __init__(self):
@@ -41,6 +49,10 @@ class Namespaces(_Namespaces):
             "srv": self.srv,
             "xlink": self.xlink,
             "xsi": self.xsi,
+            "gmi": self.gmi,
+            "gss": self.gss,
+            "gsr": self.gsr,
+            "gts": self.gts,
         }
         super().__init__(namespaces=self._namespaces)
 
