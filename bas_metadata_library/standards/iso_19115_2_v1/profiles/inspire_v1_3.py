@@ -1,6 +1,6 @@
 import json
 
-from importlib.resources import path as resource_path
+from importlib_resources import path as resource_path
 
 from bas_metadata_library import MetadataRecordConfig as _MetadataRecordConfig
 

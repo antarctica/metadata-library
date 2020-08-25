@@ -8,6 +8,10 @@ from unittest.mock import patch
 from http import HTTPStatus
 
 from jsonschema import ValidationError
+from backports.datetime_fromisoformat import MonkeyPatch
+
+# Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
+MonkeyPatch.patch_fromisoformat()
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
