@@ -3,7 +3,7 @@ from datetime import datetime, timezone, date
 
 minimal_record = {
     "language": "eng",
-    "character_set": "utf8",
+    "character_set": "utf-8",
     "hierarchy_level": "dataset",
     "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
     "date_stamp": date(2018, 10, 18),
@@ -11,7 +11,7 @@ minimal_record = {
         "title": {"value": "Test Record"},
         "dates": [{"date": date(2018, 1, 1), "date_precision": "year", "date_type": "creation"}],
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf8",
+        "character_set": "utf-8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extent": {
