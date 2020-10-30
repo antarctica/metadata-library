@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * XPaths that select elements by their index position (e.g. 2nd instance)
 * Datestamps being incorrectly encoded as datetimes rather than dates
+* Distribution format versions are decoded using the correct key (`version` instead of `value`)
 
 ## [0.3.0] 2020-08-25
 
