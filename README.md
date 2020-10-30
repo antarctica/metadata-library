@@ -46,19 +46,34 @@ $ pip install bas-metadata-library
 To generate an ISO 19115 metadata record and return it as an XML document:
 
 ```python
+from datetime import date
 from bas_metadata_library.standards.iso_19115_2_v1 import MetadataRecordConfig, MetadataRecord
 
 minimal_record_config = {
-    "contacts": [{"role": ["pointOfContact"]}],
-    "date_stamp": datetime(2018, 10, 18, 14, 40, 44, tzinfo=timezone.utc),
+    "language": "eng",
+    "character_set": "utf-8",
+    "hierarchy_level": "dataset",
+    "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+    "date_stamp": date(2018, 10, 18),
     "resource": {
         "title": {"value": "Test Record"},
         "dates": [{"date": date(2018, 1, 1), "date_precision": "year", "date_type": "creation"}],
-        "abstract": "Test Record for ISO 19115-2:2009 metadata standard (no profile) with required properties only.",
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "character_set": "utf-8",
         "language": "eng",
+        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+        "extent": {
+            "geographic": {
+                "bounding_box": {
+                    "west_longitude": -45.61521,
+                    "east_longitude": -27.04976,
+                    "south_latitude": -68.1511,
+                    "north_latitude": -54.30761,
+                }
+            }
+        },
     },
 }
-
 configuration = MetadataRecordConfig(**minimal_record_config)
 record = MetadataRecord(configuration=configuration)
 document = record.generate_xml_document()
