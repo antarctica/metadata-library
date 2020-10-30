@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
@@ -127,13 +127,13 @@ class Contact(MetadataRecordElement):
 
 
 class DateStamp(MetadataRecordElement):
-    def make_config(self) -> Optional[datetime]:
+    def make_config(self) -> Optional[date]:
         _ = None
 
-        value = self.record.xpath(f"{self.xpath}/gmd:dateStamp/gco:DateTime/text()", namespaces=self.ns.nsmap())
+        value = self.record.xpath(f"{self.xpath}/gmd:dateStamp/gco:Date/text()", namespaces=self.ns.nsmap())
         if len(value) == 1:
             try:
-                _ = datetime.fromisoformat(value[0])
+                _ = date.fromisoformat(value[0])
             except ValueError:  # pragma: no cover
                 raise RuntimeError("Datestamp could not be parsed as an ISO datetime value")
 
@@ -141,7 +141,7 @@ class DateStamp(MetadataRecordElement):
 
     def make_element(self):
         date_stamp_element = SubElement(self.record, f"{{{self.ns.gmd}}}dateStamp")
-        date_stamp_value = SubElement(date_stamp_element, f"{{{self.ns.gco}}}DateTime")
+        date_stamp_value = SubElement(date_stamp_element, f"{{{self.ns.gco}}}Date")
         date_stamp_value.text = format_date_string(self.attributes["date_stamp"])
 
 

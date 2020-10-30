@@ -584,7 +584,7 @@
     },
     "date_stamp": {
       "type": "string",
-      "format": "date-time"
+      "format": "date"
     },
     "maintenance": {
       "$ref": "#/definitions/maintenance"
