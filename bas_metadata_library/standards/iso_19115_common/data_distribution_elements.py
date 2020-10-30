@@ -143,7 +143,7 @@ class DistributionFormat(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(version_value) == 1:  # pragma: no cover
-            _["value"] = version_value[0]
+            _["version"] = version_value[0]
 
         return _
 
