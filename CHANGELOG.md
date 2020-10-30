@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Distribution format versions are decoded using the correct key (`version` instead of `value`)
 * Incorrect character encoding term for UTF-8 (`utf-8` instead of `utf8`)
 
+### Changed
+
+* Updated minimal usage example
+
 ## [0.3.0] 2020-08-25
 
 ### Changed [BREAKING!]
