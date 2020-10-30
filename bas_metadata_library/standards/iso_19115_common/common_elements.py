@@ -331,14 +331,17 @@ class OnlineResource(MetadataRecordElement):
         _ = {}
 
         linkage = Linkage(
-            record=self.record, attributes=self.attributes, xpath=f"{ self.xpath }/gmd:CI_OnlineResource/gmd:linkage",
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{ self.xpath }/gmd:CI_OnlineResource/gmd:linkage",
         )
         _linkage = linkage.make_config()
         if "href" in _linkage.keys():
             _["href"] = _linkage["href"]
 
         name_value = self.record.xpath(
-            f"{self.xpath}/gmd:CI_OnlineResource/gmd:name/gco:CharacterString/text()", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:CI_OnlineResource/gmd:name/gco:CharacterString/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(name_value) > 0:
             _["title"] = name_value[0]
@@ -351,7 +354,9 @@ class OnlineResource(MetadataRecordElement):
             _["description"] = description_value[0]
 
         function = OnlineRole(
-            record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:CI_OnlineResource/gmd:function",
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:CI_OnlineResource/gmd:function",
         )
         _function = function.make_config()
         if _function != "":
@@ -395,7 +400,10 @@ class Linkage(MetadataRecordElement):
     def make_config(self) -> dict:
         _ = {}
 
-        url_value = self.record.xpath(f"{self.xpath}/gmd:URL/text()", namespaces=self.ns.nsmap(),)
+        url_value = self.record.xpath(
+            f"{self.xpath}/gmd:URL/text()",
+            namespaces=self.ns.nsmap(),
+        )
         if len(url_value) > 0:
             _["href"] = url_value[0]
 
@@ -499,14 +507,18 @@ class MaintenanceInformation(MetadataRecordElement):
         _ = {}
 
         maintenance_frequency = MaintenanceAndUpdateFrequency(
-            record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:maintenanceAndUpdateFrequency",
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:maintenanceAndUpdateFrequency",
         )
         _maintenance_frequency = maintenance_frequency.make_config()
         if _maintenance_frequency != "":
             _["maintenance_frequency"] = _maintenance_frequency
 
         progress = MaintenanceProgress(
-            record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:maintenanceNote",
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:maintenanceNote",
         )
         _progress = progress.make_config()
         if _progress != "":
@@ -645,9 +657,14 @@ class Citation(MetadataRecordElement):
             _["title"]["href"] = title_href[0]
 
         _dates = []
-        dates_length = int(self.record.xpath(f"count({self.xpath}/gmd:date)", namespaces=self.ns.nsmap(),))
+        dates_length = int(
+            self.record.xpath(
+                f"count({self.xpath}/gmd:date)",
+                namespaces=self.ns.nsmap(),
+            )
+        )
         for date_index in range(1, dates_length + 1):
-            date_ = Date(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:date[{date_index}]")
+            date_ = Date(record=self.record, attributes=self.attributes, xpath=f"({self.xpath}/gmd:date)[{date_index}]")
             _date = date_.make_config()
             if bool(_date):
                 _dates.append(_date)
@@ -661,10 +678,17 @@ class Citation(MetadataRecordElement):
             _["edition"] = edition_value[0]
 
         _identifiers = []
-        identifiers_length = int(self.record.xpath(f"count({self.xpath}/gmd:identifier)", namespaces=self.ns.nsmap(),))
+        identifiers_length = int(
+            self.record.xpath(
+                f"count({self.xpath}/gmd:identifier)",
+                namespaces=self.ns.nsmap(),
+            )
+        )
         for identifier_index in range(1, identifiers_length + 1):
             identifier = Identifier(
-                record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:identifier[{identifier_index}]"
+                record=self.record,
+                attributes=self.attributes,
+                xpath=f"({self.xpath}/gmd:identifier)[{identifier_index}]",
             )
             _identifier = identifier.make_config()
             if bool(_identifier):

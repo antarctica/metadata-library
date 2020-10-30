@@ -232,6 +232,21 @@ complete_record["resource"]["contacts"].insert(
         "role": ["collaborator"],
     },
 )
+complete_record["resource"]["contacts"].append(
+    {
+        "organisation": {"name": "Mapping and Geograpgic Information Centre, British Antarctic Survey"},
+        "phone": "+44 (0)1223 221400",
+        "address": {
+            "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+            "city": "Cambridge",
+            "administrative_area": "Cambridgeshire",
+            "postal_code": "CB3 0ET",
+            "country": "United Kingdom",
+        },
+        "email": "magic@bas.ac.uk",
+        "role": ["distributor"],
+    }
+)
 complete_record["resource"]["constraints"]["access"][0]["statement"] = "Custom access restrictions statement"
 complete_record["resource"]["constraints"]["usage"].append(
     {

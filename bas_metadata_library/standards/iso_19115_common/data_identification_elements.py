@@ -54,7 +54,7 @@ class DataIdentification(MetadataRecordElement):
             contact = PointOfContact(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact"
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact)"
                 f"[{contact_index}]",
             )
             _contact = contact.make_config()
@@ -81,7 +81,7 @@ class DataIdentification(MetadataRecordElement):
             keywords = DescriptiveKeywords(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords"
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords)"
                 f"[{keyword_index}]",
             )
             _keywords = keywords.make_config()
@@ -101,7 +101,7 @@ class DataIdentification(MetadataRecordElement):
             constraint = ResourceConstraints(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints"
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints)"
                 f"[{constraint_index}]",
             )
             _constraint = constraint.make_config()
@@ -164,7 +164,7 @@ class DataIdentification(MetadataRecordElement):
             topic = TopicCategory(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory"
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory)"
                 f"[{topic_index}]",
             )
             _topic = topic.make_config()
@@ -729,7 +729,8 @@ class UseLimitation(MetadataRecordElement):
         _ = {}
 
         use_constraint_statement = self.record.xpath(
-            f"{self.xpath}/gco:CharacterString/text() | {self.xpath}/gmx:Anchor/text()", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gco:CharacterString/text() | {self.xpath}/gmx:Anchor/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(use_constraint_statement) == 1:
             _["statement"] = use_constraint_statement[0]
@@ -911,7 +912,9 @@ class GeographicExtent(MetadataRecordElement):
         _ = {}
 
         bounding_box = BoundingBox(
-            record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:geographicElement",
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:geographicElement",
         )
         _bounding_box = bounding_box.make_config()
         if bool(_bounding_box):
@@ -991,13 +994,15 @@ class VerticalExtent(MetadataRecordElement):
         _ = {}
 
         minimum_value = self.record.xpath(
-            f"{self.xpath}/gmd:EX_VerticalExtent/gmd:minimumValue/gco:Real/text()", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:EX_VerticalExtent/gmd:minimumValue/gco:Real/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(minimum_value) == 1:
             _["minimum"] = float(minimum_value[0])
 
         maximum_value = self.record.xpath(
-            f"{self.xpath}/gmd:EX_VerticalExtent/gmd:maximumValue/gco:Real/text()", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:EX_VerticalExtent/gmd:maximumValue/gco:Real/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(maximum_value) == 1:
             _["maximum"] = float(maximum_value[0])
@@ -1040,25 +1045,29 @@ class VerticalCRS(MetadataRecordElement):
         _ = {}
 
         identifier_value = self.record.xpath(
-            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/@gml:id", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/@gml:id",
+            namespaces=self.ns.nsmap(),
         )
         if len(identifier_value) == 1:
             _["identifier"] = identifier_value[0]
 
         code_value = self.record.xpath(
-            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:identifier/text()", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:identifier/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(code_value) == 1:
             _["code"] = code_value[0]
 
         name_value = self.record.xpath(
-            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:name/text()", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:name/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(name_value) == 1:
             _["name"] = name_value[0]
 
         remarks_value = self.record.xpath(
-            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:remarks/text()", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:remarks/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(remarks_value) == 1:
             _["remarks"] = remarks_value[0]
@@ -1071,19 +1080,22 @@ class VerticalCRS(MetadataRecordElement):
             _["domain_of_validity"] = {"href": domain_of_validity_href[0]}
 
         scope_value = self.record.xpath(
-            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:scope/text()", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:scope/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(scope_value) == 1:
             _["scope"] = scope_value[0]
 
         vertical_cs_href = self.record.xpath(
-            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:verticalCS/@xlink:href", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:verticalCS/@xlink:href",
+            namespaces=self.ns.nsmap(),
         )
         if len(vertical_cs_href) == 1:
             _["vertical_cs"] = {"href": vertical_cs_href[0]}
 
         vertical_datum_href = self.record.xpath(
-            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:verticalDatum/@xlink:href", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:verticalCRS/gml:VerticalCRS/gml:verticalDatum/@xlink:href",
+            namespaces=self.ns.nsmap(),
         )
         if len(vertical_datum_href) == 1:
             _["vertical_datum"] = {"href": vertical_datum_href[0]}

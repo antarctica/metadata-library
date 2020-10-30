@@ -48,10 +48,15 @@ class ISOMetadataRecord(MetadataRecordElement):
             _["hierarchy_level"] = _hierarchy_level
 
         _contacts = []
-        contacts_length = int(self.record.xpath(f"count({self.xpath}/gmd:contact)", namespaces=self.ns.nsmap(),))
+        contacts_length = int(
+            self.record.xpath(
+                f"count({self.xpath}/gmd:contact)",
+                namespaces=self.ns.nsmap(),
+            )
+        )
         for contact_index in range(1, contacts_length + 1):
             contact = Contact(
-                record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:contact[{contact_index}]"
+                record=self.record, attributes=self.attributes, xpath=f"({self.xpath}/gmd:contact)[{contact_index}]"
             )
             _contact = contact.make_config()
             if bool(_contact):
