@@ -6,7 +6,7 @@ minimal_record = {
     "character_set": "utf8",
     "hierarchy_level": "dataset",
     "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
-    "date_stamp": datetime(2018, 10, 18, 14, 40, 44, tzinfo=timezone.utc),
+    "date_stamp": date(2018, 10, 18),
     "resource": {
         "title": {"value": "Test Record"},
         "dates": [{"date": date(2018, 1, 1), "date_precision": "year", "date_type": "creation"}],

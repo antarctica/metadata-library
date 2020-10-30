@@ -2,7 +2,7 @@
 import pytest
 
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, date
 from typing import List
 from unittest.mock import patch
 from http import HTTPStatus
@@ -220,9 +220,9 @@ def test_datestamp(get_record_response, config_name):
     if "date_stamp" not in config:
         pytest.skip("record does not contain a datestamp")
 
-    datestamps = record.xpath("/gmd:MD_Metadata/gmd:dateStamp/gco:DateTime/text()", namespaces=namespaces.nsmap())
+    datestamps = record.xpath("/gmd:MD_Metadata/gmd:dateStamp/gco:Date/text()", namespaces=namespaces.nsmap())
     assert len(datestamps) == 1
-    assert datetime.fromisoformat(datestamps[0]) == config["date_stamp"]
+    assert date.fromisoformat(datestamps[0]) == config["date_stamp"]
 
 
 @pytest.mark.usefixtures("get_record_response")

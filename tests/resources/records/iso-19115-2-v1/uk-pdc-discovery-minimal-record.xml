@@ -47,7 +47,7 @@
     </gmd:CI_ResponsibleParty>
   </gmd:contact>
   <gmd:dateStamp>
-    <gco:DateTime>2018-10-18T14:40:44+00:00</gco:DateTime>
+    <gco:Date>2018-10-18</gco:Date>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
     <gco:CharacterString>ISO 19115 (UK GEMINI)</gco:CharacterString>
