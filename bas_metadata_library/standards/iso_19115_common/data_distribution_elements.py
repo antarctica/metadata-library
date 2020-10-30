@@ -26,7 +26,7 @@ class DataDistribution(MetadataRecordElement):
             format_ = DistributionFormat(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"{self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+                xpath=f"({self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat)"
                 f"[{format_index}]",
             )
             _format = format_.make_config()
@@ -47,8 +47,8 @@ class DataDistribution(MetadataRecordElement):
             distributor = Distributor(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"{self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/"
-                f"gmd:distributorContact"
+                xpath=f"({self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/"
+                f"gmd:distributorContact)"
                 f"[{distributor_index}]",
             )
             _distributor = distributor.make_config()
@@ -68,7 +68,7 @@ class DataDistribution(MetadataRecordElement):
             transfer_option = TransferOptions(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"{self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"
+                xpath=f"({self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions)"
                 f"[{transfer_option_index}]",
             )
             _transfer_option = transfer_option.make_config()
@@ -132,13 +132,15 @@ class DistributionFormat(MetadataRecordElement):
             _["format"] = format_name[0]
 
         format_href = self.record.xpath(
-            f"{self.xpath}/gmd:MD_Format/gmd:name/gmx:Anchor/@xlink:href", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:MD_Format/gmd:name/gmx:Anchor/@xlink:href",
+            namespaces=self.ns.nsmap(),
         )
         if len(format_href) == 1:
             _["href"] = format_href[0]
 
         version_value = self.record.xpath(
-            f"{self.xpath}/gmd:MD_Format/gmd:version/gco:CharacterString/text()", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:MD_Format/gmd:version/gco:CharacterString/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(version_value) == 1:  # pragma: no cover
             _["value"] = version_value[0]
@@ -212,7 +214,8 @@ class TransferOptions(MetadataRecordElement):
             _["size"]["unit"] = size_unit[0]
 
         size_magnitude = self.record.xpath(
-            f"{self.xpath}/gmd:MD_DigitalTransferOptions/gmd:transferSize/gco:Real/text()", namespaces=self.ns.nsmap(),
+            f"{self.xpath}/gmd:MD_DigitalTransferOptions/gmd:transferSize/gco:Real/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(size_magnitude) == 1:
             if "size" not in _.keys():  # pragma: no cover

@@ -112,7 +112,8 @@ class CodeListElement(MetadataRecordElement):
         _ = ""
 
         value = self.record.xpath(
-            f"{self.xpath}[@codeList = '{self.code_list}']/@codeListValue", namespaces=self.ns.nsmap(),
+            f"{self.xpath}[@codeList = '{self.code_list}']/@codeListValue",
+            namespaces=self.ns.nsmap(),
         )
         if len(value) == 1:
             _ = value[0]
