@@ -53,27 +53,34 @@ class ScopeCode(CodeListElement):
             xpath=f"{xpath}/gmd:MD_ScopeCode",
         )
         self.code_list_values = [
+            "aggregate",
+            "application",
             "attribute",
             "attributeType",
+            "collection",
             "collectionHardware",
             "collectionSession",
+            "coverage",
             "dataset",
-            "series",
-            "nonGeographicDataset",
             "dimensionGroup",
+            "document",
             "feature",
             "featureType",
-            "propertyType",
             "fieldSession",
-            "software",
-            "service",
+            "initiative",
+            "metadata",
             "model",
+            "nonGeographicDataset",
+            "product",
+            "propertyType",
+            "repository",
+            "sample",
+            "series",
+            "service",
+            "software",
             "tile",
         ]
-        self.code_list = (
-            "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/"
-            "codelist/gmxCodelists.xml#MD_ScopeCode"
-        )
+        self.code_list = "https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
         self.element = f"{{{self.ns.gmd}}}level"
         self.element_code = f"{{{self.ns.gmd}}}MD_ScopeCode"
         self.attribute = "hierarchy_level"
