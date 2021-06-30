@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.4.0] 2021-06-30
+
+### Fixed
+
+* README whitespace
+* Docker Compose command
+
 ### Changed
 
 * Scope code, code list changed to ISO 19115-3 source
+* Updating copyright dates
 
 ## [0.3.1] 2020-10-30
 
