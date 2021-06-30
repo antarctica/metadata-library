@@ -167,8 +167,8 @@ def test_hierarchy_level(get_record_response, config_name):
 
     hierarchy_level_elements = record.xpath(
         f"/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode[@codeList = "
-        f"'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/"
-        f"gmxCodelists.xml#MD_ScopeCode' and @codeListValue = '{config['hierarchy_level']}']",
+        f"'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode' and "
+        f"@codeListValue = '{config['hierarchy_level']}']",
         namespaces=namespaces.nsmap(),
     )
     assert len(hierarchy_level_elements) == 1
@@ -952,9 +952,8 @@ def test_data_quality_scope(get_record_response, config_name):
 
     scope_code_elements = record.xpath(
         f"/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode"
-        f"[@codeList = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/"
-        f"gmxCodelists.xml#MD_ScopeCode'][@codeListValue = '{config['hierarchy_level']}']/text() = "
-        f"'{config['hierarchy_level']}'",
+        f"[@codeList = 'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode']"
+        f"[@codeListValue = '{config['hierarchy_level']}']/text() = '{config['hierarchy_level']}'",
         namespaces=namespaces.nsmap(),
     )
     assert scope_code_elements is True
