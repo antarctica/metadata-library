@@ -110,6 +110,9 @@
       <gmd:abstract>
         <gco:CharacterString>Test Record for ISO 19115 metadata standard (no profile) with simple baseline properties only. In this context baseline properties are those that are required, or have default values. Values in this record are non-complex, meaning they are simple character strings rather than anchors. Authorities are not included in elements that support citations.</gco:CharacterString>
       </gmd:abstract>
+      <gmd:credit>
+        <gco:CharacterString>No credit.</gco:CharacterString>
+      </gmd:credit>
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:individualName>

@@ -29,4 +29,7 @@ configs_safe = {
     "inspire-minimal": iso_19115_v1_inspire_v1_3_minimal_record,
     "uk-pdc-discovery-minimal": iso_19115_v1_uk_pdc_discovery_v1_minimal_record,
 }
+del configs_safe["base-simple"]["resource"]["credit"]
+del configs_safe["base-complex"]["resource"]["credit"]
+del configs_safe["complete"]["resource"]["credit"]
 configs_all = {**configs_safe}
