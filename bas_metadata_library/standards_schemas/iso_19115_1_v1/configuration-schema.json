@@ -195,6 +195,9 @@
         }
       }
     },
+    "credit": {
+      "type": "string"
+    },
     "date": {
       "type": "string",
       "format": "date-time"
@@ -674,6 +677,9 @@
         },
         "abstract": {
           "type": "string"
+        },
+        "credit": {
+          "$ref": "#/definitions/credit"
         },
         "dates": {
           "$ref": "#/definitions/dates"

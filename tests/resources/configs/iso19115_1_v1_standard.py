@@ -54,6 +54,7 @@ base_simple_record["resource"]["abstract"] = (
     "default values. Values in this record are non-complex, meaning they are simple character strings rather than "
     "anchors. Authorities are not included in elements that support citations."
 )
+base_simple_record["resource"]["credit"] = "No credit."
 base_simple_record["resource"]["dates"].append(
     {"date": datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc), "date_type": "publication"}
 )

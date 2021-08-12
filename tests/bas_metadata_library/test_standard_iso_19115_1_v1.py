@@ -348,6 +348,23 @@ def test_identification_abstract(get_record_response, config_name):
     assert resource_abstract_value is True
 
 
+@pytest.mark.usefixtures("get_record_response")
+@pytest.mark.parametrize("config_name", list(configs.keys()))
+def test_identification_credit(get_record_response, config_name):
+    record = get_record_response(standard=standard, config=config_name)
+    config = configs[config_name]
+
+    if "resource" not in config or "credit" not in config["resource"]:
+        pytest.skip("record does not contain a resource credit")
+
+    resource_credit_value = record.xpath(
+        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:credit/gco:CharacterString/text() = "
+        f"'{config['resource']['credit']}'",
+        namespaces=namespaces.nsmap(),
+    )
+    assert resource_credit_value is True
+
+
 # noinspection PyUnboundLocalVariable
 def _resolve_points_of_contact_xpaths(point_of_contact_type, config):
     pocs = []

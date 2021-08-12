@@ -43,6 +43,15 @@ class DataIdentification(MetadataRecordElement):
         if _abstract != "":
             _["abstract"] = _abstract
 
+        credit = Credit(
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:credit",
+        )
+        _credit = credit.make_config()
+        if _credit != "":
+            _["credit"] = _credit
+
         _contacts = []
         contacts_length = int(
             self.record.xpath(
@@ -210,6 +219,14 @@ class DataIdentification(MetadataRecordElement):
         )
         abstract.make_element()
 
+        credit = Credit(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes["resource"],
+        )
+        credit.make_element()
+
         if "contacts" in self.attributes["resource"]:
             for point_of_contact_attributes in self.attributes["resource"]["contacts"]:
                 for role in point_of_contact_attributes["role"]:
@@ -330,6 +347,23 @@ class Abstract(MetadataRecordElement):
         abstract_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}abstract")
         abstract_value = SubElement(abstract_element, f"{{{self.ns.gco}}}CharacterString")
         abstract_value.text = self.element_attributes["abstract"]
+
+
+class Credit(MetadataRecordElement):
+    def make_config(self) -> str:
+        _ = ""
+
+        credit_value = self.record.xpath(f"{self.xpath}/gco:CharacterString/text()", namespaces=self.ns.nsmap())
+        if len(credit_value) == 1:
+            _ = credit_value[0]
+
+        return _
+
+    def make_element(self):
+        if "credit" in self.element_attributes:
+            credit_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}credit")
+            credit_value = SubElement(credit_element, f"{{{self.ns.gco}}}CharacterString")
+            credit_value.text = self.element_attributes["credit"]
 
 
 class PointOfContact(MetadataRecordElement):
