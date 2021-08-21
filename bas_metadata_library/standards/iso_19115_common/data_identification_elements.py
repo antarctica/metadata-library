@@ -575,15 +575,6 @@ class ResourceConstraints(MetadataRecordElement):
             elif _id == "citation":
                 _["usage"] = {"required_citation": _usage_constraint}
 
-        if _id == "InspireLimitationsOnPublicAccess":
-            limitations_on_access = self.record.xpath(
-                f"{self.xpath}/gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor/text()",
-                namespaces=self.ns.nsmap(),
-            )
-            if len(limitations_on_access) == 1:
-                if "access" in _.keys():
-                    _["access"]["inspire_limitations_on_public_access"] = limitations_on_access[0]
-
         return _
 
     def make_element(self):
@@ -610,17 +601,6 @@ class ResourceConstraints(MetadataRecordElement):
                         element_attributes=element_attributes,
                     )
                     other_constraint.make_element()
-
-                if "inspire_limitations_on_public_access" in access_constraint_attributes:
-                    constraints_element.set("id", "InspireLimitationsOnPublicAccess")
-
-                    public_access_limitation = InspireLimitationsOnPublicAccess(
-                        record=self.record,
-                        attributes=self.attributes,
-                        parent_element=constraints_element,
-                        element_attributes=access_constraint_attributes,
-                    )
-                    public_access_limitation.make_element()
 
         if "usage" in self.element_attributes:
             for usage_constraint_attributes in self.element_attributes["usage"]:
@@ -721,23 +701,6 @@ class AccessConstraint(CodeListElement):
         self.element = f"{{{self.ns.gmd}}}accessConstraints"
         self.element_code = f"{{{self.ns.gmd}}}MD_RestrictionCode"
         self.attribute = "restriction_code"
-
-
-class InspireLimitationsOnPublicAccess(MetadataRecordElement):
-    def make_element(self):
-        other_constraints_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}otherConstraints")
-
-        other_constraints_value = AnchorElement(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=other_constraints_element,
-            element_attributes={
-                "href": f"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/"
-                f"{self.element_attributes['inspire_limitations_on_public_access']}"
-            },
-            element_value=self.element_attributes["inspire_limitations_on_public_access"],
-        )
-        other_constraints_value.make_element()
 
 
 class OtherConstraints(MetadataRecordElement):
