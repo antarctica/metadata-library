@@ -20,7 +20,7 @@ def format_date_string(date_datetime: Union[date, datetime]) -> str:
     return date_datetime.isoformat()
 
 
-def contacts_have_role(contacts: list, role: str) -> bool:
+def contacts_have_role(contacts: list, role: str) -> bool:  # pragma: no cover
     """
     Checks if at least one contact has a given role
 
