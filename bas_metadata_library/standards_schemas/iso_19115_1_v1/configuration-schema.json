@@ -1158,65 +1158,6 @@
             }
           }
         },
-        "measures": {
-          "title": "Measures",
-          "description": "Data quality measures for the resource.",
-          "type": "array",
-          "items": {
-            "title": "Measure",
-            "description": "Data quality measure for the resource",
-            "type": "object",
-            "required": [],
-            "additionalProperties": false,
-            "properties": {
-              "code": {
-                "title": "Code",
-                "description": "Identifier for the data quality measure.",
-                "type": "string",
-                "examples": ["Conformity_001"]
-              },
-              "code_space": {
-                "title": "Code-space",
-                "description": "Registry in which the data quality code resides.",
-                "type": "string",
-                "examples": ["INSPIRE"]
-              },
-              "pass": {
-                "title": "Pass",
-                "description": "Whether the resource meets the data quality measure.",
-                "type": "boolean",
-                "examples": [true]
-              },
-              "title": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/title"
-                  },
-                  {
-                    "properties": {
-                      "href": {
-                        "title": "URL",
-                        "description": "URL identifying the data quality measure.",
-                        "type": "string",
-                        "format": "uri",
-                        "examples": ["http://data.europa.eu/eli/reg/2010/1089"]
-                      }
-                    }
-                  }
-                ]
-              },
-              "dates": {
-                "$ref": "#/definitions/dates"
-              },
-              "explanation": {
-                "title": "Explanation",
-                "description": "Information about the data quality measure and how it applies to the resource.",
-                "type": "string",
-                "examples": ["See the referenced specification"]
-              }
-            }
-          }
-        },
         "lineage": {
           "title": "Lineage",
           "description": "Information on the history of the resource, inc. data quality and methodological limitations.",
