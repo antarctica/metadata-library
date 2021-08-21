@@ -282,12 +282,6 @@ complete_record["resource"]["transfer_options"].append(
     }
 )
 
-        {
-        }
-    ],
-        },
-}
-
 configs_safe = {
     "minimal": minimal_record,
     "base-simple": base_simple_record,
