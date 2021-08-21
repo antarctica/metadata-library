@@ -995,53 +995,6 @@ def test_data_quality_lineage(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_data_quality_measures(get_record_response, config_name):
-    record = get_record_response(standard=standard, config=config_name)
-    config = configs[config_name]
-
-    if "resource" not in config or "measures" not in config["resource"]:
-        pytest.skip("record does not contain any data quality measures")
-
-    for measure in config["resource"]["measures"]:
-        if "code" in measure and "code_space" in measure:
-            if measure["code"] == "Conformity_001" and measure["code_space"] == "INSPIRE":
-                if "pass" in measure:
-                    inspire_conformance_result_value = record.xpath(
-                        f"/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency"
-                        f"[gmd:measureIdentification[gmd:RS_Identifier[gmd:code[gco:CharacterString[text() = "
-                        f"'{measure['code']}']] and gmd:codeSpace[gco:CharacterString[text() = "
-                        f"'{measure['code_space']}']]]]]/gmd:result/gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean/"
-                        f"text() = '{str(measure['pass']).lower()}'",
-                        namespaces=namespaces.nsmap(),
-                    )
-                    assert inspire_conformance_result_value is True
-
-                if "explanation" in measure:
-                    inspire_conformance_explanation_value = record.xpath(
-                        f"/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency"
-                        f"[gmd:measureIdentification[gmd:RS_Identifier[gmd:code[gco:CharacterString[text() = "
-                        f"'{measure['code']}']] and gmd:codeSpace[gco:CharacterString[text() = "
-                        f"'{measure['code_space']}']]]]]/gmd:result/gmd:DQ_ConformanceResult/gmd:explanation/"
-                        f"gco:CharacterString/text() = '{measure['explanation']}'",
-                        namespaces=namespaces.nsmap(),
-                    )
-                    assert inspire_conformance_explanation_value is True
-
-                if "title" in measure or "dates" in measure:
-                    inspire_conformance_citation_element = record.xpath(
-                        f"/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency"
-                        f"[gmd:measureIdentification[gmd:RS_Identifier[gmd:code[gco:CharacterString[text() = "
-                        f"'{measure['code']}']] and gmd:codeSpace[gco:CharacterString[text() = "
-                        f"'{measure['code_space']}']]]]]/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/"
-                        f"gmd:CI_Citation",
-                        namespaces=namespaces.nsmap(),
-                    )
-                    assert len(inspire_conformance_citation_element) == 1
-                    citation(element=inspire_conformance_citation_element[0], config=measure)
-
-
-@pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs.keys()))
 def test_metadata_maintenance(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs[config_name]

@@ -26,12 +26,12 @@ without making breaking changes, *ISO 19115-1:2014* will be referred to as *ISO-
 
 ### Supported profiles
 
-| Standard         | Profile                                    | Implementation                                                               | Library Namespace                                                            | Introduced In                                                                                    |
-| ---------------- | ------------------------------------------ | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| ISO 19115:2003   | [EU Inspire](https://inspire.ec.europa.eu) | [UK Gemini](https://www.agi.org.uk/agi-groups/standards-committee/uk-gemini) | `bas_metadata_library.standards.iso_19115_1_v1.profiles.inspire_v1_3`        | [#40](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/40) |
-| ISO 19115:2003   | UK Polar Data Centre Discovery Metadata    | -                                                                            | `bas_metadata_library.standards.iso_19115_1_v1.profiles.uk_pdc_discovery_v1` | [#45](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/45) |
-| ISO 19115-2:2009 | [EU Inspire](https://inspire.ec.europa.eu) | [UK Gemini](https://www.agi.org.uk/agi-groups/standards-committee/uk-gemini) | `bas_metadata_library.standards.iso_19115_2_v1.profiles.inspire_v1_3`        | [#40](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50) |
-| ISO 19115-2:2009 | UK Polar Data Centre Discovery Metadata    | -                                                                            | `bas_metadata_library.standards.iso_19115_2_v1.profiles.uk_pdc_discovery_v1` | [#45](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50) |
+| Standard | Profile  | Implementation  | Library Namespace | Introduced In |
+| -------- | -------- | --------------- | ----------------- | ------------- |
+| -        | -        | -               | -                 | -             |
+
+**Note:** Support for profiles has been temporarily removed to allow underlying standards to be implemented more 
+easily, and to wait until stable profiles for UK PDC Discovery metadata have been developed and approved. 
 
 ## Installation
 
