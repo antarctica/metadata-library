@@ -12,12 +12,6 @@ from jsonschema import ValidationError
 from lxml.etree import ElementTree, XML, tostring
 
 from bas_metadata_library.standards.iso_19115_2_v1 import Namespaces, MetadataRecordConfig, MetadataRecord
-from bas_metadata_library.standards.iso_19115_2_v1.profiles.inspire_v1_3 import (
-    MetadataRecordConfig as InspireMetadataRecordConfig,
-)
-from bas_metadata_library.standards.iso_19115_2_v1.profiles.uk_pdc_discovery_v1 import (
-    MetadataRecordConfig as UKPDCDiscoveryMetadataRecordConfig,
-)
 
 from tests.resources.configs.iso19115_2_v1_standard import configs_safe as configs
 
@@ -25,9 +19,7 @@ standard = "iso-19115-2"
 namespaces = Namespaces()
 
 
-@pytest.mark.parametrize(
-    "config_class", [MetadataRecordConfig, InspireMetadataRecordConfig, UKPDCDiscoveryMetadataRecordConfig]
-)
+@pytest.mark.parametrize("config_class", [MetadataRecordConfig])
 def test_invalid_configuration(config_class):
     config = {"invalid-configuration": "invalid-configuration"}
     with pytest.raises(ValidationError) as e:

@@ -282,101 +282,10 @@ complete_record["resource"]["transfer_options"].append(
     }
 )
 
-
-iso_19115_v1_inspire_v1_3_minimal_record = deepcopy(minimal_record)  # type: dict
-iso_19115_v1_inspire_v1_3_minimal_record["contacts"][0]["email"] = "polardatacentre@bas.ac.uk"
-iso_19115_v1_inspire_v1_3_minimal_record["resource"]["identifiers"] = [
-    {"identifier": "https://doi.org/10.5072/r3qz22k64", "href": "https://doi.org/10.5072/r3qz22k64", "title": "doi"}
-]
-iso_19115_v1_inspire_v1_3_minimal_record["resource"]["contacts"] = [
-    {"organisation": {"name": "UK Polar Data Centre"}, "email": "polardatacentre@bas.ac.uk", "role": ["pointOfContact"]}
-]
-iso_19115_v1_inspire_v1_3_minimal_record["resource"]["keywords"] = [
-    {
-        "terms": [{"term": "Atmospheric conditions"}],
-        "type": "theme",
-        "thesaurus": {
-            "title": {"value": "General Multilingual Environmental Thesaurus - INSPIRE themes"},
-            "dates": [{"date": date(2018, 8, 16), "date_type": "publication"}],
-        },
-    }
-]
-iso_19115_v1_inspire_v1_3_minimal_record["resource"]["constraints"] = {
-    "access": [{"restriction_code": "otherRestrictions", "inspire_limitations_on_public_access": "noLimitations"}],
-    "usage": [
         {
-            "copyright_licence": {
-                "code": "OGL-UK-3.0",
-                "statement": "This information is licensed under the Open Government Licence v3.0. To view this"
-                " licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
-                "href": "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-            }
         }
     ],
-}
-iso_19115_v1_inspire_v1_3_minimal_record["resource"]["measures"] = [
-    {
-        "code": "Conformity_001",
-        "code_space": "INSPIRE",
-        "pass": True,
-        "title": {
-            "value": "Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive "
-            "2007/2/EC of the European Parliament and of the Council as regards interoperability of "
-            "spatial data sets and services",
-            "href": "http://data.europa.eu/eli/reg/2010/1089",
         },
-        "dates": [{"date": date(2010, 12, 8), "date_type": "publication"}],
-        "explanation": "See the referenced specification",
-    }
-]
-iso_19115_v1_inspire_v1_3_minimal_record["resource"]["lineage"] = "Example lineage statement"
-
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record = deepcopy(iso_19115_v1_inspire_v1_3_minimal_record)
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["file_identifier"] = "b1a7d1b5-c419-41e7-9178-b1ffd76d5371"
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["organisation"]["href"] = "https://ror.org/01rhff309"
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["organisation"]["title"] = "ror"
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["contacts"][0]["online_resource"] = {
-    "href": "https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/",
-    "function": "information",
-}
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["metadata_standard"] = {
-    "name": "ISO 19115 (UK GEMINI)",
-    "version": "1.0 (2.3)",
-}
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["maintenance"] = {
-    "maintenance_frequency": "asNeeded",
-    "progress": "completed",
-}
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["dates"].append(
-    {"date": datetime(2018, 10, 8, 14, 40, 44, tzinfo=timezone.utc), "date_type": "released"}
-)
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["edition"] = "2"
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["supplemental_information"] = (
-    "It is recommended that "
-    "careful attention be paid to the contents of any data, and that the author be contacted with any questions "
-    "regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk."
-)
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["identifiers"] = [
-    {
-        "identifier": "https://data.bas.ac.uk/item/b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-        "href": "https://data.bas.ac.uk/item/b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-        "title": "self",
-    }
-]
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["contacts"][0]["organisation"][
-    "href"
-] = "https://ror.org/01rhff309"
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["contacts"][0]["organisation"]["title"] = "ror"
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["contacts"][0]["online_resource"] = {
-    "href": "https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/",
-    "function": "information",
-}
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["contacts"][0]["role"].append("custodian")
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["contacts"][0]["role"].append("publisher")
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["contacts"][0]["role"].append("distributor")
-iso_19115_v1_uk_pdc_discovery_v1_minimal_record["resource"]["maintenance"] = {
-    "maintenance_frequency": "asNeeded",
-    "progress": "completed",
 }
 
 configs_safe = {
@@ -384,8 +293,6 @@ configs_safe = {
     "base-simple": base_simple_record,
     "base-complex": base_complex_record,
     "complete": complete_record,
-    "inspire-minimal": iso_19115_v1_inspire_v1_3_minimal_record,
-    "uk-pdc-discovery-minimal": iso_19115_v1_uk_pdc_discovery_v1_minimal_record,
 }
 configs_unsafe = {
     "minimal-required-doi-citation": minimal_record_with_required_doi_citation,
