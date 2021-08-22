@@ -140,6 +140,7 @@
                   "title": "DOI",
                   "description": "Digital Object Identifier (DOI) for the resource, or that should be cited for the resource.",
                   "type": "string",
+                  "format": "uri",
                   "examples": ["https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"]
                 }
               },
