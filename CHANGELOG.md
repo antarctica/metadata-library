@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+* Using definitions property consistently in configuration schemas
+  [#115](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/115)
 * Configuration schemas relocated to `schemas` module and split into source and distribution versions to avoid relying 
   on remote schemas during development
   [#101](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/101)
