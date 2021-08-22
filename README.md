@@ -4,13 +4,14 @@ Python library for generating metadata records.
 
 ## Purpose
 
-This library is designed to assist in generating metadata records for the discovery of datasets. As a library, this
-package is intended to be embedded within other tools and services, to avoid the need to implement
-the complexity and verbosity of specific metadata standards.
+This library is designed to assist in generating metadata records for the discovery of datasets, services and related
+resources. As a library, this project is intended to be used as a dependency within other tools and services, to 
+avoid the need to duplicate the implementation of complex and verbose metadata standards.
 
-This library is built around the needs of the British Antarctic Survey and NERC Polar Data Centre. This means only
-standards, and elements of these standards, used by BAS or the UK PDC are supported. Additions that would enable this
-library to be useful to others are welcome as contributions.
+This library is built around the needs of the British Antarctic Survey and NERC (UK) Polar Data Centre. This means only
+standards, and elements of these standards, used by BAS or the UK PDC are supported. However, additions that would 
+enable this library to be useful to other organisations and use-case are welcome as contributions providing they do not
+add significant complexity or maintenance.
 
 ### Supported standards
 
@@ -19,10 +20,9 @@ library to be useful to others are welcome as contributions.
 | [ISO 19115:2003](https://www.iso.org/standard/26020.html)   | [ISO 19139:2007](https://www.iso.org/standard/32557.html)   | `bas_metadata_library.standards.iso_19115_1_v1` | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/46) |
 | [ISO 19115-2:2009](https://www.iso.org/standard/39229.html) | [ISO 19139-2:2012](https://www.iso.org/standard/57104.html) | `bas_metadata_library.standards.iso_19115_2_v1` | [#50](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50) |
 
-**Note:** In this library *ISO 19115:2003* is referred to as *ISO-19115-1* (`iso_19115_1_v1`) for consistency with
-*ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_v1`). As ISO have subsequently created
-[ISO 19115-1:2014](https://www.iso.org/standard/53798.html) this creates a conflict/ambiguity. To resolve this
-without making breaking changes, *ISO 19115-1:2014* will be referred to as *ISO-19115-3* when added to this library.
+**Note:** In this library, the *ISO 19115:2003* standard is referred to as *ISO-19115-1* (`iso_19115_1_v1`) for 
+consistency with *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_v1`). In the future, the 
+[ISO 19115-1:2014](https://www.iso.org/standard/53798.html) standard will be referred to as *ISO-19115-3*.
 
 ### Supported profiles
 
@@ -82,10 +82,10 @@ document = record.generate_xml_document()
 print(document)
 ```
 
-Where `metadata_configs.record` is a Python dictionary implementing the BAS metadata generic schema, documented in the
-[BAS Metadata Standards](https://metadata-standards.data.bas.ac.uk) project.
+Where `metadata_configs.record` is a Python dictionary implementing the relevant schema for each standard, documented 
+in the [BAS Metadata Standards](https://metadata-standards.data.bas.ac.uk) project.
 
-To reverse this process and convert an XML record into a configuration object:
+To reverse this process and convert a XML record into a configuration object:
 
 ```python
 from bas_metadata_library.standards.iso_19115_2_v1 import MetadataRecord
@@ -103,29 +103,79 @@ print(minimal_record_config)
 
 ### HTML entities
 
-Do not include HTML entities in input to this generator, as it will be douple escaped by [Lxml](https://lxml.de), the
-underlying XML processing library.
+Do not include HTML entities in input to this generator, as they will be double escaped by [Lxml](https://lxml.de), the
+underlying XML processing library used by this project. Instead, literal characters should be used (e.g. `>`), which 
+will be escaped as needed automatically. This applies to any unicode character, such as accents (e.g. `å`) and 
+symbols (e.g. `µ`).
 
-This means `&gt;`, the HTML entity for `>`, will be escaped again to `&amp;gt;` which will not be correctly
-interpreted when decoded. Instead the literal character should be used (e.g. `>`), which Lxml will escape if needed.
-
-This applies to any unicode character, such as accents (e.g. `å`) and symbols (e.g. `µ`).
+E.g. If `&gt;`, the HTML entity for `>` (greater than), were used as input, it would be escaped again to `&amp;gt;` 
+which will not be valid output. 
 
 ## Implementation
 
-This library consists of a set of base classes using [lxml](https://lxml.de) for generating XML based metadata records
-from a configuration object, or generating a configuration object from an XML record.
+This library is implemented in Python and consists of a set of classes used to generate XML metadata records from a 
+configuration object, or to generate a configuration object from an XML record. 
 
-Each [supported standard](#supported-standards) implements these classes for supported elements as per their respective
-standard. Two methods are implemented, `make_element()` builds an XML element using values from a configuration object,
-`make_config()` typically uses XPath expressions to build a configuration object from XML. These element classes are
-combined to generate complete metadata records or configuration objects.
+### Metadata Record classes
 
-Configuration objects are python dicts, the properties and values of which are defined by, and validated against, a
-[JSON Schema](https://json-schema.org).
+Each [supported Standard](#supported-standards) and [Supported Profile](#supported-profiles) is implemented as a module 
+under `bas_metadata_library.standards` (where profiles are implemented as modules under their respective standard).
 
-See the [development](#development) section for more information on the [base classes](#library-base-classes) used
-across all standards and how to [add a new standard](#adding-a-new-standard).
+For each, classes inherited from these parent classes are defined:
+
+* `Namespaces`
+* `MetadataRecord`
+* `MetadataRecordConfig`
+
+The `namespaces` class is a set of mappings between XML namespaces, their shorthand aliases and their definitions XSDs.
+
+The `MetadataRecord` class represents a metadata record and defines the Root [Element](#element-classes). This class 
+provides methods to generate an XML document for example.
+
+The `MetadataRecordConfig` class represents the [Configuration](#configuration-classes) used to define values within a 
+`MetadataRecord`, either for new records, or derived from existing records. This class provides methods to validate the 
+configuration used in a record for example.
+
+### Element classes
+
+Each supported element, in each [supported standard](#supported-standards), inherit and use the `MetadataRecordElement`
+class to:
+
+* encode configuration values into an XML fragment of at least one element
+* decode an XML fragment into one or more configuration values
+
+Specifically, at least two methods are implemented:
+
+* `make_element()` which builds an XML element using values from a configuration object
+* `make_config()` which uses typically XPath expressions to build a configuration object from XML
+
+These methods may be simple (if encoding or decoding a simple free text value for example), or quite complex through 
+the use of sub-elements (which themselves may contain sub-elements as needed).
+
+### Configuration classes
+
+The configuration of each metadata record is held in a Python dictionary, within a `MetadataRecordConfig` class. This
+class includes methods to validate its configuration against a relevant [Configuration Schema](#configuration-schemas).
+
+Configuration classes are defined at the root of each standard or profile, alongside its root
+[Metadata Element](#element-classes) and XML namespaces.
+
+### Configuration schemas
+
+Allowed configuration values for each [supported Standard](#supported-standards) and
+[Supported Profile](#supported-profiles) are described by a [JSON Schema](https://json-schema.org). These configuration 
+schemas include which configuration properties are required, and in some cases, allowed values for these properties.
+
+Configuration schemas are stored as JSON files in the `bas_metadata_library.standards_schemas` module and loaded as 
+resource files from within this package. Schemas are also made available externally through the BAS Metadata Standards 
+website, [metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk), to allow:
+
+1. other applications to ensure their output will be compatible with this library but that can't, or don't want to, 
+   use this library
+2. to allow schema inheritance/extension where used for standards that inherit from other standards (such as profiles)
+
+#### Source and distribution schemas
+
 Standards and profiles usually inherit from other standards and profiles. In order to prevent this creating huge 
 duplication within configuration schemas, inheritance is used to incorporate a base schema and extend it as needed. For 
 example, the ISO 19115-2 standard extends, and therefore incorporates the configuration schema for, ISO 19115-1.
@@ -148,6 +198,25 @@ When editing configuration schemas, you should edit the source schemas, located 
 
 JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsonschemavalidator.net).
 
+### Adding a new standard
+
+To add a new standard:
+
+1. create a new module under `bas_metadata_library.standards`, e.g. `bas_metadata_library.standards.foo_v1/__init__.py`
+2. in this module, overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed
+3. create a suitable metadata configuration JSON schema in `bas_metadata_library.standards_schemas/`
+   e.g. `bas_metadata_library.standards_schemas/foo_v1/configuration-schema.json`
+4. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish 
+   the configuration schema within the BAS Metadata Standards website
+5. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
+   `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
+6. update the inbuilt Flask application in `app.py` with a route for generating test records for the new standard
+7. use the inbuilt Flask application to generate the test records and save to `tests/resources/records/`
+8. add relevant [tests](#testing) with methods to test each metadata element class and test records
+
+### Adding a new element to an existing standard
+
+...
 
 ## Setup
 
@@ -198,26 +267,28 @@ permissions to remote state are enforced.
 
 ## Development
 
-This API is developed as a Python library. A bundled Flask application is used to simulate its usage and to act as
-framework for running tests etc.
+This API is developed as a Python library. A bundled Flask application is used to simulate its usage, act as
+framework for running tests etc., and provide utility methods for generating schemas etc.
+
+### Development environment
+
+Git, Docker and Docker Compose are required to set up a local development environment of this application.
+
+If you have access to the [BAS GitLab instance](https://gitlab.data.bas.ac.uk), you can clone the project and pull 
+Docker images from the BAS GitLab instance and BAS Docker Registry. 
 
 ```shell
 $ git clone https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator.git
 $ cd metadata-generator
-```
-
-### Development environment
-
-Docker and Docker Compose are required to setup a local development environment of this application.
-
-If you have access to the [BAS GitLab instance](https://gitlab.data.bas.ac.uk), you can pull the application Docker
-image from the BAS Docker Registry. Otherwise you will need to build the Docker image locally.
-
-```shell
-# If you have access to gitlab.data.bas.ac.uk:
 $ docker login docker-registry.data.bas.ac.uk
 $ docker compose pull
-# If you don't have access:
+```
+
+Otherwise, you will need to build the Docker image locally.
+
+```shell
+$ git clone https://github.com/antarctica/metadata-library.git
+$ cd metadata-library
 $ docker compose build
 ```
 
@@ -237,45 +308,6 @@ $ docker compose run app flask test
 # List all available commands
 $ docker compose run app flask
 ```
-
-### Library base classes
-
-The `bas_metadata_library` module defines a series of modules for each standard (in `bas_metadata_library.standards`)
-as well  as *base* classes used across all standards, that providing common functionality. See existing standards for
-how these are used.
-
-### Configuration schemas
-
-This library accepts a 'configuration' for each metadata record. This contains values for elements, or values that are
-used to compute values. For example, a *title* element would use a value taken directly from the record configuration.
-
-To ensure all required configuration attributes are included, and where relevant that their values are allowed, this
-configuration is validated against a schema. This schema uses the [JSON Schema](https://json-schema.org) standard.
-
-Configuration schemas are stored as JSON files in `bas_metadata_library.standards_schemas` and loaded as resource files
-within this package. Schemas are also made available externally through the BAS Metadata Standards website
-[metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk) to allow:
-
-1. other applications to ensure their output will be compatible with this library, but that can't use this library
-2. to allow schema inheritance/extension where used for standards that inherit from other standards (such as profiles)
-
-JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsonschemavalidator.net).
-
-### Adding a new standard
-
-To add a new standard:
-
-1. create a new module in `bas_metadata_library.standards/` e.g. `bas_metadata_library.standards.foo_v1/__init__.py`
-2. in this module, overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed
-3. create a suitable metadata configuration JSON schema in `bas_metadata_library.standards_schemas/`
-   e.g. `bas_metadata_library.standards_schemas/foo_v1/configuration-schema.json`
-4. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` to copy the configuration schema to the
-   relevant S3 buckets for external access
-5. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
-   `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
-6. update the inbuilt Flask application in `app.py` with a route for generating test records for the new standard
-7. use the inbuilt Flask application to generate the test records and save to `tests/resources/records/`
-8. add relevant [tests](#testing) with methods to test each metadata element class and test records
 
 ### Code Style
 
