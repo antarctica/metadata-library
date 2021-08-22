@@ -50,11 +50,13 @@ class Namespaces(_Namespaces):
         super().__init__(namespaces=self._namespaces)
 
 
-class MetadataRecordConfig(_MetadataRecordConfig):
+class MetadataRecordConfigV1(_MetadataRecordConfig):
     """
     Overloaded base MetadataRecordConfig class
 
-    Defines the JSON Schema used for this metadata standard
+    Defines version 1 of the JSON Schema used for this metadata standard (deprecated)
+
+    Includes methods to convert from and to a V2 configuration instance
     """
 
     def __init__(self, **kwargs: dict):
@@ -69,15 +71,43 @@ class MetadataRecordConfig(_MetadataRecordConfig):
                 configuration_schema_data = json.load(configuration_schema_file)
         self.schema = configuration_schema_data
 
+    def convert_to_v2_configuration(self) -> "MetadataRecordConfigV2":
+        return MetadataRecordConfigV2(**self.config)
+
+    def convert_from_v2_configuration(self, configuration: "MetadataRecordConfigV2"):
+        self.config = configuration.config
+
+
+class MetadataRecordConfigV2(_MetadataRecordConfig):
+    """
+    Overloaded base MetadataRecordConfig class
+
+    Defines version 2 of the JSON Schema used for this metadata standard
+    """
+
+    def __init__(self, **kwargs: dict):
+        super().__init__(**kwargs)
+
+        self.config = kwargs
+
+        with resource_path(
+            "bas_metadata_library.schemas.dist", "iso_19115_1_v2.json"
+        ) as configuration_schema_file_path:
+            with open(configuration_schema_file_path) as configuration_schema_file:
+                configuration_schema_data = json.load(configuration_schema_file)
+        self.schema = configuration_schema_data
+
 
 class MetadataRecord(_MetadataRecord):
     """
     Overloaded base MetadataRecordConfig class
 
     Defines the root element, and it's sub-elements, for this metadata standard
+
+    Expects/requires record configurations to use version 2 of the configuration schema for this standard
     """
 
-    def __init__(self, configuration: MetadataRecordConfig = None, record: str = None):
+    def __init__(self, configuration: MetadataRecordConfigV2 = None, record: str = None):
         self.ns = Namespaces()
         self.attributes = {}
         self.record = Element(
@@ -96,8 +126,8 @@ class MetadataRecord(_MetadataRecord):
 
         self.metadata_record = ISOMetadataRecord(record=self.record, attributes=self.attributes, xpath=self.xpath)
 
-    def make_config(self) -> MetadataRecordConfig:
-        return MetadataRecordConfig(**self.metadata_record.make_config())
+    def make_config(self) -> MetadataRecordConfigV2:
+        return MetadataRecordConfigV2(**self.metadata_record.make_config())
 
     def make_element(self) -> Element:
         return self.metadata_record.make_element()

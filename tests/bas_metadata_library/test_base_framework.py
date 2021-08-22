@@ -19,7 +19,7 @@ def test_record_class_configuration():
 
 
 def test_record_class_record():
-    with open(f"tests/resources/records/test-standard-v1/minimal-record.xml") as record_file:
+    with open(f"tests/resources/records/test-standard/minimal-record.xml") as record_file:
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)
@@ -35,7 +35,7 @@ def test_element_class_config():
 
 
 def test_element_class_record():
-    with open(f"tests/resources/records/test-standard-v1/minimal-record.xml") as record_file:
+    with open(f"tests/resources/records/test-standard/minimal-record.xml") as record_file:
         record_data = record_file.read()
     record = MetadataRecord(record=record_data)
     element = MetadataRecordElement(record=record, attributes={})

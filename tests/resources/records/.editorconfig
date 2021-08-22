@@ -1,5 +1,0 @@
-# EditorConfig is awesome: https://EditorConfig.org
-
-# Set 2 space indentation
-[*.xml]
-indent_size = 2

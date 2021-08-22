@@ -1,0 +1,12 @@
+{
+  "$id": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UK PDC Metadata Record Generator - ISO 19115-2 v2 configuration schema",
+  "description": "Metadata record configuration schema for the ISO 19115-2 metadata standard (version 2)",
+  "definitions": {},
+  "allOf": [
+    {
+      "$ref": "iso_19115_1_v2.json"
+    }
+  ]
+}

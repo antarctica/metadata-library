@@ -33,6 +33,15 @@ consistency with *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_
 **Note:** Support for profiles has been temporarily removed to allow underlying standards to be implemented more 
 easily, and to wait until stable profiles for UK PDC Discovery metadata have been developed and approved. 
 
+### Supported configuration versions
+
+| Standard         | Profile | Configuration Version                                                                                                 | Status     | Notes                                         |
+| ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------- | ---------- | --------------------------------------------- |
+| ISO 19115:2003   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json) | Deprecated | Stable version to be replaced by `v2`         |
+| ISO 19115:2003   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json) | Alpha      | New version under development to replace `v1` |
+| ISO 19115-2:2009 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json) | Deprecated | Stable version to be replaced by `v2`         |
+| ISO 19115-2:2009 | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json) | Alpha      | New version under development to replace `v1` |
+
 ## Installation
 
 This package can be installed using Pip from [PyPi](https://pypi.org/project/bas-metadata-library):
@@ -47,7 +56,7 @@ To generate an ISO 19115 metadata record and return it as an XML document:
 
 ```python
 from datetime import date
-from bas_metadata_library.standards.iso_19115_2_v1 import MetadataRecordConfig, MetadataRecord
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecord
 
 minimal_record_config = {
     "language": "eng",
@@ -74,7 +83,7 @@ minimal_record_config = {
         },
     },
 }
-configuration = MetadataRecordConfig(**minimal_record_config)
+configuration = MetadataRecordConfigV2(**minimal_record_config)
 record = MetadataRecord(configuration=configuration)
 document = record.generate_xml_document()
 
@@ -88,7 +97,7 @@ in the [BAS Metadata Standards](https://metadata-standards.data.bas.ac.uk) proje
 To reverse this process and convert a XML record into a configuration object:
 
 ```python
-from bas_metadata_library.standards.iso_19115_2_v1 import MetadataRecord
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecord
 
 with open(f"minimal-record.xml") as record_file:
     record_data = record_file.read()
@@ -160,6 +169,9 @@ class includes methods to validate its configuration against a relevant [Configu
 Configuration classes are defined at the root of each standard or profile, alongside its root
 [Metadata Element](#element-classes) and XML namespaces.
 
+A configuration class will exist for each supported configuration schema with methods to convert from one version to
+another.
+
 ### Configuration schemas
 
 Allowed configuration values for each [supported Standard](#supported-standards) and
@@ -173,6 +185,8 @@ website, [metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas
 1. other applications to ensure their output will be compatible with this library but that can't, or don't want to, 
    use this library
 2. to allow schema inheritance/extension where used for standards that inherit from other standards (such as profiles)
+
+Configuration schemas a versioned (e.g. `v1`, `v2`) to allow for backwards incompatible changes to be made.
 
 #### Source and distribution schemas
 

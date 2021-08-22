@@ -2,7 +2,7 @@ from datetime import date as _date, datetime as _datetime
 
 from lxml.etree import Element
 
-from bas_metadata_library.standards.iso_19115_1_v1 import Namespaces
+from bas_metadata_library.standards.iso_19115_1 import Namespaces
 
 namespaces = Namespaces()
 
@@ -18,7 +18,8 @@ def responsible_party(element: Element, config: dict):
 
     if "individual" in config:
         individual_elements = element.xpath(
-            "./gmd:individualName/gmx:Anchor | ./gmd:individualName/gco:CharacterString", namespaces=namespaces.nsmap(),
+            "./gmd:individualName/gmx:Anchor | ./gmd:individualName/gco:CharacterString",
+            namespaces=namespaces.nsmap(),
         )
         assert len(individual_elements) == 1
 
@@ -118,7 +119,8 @@ def responsible_party(element: Element, config: dict):
 
     if "online_resource" in config:
         online_resource_values = element.xpath(
-            "./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource", namespaces=namespaces.nsmap(),
+            "./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource",
+            namespaces=namespaces.nsmap(),
         )
         assert len(online_resource_values) == 1
         online_resource(element=online_resource_values[0], config=config["online_resource"])
@@ -126,18 +128,23 @@ def responsible_party(element: Element, config: dict):
 
 def online_resource(element: Element, config: dict):
     if "href" in config:
-        url_values = element.xpath(f"./gmd:linkage/gmd:URL/text() = '{config['href']}'", namespaces=namespaces.nsmap(),)
+        url_values = element.xpath(
+            f"./gmd:linkage/gmd:URL/text() = '{config['href']}'",
+            namespaces=namespaces.nsmap(),
+        )
         assert url_values is True
 
     if "title" in config:
         title_values = element.xpath(
-            f"./gmd:name/gco:CharacterString/text() = '{config['title']}'", namespaces=namespaces.nsmap(),
+            f"./gmd:name/gco:CharacterString/text() = '{config['title']}'",
+            namespaces=namespaces.nsmap(),
         )
         assert title_values is True
 
     if "description" in config:
         description_values = element.xpath(
-            f"./gmd:description/gco:CharacterString/text() = '{config['description']}'", namespaces=namespaces.nsmap(),
+            f"./gmd:description/gco:CharacterString/text() = '{config['description']}'",
+            namespaces=namespaces.nsmap(),
         )
         assert description_values is True
 

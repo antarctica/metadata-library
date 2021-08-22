@@ -34,7 +34,7 @@ def test_response(client, config_name):
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
 def test_complete_record(client, config_name):
-    with open(f"tests/resources/records/test-standard-v1/{config_name}-record.xml") as expected_contents_file:
+    with open(f"tests/resources/records/test-standard/{config_name}-record.xml") as expected_contents_file:
         expected_contents = expected_contents_file.read()
 
     response = client.get(f"/standards/{standard}/{config_name}")
@@ -95,7 +95,7 @@ def test_resource_title(get_record_response, config_name):
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
 def test_parse_existing_record(config_name):
-    with open(f"tests/resources/records/test-standard-v1/{config_name}-record.xml") as record_file:
+    with open(f"tests/resources/records/test-standard/{config_name}-record.xml") as record_file:
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)
