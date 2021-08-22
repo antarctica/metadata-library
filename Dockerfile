@@ -8,14 +8,14 @@ ENV PYTHONPATH=$APPPATH
 RUN mkdir $APPPATH
 WORKDIR $APPPATH
 
-RUN apk add --no-cache libxslt-dev libffi-dev libressl-dev git
+RUN apk add --no-cache libxslt-dev libffi-dev openssl-dev git
 
 
 FROM base as build
 
 ENV APPVENV=/usr/local/virtualenvs/bas_metadata_library
 
-RUN apk add --no-cache build-base
+RUN apk add --no-cache build-base cargo
 RUN python3 -m venv $APPVENV
 ENV PATH="$APPVENV/bin:$PATH"
 

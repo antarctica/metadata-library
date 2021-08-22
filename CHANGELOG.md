@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * title, description and example meta elements to JSON schemas
   [#80](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/80)
 
+### Fixed
+
+* Adding missing rust/cargo dependencies to Docker container to enable cryptography package to be built
+  [#113](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/113)
+
 ### Changed
 
 * configuration schemas relocated to `schemas` module and split into source and distribution versions to avoid relying 
