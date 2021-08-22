@@ -826,8 +826,8 @@
     "date_stamp": {
       "title": "The date when the record describing the resource was last updated.",
       "type": "string",
-      "format": "date-time",
-      "examples": ["2020-04-16 17:57:52+00:00"]
+      "format": "date",
+      "examples": ["2020-04-16"]
     },
     "maintenance": {
       "$ref": "#/definitions/maintenance"
