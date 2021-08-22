@@ -16,9 +16,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* resource credit element
+* Resource credit element
   [#65](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/65)
-* title, description and example meta elements to JSON schemas
+* Title, description and example meta elements to JSON schemas
   [#80](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/80)
 
 ### Fixed
@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-* configuration schemas relocated to `schemas` module and split into source and distribution versions to avoid relying 
+* Configuration schemas relocated to `schemas` module and split into source and distribution versions to avoid relying 
   on remote schemas during development
   [#101](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/101)
 
