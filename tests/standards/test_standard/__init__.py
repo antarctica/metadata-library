@@ -42,7 +42,7 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
         self.config = kwargs
 
-        with open(f"tests/standards_schemas/test_standard_v1/configuration-schema.json") as configuration_schema_file:
+        with open(f"tests/schemas/test_standard_v1.json") as configuration_schema_file:
             configuration_schema_data = json.load(configuration_schema_file)
         self.schema = configuration_schema_data
 
@@ -92,7 +92,10 @@ class MetadataRecord(_MetadataRecord):
 
 class ResourceElement(MetadataRecordElement):
     def make_config(self):
-        title = TitleElement(record=self.record, attributes=self.attributes,)
+        title = TitleElement(
+            record=self.record,
+            attributes=self.attributes,
+        )
         _title = title.make_config()
 
         return {"title": _title}

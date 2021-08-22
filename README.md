@@ -126,6 +126,28 @@ Configuration objects are python dicts, the properties and values of which are d
 
 See the [development](#development) section for more information on the [base classes](#library-base-classes) used
 across all standards and how to [add a new standard](#adding-a-new-standard).
+Standards and profiles usually inherit from other standards and profiles. In order to prevent this creating huge 
+duplication within configuration schemas, inheritance is used to incorporate a base schema and extend it as needed. For 
+example, the ISO 19115-2 standard extends, and therefore incorporates the configuration schema for, ISO 19115-1.
+
+JSON Schema references and identifier properties are used to implement this, using URIs within the BAS Metadata 
+Standards website. Unfortunately, this creates a problem when developing these schemas, as if Schema B relies on Schema 
+A, using its published identifier as a reference, the published instance of the schema will be used (i.e. the remote 
+schema will be downloaded when Schema B is validated). If Schema A is being developed, and is not ready to be 
+republished, there is a difference between the local and remote schemas used, creating unreliable tests for example.
+
+To avoid this problem, a set of *source* schemas are used which use references to avoid duplication, from which a set 
+of *distribution* schemas are generated. These distribution schemas inline any references contained in their source 
+counterpart. These distribution schemas are therefore self-contained and can be updated locally without any 
+dependencies on remote sources. Distribution schemas are used by [Configuration Classes](#configuration-classes) and 
+published to the BAS Metadata Standards website, they are located in the `bas_metadata_library.schemas.dist` module.
+
+When editing configuration schemas, you should edit the source schemas, located in the 
+`bas_metadata_library.schemas.src` module, then run the 
+[regenerate distribution schemas](#generating-configuration-schemas) using an internal command line utility. 
+
+JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsonschemavalidator.net).
+
 
 ## Setup
 
@@ -336,6 +358,25 @@ $ docker compose run app bandit -r .
 #### PyCharm
 
 A run/debug configuration, *App*, is included in the project.
+
+### Generating configuration schemas
+
+To generate [distribution schemas from source schemas](#source-and-distribution-schemas), a custom Flask CLI command,
+`generate-schemas` is available. The [`jsonref`](https://jsonref.readthedocs.io/en/latest/) library is used to resolve
+any references in source schemas and write the output as distribution schemas, replacing any existing output.
+
+```shell
+# start Flask application:
+$ docker compose up
+# then in a separate terminal:
+$ docker compose run app flask generate-schemas
+```
+
+To configure this command, (e.g. to add a new schema for a new standard/profile), adjust the `schemas` list in the 
+`generate_schemas` method in `manage.py`. This list should contain dictionaries with keys for the common name of the 
+schema (based on the common file name of the schema JSON file), and whether the source schema should be resolved or 
+simply copied. This should be true by default, and is only relevant to schemas that do not contain any references, as
+this will cause an error if resolved.
 
 ## Testing
 

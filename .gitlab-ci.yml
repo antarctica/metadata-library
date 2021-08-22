@@ -131,8 +131,8 @@ publish-schemas-stage:
     name: governmentpaas/awscli:latest
     entrypoint: [""]
   script:
-    - "aws s3 cp bas_metadata_library/standards_schemas/iso_19115_1_v1/configuration-schema.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/iso-19115-1-v1/configuration-schema.json"
-    - "aws s3 cp bas_metadata_library/standards_schemas/iso_19115_2_v1/configuration-schema.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/iso-19115-2-v1/configuration-schema.json"
+    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_1_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
+    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_2_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json"
   only:
     - master
 
@@ -142,8 +142,8 @@ publish-schemas-prod:
     name: governmentpaas/awscli:latest
     entrypoint: [""]
   script:
-    - "aws s3 cp bas_metadata_library/standards_schemas/iso_19115_1_v1/configuration-schema.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/iso-19115-1-v1/configuration-schema.json"
-    - "aws s3 cp bas_metadata_library/standards_schemas/iso_19115_2_v1/configuration-schema.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/iso-19115-2-v1/configuration-schema.json"
+    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_1_v1.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
+    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_2_v1.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json"
   only:
     - tags
 

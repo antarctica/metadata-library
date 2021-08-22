@@ -1,8 +1,12 @@
 import os
+import json
 
 import requests
+import jsonref
 
 from pathlib import Path
+
+from jsonref import JsonRef
 
 from app import create_app
 
@@ -30,6 +34,27 @@ def capture_test_records():
             response_file_path = Path(f"./tests/resources/records/{standard}-{options['version']}/{config}-record.xml")
             with open(response_file_path, mode="w") as response_file:
                 response_file.write(response.text)
+
+
+@app.cli.command()
+def generate_schemas():
+    """Inline JSON Schema references in configuration schemas"""
+    schemas = [{"id": "iso_19115_1_v1", "resolve": False}, {"id": "iso_19115_2_v1", "resolve": True}]
+
+    for schema in schemas:
+        print(f"Generating schema for [{schema['id']}]")
+        src_schema_path = Path(f"./bas_metadata_library/schemas/src/{schema['id']}.json")
+        dest_schema_path = Path(f"./bas_metadata_library/schemas/dist/{schema['id']}.json")
+        with open(str(src_schema_path), mode="r") as src_schema_file, open(
+            str(dest_schema_path), mode="w"
+        ) as dist_schema_file:
+            src_schema_data = json.load(src_schema_file)
+            dist_schema_data = src_schema_data
+            if schema["resolve"]:
+                dist_schema_data = JsonRef.replace_refs(
+                    src_schema_data, base_uri=f"file://{str(src_schema_path.absolute())}"
+                )
+            json.dump(dist_schema_data, dist_schema_file, indent=4)
 
 
 if "PYCHARM_HOSTED" in os.environ:
