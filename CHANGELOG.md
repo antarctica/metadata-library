@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Configuration schemas relocated to `schemas` module and split into source and distribution versions to avoid relying 
   on remote schemas during development
   [#101](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/101)
+* README documentation improvements
+  [#112](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/112)
 
 ## [0.4.0] 2021-06-30
 
