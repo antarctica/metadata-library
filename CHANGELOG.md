@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed [BREAKING!]
+
+* Modules for standards no longer include a version (e.g. `bas_metadata_library.standards.iso_19115_2` rather than 
+  `bas_metadata_library.standards.iso_19115_2_v1`)
+  [#102](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/102)
+
+* `MetadataRecordConfiguration` classes renamed to include version (e.g. `MetadataRecordConfigurationV1`)
+  [#102](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/102)
+
 ### Removed [BREAKING!]
 
 * Support for INSPIRE and PoC UK-PDC profiles
@@ -20,6 +29,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#65](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/65)
 * Title, description and example meta elements to JSON schemas
   [#80](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/80)
+* Version 2 configurations for ISO 19115-1 and ISO 19115-2 to support backwards incompatible schema changes
+  [#102](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/102)
 
 ### Fixed
 

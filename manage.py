@@ -10,8 +10,8 @@ from jsonref import JsonRef
 
 from app import create_app
 
-from tests.resources.configs.iso19115_1_v1_standard import configs_all as iso19115_1_v1_standard_configs
-from tests.resources.configs.iso19115_2_v1_standard import configs_all as iso19115_2_v1_standard_configs
+from tests.resources.configs.iso19115_1_standard import configs_all as iso19115_1_v1_standard_configs
+from tests.resources.configs.iso19115_2_standard import configs_all as iso19115_2_v1_standard_configs
 from tests.resources.configs.test_metadata_standard import configs_all as test_metadata_standard_configs
 
 app = create_app()
@@ -21,9 +21,9 @@ app = create_app()
 def capture_test_records():
     """Capture records for use in tests."""
     standards = {
-        "test-standard": {"version": "v1", "configurations": list(test_metadata_standard_configs.keys())},
-        "iso-19115-1": {"version": "v1", "configurations": list(iso19115_1_v1_standard_configs.keys())},
-        "iso-19115-2": {"version": "v1", "configurations": list(iso19115_2_v1_standard_configs.keys())},
+        "test-standard": {"configurations": list(test_metadata_standard_configs.keys())},
+        "iso-19115-1": {"configurations": list(iso19115_1_v1_standard_configs.keys())},
+        "iso-19115-2": {"configurations": list(iso19115_2_v1_standard_configs.keys())},
     }
     for standard, options in standards.items():
         for config in options["configurations"]:
@@ -31,7 +31,8 @@ def capture_test_records():
             response = requests.get(f"http://host.docker.internal:9000/standards/{standard}/{config}")
             response.raise_for_status()
 
-            response_file_path = Path(f"./tests/resources/records/{standard}-{options['version']}/{config}-record.xml")
+            response_file_path = Path(f"./tests/resources/records/{standard}/{config}-record.xml")
+            response_file_path.parent.mkdir(parents=True, exist_ok=True)
             with open(response_file_path, mode="w") as response_file:
                 response_file.write(response.text)
 
@@ -39,7 +40,12 @@ def capture_test_records():
 @app.cli.command()
 def generate_schemas():
     """Inline JSON Schema references in configuration schemas"""
-    schemas = [{"id": "iso_19115_1_v1", "resolve": False}, {"id": "iso_19115_2_v1", "resolve": True}]
+    schemas = [
+        {"id": "iso_19115_1_v1", "resolve": False},
+        {"id": "iso_19115_2_v1", "resolve": True},
+        {"id": "iso_19115_1_v2", "resolve": False},
+        {"id": "iso_19115_2_v2", "resolve": True},
+    ]
 
     for schema in schemas:
         print(f"Generating schema for [{schema['id']}]")

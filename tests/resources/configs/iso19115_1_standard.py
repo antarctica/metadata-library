@@ -2,7 +2,7 @@ import datetime
 
 from copy import deepcopy
 
-minimal_record = {
+minimal_record_v1 = {
     "language": "eng",
     "character_set": "utf-8",
     "hierarchy_level": "dataset",
@@ -28,15 +28,15 @@ minimal_record = {
     },
 }
 
-minimal_record_with_required_doi_citation = deepcopy(minimal_record)  # type: dict
-minimal_record_with_required_doi_citation["resource"]["constraints"] = {
+minimal_record_with_required_doi_citation_v1 = deepcopy(minimal_record_v1)  # type: dict
+minimal_record_with_required_doi_citation_v1["resource"]["constraints"] = {
     "usage": [
         {"restriction_code": "otherRestrictions", "required_citation": {"doi": "https://doi.org/10.7939/R3QZ22K64"}}
     ]
 }
 
 # noinspection DuplicatedCode,HttpUrlsUsage
-base_simple_record = {
+base_simple_record_v1 = {
     "language": "eng",
     "character_set": "utf-8",
     "hierarchy_level": "dataset",
@@ -138,7 +138,7 @@ base_simple_record = {
 }
 
 # noinspection DuplicatedCode,HttpUrlsUsage
-base_complex_record = {
+base_complex_record_v1 = {
     "language": "eng",
     "character_set": "utf-8",
     "hierarchy_level": "dataset",
@@ -305,7 +305,7 @@ base_complex_record = {
 }
 
 # noinspection DuplicatedCode,HttpUrlsUsage
-complete_record = {
+complete_record_v1 = {
     "language": "eng",
     "character_set": "utf-8",
     "hierarchy_level": "dataset",
@@ -542,13 +542,38 @@ complete_record = {
     },
 }
 
-configs_safe = {
-    "minimal": minimal_record,
-    "base-simple": base_simple_record,
-    "base-complex": base_complex_record,
-    "complete": complete_record,
+minimal_record_v2 = deepcopy(minimal_record_v1)  # type: dict
+
+base_simple_record_v2 = deepcopy(base_simple_record_v1)  # type: dict
+
+base_complex_record_v2 = deepcopy(base_complex_record_v1)  # type: dict
+
+complete_record_v2 = deepcopy(complete_record_v1)  # type: dict
+
+minimal_record_with_required_doi_citation_v2 = deepcopy(minimal_record_with_required_doi_citation_v1)  # type: dict
+
+configs_safe_v1 = {
+    "minimal_v1": minimal_record_v1,
+    "base-simple_v1": base_simple_record_v1,
+    "base-complex_v1": base_complex_record_v1,
+    "complete_v1": complete_record_v1,
 }
-configs_unsafe = {
-    "minimal-required-doi-citation": minimal_record_with_required_doi_citation,
+configs_safe_v2 = {
+    "minimal_v2": minimal_record_v2,
+    "base-simple_v2": base_simple_record_v2,
+    "base-complex_v2": base_complex_record_v2,
+    "complete_v2": complete_record_v2,
 }
-configs_all = {**configs_safe, **configs_unsafe}
+configs_safe_all = {**configs_safe_v1, **configs_safe_v2}
+
+configs_unsafe_v1 = {
+    "minimal-required-doi-citation_v1": minimal_record_with_required_doi_citation_v1,
+}
+configs_unsafe_v2 = {
+    "minimal-required-doi-citation_v2": minimal_record_with_required_doi_citation_v2,
+}
+configs_unsafe_all = {**configs_unsafe_v1, **configs_unsafe_v2}
+
+configs_v1_all = {**configs_safe_v1, **configs_unsafe_v1}
+configs_v2_all = {**configs_safe_v2, **configs_unsafe_v2}
+configs_all = {**configs_v1_all, **configs_v2_all}
