@@ -72,12 +72,12 @@ class DataIdentification(MetadataRecordElement):
         if len(_contacts) > 0:
             _["contacts"] = _contacts
 
-        resource_maintenance = ResourceMaintenance(
+        identification_maintenance = ResourceMaintenance(
             record=self.record, attributes=self.attributes, xpath=f"{self.xpath}"
         )
-        _resource_maintenance = resource_maintenance.make_config()
-        if bool(_resource_maintenance):
-            _["maintenance"] = _resource_maintenance
+        _identification_maintenance = identification_maintenance.make_config()
+        if bool(_identification_maintenance):
+            _["maintenance"] = _identification_maintenance
 
         _descriptive_keywords = []
         keywords_length = int(
@@ -207,7 +207,7 @@ class DataIdentification(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=citation_wrapper,
-            element_attributes=self.element_attributes["resource"],
+            element_attributes=self.element_attributes["identification"],
         )
         citation.make_element()
 
@@ -215,7 +215,7 @@ class DataIdentification(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=data_identification_element,
-            element_attributes=self.attributes["resource"],
+            element_attributes=self.attributes["identification"],
         )
         abstract.make_element()
 
@@ -223,12 +223,12 @@ class DataIdentification(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=data_identification_element,
-            element_attributes=self.attributes["resource"],
+            element_attributes=self.attributes["identification"],
         )
         credit.make_element()
 
-        if "contacts" in self.attributes["resource"]:
-            for point_of_contact_attributes in self.attributes["resource"]["contacts"]:
+        if "contacts" in self.attributes["identification"]:
+            for point_of_contact_attributes in self.attributes["identification"]["contacts"]:
                 for role in point_of_contact_attributes["role"]:
                     if role != "distributor":
                         _point_of_contact = point_of_contact_attributes.copy()
@@ -242,17 +242,17 @@ class DataIdentification(MetadataRecordElement):
                         )
                         point_of_contact.make_element()
 
-        if "maintenance" in self.attributes["resource"]:
-            resource_maintenance = ResourceMaintenance(
+        if "maintenance" in self.attributes["identification"]:
+            identification_maintenance = ResourceMaintenance(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=data_identification_element,
-                element_attributes=self.element_attributes["resource"]["maintenance"],
+                element_attributes=self.element_attributes["identification"]["maintenance"],
             )
-            resource_maintenance.make_element()
+            identification_maintenance.make_element()
 
-        if "keywords" in self.attributes["resource"]:
-            for keyword_attributes in self.attributes["resource"]["keywords"]:
+        if "keywords" in self.attributes["identification"]:
+            for keyword_attributes in self.attributes["identification"]["keywords"]:
                 descriptive_keywords = DescriptiveKeywords(
                     record=self.record,
                     attributes=self.attributes,
@@ -261,30 +261,30 @@ class DataIdentification(MetadataRecordElement):
                 )
                 descriptive_keywords.make_element()
 
-        if "constraints" in self.attributes["resource"]:
+        if "constraints" in self.attributes["identification"]:
             constraints = ResourceConstraints(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=data_identification_element,
-                element_attributes=self.attributes["resource"]["constraints"],
+                element_attributes=self.attributes["identification"]["constraints"],
             )
             constraints.make_element()
 
-        if "spatial_representation_type" in self.attributes["resource"]:
+        if "spatial_representation_type" in self.attributes["identification"]:
             spatial_representation_type = SpatialRepresentationType(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=data_identification_element,
-                element_attributes=self.attributes["resource"],
+                element_attributes=self.attributes["identification"],
             )
             spatial_representation_type.make_element()
 
-        if "spatial_resolution" in self.attributes["resource"]:  # pragma: no cover
+        if "spatial_resolution" in self.attributes["identification"]:  # pragma: no cover
             spatial_resolution = SpatialResolution(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=data_identification_element,
-                element_attributes=self.attributes["resource"],
+                element_attributes=self.attributes["identification"],
             )
             spatial_resolution.make_element()
 
@@ -292,7 +292,7 @@ class DataIdentification(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=data_identification_element,
-            element_attributes=self.attributes["resource"],
+            element_attributes=self.attributes["identification"],
         )
         character_set.make_element()
 
@@ -300,12 +300,12 @@ class DataIdentification(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=data_identification_element,
-            element_attributes=self.attributes["resource"],
+            element_attributes=self.attributes["identification"],
         )
         language.make_element()
 
-        if "topics" in self.attributes["resource"]:
-            for topic_attribute in self.attributes["resource"]["topics"]:
+        if "topics" in self.attributes["identification"]:
+            for topic_attribute in self.attributes["identification"]["topics"]:
                 topic = TopicCategory(
                     record=self.record,
                     attributes=self.attributes,
@@ -314,21 +314,21 @@ class DataIdentification(MetadataRecordElement):
                 )
                 topic.make_element()
 
-        if "extent" in self.attributes["resource"]:
+        if "extent" in self.attributes["identification"]:
             extent = Extent(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=data_identification_element,
-                element_attributes=self.attributes["resource"]["extent"],
+                element_attributes=self.attributes["identification"]["extent"],
             )
             extent.make_element()
 
-        if "supplemental_information" in self.attributes["resource"]:
+        if "supplemental_information" in self.attributes["identification"]:
             supplemental_information = SupplementalInformation(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=data_identification_element,
-                element_attributes=self.attributes["resource"],
+                element_attributes=self.attributes["identification"],
             )
             supplemental_information.make_element()
 

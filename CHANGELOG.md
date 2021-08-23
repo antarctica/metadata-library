@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Modules for standards no longer include a version (e.g. `bas_metadata_library.standards.iso_19115_2` rather than 
   `bas_metadata_library.standards.iso_19115_2_v1`)
   [#102](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/102)
-
 * `MetadataRecordConfiguration` classes renamed to include version (e.g. `MetadataRecordConfigurationV1`)
   [#102](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/102)
 
@@ -43,6 +42,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+* Configuration schema v2 root level properties changed from v2 (resource -> identification, new metadata)
+  [#109](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/109)
 * Using definitions property consistently in configuration schemas
   [#115](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/115)
 * Configuration schemas relocated to `schemas` module and split into source and distribution versions to avoid relying 

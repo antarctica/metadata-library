@@ -37,7 +37,7 @@ def test_invalid_configuration_v2():
     with pytest.raises(ValidationError) as e:
         configuration = MetadataRecordConfigV2(**config)
         configuration.validate()
-    assert "'language' is a required property" in str(e.value)
+    assert "'hierarchy_level' is a required property" in str(e.value)
 
 
 @pytest.mark.usefixtures("app_client")

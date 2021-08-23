@@ -4,7 +4,6 @@
 from lxml.etree import SubElement  # nosec
 
 from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement
-from bas_metadata_library.standards.iso_19115_common.common_elements import Citation
 from bas_metadata_library.standards.iso_19115_common.base_elements import ScopeCode
 
 
@@ -34,7 +33,7 @@ class DataQuality(MetadataRecordElement):
             record=self.record,
             attributes=self.attributes,
             parent_element=data_quality_element,
-            element_attributes=self.attributes["resource"],
+            element_attributes=self.attributes["identification"],
         )
         lineage.make_element()
 
