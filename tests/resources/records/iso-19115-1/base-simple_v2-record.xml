@@ -357,7 +357,7 @@
           <gmd:name>
             <gco:CharacterString>netCDF</gco:CharacterString>
           </gmd:name>
-          <gmd:version gco:nilReason="unknown"/>
+          <gmd:version gco:nilReason="missing"/>
         </gmd:MD_Format>
       </gmd:distributionFormat>
       <gmd:distributor>

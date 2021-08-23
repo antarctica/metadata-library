@@ -173,7 +173,7 @@ class DistributionFormat(MetadataRecordElement):
             SubElement(
                 distribution_format_element,
                 f"{{{self.ns.gmd}}}version",
-                attrib={f"{{{self.ns.gco}}}nilReason": "unknown"},
+                attrib={f"{{{self.ns.gco}}}nilReason": "missing"},
             )
 
 

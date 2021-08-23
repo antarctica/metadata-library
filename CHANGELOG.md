@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+* Corrected `gco:nillReason` for missing data transfer formats (from `unknown` to `missing`)
+  [#64](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/64)
 * Configuration schema for datestamp changed to require date values rather than date-time
   [#82](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/82)
 * Configuration schema for DOIs changed to require URI values rather than free-text
