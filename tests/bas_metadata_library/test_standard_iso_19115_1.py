@@ -924,7 +924,15 @@ def test_distribution_formats(get_record_response, config_name):
         if "version" in _format.keys():
             version_values = record.xpath(
                 f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/"
-                f"gmd:version/gmd:version[@gco:nilReason = 'unknown']",
+                f"gmd:version/gco:CharacterString/text()",
+                namespaces=namespaces.nsmap(),
+            )
+            assert len(version_values) == 1
+            assert version_values[0] == _format["version"]
+        if "version" not in _format.keys():
+            version_values = record.xpath(
+                f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/"
+                f"gmd:version[@gco:nilReason = 'missing']",
                 namespaces=namespaces.nsmap(),
             )
             assert len(version_values) == 1

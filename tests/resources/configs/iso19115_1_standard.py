@@ -1052,6 +1052,7 @@ complete_record_v2 = {
         "formats": [
             {
                 "format": "netCDF",
+                "version": "4",
                 "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
             }
         ],
