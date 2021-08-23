@@ -83,8 +83,8 @@ class DataDistribution(MetadataRecordElement):
         data_distribution_wrapper = SubElement(self.record, f"{{{self.ns.gmd}}}distributionInfo")
         data_distribution_element = SubElement(data_distribution_wrapper, f"{{{self.ns.gmd}}}MD_Distribution")
 
-        if "formats" in self.attributes["resource"]:
-            for format_attributes in self.attributes["resource"]["formats"]:
+        if "formats" in self.attributes["identification"]:
+            for format_attributes in self.attributes["identification"]["formats"]:
                 distribution_format = DistributionFormat(
                     record=self.record,
                     attributes=self.attributes,
@@ -93,8 +93,8 @@ class DataDistribution(MetadataRecordElement):
                 )
                 distribution_format.make_element()
 
-        if "contacts" in self.attributes["resource"]:
-            for point_of_contact_attributes in self.attributes["resource"]["contacts"]:
+        if "contacts" in self.attributes["identification"]:
+            for point_of_contact_attributes in self.attributes["identification"]["contacts"]:
                 for role in point_of_contact_attributes["role"]:
                     if role == "distributor":
                         _point_of_contact = point_of_contact_attributes.copy()
@@ -108,8 +108,8 @@ class DataDistribution(MetadataRecordElement):
                         )
                         distributor.make_element()
 
-        if "transfer_options" in self.attributes["resource"]:
-            for transfer_attributes in self.attributes["resource"]["transfer_options"]:
+        if "transfer_options" in self.attributes["identification"]:
+            for transfer_attributes in self.attributes["identification"]["transfer_options"]:
                 transfer_options = TransferOptions(
                     record=self.record,
                     attributes=self.attributes,

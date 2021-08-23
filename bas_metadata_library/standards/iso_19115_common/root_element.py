@@ -17,7 +17,7 @@ from bas_metadata_library.standards.iso_19115_common.utils import contacts_have_
 
 class ISOMetadataRecord(MetadataRecordElement):
     def make_config(self) -> dict:
-        _ = {}
+        _ = {"metadata": {}, "identification": {}}
 
         file_identifier = FileIdentifier(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _file_identifier = file_identifier.make_config()
@@ -29,7 +29,7 @@ class ISOMetadataRecord(MetadataRecordElement):
         _language = language.make_config()
         if _language != "":
             # noinspection PyTypeChecker
-            _["language"] = _language
+            _["metadata"]["language"] = _language
 
         character_set = CharacterSet(
             record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:characterSet"
@@ -37,7 +37,7 @@ class ISOMetadataRecord(MetadataRecordElement):
         _character_set = character_set.make_config()
         if _character_set != "":
             # noinspection PyTypeChecker
-            _["character_set"] = _character_set
+            _["metadata"]["character_set"] = _character_set
 
         hierarchy_level = HierarchyLevel(
             record=self.record, attributes=self.attributes, xpath=f"/{self.xpath}/gmd:hierarchyLevel"
@@ -63,18 +63,18 @@ class ISOMetadataRecord(MetadataRecordElement):
                 _contacts.append(_contact)
         if len(_contacts) > 0:
             # noinspection PyTypeChecker
-            _["contacts"] = _contacts
+            _["metadata"]["contacts"] = _contacts
 
         date_stamp = DateStamp(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _date_stamp = date_stamp.make_config()
         if _date_stamp is not None:
             # noinspection PyTypeChecker
-            _["date_stamp"] = _date_stamp
+            _["metadata"]["date_stamp"] = _date_stamp
 
         metadata_standard = MetadataStandard(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _metadata_standard = metadata_standard.make_config()
         if bool(_metadata_standard):
-            _["metadata_standard"] = _metadata_standard
+            _["metadata"]["metadata_standard"] = _metadata_standard
 
         reference_system_identifier = ReferenceSystemInfo(
             record=self.record, attributes=self.attributes, xpath=f"{self.xpath}"
@@ -84,28 +84,26 @@ class ISOMetadataRecord(MetadataRecordElement):
             # noinspection PyTypeChecker
             _["reference_system_info"] = _reference_system_identifier
 
-        _resource = {}
-
         data_identification = DataIdentification(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _data_identification = data_identification.make_config()
         if bool(_data_identification):
-            _resource = {**_resource, **_data_identification}
+            _["identification"] = {**_["identification"], **_data_identification}
 
         data_distribution = DataDistribution(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _data_distribution = data_distribution.make_config()
         if bool(_data_distribution):
             # detach distributors and merge into main contacts list
             if "distributors" in _data_distribution.keys():
-                if "contacts" not in _resource.keys():  # pragma: no cover
-                    _resource["contacts"] = []
-                _resource["contacts"] = _resource["contacts"] + _data_distribution["distributors"]
+                if "contacts" not in _["identification"].keys():  # pragma: no cover
+                    _["identification"]["contacts"] = []
+                _["identification"]["contacts"] = _["identification"]["contacts"] + _data_distribution["distributors"]
                 del _data_distribution["distributors"]
-            _resource = {**_resource, **_data_distribution}
+            _["identification"] = {**_["identification"], **_data_distribution}
 
         data_quality = DataQuality(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _data_quality = data_quality.make_config()
         if bool(_data_quality):
-            _resource = {**_resource, **_data_quality}
+            _["identification"] = {**_["identification"], **_data_quality}
 
         metadata_maintenance = MetadataMaintenance(
             record=self.record, attributes=self.attributes, xpath=f"{self.xpath}"
@@ -113,52 +111,61 @@ class ISOMetadataRecord(MetadataRecordElement):
         _metadata_maintenance = metadata_maintenance.make_config()
         if bool(_metadata_maintenance):
             # noinspection PyTypeChecker
-            _["maintenance"] = _metadata_maintenance
+            _["metadata"]["maintenance"] = _metadata_maintenance
 
-        if "contacts" in _resource.keys():
-            _resource["contacts"] = contacts_condense_roles(contacts=_resource["contacts"])
-        if bool(_resource):
-            _["resource"] = _resource
+        if "identification" in _.keys() and "contacts" in _["identification"].keys():
+            _["identification"]["contacts"] = contacts_condense_roles(contacts=_["identification"]["contacts"])
+
+        if not _["metadata"]:  # pragma: no cover
+            del _["metadata"]
+        if not _["identification"]:  # pragma: no cover
+            del _["identification"]
+
         return _
 
     def make_element(self):
-        identifier = FileIdentifier(record=self.record, attributes=self.attributes, parent_element=self.record)
-        identifier.make_element()
+        if "file_identifier" in self.attributes:
+            identifier = FileIdentifier(record=self.record, attributes=self.attributes, parent_element=self.record)
+            identifier.make_element()
 
-        if "language" in self.attributes:
-            language = Language(record=self.record, attributes=self.attributes)
+        if "metadata" in self.attributes and "language" in self.attributes["metadata"]:
+            language = Language(record=self.record, attributes=self.attributes["metadata"])
             language.make_element()
 
-        if "character_set" in self.attributes:
-            character_set = CharacterSet(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
+        if "metadata" in self.attributes and "character_set" in self.attributes["metadata"]:
+            character_set = CharacterSet(
+                record=self.record, attributes=self.attributes["metadata"], xpath=f"{self.xpath}"
+            )
             character_set.make_element()
 
         if "hierarchy_level" in self.attributes:
             hierarchy_level = HierarchyLevel(record=self.record, attributes=self.attributes)
             hierarchy_level.make_element()
 
-        for contact_attributes in self.attributes["contacts"]:
-            for role in contact_attributes["role"]:
-                _contact = contact_attributes.copy()
-                _contact["role"] = role
+        if "metadata" in self.attributes and "contacts" in self.attributes["metadata"]:
+            for contact_attributes in self.attributes["metadata"]["contacts"]:
+                for role in contact_attributes["role"]:
+                    _contact = contact_attributes.copy()
+                    _contact["role"] = role
 
-                contact = Contact(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=self.record,
-                    element_attributes=_contact,
-                )
-                contact.make_element()
+                    contact = Contact(
+                        record=self.record,
+                        attributes=self.attributes,
+                        parent_element=self.record,
+                        element_attributes=_contact,
+                    )
+                    contact.make_element()
 
-        date_stamp = DateStamp(record=self.record, attributes=self.attributes)
-        date_stamp.make_element()
+        if "metadata" in self.attributes and "date_stamp" in self.attributes["metadata"]:
+            date_stamp = DateStamp(record=self.record, attributes=self.attributes["metadata"])
+            date_stamp.make_element()
 
-        if "metadata_standard" in self.attributes:
+        if "metadata" in self.attributes and "metadata_standard" in self.attributes["metadata"]:
             metadata_standard = MetadataStandard(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=self.record,
-                element_attributes=self.attributes["metadata_standard"],
+                element_attributes=self.attributes["metadata"]["metadata_standard"],
             )
             metadata_standard.make_element()
 
@@ -171,34 +178,42 @@ class ISOMetadataRecord(MetadataRecordElement):
             )
             reference_system_info.make_element()
 
-        data_identification = DataIdentification(record=self.record, attributes=self.attributes)
-        data_identification.make_element()
+        if "identification" in self.attributes:
+            data_identification = DataIdentification(record=self.record, attributes=self.attributes)
+            data_identification.make_element()
 
-        if (
-            "formats" in self.attributes["resource"]
-            or "transfer_options" in self.attributes["resource"]
+        # if
+        #   [identification][formats] or
+        #   [identification][transfer_options] or
+        #   [identification][contacts]*[role='distributor']
+        if "identification" in self.attributes and (
+            "formats" in self.attributes["identification"]
+            or "transfer_options" in self.attributes["identification"]
             or (
-                "contacts" in self.attributes["resource"]
-                and contacts_have_role(contacts=self.attributes["resource"]["contacts"], role="distributor")
+                "contacts" in self.attributes["identification"]
+                and contacts_have_role(contacts=self.attributes["identification"]["contacts"], role="distributor")
             )
         ):
             data_distribution = DataDistribution(record=self.record, attributes=self.attributes)
             data_distribution.make_element()
 
-        if (
-            "hierarchy_level" in self.attributes
-            or "measures" in self.attributes["resource"]
-            or "lineage" in self.attributes["resource"]
+        # if
+        #   [hierarchy_level] or
+        #   [identification][measures] or
+        #   [identification][lineage]
+        if ("hierarchy_level" in self.attributes) or (
+            "identification" in self.attributes
+            and ("measures" in self.attributes["identification"] or "lineage" in self.attributes["identification"])
         ):
             data_quality = DataQuality(record=self.record, attributes=self.attributes)
             data_quality.make_element()
 
-        if "maintenance" in self.attributes:
+        if "metadata" in self.attributes and "maintenance" in self.attributes["metadata"]:
             metadata_maintenance = MetadataMaintenance(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=self.record,
-                element_attributes=self.attributes["maintenance"],
+                element_attributes=self.attributes["metadata"]["maintenance"],
             )
             metadata_maintenance.make_element()
 

@@ -36,9 +36,7 @@ from tests.resources.configs.iso19115_1_standard import (
     configs_safe_v1,
     configs_safe_v2,
     configs_unsafe_v2,
-    configs_safe_all,
     configs_v2_all,
-    configs_all,
 )
 
 standard = "iso-19115-1"
@@ -58,11 +56,11 @@ def test_invalid_configuration_v2():
     with pytest.raises(ValidationError) as e:
         configuration = MetadataRecordConfigV2(**config)
         configuration.validate()
-    assert "'language' is a required property" in str(e.value)
+    assert "'hierarchy_level' is a required property" in str(e.value)
 
 
 @pytest.mark.usefixtures("app_client")
-@pytest.mark.parametrize("config_name", list(configs_all.keys()))
+@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
 def test_response(client, config_name):
     with patch(
         "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraints."
@@ -79,7 +77,7 @@ def test_response(client, config_name):
 
 
 @pytest.mark.usefixtures("app_client")
-@pytest.mark.parametrize("config_name", list(configs_all.keys()))
+@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
 def test_complete_record(client, config_name):
     with open(f"tests/resources/records/iso-19115-1/{config_name}-record.xml") as expected_contents_file:
         expected_contents = expected_contents_file.read()
@@ -115,7 +113,7 @@ def test_xml_namespaces(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_all.keys()))
+@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
 def test_root_element(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
 
@@ -124,24 +122,8 @@ def test_root_element(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v1.keys()))
-def test_file_identifier_v1(get_record_response, config_name):
-    record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v1[config_name]
-
-    if "file_identifier" not in config:
-        pytest.skip("record does not contain a file identifier")
-
-    file_identifier = record.xpath(
-        f"/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text() = '{config['file_identifier']}'",
-        namespaces=namespaces.nsmap(),
-    )
-    assert file_identifier is True
-
-
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_file_identifier_v2(get_record_response, config_name):
+def test_file_identifier(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
@@ -161,13 +143,13 @@ def test_language(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "language" not in config:
-        pytest.skip("record does not contain a language")
+    if "metadata" not in config or "language" not in config["metadata"]:
+        pytest.skip("record does not contain a metadata language")
 
     language_element = record.xpath(
         f"/gmd:MD_Metadata/gmd:language/gmd:LanguageCode[@codeList = "
         f"'http://www.loc.gov/standards/iso639-2/php/code_list.php' and @codeListValue = "
-        f"'{config['language']}']/text() = '{config['language']}'",
+        f"'{config['metadata']['language']}']/text() = '{config['metadata']['language']}'",
         namespaces=namespaces.nsmap(),
     )
     assert language_element is True
@@ -179,14 +161,14 @@ def test_character_set(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "character_set" not in config:
-        pytest.skip("record does not contain a character set")
+    if "metadata" not in config or "character_set" not in config["metadata"]:
+        pytest.skip("record does not contain a metadata character set")
 
     character_set_element = record.xpath(
         f"/gmd:MD_Metadata/gmd:characterSet/gmd:MD_CharacterSetCode[@codeList = "
         f"'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/"
-        f"gmxCodelists.xml#MD_CharacterSetCode' and @codeListValue = '{config['character_set']}']/text() = "
-        f"'{config['character_set']}'",
+        f"gmxCodelists.xml#MD_CharacterSetCode' and @codeListValue = '{config['metadata']['character_set']}']/text() = "
+        f"'{config['metadata']['character_set']}'",
         namespaces=namespaces.nsmap(),
     )
     assert character_set_element is True
@@ -232,19 +214,21 @@ def test_contact(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "contacts" not in config:
-        pytest.skip("record does not contain any contacts")
+    if "metadata" not in config or "contacts" not in config["metadata"]:
+        pytest.skip("record does not contain any metadata contacts")
 
     contact_elements = record.xpath(
         "/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty", namespaces=namespaces.nsmap()
     )
-    assert len(contact_elements) == len(config["contacts"])
-    if len(config["contacts"]) != 1 or ("roles" in config["contacts"][0] and len(config["contacts"][0]["roles"] != 1)):
+    assert len(contact_elements) == len(config["metadata"]["contacts"])
+    if len(config["metadata"]["contacts"]) != 1 or (
+        "roles" in config["metadata"]["contacts"][0] and len(config["metadata"]["contacts"][0]["roles"] != 1)
+    ):
         raise NotImplementedError(
             "Testing support for multiple metadata contacts, or a contact with multiple roles, has not yet been added"
         )
 
-    responsible_party(element=contact_elements[0], config=config["contacts"][0])
+    responsible_party(element=contact_elements[0], config=config["metadata"]["contacts"][0])
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -253,12 +237,12 @@ def test_datestamp(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "date_stamp" not in config:
-        pytest.skip("record does not contain a datestamp")
+    if "metadata" not in config or "date_stamp" not in config["metadata"]:
+        pytest.skip("record does not contain a metadata datestamp")
 
     datestamps = record.xpath("/gmd:MD_Metadata/gmd:dateStamp/gco:Date/text()", namespaces=namespaces.nsmap())
     assert len(datestamps) == 1
-    assert date.fromisoformat(datestamps[0]) == config["date_stamp"]
+    assert date.fromisoformat(datestamps[0]) == config["metadata"]["date_stamp"]
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -267,12 +251,16 @@ def test_metadata_standard(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "metadata_standard" not in config or "name" not in config["metadata_standard"]:
+    if (
+        "metadata" not in config
+        or "metadata_standard" not in config["metadata"]
+        or "name" not in config["metadata"]["metadata_standard"]
+    ):
         pytest.skip("record does not contain a metadata standard")
 
     metadata_standard = record.xpath(
         f"/gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString/text() = "
-        f"'{config['metadata_standard']['name']}'",
+        f"'{config['metadata']['metadata_standard']['name']}'",
         namespaces=namespaces.nsmap(),
     )
     assert metadata_standard is True
@@ -284,12 +272,16 @@ def test_metadata_standard_version(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "metadata_standard" not in config or "version" not in config["metadata_standard"]:
+    if (
+        "metadata" not in config
+        or "metadata_standard" not in config["metadata"]
+        or "version" not in config["metadata"]["metadata_standard"]
+    ):
         pytest.skip("record does not contain a metadata standard version")
 
     metadata_standard_versions = record.xpath(
         f"/gmd:MD_Metadata/gmd:metadataStandardVersion/gco:CharacterString/text() = "
-        f"'{config['metadata_standard']['version']}'",
+        f"'{config['metadata']['metadata_standard']['version']}'",
         namespaces=namespaces.nsmap(),
     )
     assert metadata_standard_versions is True
@@ -356,15 +348,15 @@ def test_identification_citation(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config:
-        pytest.skip("record does not contain a resource citation")
+    if "identification" not in config:
+        pytest.skip("record does not contain a identification citation")
 
-    resource_citation_elements = record.xpath(
+    identification_citation_elements = record.xpath(
         "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation",
         namespaces=namespaces.nsmap(),
     )
-    assert len(resource_citation_elements) == 1
-    citation(element=resource_citation_elements[0], config=config["resource"])
+    assert len(identification_citation_elements) == 1
+    citation(element=identification_citation_elements[0], config=config["identification"])
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -373,15 +365,15 @@ def test_identification_abstract(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "abstract" not in config["resource"]:
-        pytest.skip("record does not contain a resource abstract")
+    if "identification" not in config or "abstract" not in config["identification"]:
+        pytest.skip("record does not contain a identification abstract")
 
-    resource_abstract_value = record.xpath(
+    identification_abstract_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString/text() = "
-        f"'{config['resource']['abstract']}'",
+        f"'{config['identification']['abstract']}'",
         namespaces=namespaces.nsmap(),
     )
-    assert resource_abstract_value is True
+    assert identification_abstract_value is True
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -390,15 +382,15 @@ def test_identification_credit(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "credit" not in config["resource"]:
-        pytest.skip("record does not contain a resource credit")
+    if "identification" not in config or "credit" not in config["identification"]:
+        pytest.skip("record does not contain an identification credit")
 
-    resource_credit_value = record.xpath(
+    identification_credit_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:credit/gco:CharacterString/text() = "
-        f"'{config['resource']['credit']}'",
+        f"'{config['identification']['credit']}'",
         namespaces=namespaces.nsmap(),
     )
-    assert resource_credit_value is True
+    assert identification_credit_value is True
 
 
 # noinspection PyUnboundLocalVariable
@@ -447,11 +439,11 @@ def test_identification_points_of_contact(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "contacts" not in config["resource"]:
-        pytest.skip("record does not contain any resource points of contact")
+    if "identification" not in config or "contacts" not in config["identification"]:
+        pytest.skip("record does not contain any identification points of contact")
 
     for poc in _resolve_points_of_contact_xpaths(
-        point_of_contact_type="points-of-contact", config=config["resource"]["contacts"]
+        point_of_contact_type="points-of-contact", config=config["identification"]["contacts"]
     ):
         # Responsible Party common function expects a single role but config allows multiple so loop through
         # The 'distributor' role is checked for elsewhere in test_distribution_distributors()
@@ -475,16 +467,16 @@ def test_identification_maintenance(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "maintenance" not in config["resource"]:
-        pytest.skip("record does not contain resource maintenance")
+    if "identification" not in config or "maintenance" not in config["identification"]:
+        pytest.skip("record does not contain identification maintenance")
 
-    resource_maintenance_elements = record.xpath(
+    identification_maintenance_elements = record.xpath(
         "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceMaintenance/"
         "gmd:MD_MaintenanceInformation",
         namespaces=namespaces.nsmap(),
     )
-    assert len(resource_maintenance_elements) == 1
-    maintenance(element=resource_maintenance_elements[0], config=config["resource"]["maintenance"])
+    assert len(identification_maintenance_elements) == 1
+    maintenance(element=identification_maintenance_elements[0], config=config["identification"]["maintenance"])
 
 
 def _resolve_descriptive_keywords_xpaths(config) -> List[dict]:
@@ -521,10 +513,10 @@ def test_identification_descriptive_keywords(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "keywords" not in config["resource"]:
-        pytest.skip("record does not contain resource keywords")
+    if "identification" not in config or "keywords" not in config["identification"]:
+        pytest.skip("record does not contain identification keywords")
 
-    for keyword in _resolve_descriptive_keywords_xpaths(config["resource"]["keywords"]):
+    for keyword in _resolve_descriptive_keywords_xpaths(config["identification"]["keywords"]):
         descriptive_keywords_elements = record.xpath(keyword["xpath"], namespaces=namespaces.nsmap())
         assert len(descriptive_keywords_elements) == 1
 
@@ -562,12 +554,12 @@ def test_identification_descriptive_keywords(get_record_response, config_name):
 
 
 def _resolve_resource_constraints(constraint_type, config):
-    if constraint_type == "access" and len(config["resource"]["constraints"]["access"]) >= 1:
+    if constraint_type == "access" and len(config["identification"]["constraints"]["access"]) >= 1:
         raise NotImplementedError("Testing support for multiple access constraints has not yet been added")
     elif (
         constraint_type == "access"
-        and len(config["resource"]["constraints"]["access"]) == 1
-        and "restriction_code" not in list(config["resource"]["constraints"]["access"][0].keys())
+        and len(config["identification"]["constraints"]["access"]) == 1
+        and "restriction_code" not in list(config["identification"]["constraints"]["access"][0].keys())
     ):
         raise NotImplementedError("Testing support for this set of access constraints has not yet been added")
     elif constraint_type == "usage":
@@ -595,39 +587,43 @@ def test_identification_resource_constraints(client, config_name):
         record = fromstring(response.data)
         config = configs_v2_all[config_name]
 
-        if "resource" not in config or "constraints" not in config["resource"]:
-            pytest.skip("record does not contain resource constraints")
+        if "identification" not in config or "constraints" not in config["identification"]:
+            pytest.skip("record does not contain identification resource constraints")
 
-        if "access" in config["resource"]["constraints"]:
-            _resolve_resource_constraints(constraint_type="usage", config=config["resource"]["constraints"]["usage"])
+        if "access" in config["identification"]["constraints"]:
+            _resolve_resource_constraints(
+                constraint_type="usage", config=config["identification"]["constraints"]["usage"]
+            )
 
-            for access_constraint in config["resource"]["constraints"]["access"]:
+            for access_constraint in config["identification"]["constraints"]["access"]:
                 if "restriction_code" in access_constraint.keys():
                     restriction_code_elements = record.xpath(
                         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
                         f"gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeList = "
                         f"'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/"
                         f"codelist/gmxCodelists.xml#MD_RestrictionCode' and @codeListValue = "
-                        f"'{config['resource']['constraints']['access'][0]['restriction_code']}']/text() = "
-                        f"'{config['resource']['constraints']['access'][0]['restriction_code']}'",
+                        f"'{config['identification']['constraints']['access'][0]['restriction_code']}']/text() = "
+                        f"'{config['identification']['constraints']['access'][0]['restriction_code']}'",
                         namespaces=namespaces.nsmap(),
                     )
                     assert restriction_code_elements is True
 
-                    if "statement" in config["resource"]["constraints"]["access"][0]:
+                    if "statement" in config["identification"]["constraints"]["access"][0]:
                         statement_values = record.xpath(
                             f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints"
                             f"/gmd:MD_LegalConstraints[gmd:accessConstraints[gmd:MD_RestrictionCode]]/"
                             f"gmd:otherConstraints/gco:CharacterString/text() = "
-                            f"'{config['resource']['constraints']['access'][0]['statement']}'",
+                            f"'{config['identification']['constraints']['access'][0]['statement']}'",
                             namespaces=namespaces.nsmap(),
                         )
                         assert statement_values is True
 
-        if "usage" in config["resource"]["constraints"]:
-            _resolve_resource_constraints(constraint_type="usage", config=config["resource"]["constraints"]["usage"])
+        if "usage" in config["identification"]["constraints"]:
+            _resolve_resource_constraints(
+                constraint_type="usage", config=config["identification"]["constraints"]["usage"]
+            )
 
-            for usage_constraint in config["resource"]["constraints"]["usage"]:
+            for usage_constraint in config["identification"]["constraints"]["usage"]:
                 if "copyright_licence" in usage_constraint.keys():
                     copyright_licence_value = record.xpath(
                         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
@@ -685,15 +681,15 @@ def test_identification_spatial_representation_type(get_record_response, config_
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "spatial_representation_type" not in config["resource"]:
-        pytest.skip("record does not contain a resource spatial representation type")
+    if "identification" not in config or "spatial_representation_type" not in config["identification"]:
+        pytest.skip("record does not contain a identification spatial representation type")
 
     spatial_representation_type_elements = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType/"
         f"gmd:MD_SpatialRepresentationTypeCode[@codeList = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/"
         f"ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode' and @codeListValue = "
-        f"'{config['resource']['spatial_representation_type']}']/text()  = "
-        f"'{config['resource']['spatial_representation_type']}'",
+        f"'{config['identification']['spatial_representation_type']}']/text()  = "
+        f"'{config['identification']['spatial_representation_type']}'",
         namespaces=namespaces.nsmap(),
     )
     assert spatial_representation_type_elements is True
@@ -705,10 +701,10 @@ def test_identification_spatial_resolution(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "spatial_resolution" not in config["resource"]:
+    if "identification" not in config or "spatial_resolution" not in config["identification"]:
         pytest.skip("record does not contain a resource spatial resolution")
 
-    if config["resource"]["spatial_resolution"] is not None:
+    if config["identification"]["spatial_resolution"] is not None:
         raise NotImplementedError(
             "Testing support for spatial resolutions other than 'inapplicable' has not yet been added"
         )
@@ -727,13 +723,13 @@ def test_identification_language(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "language" not in config["resource"]:
-        pytest.skip("record does not contain a resource language")
+    if "identification" not in config or "language" not in config["identification"]:
+        pytest.skip("record does not contain a identification language")
 
     language_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode"
         f"[@codeList = 'http://www.loc.gov/standards/iso639-2/php/code_list.php' and @codeListValue = "
-        f"'{config['resource']['language']}']/text() = '{config['resource']['language']}'",
+        f"'{config['identification']['language']}']/text() = '{config['identification']['language']}'",
         namespaces=namespaces.nsmap(),
     )
     assert language_value is True
@@ -745,10 +741,10 @@ def test_identification_topics(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "topics" not in config["resource"]:
+    if "identification" not in config or "topics" not in config["identification"]:
         pytest.skip("record does not contain any ISO topics")
 
-    for topic in config["resource"]["topics"]:
+    for topic in config["identification"]["topics"]:
         topic_value = record.xpath(
             f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/"
             f"gmd:MD_TopicCategoryCode/text() = '{topic}'",
@@ -764,17 +760,17 @@ def test_identification_geographic_bounding_box_extent(get_record_response, conf
     config = configs_safe_v2[config_name]
 
     if (
-        "resource" not in config
-        or "extent" not in config["resource"]
-        or "geographic" not in config["resource"]["extent"]
-        or "bounding_box" not in config["resource"]["extent"]["geographic"]
+        "identification" not in config
+        or "extent" not in config["identification"]
+        or "geographic" not in config["identification"]["extent"]
+        or "bounding_box" not in config["identification"]["extent"]["geographic"]
     ):
         pytest.skip("record does not contain a geographic bounding box extent")
 
     west_bounding_box_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text() = "
-        f"'{config['resource']['extent']['geographic']['bounding_box']['west_longitude']}'",
+        f"'{config['identification']['extent']['geographic']['bounding_box']['west_longitude']}'",
         namespaces=namespaces.nsmap(),
     )
     assert west_bounding_box_value is True
@@ -782,7 +778,7 @@ def test_identification_geographic_bounding_box_extent(get_record_response, conf
     east_bounding_box_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text() = "
-        f"'{config['resource']['extent']['geographic']['bounding_box']['east_longitude']}'",
+        f"'{config['identification']['extent']['geographic']['bounding_box']['east_longitude']}'",
         namespaces=namespaces.nsmap(),
     )
     assert east_bounding_box_value is True
@@ -790,7 +786,7 @@ def test_identification_geographic_bounding_box_extent(get_record_response, conf
     south_bounding_box_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text() = "
-        f"'{config['resource']['extent']['geographic']['bounding_box']['south_latitude']}'",
+        f"'{config['identification']['extent']['geographic']['bounding_box']['south_latitude']}'",
         namespaces=namespaces.nsmap(),
     )
     assert south_bounding_box_value is True
@@ -798,7 +794,7 @@ def test_identification_geographic_bounding_box_extent(get_record_response, conf
     north_bounding_box_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text() = "
-        f"'{config['resource']['extent']['geographic']['bounding_box']['north_latitude']}'",
+        f"'{config['identification']['extent']['geographic']['bounding_box']['north_latitude']}'",
         namespaces=namespaces.nsmap(),
     )
     assert north_bounding_box_value is True
@@ -811,17 +807,17 @@ def test_identification_temporal_extent(get_record_response, config_name):
     config = configs_safe_v2[config_name]
 
     if (
-        "resource" not in config
-        or "extent" not in config["resource"]
-        or "temporal" not in config["resource"]["extent"]
-        or "period" not in config["resource"]["extent"]["temporal"]
+        "identification" not in config
+        or "extent" not in config["identification"]
+        or "temporal" not in config["identification"]["extent"]
+        or "period" not in config["identification"]["extent"]["temporal"]
     ):
         pytest.skip("record does not contain a temporal period extent")
 
     temporal_period_start_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[@gml:id = 'boundingExtent']/"
-        f"gml:beginPosition/text() = '{config['resource']['extent']['temporal']['period']['start'].isoformat()}'",
+        f"gml:beginPosition/text() = '{config['identification']['extent']['temporal']['period']['start'].isoformat()}'",
         namespaces=namespaces.nsmap(),
     )
     assert temporal_period_start_value is True
@@ -829,7 +825,7 @@ def test_identification_temporal_extent(get_record_response, config_name):
     temporal_period_end_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[@gml:id = 'boundingExtent']/"
-        f"gml:endPosition/text() = '{config['resource']['extent']['temporal']['period']['end'].isoformat()}'",
+        f"gml:endPosition/text() = '{config['identification']['extent']['temporal']['period']['end'].isoformat()}'",
         namespaces=namespaces.nsmap(),
     )
     assert temporal_period_end_value is True
@@ -841,13 +837,17 @@ def test_identification_vertical_extent(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "extent" not in config["resource"] or "vertical" not in config["resource"]["extent"]:
+    if (
+        "identification" not in config
+        or "extent" not in config["identification"]
+        or "vertical" not in config["identification"]["extent"]
+    ):
         pytest.skip("record does not contain a vertical extent")
 
     vertical_minimum_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue/gco:Real/text() = "
-        f"'{config['resource']['extent']['vertical']['minimum']}'",
+        f"'{config['identification']['extent']['vertical']['minimum']}'",
         namespaces=namespaces.nsmap(),
     )
     assert vertical_minimum_value is True
@@ -855,7 +855,7 @@ def test_identification_vertical_extent(get_record_response, config_name):
     vertical_maximum_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue/gco:Real/text() = "
-        f"'{config['resource']['extent']['vertical']['maximum']}'",
+        f"'{config['identification']['extent']['vertical']['maximum']}'",
         namespaces=namespaces.nsmap(),
     )
     assert vertical_maximum_value is True
@@ -863,14 +863,14 @@ def test_identification_vertical_extent(get_record_response, config_name):
     vertical_crs_element = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:VerticalCRS[@gml:id = "
-        f"'{config['resource']['extent']['vertical']['identifier']}'][gml:identifier[text() = "
-        f"'{config['resource']['extent']['vertical']['code']}']][gml:name[text() = "
-        f"'{config['resource']['extent']['vertical']['name']}']][gml:remarks[text() = "
-        f"'{config['resource']['extent']['vertical']['remarks']}']][gml:scope[text() = "
-        f"'{config['resource']['extent']['vertical']['scope']}']][gml:domainOfValidity[@xlink:href = "
-        f"'{config['resource']['extent']['vertical']['domain_of_validity']['href']}']][gml:verticalCS[@xlink:href = "
-        f"'{config['resource']['extent']['vertical']['vertical_cs']['href']}']][gml:verticalDatum[@xlink:href = "
-        f"'{config['resource']['extent']['vertical']['vertical_datum']['href']}']]",
+        f"'{config['identification']['extent']['vertical']['identifier']}'][gml:identifier[text() = "
+        f"'{config['identification']['extent']['vertical']['code']}']][gml:name[text() = "
+        f"'{config['identification']['extent']['vertical']['name']}']][gml:remarks[text() = "
+        f"'{config['identification']['extent']['vertical']['remarks']}']][gml:scope[text() = "
+        f"'{config['identification']['extent']['vertical']['scope']}']][gml:domainOfValidity[@xlink:href = "
+        f"'{config['identification']['extent']['vertical']['domain_of_validity']['href']}']][gml:verticalCS[@xlink:href = "
+        f"'{config['identification']['extent']['vertical']['vertical_cs']['href']}']][gml:verticalDatum[@xlink:href = "
+        f"'{config['identification']['extent']['vertical']['vertical_datum']['href']}']]",
         namespaces=namespaces.nsmap(),
     )
     assert len(vertical_crs_element) == 1
@@ -882,12 +882,12 @@ def test_identification_supplemental_info(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "supplemental_information" not in config["resource"]:
+    if "identification" not in config or "supplemental_information" not in config["identification"]:
         pytest.skip("record does not contain supplemental information")
 
     supplemental_info_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:supplementalInformation/"
-        f"gco:CharacterString/text() = '{config['resource']['supplemental_information']}'",
+        f"gco:CharacterString/text() = '{config['identification']['supplemental_information']}'",
         namespaces=namespaces.nsmap(),
     )
     assert supplemental_info_value is True
@@ -899,10 +899,10 @@ def test_distribution_formats(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "formats" not in config["resource"]:
+    if "identification" not in config or "formats" not in config["identification"]:
         pytest.skip("record does not contain any distribution formats")
 
-    for _format in config["resource"]["formats"]:
+    for _format in config["identification"]["formats"]:
         if "format" in _format.keys():
             format_values = record.xpath(
                 f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/"
@@ -936,11 +936,11 @@ def test_distribution_distributors(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "contacts" not in config["resource"]:
-        pytest.skip("record does not contain any resource points of contact")
+    if "identification" not in config or "contacts" not in config["identification"]:
+        pytest.skip("record does not contain any identification points of contact")
 
     for poc in _resolve_points_of_contact_xpaths(
-        point_of_contact_type="distributors", config=config["resource"]["contacts"]
+        point_of_contact_type="distributors", config=config["identification"]["contacts"]
     ):
         # Responsible Party common function expects a single role but config allows multiple so loop through
         # Other roles are checked for in test_identification_points_of_contact()
@@ -964,10 +964,10 @@ def test_distribution_transfer_options(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "transfer_options" not in config["resource"]:
+    if "identification" not in config or "transfer_options" not in config["identification"]:
         pytest.skip("record does not contain any transfer options")
 
-    for option in config["resource"]["transfer_options"]:
+    for option in config["identification"]["transfer_options"]:
         if "online_resource" in option.keys():
             option_online_resource_elements = record.xpath(
                 f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/"
@@ -1012,12 +1012,12 @@ def test_data_quality_lineage(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "resource" not in config or "lineage" not in config["resource"]:
+    if "identification" not in config or "lineage" not in config["identification"]:
         pytest.skip("record does not contain a lineage")
 
     lineage_values = record.xpath(
         f"/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/"
-        f"gco:CharacterString/text() = '{config['resource']['lineage']}'",
+        f"gco:CharacterString/text() = '{config['identification']['lineage']}'",
         namespaces=namespaces.nsmap(),
     )
     assert lineage_values is True
@@ -1029,20 +1029,22 @@ def test_metadata_maintenance(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
-    if "maintenance" not in config:
+    if "metadata" not in config or "maintenance" not in config["metadata"]:
         pytest.skip("record does not contain metadata maintenance")
 
     metadata_maintenance_elements = record.xpath(
         "/gmd:MD_Metadata/gmd:metadataMaintenance/gmd:MD_MaintenanceInformation", namespaces=namespaces.nsmap()
     )
     assert len(metadata_maintenance_elements) == 1
-    maintenance(element=metadata_maintenance_elements[0], config=config["maintenance"])
+    maintenance(element=metadata_maintenance_elements[0], config=config["metadata"]["maintenance"])
 
 
 def test_edge_case_contact_without_email_address():
     config = deepcopy(configs_safe_v2["minimal_v2"])
-    config["contacts"][0]["address"] = {}
-    config["contacts"][0]["address"]["delivery_point"] = "British Antarctic Survey, High Cross, Madingley Road"
+    config["metadata"]["contacts"][0]["address"] = {}
+    config["metadata"]["contacts"][0]["address"][
+        "delivery_point"
+    ] = "British Antarctic Survey, High Cross, Madingley Road"
     configuration = MetadataRecordConfigV2(**config)
     record = MetadataRecord(configuration)
     document = fromstring(record.generate_xml_document())
@@ -1070,7 +1072,7 @@ def test_edge_case_citation_with_multiple_roles():
 
 def test_edge_case_identifier_without_href():
     config = deepcopy(configs_safe_v2["minimal_v2"])
-    config["resource"]["identifiers"] = [
+    config["identification"]["identifiers"] = [
         {"identifier": "NE/E007895/1", "title": "award"},
     ]
     configuration = MetadataRecordConfigV2(**config)
@@ -1079,7 +1081,7 @@ def test_edge_case_identifier_without_href():
     identifier_value = document.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/"
         f"gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString/text() = "
-        f"'{config['resource']['identifiers'][0]['identifier']}'",
+        f"'{config['identification']['identifiers'][0]['identifier']}'",
         namespaces=namespaces.nsmap(),
     )
     assert identifier_value is True
@@ -1116,7 +1118,7 @@ def test_edge_case_mocked_doi_lookup():
 
 def test_edge_case_distribution_format_with_version():
     config = deepcopy(configs_safe_v2["minimal_v2"])
-    config["resource"]["formats"] = [{"format": "test", "version": "test"}]
+    config["identification"]["formats"] = [{"format": "test", "version": "test"}]
     configuration = MetadataRecordConfigV2(**config)
     record = MetadataRecord(configuration)
     document = fromstring(record.generate_xml_document())

@@ -5,6 +5,7 @@ from typing import Optional
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
 from lxml.etree import SubElement, Element  # nosec
+from backports.datetime_fromisoformat import MonkeyPatch
 
 from bas_metadata_library import MetadataRecord
 from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement, CodeListElement
@@ -15,6 +16,9 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import (
     ResponsibleParty,
 )
 from bas_metadata_library.standards.iso_19115_common.utils import format_date_string
+
+# Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
+MonkeyPatch.patch_fromisoformat()
 
 
 class FileIdentifier(MetadataRecordElement):
@@ -140,9 +144,9 @@ class DateStamp(MetadataRecordElement):
         value = self.record.xpath(f"{self.xpath}/gmd:dateStamp/gco:Date/text()", namespaces=self.ns.nsmap())
         if len(value) == 1:
             try:
-                _ = date.fromisoformat(value[0])
+                _ = datetime.fromisoformat(value[0]).date()
             except ValueError:  # pragma: no cover
-                raise RuntimeError("Datestamp could not be parsed as an ISO datetime value")
+                raise RuntimeError("Datestamp could not be parsed as an ISO date value")
 
         return _
 
@@ -160,14 +164,14 @@ class MetadataMaintenance(MetadataRecordElement):
         return maintenance_information.make_config()
 
     def make_element(self):
-        if "maintenance" in self.attributes:
+        if "maintenance" in self.attributes["metadata"]:
             metadata_maintenance_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}metadataMaintenance")
 
             maintenance_information = MaintenanceInformation(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=metadata_maintenance_element,
-                element_attributes=self.attributes["maintenance"],
+                element_attributes=self.attributes["metadata"]["maintenance"],
             )
             maintenance_information.make_element()
 

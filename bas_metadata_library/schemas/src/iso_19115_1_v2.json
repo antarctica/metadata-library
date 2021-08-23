@@ -1230,45 +1230,56 @@
   },
   "type": "object",
   "required": [
-    "language",
-    "character_set",
-    "contacts",
     "hierarchy_level",
-    "date_stamp",
-    "resource"
+    "identification",
+    "metadata"
   ],
   "additionalProperties": false,
   "properties": {
-    "file_identifier": {
-      "$ref": "#/definitions/file_identifier"
-    },
-    "language": {
+    "metadata": {
+      "title": "Metadata",
+      "description": "Information about the metadata record describing the resource.",
+      "type": "object",
+      "required": [
+        "character_set",
+        "contacts",
+        "date_stamp",
+        "language"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "language": {
       "$ref": "#/definitions/language"
     },
-    "character_set": {
+        "character_set": {
       "$ref": "#/definitions/character_set"
+    },
+        "contacts": {
+      "$ref": "#/definitions/contacts"
+    },
+        "date_stamp": {
+          "$ref": "#/definitions/date_stamp"
+        },
+        "maintenance": {
+          "$ref": "#/definitions/maintenance"
+        },
+        "metadata_standard": {
+          "$ref": "#/definitions/metadata_standard"
+        }
+      }
+    },
+    "file_identifier": {
+      "$ref": "#/definitions/file_identifier"
     },
     "hierarchy_level": {
       "$ref": "#/definitions/hierarchy_level"
     },
-    "contacts": {
-      "$ref": "#/definitions/contacts"
-    },
-    "date_stamp": {
-      "$ref": "#/definitions/date_stamp"
-    },
-    "maintenance": {
-      "$ref": "#/definitions/maintenance"
-    },
-    "metadata_standard": {
-      "$ref": "#/definitions/metadata_standard"
-    },
     "reference_system_info": {
       "$ref": "#/definitions/reference_system_info"
     },
-    "resource": {
-      "title": "Resource",
-      "description": "Resource the record is describing (i.e. the dataset, service, series, etc.).",
+    "identification": {
+      "title": "Identification",
+      "description": "Information about how to reference, categorise, or describe the resource.",
       "type": "object",
       "required": [
         "title",

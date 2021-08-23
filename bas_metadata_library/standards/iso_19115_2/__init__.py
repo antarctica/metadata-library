@@ -1,5 +1,6 @@
 import json
 
+from copy import deepcopy
 from importlib_resources import path as resource_path
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
@@ -32,10 +33,38 @@ class MetadataRecordConfigV1(_MetadataRecordConfig):
         self.schema = configuration_schema_data
 
     def convert_to_v2_configuration(self) -> "MetadataRecordConfigV2":
-        return MetadataRecordConfigV2(**self.config)
+        config = deepcopy(self.config)
+
+        _metadata_keys = ["language", "character_set", "contacts", "date_stamp", "maintenance", "metadata_standard"]
+        if any(key in _metadata_keys for key in config.keys()):
+            config["metadata"] = {}
+            for key in _metadata_keys:
+                if key in config.keys():
+                    config["metadata"][key] = config[key]
+                    del config[key]
+
+        if "resource" in config:
+            config["identification"] = config["resource"]
+            del config["resource"]
+
+        return MetadataRecordConfigV2(**config)
 
     def convert_from_v2_configuration(self, configuration: "MetadataRecordConfigV2"):
-        self.config = configuration.config
+        config = deepcopy(configuration.config)
+
+        _metadata_keys = ["language", "character_set", "contacts", "date_stamp", "maintenance", "metadata_standard"]
+        if any(key in _metadata_keys for key in config["metadata"].keys()):
+            for key in _metadata_keys:
+                if key in config["metadata"].keys():
+                    config[key] = config["metadata"][key]
+        if "metadata" in config:
+            del config["metadata"]
+
+        if "identification" in config:
+            config["resource"] = config["identification"]
+            del config["identification"]
+
+        self.config = config
 
 
 class MetadataRecordConfigV2(_MetadataRecordConfig):
