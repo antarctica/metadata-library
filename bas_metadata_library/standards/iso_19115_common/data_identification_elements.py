@@ -587,23 +587,6 @@ class ResourceConstraint(MetadataRecordElement):
             )
             other_constraint.make_element()
 
-    @staticmethod
-    def _get_doi_citation(doi: str) -> str:  # pragma: no cover
-        """
-        Get citation for a DOI using crosscite.org
-
-        This is a standalone method to allow for mocking during tests.
-
-        @:type doi: str
-        @:param doi: DOI to get citation for
-
-        @:rtype: str
-        @:return APA style citation for DOI
-        """
-        citation_response = requests.get(doi, headers={"Accept": "text/x-bibliography; style=apa; locale=en-GB"})
-        citation_response.raise_for_status()
-        return citation_response.text
-
 
 class AccessConstraint(CodeListElement):
     def __init__(

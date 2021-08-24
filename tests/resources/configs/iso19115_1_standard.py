@@ -28,13 +28,6 @@ minimal_record_v1 = {
     },
 }
 
-minimal_record_with_required_doi_citation_v1 = deepcopy(minimal_record_v1)  # type: dict
-minimal_record_with_required_doi_citation_v1["resource"]["constraints"] = {
-    "usage": [
-        {"restriction_code": "otherRestrictions", "required_citation": {"doi": "https://doi.org/10.7939/R3QZ22K64"}}
-    ]
-}
-
 # noinspection DuplicatedCode,HttpUrlsUsage
 base_simple_record_v1 = {
     "language": "eng",
@@ -570,16 +563,6 @@ minimal_record_v2 = {
     },
 }
 
-minimal_record_with_required_doi_citation_v2 = deepcopy(minimal_record_v2)  # type: dict
-minimal_record_with_required_doi_citation_v2["identification"]["constraints"] = [
-    {
-        "type": "usage",
-        "restriction_code": "otherRestrictions",
-        "statement": "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64",
-        "href": "https://doi.org/10.7939/R3QZ22K64",
-    }
-]
-
 # noinspection DuplicatedCode
 base_simple_record_v2 = {
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
@@ -1104,14 +1087,6 @@ configs_safe_v2 = {
 }
 configs_safe_all = {**configs_safe_v1, **configs_safe_v2}
 
-configs_unsafe_v1 = {
-    "minimal-required-doi-citation_v1": minimal_record_with_required_doi_citation_v1,
-}
-configs_unsafe_v2 = {
-    "minimal-required-doi-citation_v2": minimal_record_with_required_doi_citation_v2,
-}
-configs_unsafe_all = {**configs_unsafe_v1, **configs_unsafe_v2}
-
-configs_v1_all = {**configs_safe_v1, **configs_unsafe_v1}
-configs_v2_all = {**configs_safe_v2, **configs_unsafe_v2}
+configs_v1_all = {**configs_safe_v1}
+configs_v2_all = {**configs_safe_v2}
 configs_all = {**configs_v1_all, **configs_v2_all}

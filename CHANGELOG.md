@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed [BREAKING!]
 
+* Support for generating DOI citations automatically from DataCite API (to remove external dependencies)
+  [#117](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/117)
 * Support for INSPIRE and PoC UK-PDC profiles
   [#103](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/103)
 * INSPIRE specific data quality measures from JSON schema

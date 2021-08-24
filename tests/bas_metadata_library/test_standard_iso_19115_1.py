@@ -4,7 +4,6 @@ import pytest
 from copy import deepcopy
 from datetime import date
 from typing import List
-from unittest.mock import patch
 from http import HTTPStatus
 
 from jsonschema import ValidationError
@@ -35,7 +34,6 @@ from tests.bas_metadata_library.standard_iso_19115_1_common import (
 from tests.resources.configs.iso19115_1_standard import (
     configs_safe_v1,
     configs_safe_v2,
-    configs_unsafe_v2,
     configs_v2_all,
 )
 
@@ -62,18 +60,9 @@ def test_invalid_configuration_v2():
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
 def test_response(client, config_name):
-    with patch(
-        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraint."
-        "_get_doi_citation"
-    ) as doi_citation:
-        doi_citation.return_value = (
-            "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. "
-            "University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"
-        )
-
-        response = client.get(f"/standards/{standard}/{config_name}")
-        assert response.status_code == HTTPStatus.OK
-        assert response.mimetype == "text/xml"
+    response = client.get(f"/standards/{standard}/{config_name}")
+    assert response.status_code == HTTPStatus.OK
+    assert response.mimetype == "text/xml"
 
 
 @pytest.mark.usefixtures("app_client")
@@ -81,15 +70,6 @@ def test_response(client, config_name):
 def test_complete_record(client, config_name):
     with open(f"tests/resources/records/iso-19115-1/{config_name}-record.xml") as expected_contents_file:
         expected_contents = expected_contents_file.read()
-
-    with patch(
-        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraint."
-        "_get_doi_citation"
-    ) as doi_citation:
-        doi_citation.return_value = (
-            "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. "
-            "University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"
-        )
 
         response = client.get(f"/standards/{standard}/{config_name}")
         assert response.data.decode() == expected_contents
@@ -146,6 +126,7 @@ def test_language(get_record_response, config_name):
     if "metadata" not in config or "language" not in config["metadata"]:
         pytest.skip("record does not contain a metadata language")
 
+    # noinspection HttpUrlsUsage
     language_element = record.xpath(
         f"/gmd:MD_Metadata/gmd:language/gmd:LanguageCode[@codeList = "
         f"'http://www.loc.gov/standards/iso639-2/php/code_list.php' and @codeListValue = "
@@ -164,6 +145,7 @@ def test_character_set(get_record_response, config_name):
     if "metadata" not in config or "character_set" not in config["metadata"]:
         pytest.skip("record does not contain a metadata character set")
 
+    # noinspection HttpUrlsUsage
     character_set_element = record.xpath(
         f"/gmd:MD_Metadata/gmd:characterSet/gmd:MD_CharacterSetCode[@codeList = "
         f"'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/"
@@ -537,6 +519,7 @@ def test_identification_descriptive_keywords(get_record_response, config_name):
                     assert len(term_hrefs) == 1
 
         if "type" in keyword["config"]:
+            # noinspection HttpUrlsUsage
             type_value = descriptive_keywords_elements[0].xpath(
                 f"./gmd:type/gmd:MD_KeywordTypeCode[@codeList = 'http://standards.iso.org/ittf/"
                 f"PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_KeywordTypeCode' "
@@ -556,61 +539,53 @@ def test_identification_descriptive_keywords(get_record_response, config_name):
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v2_all.keys()))
 def test_identification_resource_constraints(client, config_name):
-    with patch(
-        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraint."
-        "_get_doi_citation"
-    ) as doi_citation:
-        doi_citation.return_value = (
-            "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. "
-            "University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"
+    response = client.get(f"/standards/{standard}/{config_name}")
+    record = fromstring(response.data)
+    config = configs_v2_all[config_name]
+
+    if "identification" not in config or "constraints" not in config["identification"]:
+        pytest.skip("record does not contain identification resource constraints")
+
+    for constraint in config["identification"]["constraints"]:
+        constraint_element = "gmd:accessConstraints"
+        if constraint["type"] == "usage":
+            constraint_element = "gmd:useConstraints"
+
+        restriction_code_elements = record.xpath(
+            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+            f"gmd:MD_LegalConstraints/{constraint_element}/gmd:MD_RestrictionCode[@codeList = "
+            f"'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode' "
+            f"and @codeListValue = '{constraint['restriction_code']}']/text() = '{constraint['restriction_code']}'",
+            namespaces=namespaces.nsmap(),
         )
-        response = client.get(f"/standards/{standard}/{config_name}")
-        record = fromstring(response.data)
-        config = configs_v2_all[config_name]
+        assert restriction_code_elements is True
 
-        if "identification" not in config or "constraints" not in config["identification"]:
-            pytest.skip("record does not contain identification resource constraints")
+        if "statement" not in constraint and "href" not in constraint:
+            continue
 
-        for constraint in config["identification"]["constraints"]:
-            constraint_element = "gmd:accessConstraints"
-            if constraint["type"] == "usage":
-                constraint_element = "gmd:useConstraints"
+        statement_element = "gco:CharacterString"
+        constraint_value = ""
+        if "statement" in constraint:
+            constraint_value = constraint["statement"]
+        if "href" in constraint:
+            statement_element = "gmx:Anchor"
+            if "statement" not in constraint:
+                constraint_value = constraint["href"]
 
-            restriction_code_elements = record.xpath(
+        other_constraint_elements = record.xpath(
+            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+            f"gmd:MD_LegalConstraints/gmd:otherConstraints/{statement_element}/text() = '{constraint_value}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert other_constraint_elements is True
+
+        if statement_element == "gmx:Anchor":
+            other_constraint_anchor_elements = record.xpath(
                 f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                f"gmd:MD_LegalConstraints/{constraint_element}/gmd:MD_RestrictionCode[@codeList = "
-                f"'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode' "
-                f"and @codeListValue = '{constraint['restriction_code']}']/text() = '{constraint['restriction_code']}'",
+                f"gmd:MD_LegalConstraints/gmd:otherConstraints/{statement_element}[@xlink:href] = '{constraint_value}'",
                 namespaces=namespaces.nsmap(),
             )
-            assert restriction_code_elements is True
-
-            if "statement" not in constraint and "href" not in constraint:
-                continue
-
-            statement_element = "gco:CharacterString"
-            constraint_value = ""
-            if "statement" in constraint:
-                constraint_value = constraint["statement"]
-            if "href" in constraint:
-                statement_element = "gmx:Anchor"
-                if "statement" not in constraint:
-                    constraint_value = constraint["href"]
-
-            other_constraint_elements = record.xpath(
-                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                f"gmd:MD_LegalConstraints/gmd:otherConstraints/{statement_element}/text() = '{constraint_value}'",
-                namespaces=namespaces.nsmap(),
-            )
-            assert other_constraint_elements is True
-
-            if statement_element == "gmx:Anchor":
-                other_constraint_anchor_elements = record.xpath(
-                    f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                    f"gmd:MD_LegalConstraints/gmd:otherConstraints/{statement_element}[@xlink:href] = '{constraint_value}'",
-                    namespaces=namespaces.nsmap(),
-                )
-                assert other_constraint_anchor_elements is True
+            assert other_constraint_anchor_elements is True
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -622,6 +597,7 @@ def test_identification_spatial_representation_type(get_record_response, config_
     if "identification" not in config or "spatial_representation_type" not in config["identification"]:
         pytest.skip("record does not contain a identification spatial representation type")
 
+    # noinspection HttpUrlsUsage
     spatial_representation_type_elements = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType/"
         f"gmd:MD_SpatialRepresentationTypeCode[@codeList = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/"
@@ -664,6 +640,7 @@ def test_identification_language(get_record_response, config_name):
     if "identification" not in config or "language" not in config["identification"]:
         pytest.skip("record does not contain a identification language")
 
+    # noinspection HttpUrlsUsage
     language_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode"
         f"[@codeList = 'http://www.loc.gov/standards/iso639-2/php/code_list.php' and @codeListValue = "
@@ -1043,23 +1020,6 @@ class MockResponse:
             "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. University of Alberta Libraries. "
             "https://doi.org/10.7939/R3QZ22K64"
         )
-
-
-# noinspection PyUnusedLocal
-def mock_response(*args, **kwargs):
-    return MockResponse()
-
-
-def test_edge_case_mocked_doi_lookup():
-    with patch(
-        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.requests.get",
-        side_effect=mock_response,
-    ):
-        config = deepcopy(configs_unsafe_v2["minimal-required-doi-citation_v2"])
-        configuration = MetadataRecordConfigV2(**config)
-        record = MetadataRecord(configuration)
-        document = fromstring(record.generate_xml_document())
-        assert document is not None
 
 
 def test_edge_case_distribution_format_with_version():
