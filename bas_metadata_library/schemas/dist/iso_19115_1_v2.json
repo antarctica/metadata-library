@@ -190,26 +190,62 @@
             }
         },
         "constraints": {
-            "title": "constraints",
-            "description": "Series of abstract access/usage/security constraints for describing limitations on accessing or using the resource.",
-            "type": "object",
-            "required": [],
-            "additionalProperties": false,
-            "properties": {
-                "access": {
-                    "title": "Access",
-                    "description": "Series of access constraints for describing limitations on accessing the resource.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/constraint"
-                    }
-                },
-                "usage": {
-                    "title": "Usage",
-                    "description": "Series of usage constraints for describing limitations on using the resource.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/constraint"
+            "title": "Constraints",
+            "description": "Access/usage constraints for describing limitations on accessing or using the resource.",
+            "type": "array",
+            "items": {
+                "title": "Constraint",
+                "description": "Access/usage constraint describing a limitation on accessing or using the resource",
+                "type": "object",
+                "required": [
+                    "type",
+                    "restriction_code"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "type": {
+                        "title": "Constraint type",
+                        "description": "Whether the constraint constrains how the resource can be accessed, or be used.",
+                        "type": "string",
+                        "enum": [
+                            "access",
+                            "usage"
+                        ]
+                    },
+                    "restriction_code": {
+                        "title": "Restriction code",
+                        "description": "The domain the constraint pertains to.",
+                        "type": "string",
+                        "enum": [
+                            "confidential",
+                            "copyright",
+                            "inConfidence",
+                            "intellectualPropertyRights",
+                            "licenceDistributor",
+                            "licenceEndUser",
+                            "licenceUnrestricted",
+                            "license",
+                            "otherRestrictions",
+                            "patent",
+                            "patentPending",
+                            "private",
+                            "restricted",
+                            "SBU",
+                            "statutory",
+                            "trademark",
+                            "unrestricted"
+                        ]
+                    },
+                    "statement": {
+                        "title": "Statement",
+                        "description": "Free-text description/definition of the constraint.",
+                        "type": "string"
+                    },
+                    "href": {
+                        "title": "URL",
+                        "description": "URL identifying, or relating to, the constraint.",
+                        "type": "string",
+                        "format": "uri"
                     }
                 }
             }

@@ -48,10 +48,13 @@
         <gco:CharacterString>Test Record for ISO 19115 metadata standard (no profile) with required properties only.</gco:CharacterString>
       </gmd:abstract>
       <gmd:resourceConstraints>
-        <gmd:MD_LegalConstraints id="citation">
-          <gmd:useLimitation>
-            <gco:CharacterString>Cite this information as "Campbell, S. (2014). &lt;i&gt;Auster Antarctic aircraft&lt;/i&gt;. University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64"</gco:CharacterString>
-          </gmd:useLimitation>
+        <gmd:MD_LegalConstraints>
+          <gmd:useConstraints>
+            <gmd:MD_RestrictionCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</gmd:MD_RestrictionCode>
+          </gmd:useConstraints>
+          <gmd:otherConstraints>
+            <gmx:Anchor xlink:href="https://doi.org/10.7939/R3QZ22K64" xlink:actuate="onRequest">https://doi.org/10.7939/R3QZ22K64</gmx:Anchor>
+          </gmd:otherConstraints>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
       <gmd:characterSet>

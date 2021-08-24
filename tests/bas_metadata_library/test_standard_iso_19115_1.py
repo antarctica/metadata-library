@@ -63,7 +63,7 @@ def test_invalid_configuration_v2():
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
 def test_response(client, config_name):
     with patch(
-        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraints."
+        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraint."
         "_get_doi_citation"
     ) as doi_citation:
         doi_citation.return_value = (
@@ -83,7 +83,7 @@ def test_complete_record(client, config_name):
         expected_contents = expected_contents_file.read()
 
     with patch(
-        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraints."
+        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraint."
         "_get_doi_citation"
     ) as doi_citation:
         doi_citation.return_value = (
@@ -553,30 +553,11 @@ def test_identification_descriptive_keywords(get_record_response, config_name):
             citation(element=thesaurus_elements[0], config=keyword["config"]["thesaurus"])
 
 
-def _resolve_resource_constraints(constraint_type, config):
-    if constraint_type == "access" and len(config["identification"]["constraints"]["access"]) >= 1:
-        raise NotImplementedError("Testing support for multiple access constraints has not yet been added")
-    elif (
-        constraint_type == "access"
-        and len(config["identification"]["constraints"]["access"]) == 1
-        and "restriction_code" not in list(config["identification"]["constraints"]["access"][0].keys())
-    ):
-        raise NotImplementedError("Testing support for this set of access constraints has not yet been added")
-    elif constraint_type == "usage":
-        for constraint_config in config:
-            if (
-                "copyright_licence" not in constraint_config.keys()
-                and "required_citation" not in constraint_config.keys()
-                and "statement" not in constraint_config.keys()
-            ):
-                raise NotImplementedError("Testing support for this set of usage constraints has not yet been added")
-
-
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v2_all.keys()))
 def test_identification_resource_constraints(client, config_name):
     with patch(
-        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraints."
+        "bas_metadata_library.standards.iso_19115_common.data_identification_elements.ResourceConstraint."
         "_get_doi_citation"
     ) as doi_citation:
         doi_citation.return_value = (
@@ -590,89 +571,46 @@ def test_identification_resource_constraints(client, config_name):
         if "identification" not in config or "constraints" not in config["identification"]:
             pytest.skip("record does not contain identification resource constraints")
 
-        if "access" in config["identification"]["constraints"]:
-            _resolve_resource_constraints(
-                constraint_type="usage", config=config["identification"]["constraints"]["usage"]
+        for constraint in config["identification"]["constraints"]:
+            constraint_element = "gmd:accessConstraints"
+            if constraint["type"] == "usage":
+                constraint_element = "gmd:useConstraints"
+
+            restriction_code_elements = record.xpath(
+                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                f"gmd:MD_LegalConstraints/{constraint_element}/gmd:MD_RestrictionCode[@codeList = "
+                f"'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode' "
+                f"and @codeListValue = '{constraint['restriction_code']}']/text() = '{constraint['restriction_code']}'",
+                namespaces=namespaces.nsmap(),
             )
+            assert restriction_code_elements is True
 
-            for access_constraint in config["identification"]["constraints"]["access"]:
-                if "restriction_code" in access_constraint.keys():
-                    restriction_code_elements = record.xpath(
-                        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                        f"gmd:MD_LegalConstraints/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeList = "
-                        f"'http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/"
-                        f"codelist/gmxCodelists.xml#MD_RestrictionCode' and @codeListValue = "
-                        f"'{config['identification']['constraints']['access'][0]['restriction_code']}']/text() = "
-                        f"'{config['identification']['constraints']['access'][0]['restriction_code']}'",
-                        namespaces=namespaces.nsmap(),
-                    )
-                    assert restriction_code_elements is True
+            if "statement" not in constraint and "href" not in constraint:
+                continue
 
-                    if "statement" in config["identification"]["constraints"]["access"][0]:
-                        statement_values = record.xpath(
-                            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints"
-                            f"/gmd:MD_LegalConstraints[gmd:accessConstraints[gmd:MD_RestrictionCode]]/"
-                            f"gmd:otherConstraints/gco:CharacterString/text() = "
-                            f"'{config['identification']['constraints']['access'][0]['statement']}'",
-                            namespaces=namespaces.nsmap(),
-                        )
-                        assert statement_values is True
+            statement_element = "gco:CharacterString"
+            constraint_value = ""
+            if "statement" in constraint:
+                constraint_value = constraint["statement"]
+            if "href" in constraint:
+                statement_element = "gmx:Anchor"
+                if "statement" not in constraint:
+                    constraint_value = constraint["href"]
 
-        if "usage" in config["identification"]["constraints"]:
-            _resolve_resource_constraints(
-                constraint_type="usage", config=config["identification"]["constraints"]["usage"]
+            other_constraint_elements = record.xpath(
+                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                f"gmd:MD_LegalConstraints/gmd:otherConstraints/{statement_element}/text() = '{constraint_value}'",
+                namespaces=namespaces.nsmap(),
             )
+            assert other_constraint_elements is True
 
-            for usage_constraint in config["identification"]["constraints"]["usage"]:
-                if "copyright_licence" in usage_constraint.keys():
-                    copyright_licence_value = record.xpath(
-                        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                        f"gmd:MD_LegalConstraints[@id='copyright']/gmd:useLimitation/gco:CharacterString/text() | /"
-                        f"gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                        f"gmd:MD_LegalConstraints[@id='copyright']/gmd:useLimitation/gmx:Anchor/text()",
-                        namespaces=namespaces.nsmap(),
-                    )
-                    assert len(copyright_licence_value) == 1
-                    assert copyright_licence_value[0] == usage_constraint["copyright_licence"]["statement"]
-
-                    if "href" in usage_constraint["copyright_licence"]:
-                        copyright_licence_href = record.xpath(
-                            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/"
-                            f"gmd:resourceConstraints/gmd:MD_LegalConstraints[@id='copyright']/gmd:useLimitation/"
-                            f"gmx:Anchor[@xlink:href = '{usage_constraint['copyright_licence']['href']}']",
-                            namespaces=namespaces.nsmap(),
-                        )
-                        assert len(copyright_licence_href) == 1
-
-                elif (
-                    "required_citation" in usage_constraint.keys()
-                    and "statement" in usage_constraint["required_citation"]
-                ):
-                    required_citation_value = record.xpath(
-                        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                        f"gmd:MD_LegalConstraints[@id='citation']/gmd:useLimitation/gco:CharacterString/text() = "
-                        f"'{usage_constraint['required_citation']['statement']}'",
-                        namespaces=namespaces.nsmap(),
-                    )
-                    assert required_citation_value is True
-                elif "required_citation" in usage_constraint.keys() and "doi" in usage_constraint["required_citation"]:
-                    required_citation_value = record.xpath(
-                        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                        f"gmd:MD_LegalConstraints[@id='citation']/gmd:useLimitation/gco:CharacterString/text() = "
-                        f"'Cite this information as \"Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. "
-                        f"University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64\"'",
-                        namespaces=namespaces.nsmap(),
-                    )
-                    assert required_citation_value is True
-
-                elif list(usage_constraint.keys()) == ["statement"]:
-                    usage_statement_value = record.xpath(
-                        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                        f"gmd:MD_LegalConstraints/gmd:useLimitation/gco:CharacterString/text() = "
-                        f"'{usage_constraint['statement']}'",
-                        namespaces=namespaces.nsmap(),
-                    )
-                    assert usage_statement_value is True
+            if statement_element == "gmx:Anchor":
+                other_constraint_anchor_elements = record.xpath(
+                    f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                    f"gmd:MD_LegalConstraints/gmd:otherConstraints/{statement_element}[@xlink:href] = '{constraint_value}'",
+                    namespaces=namespaces.nsmap(),
+                )
+                assert other_constraint_anchor_elements is True
 
 
 @pytest.mark.usefixtures("get_record_response")

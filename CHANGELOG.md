@@ -44,7 +44,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-* Configuration schema v2 root level properties changed from v2 (resource -> identification, new metadata)
+* Constraints structure changed in v2 record configuration
+  [#81](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/81)
+* Root level properties changed in v2 record configuration (resource -> identification, new metadata)
   [#109](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/109)
 * Using definitions property consistently in configuration schemas
   [#115](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/115)

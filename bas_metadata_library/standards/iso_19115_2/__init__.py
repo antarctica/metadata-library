@@ -11,6 +11,10 @@ from lxml.etree import Element, fromstring  # nosec
 from bas_metadata_library import MetadataRecordConfig as _MetadataRecordConfig, MetadataRecord as _MetadataRecord
 from bas_metadata_library.standards.iso_19115_common import Namespaces
 from bas_metadata_library.standards.iso_19115_common.root_element import ISOMetadataRecord
+from bas_metadata_library.standards.iso_19115_common.utils import (
+    convert_from_v1_to_v2_configuration,
+    convert_from_v2_to_v1_configuration,
+)
 
 
 class MetadataRecordConfigV1(_MetadataRecordConfig):
@@ -34,36 +38,12 @@ class MetadataRecordConfigV1(_MetadataRecordConfig):
 
     def convert_to_v2_configuration(self) -> "MetadataRecordConfigV2":
         config = deepcopy(self.config)
-
-        _metadata_keys = ["language", "character_set", "contacts", "date_stamp", "maintenance", "metadata_standard"]
-        if any(key in _metadata_keys for key in config.keys()):
-            config["metadata"] = {}
-            for key in _metadata_keys:
-                if key in config.keys():
-                    config["metadata"][key] = config[key]
-                    del config[key]
-
-        if "resource" in config:
-            config["identification"] = config["resource"]
-            del config["resource"]
-
+        config = convert_from_v1_to_v2_configuration(config=config)
         return MetadataRecordConfigV2(**config)
 
     def convert_from_v2_configuration(self, configuration: "MetadataRecordConfigV2"):
         config = deepcopy(configuration.config)
-
-        _metadata_keys = ["language", "character_set", "contacts", "date_stamp", "maintenance", "metadata_standard"]
-        if any(key in _metadata_keys for key in config["metadata"].keys()):
-            for key in _metadata_keys:
-                if key in config["metadata"].keys():
-                    config[key] = config["metadata"][key]
-        if "metadata" in config:
-            del config["metadata"]
-
-        if "identification" in config:
-            config["resource"] = config["identification"]
-            del config["identification"]
-
+        config = convert_from_v2_to_v1_configuration(config=config)
         self.config = config
 
 

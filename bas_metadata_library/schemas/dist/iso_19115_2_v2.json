@@ -197,260 +197,62 @@
                     }
                 },
                 "constraints": {
-                    "title": "constraints",
-                    "description": "Series of abstract access/usage/security constraints for describing limitations on accessing or using the resource.",
-                    "type": "object",
-                    "required": [],
-                    "additionalProperties": false,
-                    "properties": {
-                        "access": {
-                            "title": "Access",
-                            "description": "Series of access constraints for describing limitations on accessing the resource.",
-                            "type": "array",
-                            "items": {
-                                "title": "Constraint",
-                                "description": "Abstract access/usage/security constraint for describing limitations on accessing the resource.",
-                                "type": "object",
-                                "required": [],
-                                "additionalProperties": false,
-                                "properties": {
-                                    "restriction_code": {
-                                        "title": "Restriction code",
-                                        "description": "The domain/cause of the limitation. Currently this is only used for INSPIRE limitations on public access.",
-                                        "type": "string",
-                                        "enum": [
-                                            "copyright",
-                                            "patent",
-                                            "patentPending",
-                                            "trademark",
-                                            "license",
-                                            "intellectualPropertyRights",
-                                            "restricted",
-                                            "otherRestrictions"
-                                        ],
-                                        "examples": [
-                                            "otherRestrictions"
-                                        ]
-                                    },
-                                    "inspire_limitations_on_public_access": {
-                                        "title": "INSPIRE limitations on public access",
-                                        "description": "Information about limitations to public access within the context of the EU INSPIRE regulations.",
-                                        "type": "string",
-                                        "enum": [
-                                            "noLimitations"
-                                        ],
-                                        "examples": [
-                                            "noLimitations"
-                                        ]
-                                    },
-                                    "statement": {
-                                        "title": "Access statement",
-                                        "description": "Explanation/description of the limitation. Not currently used.",
-                                        "type": "string",
-                                        "examples": [
-                                            "-"
-                                        ]
-                                    },
-                                    "copyright_licence": {
-                                        "title": "Copyright licence",
-                                        "description": "Information on which copyright licence the resource is licenced under.",
-                                        "type": "object",
-                                        "required": [],
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "code": {
-                                                "title": "Code",
-                                                "description": "Internal code for popular/supported copyright licences, limited subset of the SPDX licence list.",
-                                                "type": "string",
-                                                "examples": [
-                                                    "CC-BY-4.0"
-                                                ]
-                                            },
-                                            "href": {
-                                                "title": "URL",
-                                                "description": "URL to the licence the resource is licenced under. Typically this displays a licence summary.",
-                                                "type": "string",
-                                                "format": "uri",
-                                                "examples": [
-                                                    "https://creativecommons.org/licenses/by/4.0/"
-                                                ]
-                                            },
-                                            "statement": {
-                                                "title": "Statement",
-                                                "description": "Summary statement, notice and/or attribution for the licence the resource is licenced under. Typically this states which licence is used and where users can find more information about it.",
-                                                "type": "string",
-                                                "examples": [
-                                                    "This information is licensed under the Create Commons Attribution 4.0 International Licence (CC BY 4.0). To view this licence, visit https://creativecommons.org/licenses/by/4.0/"
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "required_citation": {
-                                        "title": "Required citation",
-                                        "description": "Information on a citation users must include if using the resource. Requires either a free-text citation, or a DOI from which a citation will be automatically generated.",
-                                        "type": "object",
-                                        "oneOf": [
-                                            {
-                                                "properties": {
-                                                    "statement": {
-                                                        "title": "Statement",
-                                                        "description": "Details of the required citation and instructions on how users should include the citation.",
-                                                        "type": "string",
-                                                        "examples": [
-                                                            "Cite this information as: 'Watson, C. *Antarctic Coastline (Polygon) - (MAGIC ADD candidate metadata record).* Mapping and Geographic Information Centre, British Antarctic Survey. https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556'"
-                                                        ]
-                                                    }
-                                                },
-                                                "required": [
-                                                    "statement"
-                                                ],
-                                                "additionalProperties": false
-                                            },
-                                            {
-                                                "properties": {
-                                                    "doi": {
-                                                        "title": "DOI",
-                                                        "description": "Digital Object Identifier (DOI) for the resource, or that should be cited for the resource.",
-                                                        "type": "string",
-                                                        "format": "uri",
-                                                        "examples": [
-                                                            "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
-                                                        ]
-                                                    }
-                                                },
-                                                "required": [
-                                                    "doi"
-                                                ],
-                                                "additionalProperties": false
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        },
-                        "usage": {
-                            "title": "Usage",
-                            "description": "Series of usage constraints for describing limitations on using the resource.",
-                            "type": "array",
-                            "items": {
-                                "title": "Constraint",
-                                "description": "Abstract access/usage/security constraint for describing limitations on accessing the resource.",
-                                "type": "object",
-                                "required": [],
-                                "additionalProperties": false,
-                                "properties": {
-                                    "restriction_code": {
-                                        "title": "Restriction code",
-                                        "description": "The domain/cause of the limitation. Currently this is only used for INSPIRE limitations on public access.",
-                                        "type": "string",
-                                        "enum": [
-                                            "copyright",
-                                            "patent",
-                                            "patentPending",
-                                            "trademark",
-                                            "license",
-                                            "intellectualPropertyRights",
-                                            "restricted",
-                                            "otherRestrictions"
-                                        ],
-                                        "examples": [
-                                            "otherRestrictions"
-                                        ]
-                                    },
-                                    "inspire_limitations_on_public_access": {
-                                        "title": "INSPIRE limitations on public access",
-                                        "description": "Information about limitations to public access within the context of the EU INSPIRE regulations.",
-                                        "type": "string",
-                                        "enum": [
-                                            "noLimitations"
-                                        ],
-                                        "examples": [
-                                            "noLimitations"
-                                        ]
-                                    },
-                                    "statement": {
-                                        "title": "Access statement",
-                                        "description": "Explanation/description of the limitation. Not currently used.",
-                                        "type": "string",
-                                        "examples": [
-                                            "-"
-                                        ]
-                                    },
-                                    "copyright_licence": {
-                                        "title": "Copyright licence",
-                                        "description": "Information on which copyright licence the resource is licenced under.",
-                                        "type": "object",
-                                        "required": [],
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "code": {
-                                                "title": "Code",
-                                                "description": "Internal code for popular/supported copyright licences, limited subset of the SPDX licence list.",
-                                                "type": "string",
-                                                "examples": [
-                                                    "CC-BY-4.0"
-                                                ]
-                                            },
-                                            "href": {
-                                                "title": "URL",
-                                                "description": "URL to the licence the resource is licenced under. Typically this displays a licence summary.",
-                                                "type": "string",
-                                                "format": "uri",
-                                                "examples": [
-                                                    "https://creativecommons.org/licenses/by/4.0/"
-                                                ]
-                                            },
-                                            "statement": {
-                                                "title": "Statement",
-                                                "description": "Summary statement, notice and/or attribution for the licence the resource is licenced under. Typically this states which licence is used and where users can find more information about it.",
-                                                "type": "string",
-                                                "examples": [
-                                                    "This information is licensed under the Create Commons Attribution 4.0 International Licence (CC BY 4.0). To view this licence, visit https://creativecommons.org/licenses/by/4.0/"
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "required_citation": {
-                                        "title": "Required citation",
-                                        "description": "Information on a citation users must include if using the resource. Requires either a free-text citation, or a DOI from which a citation will be automatically generated.",
-                                        "type": "object",
-                                        "oneOf": [
-                                            {
-                                                "properties": {
-                                                    "statement": {
-                                                        "title": "Statement",
-                                                        "description": "Details of the required citation and instructions on how users should include the citation.",
-                                                        "type": "string",
-                                                        "examples": [
-                                                            "Cite this information as: 'Watson, C. *Antarctic Coastline (Polygon) - (MAGIC ADD candidate metadata record).* Mapping and Geographic Information Centre, British Antarctic Survey. https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556'"
-                                                        ]
-                                                    }
-                                                },
-                                                "required": [
-                                                    "statement"
-                                                ],
-                                                "additionalProperties": false
-                                            },
-                                            {
-                                                "properties": {
-                                                    "doi": {
-                                                        "title": "DOI",
-                                                        "description": "Digital Object Identifier (DOI) for the resource, or that should be cited for the resource.",
-                                                        "type": "string",
-                                                        "format": "uri",
-                                                        "examples": [
-                                                            "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
-                                                        ]
-                                                    }
-                                                },
-                                                "required": [
-                                                    "doi"
-                                                ],
-                                                "additionalProperties": false
-                                            }
-                                        ]
-                                    }
-                                }
+                    "title": "Constraints",
+                    "description": "Access/usage constraints for describing limitations on accessing or using the resource.",
+                    "type": "array",
+                    "items": {
+                        "title": "Constraint",
+                        "description": "Access/usage constraint describing a limitation on accessing or using the resource",
+                        "type": "object",
+                        "required": [
+                            "type",
+                            "restriction_code"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "type": {
+                                "title": "Constraint type",
+                                "description": "Whether the constraint constrains how the resource can be accessed, or be used.",
+                                "type": "string",
+                                "enum": [
+                                    "access",
+                                    "usage"
+                                ]
+                            },
+                            "restriction_code": {
+                                "title": "Restriction code",
+                                "description": "The domain the constraint pertains to.",
+                                "type": "string",
+                                "enum": [
+                                    "confidential",
+                                    "copyright",
+                                    "inConfidence",
+                                    "intellectualPropertyRights",
+                                    "licenceDistributor",
+                                    "licenceEndUser",
+                                    "licenceUnrestricted",
+                                    "license",
+                                    "otherRestrictions",
+                                    "patent",
+                                    "patentPending",
+                                    "private",
+                                    "restricted",
+                                    "SBU",
+                                    "statutory",
+                                    "trademark",
+                                    "unrestricted"
+                                ]
+                            },
+                            "statement": {
+                                "title": "Statement",
+                                "description": "Free-text description/definition of the constraint.",
+                                "type": "string"
+                            },
+                            "href": {
+                                "title": "URL",
+                                "description": "URL identifying, or relating to, the constraint.",
+                                "type": "string",
+                                "format": "uri"
                             }
                         }
                     }
@@ -4954,260 +4756,62 @@
                             }
                         },
                         "constraints": {
-                            "title": "constraints",
-                            "description": "Series of abstract access/usage/security constraints for describing limitations on accessing or using the resource.",
-                            "type": "object",
-                            "required": [],
-                            "additionalProperties": false,
-                            "properties": {
-                                "access": {
-                                    "title": "Access",
-                                    "description": "Series of access constraints for describing limitations on accessing the resource.",
-                                    "type": "array",
-                                    "items": {
-                                        "title": "Constraint",
-                                        "description": "Abstract access/usage/security constraint for describing limitations on accessing the resource.",
-                                        "type": "object",
-                                        "required": [],
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "restriction_code": {
-                                                "title": "Restriction code",
-                                                "description": "The domain/cause of the limitation. Currently this is only used for INSPIRE limitations on public access.",
-                                                "type": "string",
-                                                "enum": [
-                                                    "copyright",
-                                                    "patent",
-                                                    "patentPending",
-                                                    "trademark",
-                                                    "license",
-                                                    "intellectualPropertyRights",
-                                                    "restricted",
-                                                    "otherRestrictions"
-                                                ],
-                                                "examples": [
-                                                    "otherRestrictions"
-                                                ]
-                                            },
-                                            "inspire_limitations_on_public_access": {
-                                                "title": "INSPIRE limitations on public access",
-                                                "description": "Information about limitations to public access within the context of the EU INSPIRE regulations.",
-                                                "type": "string",
-                                                "enum": [
-                                                    "noLimitations"
-                                                ],
-                                                "examples": [
-                                                    "noLimitations"
-                                                ]
-                                            },
-                                            "statement": {
-                                                "title": "Access statement",
-                                                "description": "Explanation/description of the limitation. Not currently used.",
-                                                "type": "string",
-                                                "examples": [
-                                                    "-"
-                                                ]
-                                            },
-                                            "copyright_licence": {
-                                                "title": "Copyright licence",
-                                                "description": "Information on which copyright licence the resource is licenced under.",
-                                                "type": "object",
-                                                "required": [],
-                                                "additionalProperties": false,
-                                                "properties": {
-                                                    "code": {
-                                                        "title": "Code",
-                                                        "description": "Internal code for popular/supported copyright licences, limited subset of the SPDX licence list.",
-                                                        "type": "string",
-                                                        "examples": [
-                                                            "CC-BY-4.0"
-                                                        ]
-                                                    },
-                                                    "href": {
-                                                        "title": "URL",
-                                                        "description": "URL to the licence the resource is licenced under. Typically this displays a licence summary.",
-                                                        "type": "string",
-                                                        "format": "uri",
-                                                        "examples": [
-                                                            "https://creativecommons.org/licenses/by/4.0/"
-                                                        ]
-                                                    },
-                                                    "statement": {
-                                                        "title": "Statement",
-                                                        "description": "Summary statement, notice and/or attribution for the licence the resource is licenced under. Typically this states which licence is used and where users can find more information about it.",
-                                                        "type": "string",
-                                                        "examples": [
-                                                            "This information is licensed under the Create Commons Attribution 4.0 International Licence (CC BY 4.0). To view this licence, visit https://creativecommons.org/licenses/by/4.0/"
-                                                        ]
-                                                    }
-                                                }
-                                            },
-                                            "required_citation": {
-                                                "title": "Required citation",
-                                                "description": "Information on a citation users must include if using the resource. Requires either a free-text citation, or a DOI from which a citation will be automatically generated.",
-                                                "type": "object",
-                                                "oneOf": [
-                                                    {
-                                                        "properties": {
-                                                            "statement": {
-                                                                "title": "Statement",
-                                                                "description": "Details of the required citation and instructions on how users should include the citation.",
-                                                                "type": "string",
-                                                                "examples": [
-                                                                    "Cite this information as: 'Watson, C. *Antarctic Coastline (Polygon) - (MAGIC ADD candidate metadata record).* Mapping and Geographic Information Centre, British Antarctic Survey. https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556'"
-                                                                ]
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "statement"
-                                                        ],
-                                                        "additionalProperties": false
-                                                    },
-                                                    {
-                                                        "properties": {
-                                                            "doi": {
-                                                                "title": "DOI",
-                                                                "description": "Digital Object Identifier (DOI) for the resource, or that should be cited for the resource.",
-                                                                "type": "string",
-                                                                "format": "uri",
-                                                                "examples": [
-                                                                    "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
-                                                                ]
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "doi"
-                                                        ],
-                                                        "additionalProperties": false
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                "usage": {
-                                    "title": "Usage",
-                                    "description": "Series of usage constraints for describing limitations on using the resource.",
-                                    "type": "array",
-                                    "items": {
-                                        "title": "Constraint",
-                                        "description": "Abstract access/usage/security constraint for describing limitations on accessing the resource.",
-                                        "type": "object",
-                                        "required": [],
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "restriction_code": {
-                                                "title": "Restriction code",
-                                                "description": "The domain/cause of the limitation. Currently this is only used for INSPIRE limitations on public access.",
-                                                "type": "string",
-                                                "enum": [
-                                                    "copyright",
-                                                    "patent",
-                                                    "patentPending",
-                                                    "trademark",
-                                                    "license",
-                                                    "intellectualPropertyRights",
-                                                    "restricted",
-                                                    "otherRestrictions"
-                                                ],
-                                                "examples": [
-                                                    "otherRestrictions"
-                                                ]
-                                            },
-                                            "inspire_limitations_on_public_access": {
-                                                "title": "INSPIRE limitations on public access",
-                                                "description": "Information about limitations to public access within the context of the EU INSPIRE regulations.",
-                                                "type": "string",
-                                                "enum": [
-                                                    "noLimitations"
-                                                ],
-                                                "examples": [
-                                                    "noLimitations"
-                                                ]
-                                            },
-                                            "statement": {
-                                                "title": "Access statement",
-                                                "description": "Explanation/description of the limitation. Not currently used.",
-                                                "type": "string",
-                                                "examples": [
-                                                    "-"
-                                                ]
-                                            },
-                                            "copyright_licence": {
-                                                "title": "Copyright licence",
-                                                "description": "Information on which copyright licence the resource is licenced under.",
-                                                "type": "object",
-                                                "required": [],
-                                                "additionalProperties": false,
-                                                "properties": {
-                                                    "code": {
-                                                        "title": "Code",
-                                                        "description": "Internal code for popular/supported copyright licences, limited subset of the SPDX licence list.",
-                                                        "type": "string",
-                                                        "examples": [
-                                                            "CC-BY-4.0"
-                                                        ]
-                                                    },
-                                                    "href": {
-                                                        "title": "URL",
-                                                        "description": "URL to the licence the resource is licenced under. Typically this displays a licence summary.",
-                                                        "type": "string",
-                                                        "format": "uri",
-                                                        "examples": [
-                                                            "https://creativecommons.org/licenses/by/4.0/"
-                                                        ]
-                                                    },
-                                                    "statement": {
-                                                        "title": "Statement",
-                                                        "description": "Summary statement, notice and/or attribution for the licence the resource is licenced under. Typically this states which licence is used and where users can find more information about it.",
-                                                        "type": "string",
-                                                        "examples": [
-                                                            "This information is licensed under the Create Commons Attribution 4.0 International Licence (CC BY 4.0). To view this licence, visit https://creativecommons.org/licenses/by/4.0/"
-                                                        ]
-                                                    }
-                                                }
-                                            },
-                                            "required_citation": {
-                                                "title": "Required citation",
-                                                "description": "Information on a citation users must include if using the resource. Requires either a free-text citation, or a DOI from which a citation will be automatically generated.",
-                                                "type": "object",
-                                                "oneOf": [
-                                                    {
-                                                        "properties": {
-                                                            "statement": {
-                                                                "title": "Statement",
-                                                                "description": "Details of the required citation and instructions on how users should include the citation.",
-                                                                "type": "string",
-                                                                "examples": [
-                                                                    "Cite this information as: 'Watson, C. *Antarctic Coastline (Polygon) - (MAGIC ADD candidate metadata record).* Mapping and Geographic Information Centre, British Antarctic Survey. https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556'"
-                                                                ]
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "statement"
-                                                        ],
-                                                        "additionalProperties": false
-                                                    },
-                                                    {
-                                                        "properties": {
-                                                            "doi": {
-                                                                "title": "DOI",
-                                                                "description": "Digital Object Identifier (DOI) for the resource, or that should be cited for the resource.",
-                                                                "type": "string",
-                                                                "format": "uri",
-                                                                "examples": [
-                                                                    "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
-                                                                ]
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "doi"
-                                                        ],
-                                                        "additionalProperties": false
-                                                    }
-                                                ]
-                                            }
-                                        }
+                            "title": "Constraints",
+                            "description": "Access/usage constraints for describing limitations on accessing or using the resource.",
+                            "type": "array",
+                            "items": {
+                                "title": "Constraint",
+                                "description": "Access/usage constraint describing a limitation on accessing or using the resource",
+                                "type": "object",
+                                "required": [
+                                    "type",
+                                    "restriction_code"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "type": {
+                                        "title": "Constraint type",
+                                        "description": "Whether the constraint constrains how the resource can be accessed, or be used.",
+                                        "type": "string",
+                                        "enum": [
+                                            "access",
+                                            "usage"
+                                        ]
+                                    },
+                                    "restriction_code": {
+                                        "title": "Restriction code",
+                                        "description": "The domain the constraint pertains to.",
+                                        "type": "string",
+                                        "enum": [
+                                            "confidential",
+                                            "copyright",
+                                            "inConfidence",
+                                            "intellectualPropertyRights",
+                                            "licenceDistributor",
+                                            "licenceEndUser",
+                                            "licenceUnrestricted",
+                                            "license",
+                                            "otherRestrictions",
+                                            "patent",
+                                            "patentPending",
+                                            "private",
+                                            "restricted",
+                                            "SBU",
+                                            "statutory",
+                                            "trademark",
+                                            "unrestricted"
+                                        ]
+                                    },
+                                    "statement": {
+                                        "title": "Statement",
+                                        "description": "Free-text description/definition of the constraint.",
+                                        "type": "string"
+                                    },
+                                    "href": {
+                                        "title": "URL",
+                                        "description": "URL identifying, or relating to, the constraint.",
+                                        "type": "string",
+                                        "format": "uri"
                                     }
                                 }
                             }
