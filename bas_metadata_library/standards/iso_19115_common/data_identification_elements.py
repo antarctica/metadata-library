@@ -1,6 +1,5 @@
 import requests
 
-from copy import deepcopy
 from datetime import datetime
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
@@ -99,7 +98,7 @@ class DataIdentification(MetadataRecordElement):
         if len(_descriptive_keywords) > 0:
             _["keywords"] = _descriptive_keywords
 
-        _resource_constraints = {}
+        _resource_constraints = []
         constraints_length = int(
             self.record.xpath(
                 f"count({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints)",
@@ -107,7 +106,7 @@ class DataIdentification(MetadataRecordElement):
             )
         )
         for constraint_index in range(1, constraints_length + 1):
-            constraint = ResourceConstraints(
+            constraint = ResourceConstraint(
                 record=self.record,
                 attributes=self.attributes,
                 xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints)"
@@ -115,14 +114,7 @@ class DataIdentification(MetadataRecordElement):
             )
             _constraint = constraint.make_config()
             if bool(_constraint):
-                if "access" in _constraint.keys():
-                    if "access" not in _resource_constraints.keys():
-                        _resource_constraints["access"] = []
-                    _resource_constraints["access"].append(_constraint["access"])
-                elif "usage" in _constraint.keys():
-                    if "usage" not in _resource_constraints.keys():
-                        _resource_constraints["usage"] = []
-                    _resource_constraints["usage"].append(_constraint["usage"])
+                _resource_constraints.append(_constraint)
         if len(_resource_constraints) > 0:
             _["constraints"] = _resource_constraints
 
@@ -262,13 +254,14 @@ class DataIdentification(MetadataRecordElement):
                 descriptive_keywords.make_element()
 
         if "constraints" in self.attributes["identification"]:
-            constraints = ResourceConstraints(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=data_identification_element,
-                element_attributes=self.attributes["identification"]["constraints"],
-            )
-            constraints.make_element()
+            for constraint_attributes in self.attributes["identification"]["constraints"]:
+                constraint = ResourceConstraint(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_identification_element,
+                    element_attributes=constraint_attributes,
+                )
+                constraint.make_element()
 
         if "spatial_representation_type" in self.attributes["identification"]:
             spatial_representation_type = SpatialRepresentationType(
@@ -530,13 +523,9 @@ class Thesaurus(MetadataRecordElement):
         citation.make_element()
 
 
-class ResourceConstraints(MetadataRecordElement):
+class ResourceConstraint(MetadataRecordElement):
     def make_config(self) -> dict:
         _ = {}
-
-        _id = self.record.xpath(f"{self.xpath}/gmd:MD_LegalConstraints/@id", namespaces=self.ns.nsmap())
-        if len(_id) == 1:
-            _id = _id[0]
 
         access_constraint = AccessConstraint(
             record=self.record,
@@ -545,113 +534,61 @@ class ResourceConstraints(MetadataRecordElement):
         )
         _access_constraint = access_constraint.make_config()
         if _access_constraint != "":
-            _["access"] = {"restriction_code": _access_constraint}
+            _["type"] = "access"
+            _["restriction_code"] = _access_constraint
 
-            other_constraint = OtherConstraints(
-                record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:MD_LegalConstraints"
-            )
-            _other_constraint = other_constraint.make_config()
-            if _other_constraint != "":
-                _["access"]["statement"] = _other_constraint
-
-        use_constraint = UseLimitation(
+        use_constraint = UseConstraint(
             record=self.record,
             attributes=self.attributes,
-            xpath=f"{self.xpath}/gmd:MD_LegalConstraints/gmd:useLimitation",
+            xpath=f"{self.xpath}/gmd:MD_LegalConstraints/gmd:useConstraints",
         )
-        _usage_constraint = use_constraint.make_config()
-        if bool(_usage_constraint):
-            _["usage"] = _usage_constraint
+        _use_constraint = use_constraint.make_config()
+        if _use_constraint != "":
+            _["type"] = "usage"
+            _["restriction_code"] = _use_constraint
 
-            if _id == "copyright":
-                _["usage"] = {"copyright_licence": _usage_constraint}
-                if (
-                    "href" in _usage_constraint
-                    and _usage_constraint["href"]
-                    == "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-                ):
-                    # noinspection PyUnresolvedReferences
-                    _["usage"]["copyright_licence"]["code"] = "OGL-UK-3.0"
-            elif _id == "citation":
-                _["usage"] = {"required_citation": _usage_constraint}
+        other_constraint = OtherConstraints(
+            record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:MD_LegalConstraints"
+        )
+        _other_constraint = other_constraint.make_config()
+        if len(_other_constraint) > 0:
+            _ = {**_, **_other_constraint}
 
         return _
 
     def make_element(self):
-        if "access" in self.element_attributes:
-            for access_constraint_attributes in self.element_attributes["access"]:
-                constraints_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceConstraints")
-                constraints_element = SubElement(constraints_wrapper, f"{{{self.ns.gmd}}}MD_LegalConstraints")
+        constraints_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceConstraints")
+        constraints_element = SubElement(constraints_wrapper, f"{{{self.ns.gmd}}}MD_LegalConstraints")
 
-                access_constraint = AccessConstraint(
-                    record=self.record,
-                    attributes=self.attributes,
-                    parent_element=constraints_element,
-                    element_attributes=access_constraint_attributes,
-                )
-                access_constraint.make_element()
+        if self.element_attributes["type"] == "access":
+            access_constraint = AccessConstraint(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=constraints_element,
+                element_attributes=self.element_attributes,
+            )
+            access_constraint.make_element()
 
-                if "statement" in access_constraint_attributes:
-                    element_attributes = {"value": deepcopy(access_constraint_attributes["statement"])}
+        if self.element_attributes["type"] == "usage":
+            usage_constraint = UseConstraint(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=constraints_element,
+                element_attributes=self.element_attributes,
+            )
+            usage_constraint.make_element()
 
-                    other_constraint = OtherConstraints(
-                        record=self.record,
-                        attributes=self.attributes,
-                        parent_element=constraints_element,
-                        element_attributes=element_attributes,
-                    )
-                    other_constraint.make_element()
-
-        if "usage" in self.element_attributes:
-            for usage_constraint_attributes in self.element_attributes["usage"]:
-                constraints_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceConstraints")
-                constraints_element = SubElement(constraints_wrapper, f"{{{self.ns.gmd}}}MD_LegalConstraints")
-
-                if "statement" in usage_constraint_attributes:
-                    element_attributes = {"value": deepcopy(usage_constraint_attributes["statement"])}
-
-                    use_limitation = UseLimitation(
-                        record=self.record,
-                        attributes=self.attributes,
-                        parent_element=constraints_element,
-                        element_attributes=element_attributes,
-                    )
-                    use_limitation.make_element()
-
-                if "copyright_licence" in usage_constraint_attributes:
-                    constraints_element.set("id", "copyright")
-
-                    element_attributes = deepcopy(usage_constraint_attributes["copyright_licence"])
-                    element_attributes["value"] = element_attributes["statement"]
-
-                    use_limitation = UseLimitation(
-                        record=self.record,
-                        attributes=self.attributes,
-                        parent_element=constraints_element,
-                        element_attributes=element_attributes,
-                    )
-                    use_limitation.make_element()
-
-                if "required_citation" in usage_constraint_attributes:
-                    constraints_element.set("id", "citation")
-
-                    element_attributes = {}
-                    if "statement" in usage_constraint_attributes["required_citation"]:
-                        element_attributes["value"] = usage_constraint_attributes["required_citation"]["statement"]
-                    elif "doi" in usage_constraint_attributes["required_citation"]:
-                        citation = self._get_doi_citation(doi=usage_constraint_attributes["required_citation"]["doi"])
-                        element_attributes["value"] = f'Cite this information as "{citation}"'
-
-                    use_limitation = UseLimitation(
-                        record=self.record,
-                        attributes=self.attributes,
-                        parent_element=constraints_element,
-                        element_attributes=element_attributes,
-                    )
-                    use_limitation.make_element()
+        if "statement" in self.element_attributes or "href" in self.element_attributes:
+            other_constraint = OtherConstraints(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=constraints_element,
+                element_attributes=self.element_attributes,
+            )
+            other_constraint.make_element()
 
     @staticmethod
-    def _get_doi_citation(doi: str) -> str:
+    def _get_doi_citation(doi: str) -> str:  # pragma: no cover
         """
         Get citation for a DOI using crosscite.org
 
@@ -685,74 +622,115 @@ class AccessConstraint(CodeListElement):
             xpath=f"{xpath}/gmd:MD_RestrictionCode",
         )
         self.code_list_values = [
+            "confidential",
             "copyright",
+            "inConfidence",
+            "intellectualPropertyRights",
+            "licenceDistributor",
+            "licenceEndUser",
+            "licenceUnrestricted",
+            "license",
+            "otherRestrictions",
             "patent",
             "patentPending",
-            "trademark",
-            "license",
-            "intellectualPropertyRights",
+            "private",
             "restricted",
-            "otherRestrictions",
+            "SBU",
+            "statutory",
+            "trademark",
+            "unrestricted",
         ]
-        self.code_list = (
-            "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/"
-            "codelist/gmxCodelists.xml#MD_RestrictionCode"
-        )
+        self.code_list = "https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"
         self.element = f"{{{self.ns.gmd}}}accessConstraints"
         self.element_code = f"{{{self.ns.gmd}}}MD_RestrictionCode"
         self.attribute = "restriction_code"
 
 
-class OtherConstraints(MetadataRecordElement):
-    def make_config(self) -> str:
-        _ = ""
-
-        other_constraint = self.record.xpath(
-            f"{self.xpath}/gmd:otherConstraints/gco:CharacterString/text()", namespaces=self.ns.nsmap()
+class UseConstraint(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None,
+        xpath: str = None,
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes,
+            xpath=f"{xpath}/gmd:MD_RestrictionCode",
         )
-        if len(other_constraint) == 1:
-            _ = other_constraint[0]
+        self.code_list_values = [
+            "confidential",
+            "copyright",
+            "inConfidence",
+            "intellectualPropertyRights",
+            "licenceDistributor",
+            "licenceEndUser",
+            "licenceUnrestricted",
+            "license",
+            "otherRestrictions",
+            "patent",
+            "patentPending",
+            "private",
+            "restricted",
+            "SBU",
+            "statutory",
+            "trademark",
+            "unrestricted",
+        ]
+        self.code_list = "https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"
+        self.element = f"{{{self.ns.gmd}}}useConstraints"
+        self.element_code = f"{{{self.ns.gmd}}}MD_RestrictionCode"
+        self.attribute = "restriction_code"
+
+
+class OtherConstraints(MetadataRecordElement):
+    def make_config(self) -> dict:
+        _ = {}
+
+        other_constraint_value = self.record.xpath(
+            f"{self.xpath}/gmd:otherConstraints/gco:CharacterString/text() | {self.xpath}/gmd:otherConstraints/gmx:Anchor/text()",
+            namespaces=self.ns.nsmap(),
+        )
+        if len(other_constraint_value) == 1:
+            _["statement"] = other_constraint_value[0]
+
+        other_constraint_href = self.record.xpath(
+            f"{self.xpath}/gmd:otherConstraints/gmx:Anchor/@xlink:href", namespaces=self.ns.nsmap()
+        )
+        if len(other_constraint_href) == 1:
+            _["href"] = other_constraint_href[0]
+            # account for constraints that use a URL only,
+            # as the text value will repeat the URL so it can encoded properly
+            if "statement" in _ and _["statement"] == _["href"]:
+                del _["statement"]
 
         return _
 
     def make_element(self):
         other_constraints_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}otherConstraints")
-        other_constraints_value = SubElement(other_constraints_element, f"{{{self.ns.gco}}}CharacterString")
-        other_constraints_value.text = self.element_attributes["value"]
-
-
-class UseLimitation(MetadataRecordElement):
-    def make_config(self) -> dict:
-        _ = {}
-
-        use_constraint_statement = self.record.xpath(
-            f"{self.xpath}/gco:CharacterString/text() | {self.xpath}/gmx:Anchor/text()",
-            namespaces=self.ns.nsmap(),
-        )
-        if len(use_constraint_statement) == 1:
-            _["statement"] = use_constraint_statement[0]
-
-        use_constraint_href = self.record.xpath(f"{self.xpath}/gmx:Anchor/@xlink:href", namespaces=self.ns.nsmap())
-        if len(use_constraint_href) == 1:
-            _["href"] = use_constraint_href[0]
-
-        return _
-
-    def make_element(self):
-        use_limitation_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}useLimitation")
 
         if "href" in self.element_attributes:
-            use_limitation_value = AnchorElement(
+            # where a constraint only has a URL, use this as a text value as well
+            # when decoded, this fake value/statement value will be removed
+            element_value = self.element_attributes["href"]
+            if "statement" in self.element_attributes:
+                element_value = self.element_attributes["statement"]
+
+            anchor = AnchorElement(
                 record=self.record,
                 attributes=self.attributes,
-                parent_element=use_limitation_element,
+                parent_element=other_constraints_element,
                 element_attributes=self.element_attributes,
-                element_value=self.element_attributes["value"],
+                element_value=element_value,
             )
-            use_limitation_value.make_element()
+            anchor.make_element()
         else:
-            use_limitation_value = SubElement(use_limitation_element, f"{{{self.ns.gco}}}CharacterString")
-            use_limitation_value.text = self.element_attributes["value"]
+            other_constraints_value = SubElement(other_constraints_element, f"{{{self.ns.gco}}}CharacterString")
+            other_constraints_value.text = self.element_attributes["statement"]
 
 
 class SupplementalInformation(MetadataRecordElement):

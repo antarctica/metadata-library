@@ -571,12 +571,14 @@ minimal_record_v2 = {
 }
 
 minimal_record_with_required_doi_citation_v2 = deepcopy(minimal_record_v2)  # type: dict
-minimal_record_with_required_doi_citation_v2["identification"]["constraints"] = {
-    "usage": [
-        {"restriction_code": "otherRestrictions", "required_citation": {"doi": "https://doi.org/10.7939/R3QZ22K64"}}
-    ]
-}
-
+minimal_record_with_required_doi_citation_v2["identification"]["constraints"] = [
+    {
+        "type": "usage",
+        "restriction_code": "otherRestrictions",
+        "statement": "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. University of Alberta Libraries. https://doi.org/10.7939/R3QZ22K64",
+        "href": "https://doi.org/10.7939/R3QZ22K64",
+    }
+]
 
 # noinspection DuplicatedCode
 base_simple_record_v2 = {
@@ -655,16 +657,13 @@ base_simple_record_v2 = {
         ],
         "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"},
         "keywords": [{"terms": [{"term": "Atmospheric conditions"}], "type": "theme"}],
-        "constraints": {
-            "access": [{"restriction_code": "otherRestrictions"}],
-            "usage": [
-                {
-                    "copyright_licence": {
-                        "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/"
-                    }
-                }
-            ],
-        },
+        "constraints": [
+            {
+                "type": "usage",
+                "restriction_code": "license",
+                "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
+            }
+        ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
         "formats": [{"format": "netCDF"}],
@@ -817,18 +816,14 @@ base_complex_record_v2 = {
                 },
             }
         ],
-        "constraints": {
-            "access": [{"restriction_code": "otherRestrictions"}],
-            "usage": [
-                {
-                    "copyright_licence": {
-                        "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
-                        "code": "OGL-UK-3.0",
-                        "href": "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                    }
-                }
-            ],
-        },
+        "constraints": [
+            {
+                "type": "usage",
+                "restriction_code": "license",
+                "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
+                "href": "http://www.nationalarchives.gov.uk/doc/open-government-licence/",
+            }
+        ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
         "formats": [
@@ -851,7 +846,7 @@ base_complex_record_v2 = {
     },
 }
 
-# noinspection DuplicatedCode
+# noinspection DuplicatedCode,HttpUrlsUsage
 complete_record_v2 = {
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
     "hierarchy_level": "dataset",
@@ -1029,24 +1024,27 @@ complete_record_v2 = {
                 },
             }
         ],
-        "constraints": {
-            "access": [{"restriction_code": "otherRestrictions", "statement": "Custom access restrictions statement"}],
-            "usage": [
-                {
-                    "copyright_licence": {
-                        "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
-                        "code": "OGL-UK-3.0",
-                        "href": "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-                    }
-                },
-                {
-                    "required_citation": {
-                        "statement": 'Cite this information as: "Campbell, S. (2014). Auster Antarctic aircraft. University of Alberta Libraries. https://doi.org/10.7939/r3qz22k64"'
-                    }
-                },
-                {"statement": "Custom use limitations statement"},
-            ],
-        },
+        "constraints": [
+            {"type": "access", "restriction_code": "unrestricted"},
+            {
+                "type": "usage",
+                "restriction_code": "license",
+                "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
+                "href": "http://www.nationalarchives.gov.uk/doc/open-government-licence/",
+            },
+            {
+                "type": "usage",
+                "restriction_code": "otherRestrictions",
+                "statement": 'You must cite this information as: "Campbell, S. (2014). Auster Antarctic aircraft. University of Alberta Libraries. https://doi.org/10.7939/r3qz22k64"',
+                "href": "https://doi.org/10.7939/r3qz22k64",
+            },
+            {"type": "access", "restriction_code": "otherRestrictions", "statement": "constraint without href"},
+            {
+                "type": "access",
+                "restriction_code": "otherRestrictions",
+                "href": "http://example.com/#constraint-without-statement",
+            },
+        ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
         "formats": [
