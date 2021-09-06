@@ -51,6 +51,16 @@ class DataIdentification(MetadataRecordElement):
         if _credit != "":
             _["credit"] = _credit
 
+        status = Status(
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:status"
+        )
+
+        _status = status.make_config()
+        if _status != "":
+            _["status"] = _status
+
         _contacts = []
         contacts_length = int(
             self.record.xpath(
@@ -219,6 +229,14 @@ class DataIdentification(MetadataRecordElement):
         )
         credit.make_element()
 
+        status = Status(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes["identification"],
+        )
+        status.make_element()
+
         if "contacts" in self.attributes["identification"]:
             for point_of_contact_attributes in self.attributes["identification"]["contacts"]:
                 for role in point_of_contact_attributes["role"]:
@@ -358,6 +376,67 @@ class Credit(MetadataRecordElement):
             credit_value = SubElement(credit_element, f"{{{self.ns.gco}}}CharacterString")
             credit_value.text = self.element_attributes["credit"]
 
+
+class StatusProgress(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None,
+        xpath: str = None,
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes,
+            xpath=f"{xpath}/gmd:MD_ProgressCode",
+        )
+        self.code_list_values = [
+            "completed",
+            "historicalArchive",
+            "obsolete",
+            "onGoing",
+            "planned",
+            "required",
+            "underDevelopment",
+        ]
+        self.code_list = (
+            "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/"
+            "codelist/gmxCodelists.xml#MD_ProgressCode"
+        )
+        self.element = f"{{{self.ns.gmd}}}status"
+        self.element_code = f"{{{self.ns.gmd}}}MD_ProgressCode"
+        self.attribute = "progress"
+
+class Status(MetadataRecordElement):
+    def make_config(self) -> str:
+        _ = {}
+
+        progress = StatusProgress(
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:status",
+        )
+        _progress = progress.make_config()
+        if _progress != "":
+            _["progress"] = _progress
+
+        return _
+
+    def make_element(self):
+        status_element = SubElement(
+            self.parent_element, f"{{{self.ns.gmd}}}status")
+
+        if "progress" in self.element_attributes:
+            status_process = StatusProgress(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=status_element,
+                element_attributes=self.element_attributes,
+            )
+            status_process.make_element()
 
 class PointOfContact(MetadataRecordElement):
     def make_config(self) -> dict:
