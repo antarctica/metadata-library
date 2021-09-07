@@ -438,6 +438,7 @@ class Status(MetadataRecordElement):
             )
             status_process.make_element()
 
+
 class PointOfContact(MetadataRecordElement):
     def make_config(self) -> dict:
         responsible_party = ResponsibleParty(record=self.record, attributes=self.attributes, xpath=self.xpath)
