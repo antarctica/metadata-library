@@ -47,6 +47,7 @@
       <gmd:abstract>
         <gco:CharacterString>Test Record for ISO 19115 metadata standard (no profile) with required properties only.</gco:CharacterString>
       </gmd:abstract>
+      <gmd:status/>
       <gmd:characterSet>
         <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf-8">utf-8</gmd:MD_CharacterSetCode>
       </gmd:characterSet>
