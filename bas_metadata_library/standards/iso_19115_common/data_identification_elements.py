@@ -410,6 +410,7 @@ class StatusProgress(CodeListElement):
         self.element_code = f"{{{self.ns.gmd}}}MD_ProgressCode"
         self.attribute = "progress"
 
+
 class Status(MetadataRecordElement):
     def make_config(self) -> str:
         _ = {}
@@ -430,13 +431,13 @@ class Status(MetadataRecordElement):
             self.parent_element, f"{{{self.ns.gmd}}}status")
 
         if "progress" in self.element_attributes:
-            status_process = StatusProgress(
+            status_progress = StatusProgress(
                 record=self.record,
                 attributes=self.attributes,
                 parent_element=status_element,
                 element_attributes=self.element_attributes,
             )
-            status_process.make_element()
+            status_progress.make_element()
 
 
 class PointOfContact(MetadataRecordElement):
