@@ -211,6 +211,7 @@
       <gmd:credit>
         <gco:CharacterString>No credit.</gco:CharacterString>
       </gmd:credit>
+      <gmd:status/>
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:individualName>

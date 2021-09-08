@@ -174,9 +174,7 @@
       <gmd:credit>
         <gco:CharacterString>No credit.</gco:CharacterString>
       </gmd:credit>
-      <gmd:status>
-        <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="completed">completed</gmd:MD_ProgressCode>
-      </gmd:status>
+      <gmd:status/>
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:individualName>
