@@ -389,7 +389,7 @@ def test_identification_status(get_record_response, config_name):
     status_progress_element = record.xpath(
         f"./gmd:status/gmd:MD_ProgressCode[@codeList = 'http://standards.iso.org/ittf/"
         f"PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_ProgressCode']"
-        f"[@codeListValue = '{config['identification']['status']}']/text() = '{config['identification']['status']}'",
+        f"[@codeListValue = '{config['identification']['status']['progress']}']/text() = '{config['identification']['status']['progress']}'",
         namespaces=namespaces.nsmap(),
     )
     assert status_progress_element is True
