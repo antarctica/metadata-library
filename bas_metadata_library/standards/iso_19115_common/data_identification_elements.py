@@ -54,9 +54,8 @@ class DataIdentification(MetadataRecordElement):
         status = Status(
             record=self.record,
             attributes=self.attributes,
-            xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:status"
+            xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:status",
         )
-
         _status = status.make_config()
         if _status != "":
             _["status"] = _status
@@ -229,14 +228,6 @@ class DataIdentification(MetadataRecordElement):
         )
         credit.make_element()
 
-        status = Status(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.attributes["identification"],
-        )
-        status.make_element()
-
         if "contacts" in self.attributes["identification"]:
             for point_of_contact_attributes in self.attributes["identification"]["contacts"]:
                 for role in point_of_contact_attributes["role"]:
@@ -289,6 +280,15 @@ class DataIdentification(MetadataRecordElement):
                 element_attributes=self.attributes["identification"],
             )
             spatial_representation_type.make_element()
+
+        if "status" in self.attributes["identification"]:
+            status = Status(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes["identification"],
+            )
+            status.make_element()
 
         if "spatial_resolution" in self.attributes["identification"]:  # pragma: no cover
             spatial_resolution = SpatialResolution(
@@ -377,7 +377,7 @@ class Credit(MetadataRecordElement):
             credit_value.text = self.element_attributes["credit"]
 
 
-class StatusProgress(CodeListElement):
+class Status(CodeListElement):
     def __init__(
         self,
         record: MetadataRecord,
@@ -408,36 +408,7 @@ class StatusProgress(CodeListElement):
         )
         self.element = f"{{{self.ns.gmd}}}status"
         self.element_code = f"{{{self.ns.gmd}}}MD_ProgressCode"
-        self.attribute = "progress"
-
-
-class Status(MetadataRecordElement):
-    def make_config(self) -> str:
-        _ = {}
-
-        progress = StatusProgress(
-            record=self.record,
-            attributes=self.attributes,
-            xpath=f"{self.xpath}/gmd:status",
-        )
-        _progress = progress.make_config()
-        if _progress != "":
-            _["progress"] = _progress
-
-        return _
-
-    def make_element(self):
-        status_element = SubElement(
-            self.parent_element, f"{{{self.ns.gmd}}}status")
-
-        if "progress" in self.element_attributes:
-            status_progress = StatusProgress(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=status_element,
-                element_attributes=self.element_attributes,
-            )
-            status_progress.make_element()
+        self.attribute = "status"
 
 
 class PointOfContact(MetadataRecordElement):

@@ -2915,27 +2915,19 @@
                 "status": {
                     "title": "Status",
                     "description": "The status of the metadata.",
-                    "type": "object",
-                    "required": [],
-                    "properties": {
-                        "progress": {
-                            "title": "Progress",
-                            "description": "The status of the resource, or element related to the resource.",
-                            "type": "string",
-                            "enum": [
-                                "completed",
-                                "historicalArchive",
-                                "obsolete",
-                                "onGoing",
-                                "planned",
-                                "required",
-                                "underDevelopment"
-                            ],
-                            "examples": [
-                                "completed"
-                            ]
-                        }
-                    }
+                    "type": "string",
+                    "enum": [
+                        "completed",
+                        "historicalArchive",
+                        "obsolete",
+                        "onGoing",
+                        "planned",
+                        "required",
+                        "underDevelopment"
+                    ],
+                    "examples": [
+                        "completed"
+                    ]
                 },
                 "supplemental_information": {
                     "title": "Supplemental information",
@@ -4475,27 +4467,19 @@
                         "status": {
                             "title": "Status",
                             "description": "The status of the metadata.",
-                            "type": "object",
-                            "required": [],
-                            "properties": {
-                                "progress": {
-                                    "title": "Progress",
-                                    "description": "The status of the resource, or element related to the resource.",
-                                    "type": "string",
-                                    "enum": [
-                                        "completed",
-                                        "historicalArchive",
-                                        "obsolete",
-                                        "onGoing",
-                                        "planned",
-                                        "required",
-                                        "underDevelopment"
-                                    ],
-                                    "examples": [
-                                        "completed"
-                                    ]
-                                }
-                            }
+                            "type": "string",
+                            "enum": [
+                                "completed",
+                                "historicalArchive",
+                                "obsolete",
+                                "onGoing",
+                                "planned",
+                                "required",
+                                "underDevelopment"
+                            ],
+                            "examples": [
+                                "completed"
+                            ]
                         },
                         "dates": {
                             "title": "Dates",

@@ -1025,13 +1025,19 @@
         "status": {
             "title": "Status",
             "description": "The status of the metadata.",
-            "type": "object",
-            "required": [],
-            "properties": {
-                "progress": {
-                    "$ref": "#/definitions/progress"
-                }
-            }
+            "type": "string",
+            "enum": [
+                "completed",
+                "historicalArchive",
+                "obsolete",
+                "onGoing",
+                "planned",
+                "required",
+                "underDevelopment"
+            ],
+            "examples": [
+                "completed"
+            ]
         },
         "supplemental_information": {
             "title": "Supplemental information",

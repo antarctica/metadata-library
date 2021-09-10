@@ -617,9 +617,7 @@ base_simple_record_v2 = {
             },
         },
         "credit": "No credit.",
-        "status": {
-            "progress": "completed"
-        },
+        "status": "completed",
         "contacts": [
             {
                 "individual": {"name": "Watson, Constance"},
@@ -757,9 +755,7 @@ base_complex_record_v2 = {
             },
         },
         "credit": "No credit.",
-        "status": {
-            "progress": "completed"
-        },
+        "status": "completed",
         "contacts": [
             {
                 "individual": {
@@ -960,9 +956,7 @@ complete_record_v2 = {
             },
         },
         "credit": "No credit.",
-        "status": {
-            "progress": "completed"
-        },
+        "status": "completed",
         "contacts": [
             {
                 "individual": {
