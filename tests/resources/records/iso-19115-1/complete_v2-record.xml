@@ -742,7 +742,7 @@
           <gmd:distributorContact>
             <gmd:CI_ResponsibleParty>
               <gmd:organisationName>
-                <gco:CharacterString>Mapping and Geograpgic Information Centre, British Antarctic Survey</gco:CharacterString>
+                <gco:CharacterString>Mapping and Geographic Information Centre, British Antarctic Survey</gco:CharacterString>
               </gmd:organisationName>
               <gmd:contactInfo>
                 <gmd:CI_Contact>

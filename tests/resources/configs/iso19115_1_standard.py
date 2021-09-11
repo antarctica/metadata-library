@@ -414,7 +414,7 @@ complete_record_v1 = {
                 },
             },
             {
-                "organisation": {"name": "Mapping and Geograpgic Information Centre, British Antarctic Survey"},
+                "organisation": {"name": "Mapping and Geographic Information Centre, British Antarctic Survey"},
                 "phone": "+44 (0)1223 221400",
                 "address": {
                     "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
