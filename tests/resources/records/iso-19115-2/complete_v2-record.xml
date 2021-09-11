@@ -644,16 +644,6 @@
   </gmd:identificationInfo>
   <gmd:distributionInfo>
     <gmd:MD_Distribution>
-      <gmd:distributionFormat>
-        <gmd:MD_Format>
-          <gmd:name>
-            <gmx:Anchor xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca" xlink:actuate="onRequest">netCDF</gmx:Anchor>
-          </gmd:name>
-          <gmd:version>
-            <gco:CharacterString>4</gco:CharacterString>
-          </gmd:version>
-        </gmd:MD_Format>
-      </gmd:distributionFormat>
       <gmd:distributor>
         <gmd:MD_Distributor>
           <gmd:distributorContact>
@@ -709,6 +699,42 @@
               </gmd:role>
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
+          <gmd:distributorFormat>
+            <gmd:MD_Format>
+              <gmd:name>
+                <gmx:Anchor xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca" xlink:actuate="onRequest">netCDF</gmx:Anchor>
+              </gmd:name>
+              <gmd:version>
+                <gco:CharacterString>4</gco:CharacterString>
+              </gmd:version>
+            </gmd:MD_Format>
+          </gmd:distributorFormat>
+          <gmd:distributorTransferOptions>
+            <gmd:MD_DigitalTransferOptions>
+              <gmd:unitsOfDistribution>
+                <gco:CharacterString>MB</gco:CharacterString>
+              </gmd:unitsOfDistribution>
+              <gmd:transferSize>
+                <gco:Real>40</gco:Real>
+              </gmd:transferSize>
+              <gmd:onLine>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371</gmd:URL>
+                  </gmd:linkage>
+                  <gmd:name>
+                    <gco:CharacterString>Get Data</gco:CharacterString>
+                  </gmd:name>
+                  <gmd:description>
+                    <gco:CharacterString>Download measurement data</gco:CharacterString>
+                  </gmd:description>
+                  <gmd:function>
+                    <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
+                  </gmd:function>
+                </gmd:CI_OnlineResource>
+              </gmd:onLine>
+            </gmd:MD_DigitalTransferOptions>
+          </gmd:distributorTransferOptions>
         </gmd:MD_Distributor>
       </gmd:distributor>
       <gmd:distributor>
@@ -756,54 +782,80 @@
               </gmd:role>
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
+          <gmd:distributorFormat>
+            <gmd:MD_Format>
+              <gmd:name>
+                <gmx:Anchor xlink:href="https://www.iana.org/assignments/media-types/application/pdf" xlink:actuate="onRequest">PDF</gmx:Anchor>
+              </gmd:name>
+              <gmd:version>
+                <gco:CharacterString>1.6</gco:CharacterString>
+              </gmd:version>
+            </gmd:MD_Format>
+          </gmd:distributorFormat>
+          <gmd:distributorTransferOptions>
+            <gmd:MD_DigitalTransferOptions>
+              <gmd:unitsOfDistribution>
+                <gco:CharacterString>KB</gco:CharacterString>
+              </gmd:unitsOfDistribution>
+              <gmd:transferSize>
+                <gco:Real>371</gco:Real>
+              </gmd:transferSize>
+              <gmd:onLine>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>https://data.bas.ac.uk/download/1a13e804-ceca-4f7b-9001-6e976872eec0</gmd:URL>
+                  </gmd:linkage>
+                  <gmd:name>
+                    <gco:CharacterString>PDF</gco:CharacterString>
+                  </gmd:name>
+                  <gmd:description>
+                    <gco:CharacterString>Download information as an Adobe PDF.</gco:CharacterString>
+                  </gmd:description>
+                  <gmd:function>
+                    <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
+                  </gmd:function>
+                </gmd:CI_OnlineResource>
+              </gmd:onLine>
+            </gmd:MD_DigitalTransferOptions>
+          </gmd:distributorTransferOptions>
+          <gmd:distributorFormat>
+            <gmd:MD_Format>
+              <gmd:name>
+                <gmx:Anchor xlink:href="https://www.iana.org/assignments/media-types/image/png" xlink:actuate="onRequest">PNG</gmx:Anchor>
+              </gmd:name>
+              <gmd:version>
+                <gco:CharacterString>1</gco:CharacterString>
+              </gmd:version>
+            </gmd:MD_Format>
+          </gmd:distributorFormat>
+          <gmd:distributorTransferOptions>
+            <gmd:MD_DigitalTransferOptions>
+              <gmd:unitsOfDistribution>
+                <gco:CharacterString>MB</gco:CharacterString>
+              </gmd:unitsOfDistribution>
+              <gmd:transferSize>
+                <gco:Real>2.74</gco:Real>
+              </gmd:transferSize>
+              <gmd:onLine>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>https://data.bas.ac.uk/download/e6db2605-f9bd-422a-b864-caa6d69cdcaf</gmd:URL>
+                  </gmd:linkage>
+                  <gmd:name>
+                    <gco:CharacterString>PNG</gco:CharacterString>
+                  </gmd:name>
+                  <gmd:description>
+                    <gco:CharacterString>Download information as a PNG image.</gco:CharacterString>
+                  </gmd:description>
+                  <gmd:function>
+                    <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
+                  </gmd:function>
+                </gmd:CI_OnlineResource>
+              </gmd:onLine>
+            </gmd:MD_DigitalTransferOptions>
+          </gmd:distributorTransferOptions>
         </gmd:MD_Distributor>
       </gmd:distributor>
-      <gmd:transferOptions>
-        <gmd:MD_DigitalTransferOptions>
-          <gmd:unitsOfDistribution>
-            <gco:CharacterString>MB</gco:CharacterString>
-          </gmd:unitsOfDistribution>
-          <gmd:transferSize>
-            <gco:Real>40.0</gco:Real>
-          </gmd:transferSize>
-          <gmd:onLine>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371</gmd:URL>
-              </gmd:linkage>
-              <gmd:name>
-                <gco:CharacterString>Get Data</gco:CharacterString>
-              </gmd:name>
-              <gmd:description>
-                <gco:CharacterString>Download measurement data</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </gmd:onLine>
-        </gmd:MD_DigitalTransferOptions>
-      </gmd:transferOptions>
-      <gmd:transferOptions>
-        <gmd:MD_DigitalTransferOptions>
-          <gmd:onLine>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>https://www.bodc.ac.uk/data/bodc_database/nodb/data_collection/6618/</gmd:URL>
-              </gmd:linkage>
-              <gmd:name>
-                <gco:CharacterString>View Information</gco:CharacterString>
-              </gmd:name>
-              <gmd:description>
-                <gco:CharacterString>Download background information and context</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information">information</gmd:CI_OnLineFunctionCode>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </gmd:onLine>
-        </gmd:MD_DigitalTransferOptions>
-      </gmd:transferOptions>
     </gmd:MD_Distribution>
   </gmd:distributionInfo>
   <gmd:dataQualityInfo>

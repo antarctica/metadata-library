@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
@@ -9,73 +11,28 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import (
     ResponsibleParty,
     OnlineResource,
 )
+from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently
 
 
 class DataDistribution(MetadataRecordElement):
-    def make_config(self) -> dict:
-        _ = {}
+    def make_config(self) -> list:
+        _ = []
 
-        _distribution_formats = []
-        formats_length = int(
+        distributions_length = int(
             self.record.xpath(
-                f"count({self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat)",
+                f"count({self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor)",
                 namespaces=self.ns.nsmap(),
             )
         )
-        for format_index in range(1, formats_length + 1):
-            format_ = DistributionFormat(
+        for distribution_index in range(1, distributions_length + 1):
+            distribution = Distribution(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"({self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat)"
-                f"[{format_index}]",
+                xpath=f"{self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor[{distribution_index}]/gmd:MD_Distributor",
             )
-            _format = format_.make_config()
-            if bool(_format):
-                _distribution_formats.append(_format)
-        if len(_distribution_formats) > 0:
-            _["formats"] = _distribution_formats
-
-        _distributors = []
-        distributors_length = int(
-            self.record.xpath(
-                f"count({self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/"
-                f"gmd:distributorContact)",
-                namespaces=self.ns.nsmap(),
-            )
-        )
-        for distributor_index in range(1, distributors_length + 1):
-            distributor = Distributor(
-                record=self.record,
-                attributes=self.attributes,
-                xpath=f"({self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/"
-                f"gmd:distributorContact)"
-                f"[{distributor_index}]",
-            )
-            _distributor = distributor.make_config()
-            if bool(_distributor):
-                _distributors.append(_distributor)
-        if len(_distributors) > 0:
-            _["distributors"] = _distributors
-
-        _transfer_options = []
-        transfer_options_length = int(
-            self.record.xpath(
-                f"count({self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions)",
-                namespaces=self.ns.nsmap(),
-            )
-        )
-        for transfer_option_index in range(1, transfer_options_length + 1):
-            transfer_option = TransferOptions(
-                record=self.record,
-                attributes=self.attributes,
-                xpath=f"({self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions)"
-                f"[{transfer_option_index}]",
-            )
-            _transfer_option = transfer_option.make_config()
-            if bool(_transfer_option):
-                _transfer_options.append(_transfer_option)
-        if len(_transfer_options) > 0:
-            _["transfer_options"] = _transfer_options
+            _distribution = distribution.make_config()
+            if bool(_distribution):
+                _.append(_distribution)
 
         return _
 
@@ -83,43 +40,124 @@ class DataDistribution(MetadataRecordElement):
         data_distribution_wrapper = SubElement(self.record, f"{{{self.ns.gmd}}}distributionInfo")
         data_distribution_element = SubElement(data_distribution_wrapper, f"{{{self.ns.gmd}}}MD_Distribution")
 
-        if "formats" in self.attributes["identification"]:
-            for format_attributes in self.attributes["identification"]["formats"]:
-                distribution_format = DistributionFormat(
+        for distribution_config in self.element_attributes:
+            distribution_element = Distribution(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_distribution_element,
+                element_attributes=distribution_config,
+            )
+            distribution_element.make_element()
+
+
+class Distribution(MetadataRecordElement):
+    def make_config(self) -> dict:
+        _ = {}
+
+        distributor = Distributor(
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:distributorContact",
+        )
+        _distributor = distributor.make_config()
+        if bool(_distributor):
+            _["distributor"] = _distributor
+
+        # use transfer options as a proxy for the number of distribution options that exist
+        distribution_options_length = int(
+            self.record.xpath(
+                f"count({self.xpath}/gmd:distributorTransferOptions)",
+                namespaces=self.ns.nsmap(),
+            )
+        )
+        _["distribution_options"] = []
+        for distribution_option_index in range(1, distribution_options_length + 1):
+            _distribution_option = {}
+
+            # currently we match up formats and transfer options without knowing if they really relate to each other.
+            # This will be addressed in [#108].
+
+            distribution_option_format = DistributorFormat(
+                record=self.record,
+                attributes=self.attributes,
+                xpath=f"{self.xpath}/gmd:distributorFormat[{distribution_option_index}]",
+            )
+            _distribution_option_format = distribution_option_format.make_config()
+            if bool(_distribution_option_format):
+                _distribution_option["format"] = _distribution_option_format
+
+            distribution_transfer_option = DistributorTransferOption(
+                record=self.record,
+                attributes=self.attributes,
+                xpath=f"{self.xpath}/gmd:distributorTransferOptions[{distribution_option_index}]",
+            )
+            _distribution_transfer_option = distribution_transfer_option.make_config()
+            if bool(_distribution_transfer_option):
+                _distribution_option["transfer_option"] = _distribution_transfer_option
+
+            if "format" in _distribution_option or "transfer_option" in _distribution_option:
+                _["distribution_options"].append(_distribution_option)
+
+        return _
+
+    def make_element(self) -> None:
+        distribution_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}distributor")
+        distribution_element = SubElement(distribution_container, f"{{{self.ns.gmd}}}MD_Distributor")
+
+        distributor = Distributor(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=distribution_element,
+            element_attributes=self.element_attributes["distributor"],
+        )
+        distributor.make_element()
+
+        for distribution_option in self.element_attributes["distribution_options"]:
+            if "format" in distribution_option.keys():
+                distribution_format = DistributorFormat(
                     record=self.record,
                     attributes=self.attributes,
-                    parent_element=data_distribution_element,
-                    element_attributes=format_attributes,
+                    parent_element=distribution_element,
+                    element_attributes=distribution_option["format"],
                 )
                 distribution_format.make_element()
 
-        if "contacts" in self.attributes["identification"]:
-            for point_of_contact_attributes in self.attributes["identification"]["contacts"]:
-                for role in point_of_contact_attributes["role"]:
-                    if role == "distributor":
-                        _point_of_contact = point_of_contact_attributes.copy()
-                        _point_of_contact["role"] = role
-
-                        distributor = Distributor(
-                            record=self.record,
-                            attributes=self.attributes,
-                            parent_element=data_distribution_element,
-                            element_attributes=_point_of_contact,
-                        )
-                        distributor.make_element()
-
-        if "transfer_options" in self.attributes["identification"]:
-            for transfer_attributes in self.attributes["identification"]["transfer_options"]:
-                transfer_options = TransferOptions(
+            if "transfer_option" in distribution_option.keys():
+                transfer_option = DistributorTransferOption(
                     record=self.record,
                     attributes=self.attributes,
-                    parent_element=data_distribution_element,
-                    element_attributes=transfer_attributes,
+                    parent_element=distribution_element,
+                    element_attributes=distribution_option["transfer_option"],
                 )
-                transfer_options.make_element()
+                transfer_option.make_element()
 
 
-class DistributionFormat(MetadataRecordElement):
+class Distributor(MetadataRecordElement):
+    def make_config(self) -> dict:
+        responsible_party = ResponsibleParty(record=self.record, attributes=self.attributes, xpath=self.xpath)
+        _responsible_party = responsible_party.make_config()
+        if not bool(_responsible_party):  # pragma: no cover
+            return {}
+
+        return _responsible_party
+
+    def make_element(self):
+        distributor_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}distributorContact")
+
+        # roles need to looped through, but will always be 'distributor' only for distributors
+        self.element_attributes = deepcopy(self.element_attributes)
+        self.element_attributes["role"] = self.element_attributes["role"][0]
+
+        responsible_party = ResponsibleParty(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=distributor_element,
+            element_attributes=self.element_attributes,
+        )
+        responsible_party.make_element()
+
+
+class DistributorFormat(MetadataRecordElement):
     def make_config(self) -> dict:
         _ = {}
 
@@ -148,7 +186,7 @@ class DistributionFormat(MetadataRecordElement):
         return _
 
     def make_element(self):
-        distribution_format_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}distributionFormat")
+        distribution_format_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}distributorFormat")
         distribution_format_element = SubElement(distribution_format_wrapper, f"{{{self.ns.gmd}}}MD_Format")
 
         format_name_element = SubElement(distribution_format_element, f"{{{self.ns.gmd}}}name")
@@ -177,30 +215,7 @@ class DistributionFormat(MetadataRecordElement):
             )
 
 
-class Distributor(MetadataRecordElement):
-    def make_config(self) -> dict:
-        responsible_party = ResponsibleParty(record=self.record, attributes=self.attributes, xpath=self.xpath)
-        _responsible_party = responsible_party.make_config()
-        if not bool(_responsible_party):  # pragma: no cover
-            return {}
-
-        return _responsible_party
-
-    def make_element(self):
-        distributor_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}distributor")
-        distributor_wrapper = SubElement(distributor_container, f"{{{self.ns.gmd}}}MD_Distributor")
-        distributor_element = SubElement(distributor_wrapper, f"{{{self.ns.gmd}}}distributorContact")
-
-        responsible_party = ResponsibleParty(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=distributor_element,
-            element_attributes=self.element_attributes,
-        )
-        responsible_party.make_element()
-
-
-class TransferOptions(MetadataRecordElement):
+class DistributorTransferOption(MetadataRecordElement):
     def make_config(self) -> dict:
         _ = {}
 
@@ -220,7 +235,7 @@ class TransferOptions(MetadataRecordElement):
         if len(size_magnitude) == 1:
             if "size" not in _.keys():  # pragma: no cover
                 _["size"] = {}
-            _["size"]["magnitude"] = float(size_magnitude[0])
+            _["size"]["magnitude"] = format_numbers_consistently(size_magnitude[0])
 
         online_resource = OnlineResource(
             record=self.record,
@@ -236,7 +251,7 @@ class TransferOptions(MetadataRecordElement):
         return _
 
     def make_element(self):
-        transfer_options_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}transferOptions")
+        transfer_options_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}distributorTransferOptions")
         transfer_options_wrapper = SubElement(transfer_options_container, f"{{{self.ns.gmd}}}MD_DigitalTransferOptions")
 
         if "size" in self.element_attributes:
@@ -249,7 +264,9 @@ class TransferOptions(MetadataRecordElement):
             if "magnitude" in self.element_attributes["size"]:
                 transfer_size_magnitude_element = SubElement(transfer_options_wrapper, f"{{{self.ns.gmd}}}transferSize")
                 transfer_size_magnitude_value = SubElement(transfer_size_magnitude_element, f"{{{self.ns.gco}}}Real")
-                transfer_size_magnitude_value.text = str(self.element_attributes["size"]["magnitude"])
+                transfer_size_magnitude_value.text = str(
+                    format_numbers_consistently(self.element_attributes["size"]["magnitude"])
+                )
 
         transfer_options_element = SubElement(transfer_options_wrapper, f"{{{self.ns.gmd}}}onLine")
         online_resource = OnlineResource(

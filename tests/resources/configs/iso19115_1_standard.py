@@ -635,7 +635,7 @@ base_simple_record_v2 = {
                     "country": "United Kingdom",
                 },
                 "email": "polardatacentre@bas.ac.uk",
-                "role": ["pointOfContact", "custodian", "publisher", "distributor"],
+                "role": ["pointOfContact", "custodian", "publisher"],
             },
         ],
         "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"},
@@ -649,19 +649,38 @@ base_simple_record_v2 = {
         ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
-        "formats": [{"format": "netCDF"}],
-        "transfer_options": [
-            {
-                "online_resource": {
-                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                    "title": "Get Data",
-                    "description": "Download measurement data",
-                    "function": "download",
-                }
-            }
-        ],
         "lineage": "Example lineage statement",
     },
+    "distribution": [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        }
+                    },
+                }
+            ],
+        }
+    ],
 }
 
 # noinspection DuplicatedCode
@@ -763,7 +782,7 @@ base_complex_record_v2 = {
                     "country": "United Kingdom",
                 },
                 "email": "polardatacentre@bas.ac.uk",
-                "role": ["pointOfContact", "custodian", "publisher", "distributor"],
+                "role": ["pointOfContact", "custodian", "publisher"],
                 "online_resource": {
                     "href": "https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/",
                     "function": "information",
@@ -809,24 +828,45 @@ base_complex_record_v2 = {
         ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
-        "formats": [
-            {
-                "format": "netCDF",
-                "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
-            }
-        ],
-        "transfer_options": [
-            {
-                "online_resource": {
-                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                    "title": "Get Data",
-                    "description": "Download measurement data",
-                    "function": "download",
-                }
-            }
-        ],
         "lineage": "Example lineage statement",
     },
+    "distribution": [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre", "href": "https://ror.org/01rhff309", "title": "ror"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+                "online_resource": {
+                    "href": "https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/",
+                    "function": "information",
+                },
+            },
+            "distribution_options": [
+                {
+                    "format": {
+                        "format": "netCDF",
+                        "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
+                    },
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        }
+                    },
+                }
+            ],
+        }
+    ],
 }
 
 # noinspection DuplicatedCode,HttpUrlsUsage
@@ -958,24 +998,11 @@ complete_record_v2 = {
                     "country": "United Kingdom",
                 },
                 "email": "polardatacentre@bas.ac.uk",
-                "role": ["pointOfContact", "custodian", "publisher", "distributor"],
+                "role": ["pointOfContact", "custodian", "publisher"],
                 "online_resource": {
                     "href": "https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/",
                     "function": "information",
                 },
-            },
-            {
-                "organisation": {"name": "Mapping and Geograpgic Information Centre, British Antarctic Survey"},
-                "phone": "+44 (0)1223 221400",
-                "address": {
-                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
-                    "city": "Cambridge",
-                    "administrative_area": "Cambridgeshire",
-                    "postal_code": "CB3 0ET",
-                    "country": "United Kingdom",
-                },
-                "email": "magic@bas.ac.uk",
-                "role": ["distributor"],
             },
         ],
         "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"},
@@ -1030,32 +1057,6 @@ complete_record_v2 = {
         ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
-        "formats": [
-            {
-                "format": "netCDF",
-                "version": "4",
-                "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
-            }
-        ],
-        "transfer_options": [
-            {
-                "online_resource": {
-                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                    "title": "Get Data",
-                    "description": "Download measurement data",
-                    "function": "download",
-                },
-                "size": {"unit": "MB", "magnitude": 40.0},
-            },
-            {
-                "online_resource": {
-                    "href": "https://www.bodc.ac.uk/data/bodc_database/nodb/data_collection/6618/",
-                    "title": "View Information",
-                    "description": "Download background information and context",
-                    "function": "information",
-                }
-            },
-        ],
         "lineage": "Example lineage statement",
         "edition": "2",
         "identifiers": [
@@ -1071,6 +1072,94 @@ complete_record_v2 = {
             },
         ],
     },
+    "distribution": [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre", "href": "https://ror.org/01rhff309", "title": "ror"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+                "online_resource": {
+                    "href": "https://www.bas.ac.uk/team/business-teams/information-services/uk-polar-data-centre/",
+                    "function": "information",
+                },
+            },
+            "distribution_options": [
+                {
+                    "format": {
+                        "format": "netCDF",
+                        "version": "4",
+                        "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
+                    },
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        },
+                        "size": {"unit": "MB", "magnitude": 40.0},
+                    },
+                }
+            ],
+        },
+        {
+            "distributor": {
+                "organisation": {"name": "Mapping and Geographic Information Centre, British Antarctic Survey"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "magic@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {
+                        "format": "PDF",
+                        "version": "1.6",
+                        "href": "https://www.iana.org/assignments/media-types/application/pdf",
+                    },
+                    "transfer_option": {
+                        "size": {"unit": "KB", "magnitude": 371},
+                        "online_resource": {
+                            "href": "https://data.bas.ac.uk/download/1a13e804-ceca-4f7b-9001-6e976872eec0",
+                            "title": "PDF",
+                            "description": "Download information as an Adobe PDF.",
+                            "function": "download",
+                        },
+                    },
+                },
+                {
+                    "format": {
+                        "format": "PNG",
+                        "version": "1",
+                        "href": "https://www.iana.org/assignments/media-types/image/png",
+                    },
+                    "transfer_option": {
+                        "size": {"unit": "MB", "magnitude": 2.74},
+                        "online_resource": {
+                            "href": "https://data.bas.ac.uk/download/e6db2605-f9bd-422a-b864-caa6d69cdcaf",
+                            "title": "PNG",
+                            "description": "Download information as a PNG image.",
+                            "function": "download",
+                        },
+                    },
+                },
+            ],
+        },
+    ],
 }
 
 configs_safe_v1 = {

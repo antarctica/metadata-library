@@ -17,7 +17,7 @@ from bas_metadata_library.standards.iso_19115_common.utils import contacts_have_
 
 class ISOMetadataRecord(MetadataRecordElement):
     def make_config(self) -> dict:
-        _ = {"metadata": {}, "identification": {}}
+        _ = {"metadata": {}, "identification": {}, "distribution": []}
 
         file_identifier = FileIdentifier(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _file_identifier = file_identifier.make_config()
@@ -91,14 +91,8 @@ class ISOMetadataRecord(MetadataRecordElement):
 
         data_distribution = DataDistribution(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _data_distribution = data_distribution.make_config()
-        if bool(_data_distribution):
-            # detach distributors and merge into main contacts list
-            if "distributors" in _data_distribution.keys():
-                if "contacts" not in _["identification"].keys():  # pragma: no cover
-                    _["identification"]["contacts"] = []
-                _["identification"]["contacts"] = _["identification"]["contacts"] + _data_distribution["distributors"]
-                del _data_distribution["distributors"]
-            _["identification"] = {**_["identification"], **_data_distribution}
+        if len(_data_distribution) > 0:
+            _["distribution"] = _data_distribution
 
         data_quality = DataQuality(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _data_quality = data_quality.make_config()
@@ -120,6 +114,8 @@ class ISOMetadataRecord(MetadataRecordElement):
             del _["metadata"]
         if not _["identification"]:  # pragma: no cover
             del _["identification"]
+        if not _["distribution"]:
+            del _["distribution"]
 
         return _
 
@@ -182,19 +178,10 @@ class ISOMetadataRecord(MetadataRecordElement):
             data_identification = DataIdentification(record=self.record, attributes=self.attributes)
             data_identification.make_element()
 
-        # if
-        #   [identification][formats] or
-        #   [identification][transfer_options] or
-        #   [identification][contacts]*[role='distributor']
-        if "identification" in self.attributes and (
-            "formats" in self.attributes["identification"]
-            or "transfer_options" in self.attributes["identification"]
-            or (
-                "contacts" in self.attributes["identification"]
-                and contacts_have_role(contacts=self.attributes["identification"]["contacts"], role="distributor")
+        if "distribution" in self.attributes:
+            data_distribution = DataDistribution(
+                record=self.record, attributes=self.attributes, element_attributes=self.attributes["distribution"]
             )
-        ):
-            data_distribution = DataDistribution(record=self.record, attributes=self.attributes)
             data_distribution.make_element()
 
         # if

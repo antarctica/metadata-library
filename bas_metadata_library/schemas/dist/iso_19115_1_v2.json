@@ -473,6 +473,51 @@
                 "2020-04-16"
             ]
         },
+        "distributor": {
+            "title": "Distributor",
+            "description": "A contact limited to the role of distributor.",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/contact"
+                },
+                {
+                    "properties": {
+                        "role": {
+                            "items": {
+                                "enum": [
+                                    "distributor"
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "distribution_option": {
+            "title": "Distribution Option",
+            "description": "Combination of a format and transfer option defining one form the resource is distributed in.",
+            "type": "object",
+            "required": [
+                "transfer_option"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "format": {
+                    "$ref": "#/definitions/format"
+                },
+                "transfer_option": {
+                    "$ref": "#/definitions/transfer_option"
+                }
+            }
+        },
+        "distribution_options": {
+            "title": "Distribution Options",
+            "description": "Set of formats and transfer options defining the forms the resource is distributed in.",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/distribution_option"
+            }
+        },
         "edition": {
             "title": "Edition",
             "description": "Version or edition of the resource, or element related to the resource.",
@@ -511,44 +556,39 @@
                 "86bd7a1a-845d-48a9-8d71-59fdf7290556"
             ]
         },
-        "formats": {
-            "title": "Formats",
-            "description": "Series of data formats the resource is available in.",
-            "type": "array",
-            "items": {
-                "title": "Format",
-                "description": "Data format the resource is available in.",
-                "type": "object",
-                "required": [
-                    "format"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "format": {
-                        "title": "Format",
-                        "description": "Name of the data format.",
-                        "type": "string",
-                        "examples": [
-                            "GeoPackage"
-                        ]
-                    },
-                    "href": {
-                        "title": "URL",
-                        "description": "URL identifying the data format.",
-                        "type": "string",
-                        "format": "uri",
-                        "examples": [
-                            "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
-                        ]
-                    },
-                    "version": {
-                        "title": "Version",
-                        "description": "Version/Edition of the data format.",
-                        "type": "string",
-                        "examples": [
-                            "1.2"
-                        ]
-                    }
+        "format": {
+            "title": "Format",
+            "description": "Data format the resource is available in.",
+            "type": "object",
+            "required": [
+                "format"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "format": {
+                    "title": "Format",
+                    "description": "Name of the data format.",
+                    "type": "string",
+                    "examples": [
+                        "GeoPackage"
+                    ]
+                },
+                "href": {
+                    "title": "URL",
+                    "description": "URL identifying the data format.",
+                    "type": "string",
+                    "format": "uri",
+                    "examples": [
+                        "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
+                    ]
+                },
+                "version": {
+                    "title": "Version",
+                    "description": "Version/Edition of the data format.",
+                    "type": "string",
+                    "examples": [
+                        "1.2"
+                    ]
                 }
             }
         },
@@ -1100,47 +1140,42 @@
                 "environment"
             ]
         },
-        "transfer_options": {
-            "title": "Transfer options",
-            "description": "Series of data transfer options for the resource, describing where and how it can be accessed.",
-            "type": "array",
-            "items": {
-                "title": "Transfer option",
-                "description": "Data transfer option, describing where and how the resource can be accessed.",
-                "type": "object",
-                "required": [
-                    "online_resource"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "size": {
-                        "title": "Size",
-                        "description": "Size of the transfer option if it uses files for example.",
-                        "type": "object",
-                        "additionalProperties": false,
-                        "required": [],
-                        "properties": {
-                            "unit": {
-                                "title": "unit",
-                                "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
-                                "type": "string",
-                                "examples": [
-                                    "MB"
-                                ]
-                            },
-                            "magnitude": {
-                                "title": "unit",
-                                "description": "Size of the transfer option in a given unit.",
-                                "type": "number",
-                                "examples": [
-                                    20.0
-                                ]
-                            }
+        "transfer_option": {
+            "title": "Transfer option",
+            "description": "Data transfer option, describing where and how the resource can be accessed.",
+            "type": "object",
+            "required": [
+                "online_resource"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "size": {
+                    "title": "Size",
+                    "description": "Size of the transfer option if it uses files for example.",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [],
+                    "properties": {
+                        "unit": {
+                            "title": "unit",
+                            "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
+                            "type": "string",
+                            "examples": [
+                                "MB"
+                            ]
+                        },
+                        "magnitude": {
+                            "title": "unit",
+                            "description": "Size of the transfer option in a given unit.",
+                            "type": "number",
+                            "examples": [
+                                20.0
+                            ]
                         }
-                    },
-                    "online_resource": {
-                        "$ref": "#/definitions/online_resource"
                     }
+                },
+                "online_resource": {
+                    "$ref": "#/definitions/online_resource"
                 }
             }
         },
@@ -1379,14 +1414,28 @@
                 "extent": {
                     "$ref": "#/definitions/extent"
                 },
-                "formats": {
-                    "$ref": "#/definitions/formats"
-                },
-                "transfer_options": {
-                    "$ref": "#/definitions/transfer_options"
-                },
                 "lineage": {
                     "$ref": "#/definitions/lineage"
+                }
+            }
+        },
+        "distribution": {
+            "title": "Distribution",
+            "description": "Information about to acquire, enquire about or retrieve the resource",
+            "type": "array",
+            "items": {
+                "required": [
+                    "distributor",
+                    "distribution_options"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "distributor": {
+                        "$ref": "#/definitions/distributor"
+                    },
+                    "distribution_options": {
+                        "$ref": "#/definitions/distribution_options"
+                    }
                 }
             }
         }
