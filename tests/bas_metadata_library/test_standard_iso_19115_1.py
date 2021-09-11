@@ -10,6 +10,8 @@ from jsonschema import ValidationError
 from backports.datetime_fromisoformat import MonkeyPatch
 
 # Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
+from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently
+
 MonkeyPatch.patch_fromisoformat()
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
@@ -428,7 +430,7 @@ def test_identification_points_of_contact(get_record_response, config_name):
         point_of_contact_type="points-of-contact", config=config["identification"]["contacts"]
     ):
         # Responsible Party common function expects a single role but config allows multiple so loop through
-        # The 'distributor' role is checked for elsewhere in test_distribution_distributors()
+        # The 'distributor' role is checked for elsewhere in test_distributions()
         # noinspection PyTypeChecker
         for role in poc["config"]["role"]:
             if role == "distributor":
@@ -808,107 +810,112 @@ def test_identification_supplemental_info(get_record_response, config_name):
     assert supplemental_info_value is True
 
 
-@pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_distribution_formats(get_record_response, config_name):
-    record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v2[config_name]
+def _check_distributors_are_unique(distributions: list, record: MetadataRecord) -> bool:
+    unique = True
 
-    if "identification" not in config or "formats" not in config["identification"]:
-        pytest.skip("record does not contain any distribution formats")
+    distributors = []
+    org_names_config = []
 
-    for _format in config["identification"]["formats"]:
-        if "format" in _format.keys():
-            format_values = record.xpath(
-                f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/"
-                f"gmd:name/gco:CharacterString/text() | /gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/"
-                f"gmd:distributionFormat/gmd:MD_Format/gmd:name/gmx:Anchor/text()",
-                namespaces=namespaces.nsmap(),
-            )
-            assert len(format_values) == 1
-            assert format_values[0] == _format["format"]
+    for distribution in distributions:
+        distributors.append(distribution["distributor"])
 
-        if "href" in _format.keys():
-            format_href = record.xpath(
-                f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/"
-                f"gmd:name/gmx:Anchor/@xlink:href = '{_format['href']}'",
-                namespaces=namespaces.nsmap(),
-            )
-            assert format_href is True
+    for distributor in distributors:
+        org_names_config.append(distributor["organisation"]["name"])
+    if len(org_names_config) > len(set(org_names_config)):
+        unique = False
 
-        if "version" in _format.keys():
-            version_values = record.xpath(
-                f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/"
-                f"gmd:version/gco:CharacterString/text()",
-                namespaces=namespaces.nsmap(),
-            )
-            assert len(version_values) == 1
-            assert version_values[0] == _format["version"]
-        if "version" not in _format.keys():
-            version_values = record.xpath(
-                f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/"
-                f"gmd:version[@gco:nilReason = 'missing']",
-                namespaces=namespaces.nsmap(),
-            )
-            assert len(version_values) == 1
+    if not unique:
+        return unique
+
+    distributor_base = "/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact/gmd:CI_ResponsibleParty/gmd:organisationName"
+    distributor_elements = record.xpath(
+        f"{distributor_base}/gco:CharacterString/text() | {distributor_base}/gmx:Anchor/text()",
+        namespaces=namespaces.nsmap(),
+    )
+    if len(distributor_elements) > len(set(distributor_elements)):
+        unique = False
+
+    return unique
 
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_distribution_distributors(get_record_response, config_name):
+def test_distributions(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
+    xpath_base = "/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor"
 
-    if "identification" not in config or "contacts" not in config["identification"]:
-        pytest.skip("record does not contain any identification points of contact")
+    if "distribution" not in config:
+        pytest.skip("record does not contain any distributions")
 
-    for poc in _resolve_points_of_contact_xpaths(
-        point_of_contact_type="distributors", config=config["identification"]["contacts"]
-    ):
-        # Responsible Party common function expects a single role but config allows multiple so loop through
+    # the distributor is used as a key as distribution options are distributor specific, so they need to be unique
+    if not _check_distributors_are_unique(distributions=config["distribution"], record=record):
+        raise RuntimeError("Distributors must be unique in tests")
+
+    for distribution in config["distribution"]:
+        distribution_elements = record.xpath(
+            f"{xpath_base}[gmd:distributorContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString/text() = '{distribution['distributor']['organisation']['name']}'] | "
+            f"{xpath_base}[gmd:distributorContact/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor/text() = '{distribution['distributor']['organisation']['name']}' ]",
+            namespaces=namespaces.nsmap(),
+        )
+        assert len(distribution_elements) == 1
+        distribution_element = distribution_elements[0]
+
         # Other roles are checked for in test_identification_points_of_contact()
-        # noinspection PyTypeChecker
-        for role in poc["config"]["role"]:
-            if role != "distributor":
-                continue
+        distributor_elements = distribution_element.xpath(
+            f"{xpath_base}/gmd:distributorContact/gmd:CI_ResponsibleParty[gmd:organisationName/gco:CharacterString/text() = '{distribution['distributor']['organisation']['name']}'] | "
+            f"{xpath_base}/gmd:distributorContact/gmd:CI_ResponsibleParty[gmd:organisationName/gmx:Anchor/text() = '{distribution['distributor']['organisation']['name']}']",
+            namespaces=namespaces.nsmap(),
+        )
+        assert len(distributor_elements) == 1
+        responsible_party(element=distributor_elements[0], config=distribution["distributor"])
 
-            _xpath = poc["xpath"] + f"[gmd:role[gmd:CI_RoleCode[@codeListValue='{role}']]]"
-            _config = deepcopy(poc["config"])
-            _config["role"] = [role]
+        for distribution_option in distribution["distribution_options"]:
+            # format
+            if "format" in distribution_option["format"]:
+                format_values = distribution_element.xpath(
+                    f"./gmd:distributorFormat/gmd:MD_Format/gmd:name[gco:CharacterString/text() = '{distribution_option['format']['format']}'] | "
+                    f"./gmd:distributorFormat/gmd:MD_Format/gmd:name[gmx:Anchor/text() = '{distribution_option['format']['format']}']",
+                    namespaces=namespaces.nsmap(),
+                )
+                assert len(format_values) == 1
+            if "href" in distribution_option["format"]:
+                format_hrefs = distribution_element.xpath(
+                    f"./gmd:distributorFormat/gmd:MD_Format/gmd:name/gmx:Anchor/@xlink:href = '{distribution_option['format']['href']}'",
+                    namespaces=namespaces.nsmap(),
+                )
+                assert format_hrefs is True
+            if "version" in distribution_option["format"]:
+                format_versions = distribution_element.xpath(
+                    f"./gmd:distributorFormat/gmd:MD_Format/gmd:version/gco:CharacterString/text() = '{distribution_option['format']['version']}'",
+                    namespaces=namespaces.nsmap(),
+                )
+                assert format_versions is True
+            if "version" not in distribution_option["format"]:
+                format_version = distribution_element.xpath(
+                    f"./gmd:distributorFormat/gmd:MD_Format/gmd:version/@gco:nilReason = 'missing'",
+                    namespaces=namespaces.nsmap(),
+                )
+                assert format_version is True
 
-            point_of_contact_elements = record.xpath(_xpath, namespaces=namespaces.nsmap())
-            assert len(point_of_contact_elements) == 1
-            responsible_party(element=point_of_contact_elements[0], config=_config)
-
-
-@pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_distribution_transfer_options(get_record_response, config_name):
-    record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v2[config_name]
-
-    if "identification" not in config or "transfer_options" not in config["identification"]:
-        pytest.skip("record does not contain any transfer options")
-
-    for option in config["identification"]["transfer_options"]:
-        if "online_resource" in option.keys():
-            option_online_resource_elements = record.xpath(
-                f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/"
-                f"gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:linkage[gmd:URL[text() = "
-                f"'{option['online_resource']['href']}']]]",
-                namespaces=namespaces.nsmap(),
-            )
-            assert len(option_online_resource_elements) == 1
-            online_resource(element=option_online_resource_elements[0], config=option["online_resource"])
-
-        if "size" in option.keys():
-            option_size = record.xpath(
-                f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/"
-                f"gmd:MD_DigitalTransferOptions[gmd:unitsOfDistribution[gco:CharacterString[text() = "
-                f"'{option['size']['unit']}']]]/gmd:transferSize/gco:Real/text() = '{option['size']['magnitude']}'",
-                namespaces=namespaces.nsmap(),
-            )
-            assert option_size is True
+            # transfer options
+            if "online_resource" in distribution_option["transfer_option"]:
+                option_online_resource_elements = distribution_element.xpath(
+                    f"./gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:linkage[gmd:URL[text() = '{distribution_option['transfer_option']['online_resource']['href']}']]]",
+                    namespaces=namespaces.nsmap(),
+                )
+                assert len(option_online_resource_elements) == 1
+                online_resource(
+                    element=option_online_resource_elements[0],
+                    config=distribution_option["transfer_option"]["online_resource"],
+                )
+            if "size" in distribution_option["transfer_option"]:
+                _magnitude = format_numbers_consistently(distribution_option["transfer_option"]["size"]["magnitude"])
+                option_size = distribution_element.xpath(
+                    f"./gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions[gmd:unitsOfDistribution[gco:CharacterString[text() = '{distribution_option['transfer_option']['size']['unit']}']]]/gmd:transferSize/gco:Real/text() = '{_magnitude}'",
+                    namespaces=namespaces.nsmap(),
+                )
+                assert option_size is True
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -1020,21 +1027,6 @@ class MockResponse:
             "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. University of Alberta Libraries. "
             "https://doi.org/10.7939/R3QZ22K64"
         )
-
-
-def test_edge_case_distribution_format_with_version():
-    config = deepcopy(configs_safe_v2["minimal_v2"])
-    config["identification"]["formats"] = [{"format": "test", "version": "test"}]
-    configuration = MetadataRecordConfigV2(**config)
-    record = MetadataRecord(configuration)
-    document = fromstring(record.generate_xml_document())
-
-    format_version = document.xpath(
-        f"/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/"
-        f"gmd:version/gco:CharacterString/text() = 'test'",
-        namespaces=namespaces.nsmap(),
-    )
-    assert format_version is True
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v1.keys()))

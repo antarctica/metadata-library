@@ -78,7 +78,39 @@ def contacts_condense_roles(contacts: List[dict]):
     return _merged_contacts
 
 
+def format_numbers_consistently(number: Union[int, float]) -> Union[int, float]:
+    """
+    Formats numeric values in a consistent way.
+
+    Prevents inconsistencies with how numbers are formatted (e.g. should '12.0' be '12'?)
+
+    :type number: float or int
+    :param number: numeric value to format
+
+    :rtype float or int
+    :return number as an integer if applicable, otherwise float
+    """
+    number = float(number)
+    if number.is_integer():
+        number = int(number)
+    return number
+
+
 def convert_from_v1_to_v2_configuration(config: dict) -> dict:
+    """
+    Common method to convert a V1 ISO 19115 record configuration to a V2 configuration.
+
+    This method is provided on an ad-hoc and best efforts basis, supporting known use-cases only.
+
+    This method tries to be lossless wherever possible, however this is not guaranteed,
+    and may not be possible in all cases.
+
+    :type config: dict
+    :param config: V1 record configuration to be converted
+
+    :rtype dict
+    :return converted V1 configuration
+    """
     config = deepcopy(config)
 
     _metadata_keys = ["language", "character_set", "contacts", "date_stamp", "maintenance", "metadata_standard"]
@@ -122,6 +154,37 @@ def convert_from_v1_to_v2_configuration(config: dict) -> dict:
                     constraints.append(_constraint)
         config["resource"]["constraints"] = constraints
 
+    if "resource" in config and "formats" in config["resource"] and "transfer_options" in config["resource"]:
+        distributions: List[dict] = []
+
+        if "contacts" in config["resource"]:
+            for index, contact in enumerate(config["resource"]["contacts"]):
+                if "distributor" in contact["role"]:
+                    # duplicate contact as a distributor (only one role)
+                    distributor = deepcopy(contact)  # type: dict
+                    distributor["role"] = ["distributor"]
+                    distributions.append({"distributor": distributor, "distribution_options": []})
+
+                    # remove distributor role now contact is duplicated
+                    config["resource"]["contacts"][index]["role"].remove("distributor")
+                    # if contact was only a distributor, remove whole contact
+                    if len(config["resource"]["contacts"][index]["role"]) == 0:
+                        del config["resource"]["contacts"][index]
+
+            # Naively group formats and transfer options together under the first distributor
+            for index, transfer_option in enumerate(config["resource"]["transfer_options"]):
+                distribution_option = {"transfer_option": transfer_option}
+                try:
+                    distribution_option["format"] = config["resource"]["formats"][index]
+                except IndexError:
+                    pass
+
+                distributions[0]["distribution_options"].append(distribution_option)
+
+        config["distribution"] = distributions
+        del config["resource"]["formats"]
+        del config["resource"]["transfer_options"]
+
     if "resource" in config:
         config["identification"] = config["resource"]
         del config["resource"]
@@ -130,6 +193,20 @@ def convert_from_v1_to_v2_configuration(config: dict) -> dict:
 
 
 def convert_from_v2_to_v1_configuration(config: dict) -> dict:
+    """
+    Common method to convert a V2 ISO 19115 record configuration to a V1 configuration.
+
+    This method is provided on an ad-hoc and best efforts basis, supporting known use-cases only.
+
+    This method tries to be lossless wherever possible, however this is not guaranteed,
+    and may not be possible in all cases.
+
+    :type config: dict
+    :param config: V2 record configuration to be converted
+
+    :rtype dict
+    :return converted V2 configuration
+    """
     _metadata_keys = ["language", "character_set", "contacts", "date_stamp", "maintenance", "metadata_standard"]
     if any(key in _metadata_keys for key in config["metadata"].keys()):
         for key in _metadata_keys:
@@ -141,6 +218,27 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
     if "identification" in config:
         config["resource"] = config["identification"]
         del config["identification"]
+
+    if "distribution" in config:
+        config["resource"]["formats"] = []
+        config["resource"]["transfer_options"] = []
+
+        for distribution in config["distribution"]:
+            role_merged = False
+            for index, contact in enumerate(config["resource"]["contacts"]):
+                if "email" in contact and "email" in distribution["distributor"]:
+                    if contact["email"] == distribution["distributor"]["email"]:
+                        config["resource"]["contacts"][index]["role"].append("distributor")
+                        role_merged = True
+            if not role_merged:
+                config["resource"]["contacts"].append(distribution["distributor"])
+
+            for distribution_option in distribution["distribution_options"]:
+                if "format" in distribution_option.keys():
+                    config["resource"]["formats"].append(distribution_option["format"])
+                if "transfer_option" in distribution_option.keys():
+                    config["resource"]["transfer_options"].append(distribution_option["transfer_option"])
+        del config["distribution"]
 
     if "constraints" in config["resource"]:
         constraints = {"access": [], "usage": []}
