@@ -572,7 +572,7 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format>
+            <gmd:MD_Format id="70ebbaeb6dc5f9daeb2336fad988a9dd1b107711-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca" xlink:actuate="onRequest">netCDF</gmx:Anchor>
               </gmd:name>
@@ -580,7 +580,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions>
+            <gmd:MD_DigitalTransferOptions id="70ebbaeb6dc5f9daeb2336fad988a9dd1b107711-tfo">
               <gmd:onLine>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>

@@ -401,7 +401,7 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format>
+            <gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt">
               <gmd:name>
                 <gco:CharacterString>netCDF</gco:CharacterString>
               </gmd:name>
@@ -409,7 +409,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions>
+            <gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo">
               <gmd:onLine>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>

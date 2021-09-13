@@ -700,7 +700,7 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format>
+            <gmd:MD_Format id="e5ae05f8f9f7bba3a0ef2149869b7dafa2f2445b-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca" xlink:actuate="onRequest">netCDF</gmx:Anchor>
               </gmd:name>
@@ -710,7 +710,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions>
+            <gmd:MD_DigitalTransferOptions id="e5ae05f8f9f7bba3a0ef2149869b7dafa2f2445b-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>MB</gco:CharacterString>
               </gmd:unitsOfDistribution>
@@ -783,7 +783,7 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format>
+            <gmd:MD_Format id="fccae538a6c9c218854f5212bee513e9aeb85ac6-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://www.iana.org/assignments/media-types/application/pdf" xlink:actuate="onRequest">PDF</gmx:Anchor>
               </gmd:name>
@@ -793,7 +793,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions>
+            <gmd:MD_DigitalTransferOptions id="fccae538a6c9c218854f5212bee513e9aeb85ac6-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>KB</gco:CharacterString>
               </gmd:unitsOfDistribution>
@@ -819,7 +819,7 @@
             </gmd:MD_DigitalTransferOptions>
           </gmd:distributorTransferOptions>
           <gmd:distributorFormat>
-            <gmd:MD_Format>
+            <gmd:MD_Format id="e07ef4190d00e0ddb70b91272209403b2b2b4b7c-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://www.iana.org/assignments/media-types/image/png" xlink:actuate="onRequest">PNG</gmx:Anchor>
               </gmd:name>
@@ -829,7 +829,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions>
+            <gmd:MD_DigitalTransferOptions id="e07ef4190d00e0ddb70b91272209403b2b2b4b7c-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>MB</gco:CharacterString>
               </gmd:unitsOfDistribution>

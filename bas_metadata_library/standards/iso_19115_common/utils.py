@@ -5,6 +5,21 @@ from itertools import groupby
 from typing import Union, List
 
 
+def _sort_dict_by_keys(dictionary: dict) -> dict:
+    """
+    Utility method to sort a dictionary by it's keys recursively.
+
+    Keys are sorted alphabetically in ascending order.
+
+    :type dictionary: dict
+    :param dictionary: input dictionary
+
+    :rtype dict
+    :return dictionary sorted by keys
+    """
+    return {k: _sort_dict_by_keys(v) if isinstance(v, dict) else v for k, v in sorted(dictionary.items())}
+
+
 def format_date_string(date_datetime: Union[date, datetime]) -> str:
     """
     Formats a python date or datetime as an ISO 8601 date or datetime string representation
@@ -94,6 +109,44 @@ def format_numbers_consistently(number: Union[int, float]) -> Union[int, float]:
     if number.is_integer():
         number = int(number)
     return number
+
+
+def format_distribution_option_consistently(distribution_option: dict) -> dict:
+    """
+    Formats a distribution option object into a consistent structure.
+
+    Distribution option objects are hashed to generate ID values for linking their format and transfer options together.
+    As these hashes are sensitive to the order of information, and the format of numeric values etc., this method is
+    used to sort and format these objects so they are consistent, and therefore generate the same hash values.
+
+    For example these serialised (simplified) objects are the same but have different hash values:
+
+    1. '{'format', 'csv', 'transfer_option': {'size': '40.0', 'url': 'https://example.com/foo.csv'}}' ->
+        SHA1: e1342bc7fd5736aaf2cf7e6fd465c71d975b9747
+    2. '{'transfer_option': {'size': '40', 'url': 'https://example.com/foo.csv'}, 'format', 'csv'}}' ->
+        SHA1: e4554470d7712aadf5f5467d6bd1427a689dea74
+
+    By sorting the keys (so 'format' always comes before 'transfer_option' for example) and formatting '40.0' as '40',
+    these differences are removed and the same hash value is given.
+
+    :type distribution_option: dict
+    :param distribution_option: distribution option object
+
+    :rtype dict
+    :return consistently structured/formatted distribution option object
+    """
+    _distribution_option = deepcopy(distribution_option)
+    _distribution_option = _sort_dict_by_keys(dictionary=_distribution_option)
+    if (
+        "transfer_option" in _distribution_option
+        and "size" in _distribution_option["transfer_option"]
+        and "magnitude" in _distribution_option["transfer_option"]["size"]
+    ):
+        _distribution_option["transfer_option"]["size"]["magnitude"] = format_numbers_consistently(
+            number=_distribution_option["transfer_option"]["size"]["magnitude"]
+        )
+
+    return _distribution_option
 
 
 def convert_from_v1_to_v2_configuration(config: dict) -> dict:
