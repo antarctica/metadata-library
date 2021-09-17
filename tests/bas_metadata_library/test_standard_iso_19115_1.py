@@ -386,13 +386,15 @@ def test_identification_status(get_record_response, config_name):
     if "identification" not in config or "status" not in config["identification"]:
         pytest.skip("record does not contain an identification status")
 
-    status_progress_element = record.xpath(
-        f"./gmd:status/gmd:MD_ProgressCode[@codeList = 'http://standards.iso.org/ittf/"
-        f"PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_ProgressCode']"
-        f"[@codeListValue = '{config['identification']['status']['progress']}']/text() = '{config['identification']['status']['progress']}'",
+    status_elements = record.xpath(
+        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:status/"
+        f"gmd:MD_ProgressCode[@codeList = 'http://standards.iso.org/ittf/PubliclyAvailableStandards/"
+        f"ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_ProgressCode' and @codeListValue = "
+        f"'{config['identification']['status']}']/text()  = "
+        f"'{config['identification']['status']}'",
         namespaces=namespaces.nsmap(),
     )
-    assert status_progress_element is True
+    assert status_elements is True
 
 
 # noinspection PyUnboundLocalVariable
