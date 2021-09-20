@@ -1023,20 +1023,14 @@
       ]
     },
     "status": {
-      "title": "Status",
-      "description": "The status of the metadata.",
-      "type": "string",
-      "enum": [
-        "completed",
-        "historicalArchive",
-        "obsolete",
-        "onGoing",
-        "planned",
-        "required",
-        "underDevelopment"
-      ],
-      "examples": [
-        "completed"
+      "allOf": [
+        {
+          "title": "Status",
+          "description": "The status of the resource."
+        },
+        {
+          "$ref": "#/definitions/progress"
+        }
       ]
     },
     "supplemental_information": {
