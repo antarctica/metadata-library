@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#80](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/80)
 * Version 2 configurations for ISO 19115-1 and ISO 19115-2 to support backwards incompatible schema changes
   [#102](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/102)
+* Resource identification status element 
+  [#77](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/77)
 
 ### Fixed
 

@@ -832,21 +832,7 @@
                     ]
                 },
                 "progress": {
-                    "title": "Progress",
-                    "description": "The status of the resource, or element related to the resource.",
-                    "type": "string",
-                    "enum": [
-                        "completed",
-                        "historicalArchive",
-                        "obsolete",
-                        "onGoing",
-                        "planned",
-                        "required",
-                        "underDevelopment"
-                    ],
-                    "examples": [
-                        "completed"
-                    ]
+                    "$ref": "#/definitions/progress"
                 }
             }
         },
@@ -925,6 +911,23 @@
                     ]
                 }
             }
+        },
+        "progress": {
+            "title": "Progress",
+            "description": "The status of the resource, or element related to the resource.",
+            "type": "string",
+            "enum": [
+                "completed",
+                "historicalArchive",
+                "obsolete",
+                "onGoing",
+                "planned",
+                "required",
+                "underDevelopment"
+            ],
+            "examples": [
+                "completed"
+            ]
         },
         "reference_system_info": {
             "title": "Reference system information",
@@ -1017,6 +1020,17 @@
             "examples": [
                 "1:1000000",
                 null
+            ]
+        },
+        "status": {
+            "allOf": [
+                {
+                    "title": "Status",
+                    "description": "The status of the resource."
+                },
+                {
+                    "$ref": "#/definitions/progress"
+                }
             ]
         },
         "supplemental_information": {
@@ -1371,6 +1385,9 @@
                 },
                 "credit": {
                     "$ref": "#/definitions/credit"
+                },
+                "status": {
+                    "$ref": "#/definitions/status"
                 },
                 "dates": {
                     "$ref": "#/definitions/dates"

@@ -2473,6 +2473,23 @@
                         }
                     }
                 },
+                "progress": {
+                    "title": "Progress",
+                    "description": "The status of the resource, or element related to the resource.",
+                    "type": "string",
+                    "enum": [
+                        "completed",
+                        "historicalArchive",
+                        "obsolete",
+                        "onGoing",
+                        "planned",
+                        "required",
+                        "underDevelopment"
+                    ],
+                    "examples": [
+                        "completed"
+                    ]
+                },
                 "reference_system_info": {
                     "title": "Reference system information",
                     "description": "Information about the spatial Coordinate Reference System (SRS/CRS) used by the resource.",
@@ -2893,6 +2910,31 @@
                     "examples": [
                         "1:1000000",
                         null
+                    ]
+                },
+                "status": {
+                    "allOf": [
+                        {
+                            "title": "Status",
+                            "description": "The status of the resource."
+                        },
+                        {
+                            "title": "Progress",
+                            "description": "The status of the resource, or element related to the resource.",
+                            "type": "string",
+                            "enum": [
+                                "completed",
+                                "historicalArchive",
+                                "obsolete",
+                                "onGoing",
+                                "planned",
+                                "required",
+                                "underDevelopment"
+                            ],
+                            "examples": [
+                                "completed"
+                            ]
+                        }
                     ]
                 },
                 "supplemental_information": {
@@ -4428,6 +4470,31 @@
                             "type": "string",
                             "examples": [
                                 "Supported by the Wellcome Trust, grant no. 1234"
+                            ]
+                        },
+                        "status": {
+                            "allOf": [
+                                {
+                                    "title": "Status",
+                                    "description": "The status of the resource."
+                                },
+                                {
+                                    "title": "Progress",
+                                    "description": "The status of the resource, or element related to the resource.",
+                                    "type": "string",
+                                    "enum": [
+                                        "completed",
+                                        "historicalArchive",
+                                        "obsolete",
+                                        "onGoing",
+                                        "planned",
+                                        "required",
+                                        "underDevelopment"
+                                    ],
+                                    "examples": [
+                                        "completed"
+                                    ]
+                                }
                             ]
                         },
                         "dates": {
