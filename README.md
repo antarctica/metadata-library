@@ -256,7 +256,19 @@ To add a new standard:
 
 ### Adding a new element to an existing standard
 
-...
+[WIP]
+
+1. [amend configuration schema](#configuration-schemas)
+2. [generate distribution schemas](#generating-configuration-schemas)
+3. add element class
+4. update test configs
+5. [capture test records](#capturing-static-test-records)
+6. add tests
+7. check test coverage
+8. update `README.md` examples if common element
+9. update `CHANGELOG.md`
+10. if needed, add name to `authors` property in `pyproject.toml`
+
 ### Automatic transfer option / format IDs
 
 ID attributes are automatically added to `gmd:MD_Format` and `gmd:MD_DigitalTransferOptions` elements in order to 
