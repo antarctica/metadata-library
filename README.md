@@ -112,6 +112,10 @@ minimal_record_config = configuration.config
 print(minimal_record_config)
 ```
 
+## Migrating to new configuration versions
+
+TODO: [#118](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/118).
+
 ### HTML entities
 
 Do not include HTML entities in input to this generator, as they will be double escaped by [Lxml](https://lxml.de), the
