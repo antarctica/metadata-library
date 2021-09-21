@@ -2,7 +2,9 @@
 
 Python library for generating metadata records.
 
-## Purpose
+## Overview
+
+### Purpose
 
 This library is designed to assist in generating metadata records for the discovery of datasets, services and related
 resources. As a library, this project is intended to be used as a dependency within other tools and services, to 
@@ -385,7 +387,7 @@ To run the application using the Flask development server (which reloads automat
 $ docker compose up
 ```
 
-To run other commands against the Flask application (such as [Integration tests](#integration-tests)):
+To run other commands against the Flask application (such as [Tests](#testing)):
 
 ```shell
 # in a separate terminal to `docker compose up`
