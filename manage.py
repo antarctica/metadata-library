@@ -2,7 +2,6 @@ import os
 import json
 
 import requests
-import jsonref
 
 from pathlib import Path
 
