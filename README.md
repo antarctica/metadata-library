@@ -2,14 +2,16 @@
 
 Python library for generating metadata records.
 
-## Purpose
+## Overview
+
+### Purpose
 
 This library is designed to assist in generating metadata records for the discovery of datasets, services and related
-resources. As a library, this project is intended to be used as a dependency within other tools and services, to 
+resources. As a library, this project is intended to be used as a dependency within other tools and services, to
 avoid the need to duplicate the implementation of complex and verbose metadata standards.
 
 This library is built around the needs of the British Antarctic Survey and NERC (UK) Polar Data Centre. This means only
-standards, and elements of these standards, used by BAS or the UK PDC are supported. However, additions that would 
+standards, and elements of these standards, used by BAS or the UK PDC are supported. However, additions that would
 enable this library to be useful to other organisations and use-case are welcome as contributions providing they do not
 add significant complexity or maintenance.
 
@@ -20,8 +22,8 @@ add significant complexity or maintenance.
 | [ISO 19115:2003](https://www.iso.org/standard/26020.html)   | [ISO 19139:2007](https://www.iso.org/standard/32557.html)   | `bas_metadata_library.standards.iso_19115_1_v1` | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/46) |
 | [ISO 19115-2:2009](https://www.iso.org/standard/39229.html) | [ISO 19139-2:2012](https://www.iso.org/standard/57104.html) | `bas_metadata_library.standards.iso_19115_2_v1` | [#50](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50) |
 
-**Note:** In this library, the *ISO 19115:2003* standard is referred to as *ISO-19115-1* (`iso_19115_1_v1`) for 
-consistency with *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_v1`). In the future, the 
+**Note:** In this library, the *ISO 19115:2003* standard is referred to as *ISO-19115-1* (`iso_19115_1_v1`) for
+consistency with *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_v1`). In the future, the
 [ISO 19115-1:2014](https://www.iso.org/standard/53798.html) standard will be referred to as *ISO-19115-3*.
 
 ### Supported profiles
@@ -30,8 +32,8 @@ consistency with *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_
 | -------- | -------- | --------------- | ----------------- | ------------- |
 | -        | -        | -               | -                 | -             |
 
-**Note:** Support for profiles has been temporarily removed to allow underlying standards to be implemented more 
-easily, and to wait until stable profiles for UK PDC Discovery metadata have been developed and approved. 
+**Note:** Support for profiles has been temporarily removed to allow underlying standards to be implemented more
+easily, and to wait until stable profiles for UK PDC Discovery metadata have been developed and approved.
 
 ### Supported configuration versions
 
@@ -91,7 +93,7 @@ document = record.generate_xml_document()
 print(document)
 ```
 
-Where `metadata_configs.record` is a Python dictionary implementing the relevant schema for each standard, documented 
+Where `metadata_configs.record` is a Python dictionary implementing the relevant schema for each standard, documented
 in the [BAS Metadata Standards](https://metadata-standards.data.bas.ac.uk) project.
 
 To reverse this process and convert a XML record into a configuration object:
@@ -110,26 +112,30 @@ minimal_record_config = configuration.config
 print(minimal_record_config)
 ```
 
+## Migrating to new configuration versions
+
+TODO: [#118](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/118).
+
 ### HTML entities
 
 Do not include HTML entities in input to this generator, as they will be double escaped by [Lxml](https://lxml.de), the
-underlying XML processing library used by this project. Instead, literal characters should be used (e.g. `>`), which 
-will be escaped as needed automatically. This applies to any unicode character, such as accents (e.g. `å`) and 
+underlying XML processing library used by this project. Instead, literal characters should be used (e.g. `>`), which
+will be escaped as needed automatically. This applies to any unicode character, such as accents (e.g. `å`) and
 symbols (e.g. `µ`).
 
-E.g. If `&gt;`, the HTML entity for `>` (greater than), were used as input, it would be escaped again to `&amp;gt;` 
-which will not be valid output. 
+E.g. If `&gt;`, the HTML entity for `>` (greater than), were used as input, it would be escaped again to `&amp;gt;`
+which will not be valid output.
 
 ### Linking transfer options and formats
 
-To support generating a table of download options for a resource (such as [1]), this library uses a 'distribution 
-option' concept to group related formats and transfer option elements in [Record Configurations](#configuration-classes). 
+To support generating a table of download options for a resource (such as [1]), this library uses a 'distribution
+option' concept to group related formats and transfer option elements in [Record Configurations](#configuration-classes).
 
-In ISO these elements are independent of each other, with no formal mechanism to associate formats and transfer options. 
-As this library seeks to be fully reversible between a configuration object and XML, this information would be lost 
+In ISO these elements are independent of each other, with no formal mechanism to associate formats and transfer options.
+As this library seeks to be fully reversible between a configuration object and XML, this information would be lost
 once records are encoded as XML.
 
-To avoid this, this library uses the ID attribute available in both format and transfer option elements with values 
+To avoid this, this library uses the ID attribute available in both format and transfer option elements with values
 can be used when decoding XML to reconstruct these associations. This functionality should be fully transparent to the
 user, except for these auto-generated IDs being present in records.
 
@@ -146,12 +152,12 @@ See the [Automatic transfer option / format IDs](#automatic-transfer-option--for
 
 ## Implementation
 
-This library is implemented in Python and consists of a set of classes used to generate XML metadata records from a 
-configuration object, or to generate a configuration object from an XML record. 
+This library is implemented in Python and consists of a set of classes used to generate XML metadata records from a
+configuration object, or to generate a configuration object from an XML record.
 
 ### Metadata Record classes
 
-Each [supported Standard](#supported-standards) and [Supported Profile](#supported-profiles) is implemented as a module 
+Each [supported Standard](#supported-standards) and [Supported Profile](#supported-profiles) is implemented as a module
 under `bas_metadata_library.standards` (where profiles are implemented as modules under their respective standard).
 
 For each, classes inherited from these parent classes are defined:
@@ -162,11 +168,11 @@ For each, classes inherited from these parent classes are defined:
 
 The `namespaces` class is a set of mappings between XML namespaces, their shorthand aliases and their definitions XSDs.
 
-The `MetadataRecord` class represents a metadata record and defines the Root [Element](#element-classes). This class 
+The `MetadataRecord` class represents a metadata record and defines the Root [Element](#element-classes). This class
 provides methods to generate an XML document for example.
 
-The `MetadataRecordConfig` class represents the [Configuration](#configuration-classes) used to define values within a 
-`MetadataRecord`, either for new records, or derived from existing records. This class provides methods to validate the 
+The `MetadataRecordConfig` class represents the [Configuration](#configuration-classes) used to define values within a
+`MetadataRecord`, either for new records, or derived from existing records. This class provides methods to validate the
 configuration used in a record for example.
 
 ### Element classes
@@ -182,7 +188,7 @@ Specifically, at least two methods are implemented:
 * `make_element()` which builds an XML element using values from a configuration object
 * `make_config()` which uses typically XPath expressions to build a configuration object from XML
 
-These methods may be simple (if encoding or decoding a simple free text value for example), or quite complex through 
+These methods may be simple (if encoding or decoding a simple free text value for example), or quite complex through
 the use of sub-elements (which themselves may contain sub-elements as needed).
 
 ### Configuration classes
@@ -199,14 +205,14 @@ another.
 ### Configuration schemas
 
 Allowed configuration values for each [supported Standard](#supported-standards) and
-[Supported Profile](#supported-profiles) are described by a [JSON Schema](https://json-schema.org). These configuration 
+[Supported Profile](#supported-profiles) are described by a [JSON Schema](https://json-schema.org). These configuration
 schemas include which configuration properties are required, and in some cases, allowed values for these properties.
 
-Configuration schemas are stored as JSON files in the `bas_metadata_library.standards_schemas` module and loaded as 
-resource files from within this package. Schemas are also made available externally through the BAS Metadata Standards 
+Configuration schemas are stored as JSON files in the `bas_metadata_library.standards_schemas` module and loaded as
+resource files from within this package. Schemas are also made available externally through the BAS Metadata Standards
 website, [metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk), to allow:
 
-1. other applications to ensure their output will be compatible with this library but that can't, or don't want to, 
+1. other applications to ensure their output will be compatible with this library but that can't, or don't want to,
    use this library
 2. to allow schema inheritance/extension where used for standards that inherit from other standards (such as profiles)
 
@@ -214,25 +220,25 @@ Configuration schemas a versioned (e.g. `v1`, `v2`) to allow for backwards incom
 
 #### Source and distribution schemas
 
-Standards and profiles usually inherit from other standards and profiles. In order to prevent this creating huge 
-duplication within configuration schemas, inheritance is used to incorporate a base schema and extend it as needed. For 
+Standards and profiles usually inherit from other standards and profiles. In order to prevent this creating huge
+duplication within configuration schemas, inheritance is used to incorporate a base schema and extend it as needed. For
 example, the ISO 19115-2 standard extends, and therefore incorporates the configuration schema for, ISO 19115-1.
 
-JSON Schema references and identifier properties are used to implement this, using URIs within the BAS Metadata 
-Standards website. Unfortunately, this creates a problem when developing these schemas, as if Schema B relies on Schema 
-A, using its published identifier as a reference, the published instance of the schema will be used (i.e. the remote 
-schema will be downloaded when Schema B is validated). If Schema A is being developed, and is not ready to be 
+JSON Schema references and identifier properties are used to implement this, using URIs within the BAS Metadata
+Standards website. Unfortunately, this creates a problem when developing these schemas, as if Schema B relies on Schema
+A, using its published identifier as a reference, the published instance of the schema will be used (i.e. the remote
+schema will be downloaded when Schema B is validated). If Schema A is being developed, and is not ready to be
 republished, there is a difference between the local and remote schemas used, creating unreliable tests for example.
 
-To avoid this problem, a set of *source* schemas are used which use references to avoid duplication, from which a set 
-of *distribution* schemas are generated. These distribution schemas inline any references contained in their source 
-counterpart. These distribution schemas are therefore self-contained and can be updated locally without any 
-dependencies on remote sources. Distribution schemas are used by [Configuration Classes](#configuration-classes) and 
+To avoid this problem, a set of *source* schemas are used which use references to avoid duplication, from which a set
+of *distribution* schemas are generated. These distribution schemas inline any references contained in their source
+counterpart. These distribution schemas are therefore self-contained and can be updated locally without any
+dependencies on remote sources. Distribution schemas are used by [Configuration Classes](#configuration-classes) and
 published to the BAS Metadata Standards website, they are located in the `bas_metadata_library.schemas.dist` module.
 
-When editing configuration schemas, you should edit the source schemas, located in the 
-`bas_metadata_library.schemas.src` module, then run the 
-[regenerate distribution schemas](#generating-configuration-schemas) using an internal command line utility. 
+When editing configuration schemas, you should edit the source schemas, located in the
+`bas_metadata_library.schemas.src` module, then run the
+[regenerate distribution schemas](#generating-configuration-schemas) using an internal command line utility.
 
 JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsonschemavalidator.net).
 
@@ -244,7 +250,7 @@ To add a new standard:
 2. in this module, overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed
 3. create a suitable metadata configuration JSON schema in `bas_metadata_library.standards_schemas/`
    e.g. `bas_metadata_library.standards_schemas/foo_v1/configuration-schema.json`
-4. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish 
+4. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
    the configuration schema within the BAS Metadata Standards website
 5. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
    `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
@@ -254,19 +260,31 @@ To add a new standard:
 
 ### Adding a new element to an existing standard
 
-...
+[WIP]
+
+1. [amend configuration schema](#configuration-schemas)
+2. [generate distribution schemas](#generating-configuration-schemas)
+3. add element class
+4. update test configs
+5. [capture test records](#capturing-static-test-records)
+6. add tests
+7. check test coverage
+8. update `README.md` examples if common element
+9. update `CHANGELOG.md`
+10. if needed, add name to `authors` property in `pyproject.toml`
+
 ### Automatic transfer option / format IDs
 
-ID attributes are automatically added to `gmd:MD_Format` and `gmd:MD_DigitalTransferOptions` elements in order to 
-reconstruct related formats and transfer options (see the 
+ID attributes are automatically added to `gmd:MD_Format` and `gmd:MD_DigitalTransferOptions` elements in order to
+reconstruct related formats and transfer options (see the
 [Linking transfer options and formats](#linking-transfer-options-and-formats) section for more information).
 
-When a record is encoded, ID values are generated by hashing a JSON encoded string of the distribution object. This 
-ID is used as a shared base between the format and transfer option, with `-fmt` appended for the format and `-tfo` 
+When a record is encoded, ID values are generated by hashing a JSON encoded string of the distribution object. This
+ID is used as a shared base between the format and transfer option, with `-fmt` appended for the format and `-tfo`
 for the transfer option.
 
-When a record is decoded, ID values are extracted (stripping the `-fmt`/`-tfo` suffixes) to index and then match up 
-format and transfer options back into distribution options. Any format and transfer options without an ID value, or 
+When a record is decoded, ID values are extracted (stripping the `-fmt`/`-tfo` suffixes) to index and then match up
+format and transfer options back into distribution options. Any format and transfer options without an ID value, or
 without a corresponding match, are added as partial distribution options.
 
 As a worked example for encoding a (simplified) distribution object such as:
@@ -361,8 +379,8 @@ framework for running tests etc., and provide utility methods for generating sch
 
 Git, Docker and Docker Compose are required to set up a local development environment of this application.
 
-If you have access to the [BAS GitLab instance](https://gitlab.data.bas.ac.uk), you can clone the project and pull 
-Docker images from the BAS GitLab instance and BAS Docker Registry. 
+If you have access to the [BAS GitLab instance](https://gitlab.data.bas.ac.uk), you can clone the project and pull
+Docker images from the BAS GitLab instance and BAS Docker Registry.
 
 ```shell
 $ git clone https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator.git
@@ -385,7 +403,7 @@ To run the application using the Flask development server (which reloads automat
 $ docker compose up
 ```
 
-To run other commands against the Flask application (such as [Integration tests](#integration-tests)):
+To run other commands against the Flask application (such as [Tests](#testing)):
 
 ```shell
 # in a separate terminal to `docker compose up`
@@ -491,9 +509,9 @@ $ docker compose up
 $ docker compose run app flask generate-schemas
 ```
 
-To configure this command, (e.g. to add a new schema for a new standard/profile), adjust the `schemas` list in the 
-`generate_schemas` method in `manage.py`. This list should contain dictionaries with keys for the common name of the 
-schema (based on the common file name of the schema JSON file), and whether the source schema should be resolved or 
+To configure this command, (e.g. to add a new schema for a new standard/profile), adjust the `schemas` list in the
+`generate_schemas` method in `manage.py`. This list should contain dictionaries with keys for the common name of the
+schema (based on the common file name of the schema JSON file), and whether the source schema should be resolved or
 simply copied. This should be true by default, and is only relevant to schemas that do not contain any references, as
 this will cause an error if resolved.
 
