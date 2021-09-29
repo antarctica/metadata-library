@@ -627,7 +627,8 @@ def test_identification_aggregations(client, config_name):
     for aggregation in config["identification"]["aggregations"]:
         xpath = (
             base_xpath
-            + f"[gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString[text()='{aggregation['identifier']['identifier']}'] | gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor[text()='{aggregation['identifier']['identifier']}']]"
+            + f"[gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString[text()='{aggregation['identifier']['identifier']}'] "
+            f"| gmd:identifier/gmd:RS_Identifier/gmd:code/gmx:Anchor[text()='{aggregation['identifier']['identifier']}']]"
         )
         association_elements = record.xpath(xpath, namespaces=namespaces.nsmap())
         assert len(association_elements) == 1
@@ -1064,14 +1065,14 @@ def test_edge_case_citation_with_multiple_roles():
 def test_edge_case_identifier_without_href():
     config = deepcopy(configs_safe_v2["minimal_v2"])
     config["identification"]["identifiers"] = [
-        {"identifier": "NE/E007895/1", "title": "award"},
+        {"identifier": "NE/E007895/1", "namespace": "award"},
     ]
     configuration = MetadataRecordConfigV2(**config)
     record = MetadataRecord(configuration)
     document = fromstring(record.generate_xml_document())
     identifier_value = document.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/"
-        f"gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString/text() = "
+        f"gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString/text() = "
         f"'{config['identification']['identifiers'][0]['identifier']}'",
         namespaces=namespaces.nsmap(),
     )

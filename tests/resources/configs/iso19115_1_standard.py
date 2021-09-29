@@ -834,7 +834,7 @@ base_complex_record_v2 = {
                 "identifier": {
                     "identifier": "https://doi.org/10.5072/mj04wb80f",
                     "href": "https://doi.org/10.5072/mj04wb80f",
-                    "title": "doi",
+                    "namespace": "doi",
                 },
             }
         ],
@@ -1074,7 +1074,7 @@ complete_record_v2 = {
                 "identifier": {
                     "identifier": "https://doi.org/10.5072/mj04wb80f",
                     "href": "https://doi.org/10.5072/mj04wb80f",
-                    "title": "doi",
+                    "namespace": "doi",
                 },
             },
             {
@@ -1083,7 +1083,7 @@ complete_record_v2 = {
                 "identifier": {
                     "identifier": "https://doi.org/10.5072/erve7txmv",
                     "href": "https://doi.org/10.5072/erve7txmv",
-                    "title": "doi",
+                    "namespace": "doi",
                 },
             },
         ],
@@ -1095,12 +1095,12 @@ complete_record_v2 = {
             {
                 "identifier": "https://doi.org/10.5072/r3qz22k64",
                 "href": "https://doi.org/10.5072/r3qz22k64",
-                "title": "doi",
+                "namespace": "doi",
             },
             {
                 "identifier": "NE/E007895/1",
                 "href": "https://gtr.ukri.org/projects?ref=NE%2FE007895%2F1",
-                "title": "award",
+                "namespace": "award",
             },
         ],
     },

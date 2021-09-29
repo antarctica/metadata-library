@@ -190,18 +190,24 @@
             <gco:CharacterString>2</gco:CharacterString>
           </gmd:edition>
           <gmd:identifier>
-            <gmd:MD_Identifier>
+            <gmd:RS_Identifier>
               <gmd:code>
-                <gmx:Anchor xlink:href="https://doi.org/10.5072/r3qz22k64" xlink:actuate="onRequest" xlink:title="doi">https://doi.org/10.5072/r3qz22k64</gmx:Anchor>
+                <gmx:Anchor xlink:href="https://doi.org/10.5072/r3qz22k64" xlink:actuate="onRequest">https://doi.org/10.5072/r3qz22k64</gmx:Anchor>
               </gmd:code>
-            </gmd:MD_Identifier>
+              <gmd:codeSpace>
+                <gco:CharacterString>doi</gco:CharacterString>
+              </gmd:codeSpace>
+            </gmd:RS_Identifier>
           </gmd:identifier>
           <gmd:identifier>
-            <gmd:MD_Identifier>
+            <gmd:RS_Identifier>
               <gmd:code>
-                <gmx:Anchor xlink:href="https://gtr.ukri.org/projects?ref=NE%2FE007895%2F1" xlink:actuate="onRequest" xlink:title="award">NE/E007895/1</gmx:Anchor>
+                <gmx:Anchor xlink:href="https://gtr.ukri.org/projects?ref=NE%2FE007895%2F1" xlink:actuate="onRequest">NE/E007895/1</gmx:Anchor>
               </gmd:code>
-            </gmd:MD_Identifier>
+              <gmd:codeSpace>
+                <gco:CharacterString>award</gco:CharacterString>
+              </gmd:codeSpace>
+            </gmd:RS_Identifier>
           </gmd:identifier>
         </gmd:CI_Citation>
       </gmd:citation>

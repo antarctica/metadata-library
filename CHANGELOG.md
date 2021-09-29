@@ -54,6 +54,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+* Identifiers structure changed in v2 record configuration (`title` property is now `namespace`)
+  [#105](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/105)
 * Constraints structure changed in v2 record configuration
   [#81](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/81)
 * Root level properties changed in v2 record configuration (resource -> identification, new metadata)

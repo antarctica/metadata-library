@@ -205,8 +205,8 @@ def assert_date(element: Element, config: dict):
 
 def assert_identifier(element: Element, config: dict):
     identifier_elements = element.xpath(
-        f"./gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor[text()='{config['identifier']}'] | "
-        f"./gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString[text()='{config['identifier']}']",
+        f"./gmd:identifier/gmd:RS_Identifier/gmd:code/gmx:Anchor[text()='{config['identifier']}'] | "
+        f"./gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString[text()='{config['identifier']}']",
         namespaces=namespaces.nsmap(),
     )
     assert len(identifier_elements) == 1
@@ -217,11 +217,12 @@ def assert_identifier(element: Element, config: dict):
         )
         assert identifier_href is True
 
-    if "title" in config:
-        identifier_title = identifier_elements[0].xpath(
-            f"@xlink:title = '{config['title']}'", namespaces=namespaces.nsmap()
+    if "namespace" in config:
+        identifier_namespace_elements = element.xpath(
+            f"./gmd:identifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString[text()='{config['namespace']}']",
+            namespaces=namespaces.nsmap(),
         )
-        assert identifier_title is True
+        assert len(identifier_namespace_elements) == 1
 
 
 def assert_citation(element: Element, config: dict):
