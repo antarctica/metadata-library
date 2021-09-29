@@ -20,40 +20,96 @@ def _sort_dict_by_keys(dictionary: dict) -> dict:
     return {k: _sort_dict_by_keys(v) if isinstance(v, dict) else v for k, v in sorted(dictionary.items())}
 
 
-def format_date_string(date_datetime: Union[date, datetime]) -> str:
+def encode_date_string(date_datetime: Union[date, datetime], date_precision: str = None) -> str:
     """
-    Formats a python date or datetime as an ISO 8601 date or datetime string representation
+    Formats a python date or datetime object as an ISO 8601 date or datetime string representation
 
-    E.g. Return 'date(2012, 4, 18)' as '2012-04-18' or 'datetime(2012, 4, 18, 22, 48, 56)' as '2012-4-18T22:48:56'.
+    This method includes support for partial dates (year or year month) via an optional date precision element.
+    When set the month and/or day elements in the Python date object are ignored when encoding as an ISO date.
+
+    This is intended to work around issues where a date is not known for example but Python's date object requires
+    one to be set. '1' is used as a default/convention but without a precision flag it isn't possible to know if '1'
+    represents the first of the month (and is known), or represents an unknown value.
+
+    This method is the inverse of `encode_date_string`.
+
+    Examples:
+    * 'date(2012, 4, 18)' is returned as '2012-04-18'
+    * 'datetime(2012, 4, 18, 22, 48, 56)' is returned as '2012-4-18T22:48:56'
+    * 'date(2012, 4, 18), date_precision='year' is returned as '2012'
+    * 'date(2012, 4, 18), date_precision='month' is returned as '2012-04'
 
     :type date_datetime: date/datetime
     :param date_datetime: python date/datetime
+    :type date_precision: str
+    :param date_precision: qualifier to limit the precision of the date_datetime to a month or year
 
     :rtype str
     :return: ISO 8601 formatted date/datetime
     """
-    return date_datetime.isoformat()
+    if date_precision is None:
+        return date_datetime.isoformat()
+    if date_precision == "year":
+        return str(date_datetime.year)
+    if date_precision == "month":
+        return f"{date_datetime.year}-{date_datetime.month:02}"
 
 
 def contacts_have_role(contacts: list, role: str) -> bool:  # pragma: no cover
+def decode_date_string(date_datetime: str) -> dict:
     """
     Checks if at least one contact has a given role
+    Parses an ISO 8601 date, partial date or datetime string representation as a python date or datetime object
 
     E.g. in all the contacts in a resource, do any have the 'distributor' role?
+    This method includes support for partial dates (year or year month) via an optional date precision element.
+    When applicable, a `date_precision` property will be included in the returned dict to indicate the date object
+    is precise to the 'month' or 'year'.
 
     :type contacts: list
     :param contacts: list of contacts (point of contacts)
     :type role: str
     :param role: role to check for
+    This is intended to work around issues where a date is not known for example but Python's date object requires
+    one to be set. '1' is used as a default/convention but without a precision flag it isn't possible to know if '1'
+    represents the first of the month (and is known), or represents an unknown value.
+
+    This method is the inverse of `encode_date_string`.
 
     :rtype bool
     :return True if at least one contact has the given role, otherwise False
+    Examples:
+    * '2012-04-18' is returned as '{date(2012, 4, 18)}'
+    * '2012-4-18T22:48:56' is returned as 'datetime(2012, 4, 18, 22, 48, 56)'
+    * '2012' is returned as {'date(2012, 4, 18), date_precision='year'}
+    * '2012-04' is returned as {'date(2012, 4, 18), date_precision='month'}
+
+    :type date_datetime: str
+    :param date_datetime: ISO 8601 formatted date/datetime
+
+    :rtype dict
+    :return: dict containing a python date/datetime and optionally a date_precision qualifying string
     """
     for contact in contacts:
         if role in contact["role"]:
             return True
+    if "T" in date_datetime:
+        return {"date": datetime.fromisoformat(date_datetime)}
+
+    _ = {}
+    _date_datetime_parts = date_datetime.split("-")
+    if len(_date_datetime_parts) == 1:
+        # Assume a year only date
+        date_datetime = f"{date_datetime}-01-01"
+        _["date_precision"] = "year"
+    elif len(_date_datetime_parts) == 2:
+        # Assume a year and month only date
+        date_datetime = f"{date_datetime}-01"
+        _["date_precision"] = "month"
 
     return False
+    _["date"] = datetime.fromisoformat(date_datetime).date()
+    return _
 
 
 def contacts_condense_roles(contacts: List[dict]):
