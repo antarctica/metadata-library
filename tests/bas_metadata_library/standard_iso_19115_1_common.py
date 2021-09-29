@@ -7,7 +7,7 @@ from bas_metadata_library.standards.iso_19115_1 import Namespaces
 namespaces = Namespaces()
 
 
-def responsible_party(element: Element, config: dict):
+def assert_responsible_party(element: Element, config: dict):
     if "role" in config:
         roles_element = element.xpath(
             f"./gmd:role/gmd:CI_RoleCode[@codeList = 'https://standards.iso.org/iso/19115/resources/Codelists/cat/"
@@ -123,10 +123,10 @@ def responsible_party(element: Element, config: dict):
             namespaces=namespaces.nsmap(),
         )
         assert len(online_resource_values) == 1
-        online_resource(element=online_resource_values[0], config=config["online_resource"])
+        assert_online_resource(element=online_resource_values[0], config=config["online_resource"])
 
 
-def online_resource(element: Element, config: dict):
+def assert_online_resource(element: Element, config: dict):
     if "href" in config:
         url_values = element.xpath(
             f"./gmd:linkage/gmd:URL/text() = '{config['href']}'",
@@ -158,7 +158,7 @@ def online_resource(element: Element, config: dict):
         assert function_elements is True
 
 
-def maintenance(element: Element, config: dict):
+def assert_maintenance(element: Element, config: dict):
     if "maintenance_frequency" in config:
         maintenance_frequency_element = element.xpath(
             f"./gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode[@codeList = "
@@ -179,7 +179,7 @@ def maintenance(element: Element, config: dict):
         assert maintenance_progress_element is True
 
 
-def date(element: Element, config: dict):
+def assert_date(element: Element, config: dict):
     if "date" in config:
         if type(config["date"]) is _date:
             date_values = element.xpath("./gmd:date/gco:Date/text()", namespaces=namespaces.nsmap())
@@ -203,7 +203,6 @@ def date(element: Element, config: dict):
         assert date_type_elements is True
 
 
-def citation(element: Element, config: dict):
 def assert_identifier(element: Element, config: dict):
     identifier_elements = element.xpath(
         f"./gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor[text()='{config['identifier']}'] | "
@@ -225,6 +224,7 @@ def assert_identifier(element: Element, config: dict):
         assert identifier_title is True
 
 
+def assert_citation(element: Element, config: dict):
     if "title" in config and "value" in config["title"]:
         title_elements = element.xpath(
             f"./gmd:title/gco:CharacterString/text() | ./gmd:title/gmx:Anchor/text()", namespaces=namespaces.nsmap()
@@ -248,14 +248,14 @@ def assert_identifier(element: Element, config: dict):
                 namespaces=namespaces.nsmap(),
             )
             assert len(date_elements) == 1
-            date(element=date_elements[0], config=date_config)
+            assert_date(element=date_elements[0], config=date_config)
 
     if "contact" in config:
         contact_elements = element.xpath(
             "./gmd:citedResponsibleParty/gmd:CI_ResponsibleParty", namespaces=namespaces.nsmap()
         )
         assert len(contact_elements) == 1
-        responsible_party(element=contact_elements[0], config=config["contact"])
+        assert_responsible_party(element=contact_elements[0], config=config["contact"])
 
     if "edition" in config:
         edition_value = element.xpath(

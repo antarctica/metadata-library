@@ -27,10 +27,10 @@ from bas_metadata_library.standards.iso_19115_1 import (
     MetadataRecord,
 )
 from tests.bas_metadata_library.standard_iso_19115_1_common import (
-    responsible_party,
-    maintenance,
-    citation,
-    online_resource,
+    assert_responsible_party,
+    assert_maintenance,
+    assert_citation,
+    assert_online_resource,
     assert_identifier,
 )
 
@@ -213,7 +213,7 @@ def test_contact(get_record_response, config_name):
             "Testing support for multiple metadata contacts, or a contact with multiple roles, has not yet been added"
         )
 
-    responsible_party(element=contact_elements[0], config=config["metadata"]["contacts"][0])
+    assert_responsible_party(element=contact_elements[0], config=config["metadata"]["contacts"][0])
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -288,7 +288,9 @@ def test_reference_system_info(get_record_response, config_name):
             namespaces=namespaces.nsmap(),
         )
         assert len(reference_system_authority_elements) == 1
-        citation(element=reference_system_authority_elements[0], config=config["reference_system_info"]["authority"])
+        assert_citation(
+            element=reference_system_authority_elements[0], config=config["reference_system_info"]["authority"]
+        )
 
     if "code" in config["reference_system_info"]:
         reference_system_code_elements = record.xpath(
@@ -341,7 +343,7 @@ def test_identification_citation(get_record_response, config_name):
         namespaces=namespaces.nsmap(),
     )
     assert len(identification_citation_elements) == 1
-    citation(element=identification_citation_elements[0], config=config["identification"])
+    assert_citation(element=identification_citation_elements[0], config=config["identification"])
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -463,7 +465,7 @@ def test_identification_points_of_contact(get_record_response, config_name):
 
             point_of_contact_elements = record.xpath(_xpath, namespaces=namespaces.nsmap())
             assert len(point_of_contact_elements) == 1
-            responsible_party(element=point_of_contact_elements[0], config=_config)
+            assert_responsible_party(element=point_of_contact_elements[0], config=_config)
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -481,7 +483,7 @@ def test_identification_maintenance(get_record_response, config_name):
         namespaces=namespaces.nsmap(),
     )
     assert len(identification_maintenance_elements) == 1
-    maintenance(element=identification_maintenance_elements[0], config=config["identification"]["maintenance"])
+    assert_maintenance(element=identification_maintenance_elements[0], config=config["identification"]["maintenance"])
 
 
 def _resolve_descriptive_keywords_xpaths(config) -> List[dict]:
@@ -556,7 +558,7 @@ def test_identification_descriptive_keywords(get_record_response, config_name):
                 "./gmd:thesaurusName/gmd:CI_Citation", namespaces=namespaces.nsmap()
             )
             assert len(thesaurus_elements) == 1
-            citation(element=thesaurus_elements[0], config=keyword["config"]["thesaurus"])
+            assert_citation(element=thesaurus_elements[0], config=keyword["config"]["thesaurus"])
 
 
 @pytest.mark.usefixtures("app_client")
@@ -927,7 +929,7 @@ def test_distributions(get_record_response, config_name):
             namespaces=namespaces.nsmap(),
         )
         assert len(distributor_elements) == 1
-        responsible_party(element=distributor_elements[0], config=distribution["distributor"])
+        assert_responsible_party(element=distributor_elements[0], config=distribution["distributor"])
 
         for distribution_option in distribution["distribution_options"]:
             # format
@@ -964,7 +966,7 @@ def test_distributions(get_record_response, config_name):
                     namespaces=namespaces.nsmap(),
                 )
                 assert len(option_online_resource_elements) == 1
-                online_resource(
+                assert_online_resource(
                     element=option_online_resource_elements[0],
                     config=distribution_option["transfer_option"]["online_resource"],
                 )
@@ -1025,7 +1027,7 @@ def test_metadata_maintenance(get_record_response, config_name):
         "/gmd:MD_Metadata/gmd:metadataMaintenance/gmd:MD_MaintenanceInformation", namespaces=namespaces.nsmap()
     )
     assert len(metadata_maintenance_elements) == 1
-    maintenance(element=metadata_maintenance_elements[0], config=config["metadata"]["maintenance"])
+    assert_maintenance(element=metadata_maintenance_elements[0], config=config["metadata"]["maintenance"])
 
 
 def test_edge_case_contact_without_email_address():
