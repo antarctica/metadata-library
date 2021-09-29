@@ -112,7 +112,7 @@ minimal_record_config = configuration.config
 print(minimal_record_config)
 ```
 
-## Migrating to new configuration versions
+### Migrating to new configuration versions
 
 TODO: [#118](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/118).
 
@@ -503,8 +503,6 @@ To generate [distribution schemas from source schemas](#source-and-distribution-
 any references in source schemas and write the output as distribution schemas, replacing any existing output.
 
 ```shell
-# start Flask application:
-$ docker compose up
 # then in a separate terminal:
 $ docker compose run app flask generate-schemas
 ```
@@ -521,8 +519,8 @@ All code in the `bas_metadata_library` module must be covered by tests, defined 
 [PyTest](https://docs.pytest.org/en/latest/) which should be ran in a random order using
 [pytest-random-order](https://pypi.org/project/pytest-random-order/).
 
-Tests are written to create metadata records based on a series of configurations defined in `tests/config.py`. These
-define 'minimal' to 'complete' test records, intended to test different ways a standard can be used, both for
+Tests are written to create metadata records based on a series of configurations defined in `tests/resources/configs/`. 
+These define 'minimal' to 'complete' test records, intended to test different ways a standard can be used, both for
 individual elements and whole records. These tests are designed to ensure that records are generally well-formed and
 that where config options are used the corresponding elements in the metadata record are generated.
 
