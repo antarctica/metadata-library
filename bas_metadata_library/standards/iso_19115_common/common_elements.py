@@ -8,7 +8,7 @@ from lxml.etree import SubElement, Element  # nosec
 
 from bas_metadata_library import MetadataRecord as _MetadataRecord, MetadataRecord
 from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement, CodeListElement
-from bas_metadata_library.standards.iso_19115_common.utils import format_date_string
+from bas_metadata_library.standards.iso_19115_common.utils import encode_date_string, decode_date_string
 
 
 class Language(CodeListElement):
@@ -788,24 +788,15 @@ class Date(MetadataRecordElement):
     def make_config(self) -> dict:
         _ = {}
 
-        date_value = self.record.xpath(f"{self.xpath}/gmd:date/gco:Date/text()", namespaces=self.ns.nsmap())
+        date_value = self.record.xpath(
+            f"{self.xpath}/gmd:date/gco:Date/text() | {self.xpath}/gmd:date/gco:DateTime/text()",
+            namespaces=self.ns.nsmap(),
+        )
         if len(date_value) == 1:
             try:
-                if len(date_value[0]) == 4:
-                    # Assume a year only date
-                    date_value[0] = f"{date_value[0]}-01-01"
-                    _["date_precision"] = "year"
-
-                _["date"] = datetime.fromisoformat(date_value[0]).date()
+                _ = decode_date_string(date_datetime=date_value[0])
             except ValueError:  # pragma: no cover
-                raise RuntimeError("Date could not be parsed as an ISO date value")
-
-        date_time_value = self.record.xpath(f"{self.xpath}/gmd:date/gco:DateTime/text()", namespaces=self.ns.nsmap())
-        if len(date_time_value) == 1:
-            try:
-                _["date"] = datetime.fromisoformat(date_time_value[0])
-            except ValueError:  # pragma: no cover
-                raise RuntimeError("Date could not be parsed as an ISO datetime value")
+                raise RuntimeError("Date/datetime could not be parsed as an ISO date value")
 
         date_type = DateType(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:dateType")
         _date_type = date_type.make_config()
@@ -823,12 +814,13 @@ class Date(MetadataRecordElement):
         if type(self.element_attributes["date"]) is datetime:
             date_value_element = f"{{{self.ns.gco}}}DateTime"
 
+        _date_precision = None
+        if "date_precision" in self.element_attributes.keys():
+            _date_precision = self.element_attributes["date_precision"]
         date_value = SubElement(date_element, date_value_element)
-        date_value.text = format_date_string(self.element_attributes["date"])
-
-        if "date_precision" in self.element_attributes:
-            if self.element_attributes["date_precision"] == "year":
-                date_value.text = str(self.element_attributes["date"].year)
+        date_value.text = encode_date_string(
+            date_datetime=self.element_attributes["date"], date_precision=_date_precision
+        )
 
         date_type = DateType(
             record=self.record,

@@ -10,7 +10,7 @@ from jsonschema import ValidationError
 from backports.datetime_fromisoformat import MonkeyPatch
 
 # Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
-from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently
+from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently, encode_date_string
 
 MonkeyPatch.patch_fromisoformat()
 
@@ -793,18 +793,32 @@ def test_identification_temporal_extent(get_record_response, config_name):
     ):
         pytest.skip("record does not contain a temporal period extent")
 
+    _date_precision = None
+    if "date_precision" in config["identification"]["extent"]["temporal"]["period"]["start"]:
+        _date_precision = config["identification"]["extent"]["temporal"]["period"]["start"]["date_precision"]
+    _start_value = encode_date_string(
+        date_datetime=config["identification"]["extent"]["temporal"]["period"]["start"]["date"],
+        date_precision=_date_precision,
+    )
     temporal_period_start_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[@gml:id = 'boundingExtent']/"
-        f"gml:beginPosition/text() = '{config['identification']['extent']['temporal']['period']['start'].isoformat()}'",
+        f"gml:beginPosition/text() = '{_start_value}'",
         namespaces=namespaces.nsmap(),
     )
     assert temporal_period_start_value is True
 
+    _date_precision = None
+    if "date_precision" in config["identification"]["extent"]["temporal"]["period"]["end"]:
+        _date_precision = config["identification"]["extent"]["temporal"]["period"]["end"]["date_precision"]
+    _end_value = encode_date_string(
+        date_datetime=config["identification"]["extent"]["temporal"]["period"]["end"]["date"],
+        date_precision=_date_precision,
+    )
     temporal_period_end_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
         f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[@gml:id = 'boundingExtent']/"
-        f"gml:endPosition/text() = '{config['identification']['extent']['temporal']['period']['end'].isoformat()}'",
+        f"gml:endPosition/text() = '{_end_value}'",
         namespaces=namespaces.nsmap(),
     )
     assert temporal_period_end_value is True

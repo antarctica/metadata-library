@@ -15,7 +15,7 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import (
     AnchorElement,
     ResponsibleParty,
 )
-from bas_metadata_library.standards.iso_19115_common.utils import format_date_string
+from bas_metadata_library.standards.iso_19115_common.utils import encode_date_string, decode_date_string
 
 # Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
 MonkeyPatch.patch_fromisoformat()
@@ -144,7 +144,7 @@ class DateStamp(MetadataRecordElement):
         value = self.record.xpath(f"{self.xpath}/gmd:dateStamp/gco:Date/text()", namespaces=self.ns.nsmap())
         if len(value) == 1:
             try:
-                _ = datetime.fromisoformat(value[0]).date()
+                _ = decode_date_string(date_datetime=value[0])["date"]
             except ValueError:  # pragma: no cover
                 raise RuntimeError("Datestamp could not be parsed as an ISO date value")
 
@@ -153,7 +153,7 @@ class DateStamp(MetadataRecordElement):
     def make_element(self):
         date_stamp_element = SubElement(self.record, f"{{{self.ns.gmd}}}dateStamp")
         date_stamp_value = SubElement(date_stamp_element, f"{{{self.ns.gco}}}Date")
-        date_stamp_value.text = format_date_string(self.attributes["date_stamp"])
+        date_stamp_value.text = encode_date_string(self.attributes["date_stamp"])
 
 
 class MetadataMaintenance(MetadataRecordElement):

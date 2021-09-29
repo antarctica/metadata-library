@@ -340,7 +340,7 @@
             <gmd:EX_TemporalExtent>
               <gmd:extent>
                 <gml:TimePeriod gml:id="boundingExtent">
-                  <gml:beginPosition>2018-09-14T00:00:00</gml:beginPosition>
+                  <gml:beginPosition>2018-01-01</gml:beginPosition>
                   <gml:endPosition>2018-09-15T00:00:00</gml:endPosition>
                 </gml:TimePeriod>
               </gmd:extent>
