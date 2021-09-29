@@ -61,6 +61,77 @@
         }
       }
     },
+    "aggregations": {
+      "title": "Aggregations",
+      "description": "Foreign resources related to this resource.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/aggregation"
+      },
+      "minItems": 1
+    },
+    "aggregation": {
+      "title": "Aggregation",
+      "description": "A foreign resource related to this resource.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "association_type",
+        "identifier"
+      ],
+      "properties": {
+        "association_type": {
+          "title": "Association Type",
+          "description": "Describes the type or kind of relation between this resource and the foreign resource.",
+          "type": "string",
+          "enum": [
+            "collectiveTitle",
+            "crossReference",
+            "dependency",
+            "isComposedOf",
+            "largerWorkCitation",
+            "partOfSeamlessDatabase",
+            "revisionOf",
+            "series",
+            "stereoMate"
+          ],
+          "examples": [
+            "crossReference"
+          ]
+        },
+        "initiative_type": {
+          "title": "Initiative Type",
+          "description": "Provides additional context about the type of relation between this resource and the foreign resource.",
+          "type": "string",
+          "enum": [
+            "campaign",
+            "collection",
+            "exercise",
+            "experiment",
+            "investigation",
+            "mission",
+            "operation",
+            "platform",
+            "process",
+            "program",
+            "project",
+            "sensor",
+            "study",
+            "task",
+            "trial",
+            "dataDictionary",
+            "sciencePaper",
+            "userGuide"
+          ],
+          "examples": [
+            "collection"
+          ]
+        },
+        "identifier": {
+          "$ref": "#/definitions/identifier"
+        }
+      }
+    },
     "character_set": {
       "title": "Character set",
       "description": "Character encoding scheme used (typically 'UTF-8)'.",
@@ -1409,6 +1480,9 @@
         },
         "constraints": {
           "$ref": "#/definitions/constraints"
+        },
+        "aggregations": {
+          "$ref": "#/definitions/aggregations"
         },
         "supplemental_information": {
           "$ref": "#/definitions/supplemental_information"

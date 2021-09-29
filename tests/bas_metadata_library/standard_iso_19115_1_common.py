@@ -204,6 +204,27 @@ def date(element: Element, config: dict):
 
 
 def citation(element: Element, config: dict):
+def assert_identifier(element: Element, config: dict):
+    identifier_elements = element.xpath(
+        f"./gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor[text()='{config['identifier']}'] | "
+        f"./gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString[text()='{config['identifier']}']",
+        namespaces=namespaces.nsmap(),
+    )
+    assert len(identifier_elements) == 1
+
+    if "href" in config:
+        identifier_href = identifier_elements[0].xpath(
+            f"@xlink:href = '{config['href']}'", namespaces=namespaces.nsmap()
+        )
+        assert identifier_href is True
+
+    if "title" in config:
+        identifier_title = identifier_elements[0].xpath(
+            f"@xlink:title = '{config['title']}'", namespaces=namespaces.nsmap()
+        )
+        assert identifier_title is True
+
+
     if "title" in config and "value" in config["title"]:
         title_elements = element.xpath(
             f"./gmd:title/gco:CharacterString/text() | ./gmd:title/gmx:Anchor/text()", namespaces=namespaces.nsmap()

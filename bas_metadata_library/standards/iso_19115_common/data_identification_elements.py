@@ -16,6 +16,7 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import (
     AnchorElement,
     Language,
     CharacterSet,
+    Identifier,
 )
 from bas_metadata_library.standards.iso_19115_common.utils import format_date_string
 
@@ -126,6 +127,26 @@ class DataIdentification(MetadataRecordElement):
                 _resource_constraints.append(_constraint)
         if len(_resource_constraints) > 0:
             _["constraints"] = _resource_constraints
+
+        _resource_aggregations = []
+        aggregations_length = int(
+            self.record.xpath(
+                f"count({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo)",
+                namespaces=self.ns.nsmap(),
+            )
+        )
+        for aggregate_index in range(1, aggregations_length + 1):
+            aggregation = Aggregation(
+                record=self.record,
+                attributes=self.attributes,
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo)"
+                f"[{aggregate_index}]",
+            )
+            _aggregation = aggregation.make_config()
+            if bool(_aggregation):
+                _resource_aggregations.append(_aggregation)
+        if len(_resource_aggregations) > 0:
+            _["aggregations"] = _resource_aggregations
 
         spatial_representation_type = SpatialRepresentationType(
             record=self.record,
@@ -271,6 +292,16 @@ class DataIdentification(MetadataRecordElement):
                     element_attributes=constraint_attributes,
                 )
                 constraint.make_element()
+
+        if "aggregations" in self.attributes["identification"]:
+            for aggregation_attributes in self.attributes["identification"]["aggregations"]:
+                aggregation = Aggregation(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_identification_element,
+                    element_attributes=aggregation_attributes,
+                )
+                aggregation.make_element()
 
         if "spatial_representation_type" in self.attributes["identification"]:
             spatial_representation_type = SpatialRepresentationType(
@@ -766,6 +797,148 @@ class OtherConstraints(MetadataRecordElement):
         else:
             other_constraints_value = SubElement(other_constraints_element, f"{{{self.ns.gco}}}CharacterString")
             other_constraints_value.text = self.element_attributes["statement"]
+
+
+class Aggregation(MetadataRecordElement):
+    def make_config(self) -> dict:
+        _ = {}
+
+        association_type = AssociationType(
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:MD_AggregateInformation/gmd:associationType",
+        )
+        _association_type = association_type.make_config()
+        if _association_type != "":
+            _["association_type"] = _association_type
+
+        initiative_type = InitiativeType(
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:MD_AggregateInformation/gmd:initiativeType",
+        )
+        _initiative_type = initiative_type.make_config()
+        if _initiative_type != "":
+            _["initiative_type"] = _initiative_type
+
+        identifier = Identifier(
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:MD_AggregateInformation/gmd:identifier",
+        )
+        _identifier = identifier.make_config()
+        if bool(_identifier):
+            _["identifier"] = _identifier
+
+        return _
+
+    def make_element(self):
+        aggregation_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}aggregationInfo")
+        aggregation_element = SubElement(aggregation_wrapper, f"{{{self.ns.gmd}}}MD_AggregateInformation")
+
+        association_type = AssociationType(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=aggregation_element,
+            element_attributes=self.element_attributes,
+        )
+        association_type.make_element()
+
+        if "initiative_type" in self.element_attributes:
+            initiative_type = InitiativeType(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=aggregation_element,
+                element_attributes=self.element_attributes,
+            )
+            initiative_type.make_element()
+
+        identifier = Identifier(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=aggregation_element,
+            element_attributes=self.element_attributes["identifier"],
+        )
+        identifier.make_element()
+
+
+class AssociationType(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None,
+        xpath: str = None,
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes,
+            xpath=f"{xpath}/gmd:DS_AssociationTypeCode",
+        )
+        self.code_list_values = [
+            "collectiveTitle",
+            "crossReference",
+            "dependency",
+            "isComposedOf",
+            "largerWorkCitation",
+            "partOfSeamlessDatabase",
+            "revisionOf",
+            "series",
+            "stereoMate",
+        ]
+        self.code_list = (
+            "https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode"
+        )
+        self.element = f"{{{self.ns.gmd}}}associationType"
+        self.element_code = f"{{{self.ns.gmd}}}DS_AssociationTypeCode"
+        self.attribute = "association_type"
+
+
+class InitiativeType(CodeListElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None,
+        xpath: str = None,
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes,
+            xpath=f"{xpath}/gmd:DS_InitiativeTypeCode",
+        )
+        self.code_list_values = [
+            "campaign",
+            "collection",
+            "exercise",
+            "experiment",
+            "investigation",
+            "mission",
+            "operation",
+            "platform",
+            "process",
+            "program",
+            "project",
+            "sensor",
+            "study",
+            "task",
+            "trial",
+            "dataDictionary",
+            "sciencePaper",
+            "userGuide",
+        ]
+        self.code_list = (
+            "https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_InitiativeTypeCode"
+        )
+        self.element = f"{{{self.ns.gmd}}}initiativeType"
+        self.element_code = f"{{{self.ns.gmd}}}DS_InitiativeTypeCode"
+        self.attribute = "initiative_type"
 
 
 class SupplementalInformation(MetadataRecordElement):

@@ -828,6 +828,16 @@ base_complex_record_v2 = {
                 "href": "http://www.nationalarchives.gov.uk/doc/open-government-licence/",
             }
         ],
+        "aggregations": [
+            {
+                "association_type": "crossReference",
+                "identifier": {
+                    "identifier": "https://doi.org/10.5072/mj04wb80f",
+                    "href": "https://doi.org/10.5072/mj04wb80f",
+                    "title": "doi",
+                },
+            }
+        ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
         "lineage": "Example lineage statement",
@@ -1056,6 +1066,25 @@ complete_record_v2 = {
                 "type": "access",
                 "restriction_code": "otherRestrictions",
                 "href": "http://example.com/#constraint-without-statement",
+            },
+        ],
+        "aggregations": [
+            {
+                "association_type": "crossReference",
+                "identifier": {
+                    "identifier": "https://doi.org/10.5072/mj04wb80f",
+                    "href": "https://doi.org/10.5072/mj04wb80f",
+                    "title": "doi",
+                },
+            },
+            {
+                "association_type": "isComposedOf",
+                "initiative_type": "collection",
+                "identifier": {
+                    "identifier": "https://doi.org/10.5072/erve7txmv",
+                    "href": "https://doi.org/10.5072/erve7txmv",
+                    "title": "doi",
+                },
             },
         ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",

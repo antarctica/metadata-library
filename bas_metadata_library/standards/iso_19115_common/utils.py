@@ -337,4 +337,12 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
             del constraints["usage"]
         config["resource"]["constraints"] = constraints
 
+    # a number of new properties were not supported in the V1 schema and so are removed to prevent validation errors
+    # due to unknown/unexpected properties.
+    # TODO: Check this includes other new keys such as 'status'
+    _new_resource_identification_keys = ["aggregations"]
+    for key in _new_resource_identification_keys:  # pragma: no cover
+        if key in config["resource"].keys():
+            del config["resource"][key]
+
     return config

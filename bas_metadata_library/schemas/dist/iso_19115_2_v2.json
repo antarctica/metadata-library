@@ -68,6 +68,200 @@
                         }
                     }
                 },
+                "aggregations": {
+                    "title": "Aggregations",
+                    "description": "Foreign resources related to this resource.",
+                    "type": "array",
+                    "items": {
+                        "title": "Aggregation",
+                        "description": "A foreign resource related to this resource.",
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "association_type",
+                            "identifier"
+                        ],
+                        "properties": {
+                            "association_type": {
+                                "title": "Association Type",
+                                "description": "Describes the type or kind of relation between this resource and the foreign resource.",
+                                "type": "string",
+                                "enum": [
+                                    "collectiveTitle",
+                                    "crossReference",
+                                    "dependency",
+                                    "isComposedOf",
+                                    "largerWorkCitation",
+                                    "partOfSeamlessDatabase",
+                                    "revisionOf",
+                                    "series",
+                                    "stereoMate"
+                                ],
+                                "examples": [
+                                    "crossReference"
+                                ]
+                            },
+                            "initiative_type": {
+                                "title": "Initiative Type",
+                                "description": "Provides additional context about the type of relation between this resource and the foreign resource.",
+                                "type": "string",
+                                "enum": [
+                                    "campaign",
+                                    "collection",
+                                    "exercise",
+                                    "experiment",
+                                    "investigation",
+                                    "mission",
+                                    "operation",
+                                    "platform",
+                                    "process",
+                                    "program",
+                                    "project",
+                                    "sensor",
+                                    "study",
+                                    "task",
+                                    "trial",
+                                    "dataDictionary",
+                                    "sciencePaper",
+                                    "userGuide"
+                                ],
+                                "examples": [
+                                    "collection"
+                                ]
+                            },
+                            "identifier": {
+                                "title": "Identifier",
+                                "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                "type": "object",
+                                "required": [],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "identifier": {
+                                        "title": "Identifier (value)",
+                                        "description": "Identifier value, this may be a URL.",
+                                        "type": "string",
+                                        "examples": [
+                                            "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                        ]
+                                    },
+                                    "href": {
+                                        "title": "URL",
+                                        "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                        "type": "string",
+                                        "format": "uri",
+                                        "examples": [
+                                            "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                        ]
+                                    },
+                                    "title": {
+                                        "title": "Title",
+                                        "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                                        "type": "string",
+                                        "examples": [
+                                            "doi",
+                                            "grant"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "minItems": 1
+                },
+                "aggregation": {
+                    "title": "Aggregation",
+                    "description": "A foreign resource related to this resource.",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "association_type",
+                        "identifier"
+                    ],
+                    "properties": {
+                        "association_type": {
+                            "title": "Association Type",
+                            "description": "Describes the type or kind of relation between this resource and the foreign resource.",
+                            "type": "string",
+                            "enum": [
+                                "collectiveTitle",
+                                "crossReference",
+                                "dependency",
+                                "isComposedOf",
+                                "largerWorkCitation",
+                                "partOfSeamlessDatabase",
+                                "revisionOf",
+                                "series",
+                                "stereoMate"
+                            ],
+                            "examples": [
+                                "crossReference"
+                            ]
+                        },
+                        "initiative_type": {
+                            "title": "Initiative Type",
+                            "description": "Provides additional context about the type of relation between this resource and the foreign resource.",
+                            "type": "string",
+                            "enum": [
+                                "campaign",
+                                "collection",
+                                "exercise",
+                                "experiment",
+                                "investigation",
+                                "mission",
+                                "operation",
+                                "platform",
+                                "process",
+                                "program",
+                                "project",
+                                "sensor",
+                                "study",
+                                "task",
+                                "trial",
+                                "dataDictionary",
+                                "sciencePaper",
+                                "userGuide"
+                            ],
+                            "examples": [
+                                "collection"
+                            ]
+                        },
+                        "identifier": {
+                            "title": "Identifier",
+                            "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": false,
+                            "properties": {
+                                "identifier": {
+                                    "title": "Identifier (value)",
+                                    "description": "Identifier value, this may be a URL.",
+                                    "type": "string",
+                                    "examples": [
+                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                    ]
+                                },
+                                "href": {
+                                    "title": "URL",
+                                    "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                    "type": "string",
+                                    "format": "uri",
+                                    "examples": [
+                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                    ]
+                                },
+                                "title": {
+                                    "title": "Title",
+                                    "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                                    "type": "string",
+                                    "examples": [
+                                        "doi",
+                                        "grant"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
                 "character_set": {
                     "title": "Character set",
                     "description": "Character encoding scheme used (typically 'UTF-8)'.",
@@ -5419,6 +5613,106 @@
                                     }
                                 }
                             }
+                        },
+                        "aggregations": {
+                            "title": "Aggregations",
+                            "description": "Foreign resources related to this resource.",
+                            "type": "array",
+                            "items": {
+                                "title": "Aggregation",
+                                "description": "A foreign resource related to this resource.",
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                    "association_type",
+                                    "identifier"
+                                ],
+                                "properties": {
+                                    "association_type": {
+                                        "title": "Association Type",
+                                        "description": "Describes the type or kind of relation between this resource and the foreign resource.",
+                                        "type": "string",
+                                        "enum": [
+                                            "collectiveTitle",
+                                            "crossReference",
+                                            "dependency",
+                                            "isComposedOf",
+                                            "largerWorkCitation",
+                                            "partOfSeamlessDatabase",
+                                            "revisionOf",
+                                            "series",
+                                            "stereoMate"
+                                        ],
+                                        "examples": [
+                                            "crossReference"
+                                        ]
+                                    },
+                                    "initiative_type": {
+                                        "title": "Initiative Type",
+                                        "description": "Provides additional context about the type of relation between this resource and the foreign resource.",
+                                        "type": "string",
+                                        "enum": [
+                                            "campaign",
+                                            "collection",
+                                            "exercise",
+                                            "experiment",
+                                            "investigation",
+                                            "mission",
+                                            "operation",
+                                            "platform",
+                                            "process",
+                                            "program",
+                                            "project",
+                                            "sensor",
+                                            "study",
+                                            "task",
+                                            "trial",
+                                            "dataDictionary",
+                                            "sciencePaper",
+                                            "userGuide"
+                                        ],
+                                        "examples": [
+                                            "collection"
+                                        ]
+                                    },
+                                    "identifier": {
+                                        "title": "Identifier",
+                                        "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                        "type": "object",
+                                        "required": [],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "identifier": {
+                                                "title": "Identifier (value)",
+                                                "description": "Identifier value, this may be a URL.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                ]
+                                            },
+                                            "href": {
+                                                "title": "URL",
+                                                "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                                "type": "string",
+                                                "format": "uri",
+                                                "examples": [
+                                                    "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                ]
+                                            },
+                                            "title": {
+                                                "title": "Title",
+                                                "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "doi",
+                                                    "grant"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "minItems": 1
                         },
                         "supplemental_information": {
                             "title": "Supplemental information",

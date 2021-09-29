@@ -31,6 +31,7 @@ from tests.bas_metadata_library.standard_iso_19115_1_common import (
     maintenance,
     citation,
     online_resource,
+    assert_identifier,
 )
 
 from tests.resources.configs.iso19115_1_standard import (
@@ -608,6 +609,44 @@ def test_identification_resource_constraints(client, config_name):
                 namespaces=namespaces.nsmap(),
             )
             assert other_constraint_anchor_elements is True
+
+
+@pytest.mark.usefixtures("app_client")
+@pytest.mark.parametrize("config_name", list(configs_v2_all.keys()))
+def test_identification_aggregations(client, config_name):
+    response = client.get(f"/standards/{standard}/{config_name}")
+    record = fromstring(response.data)
+    config = configs_v2_all[config_name]
+
+    if "identification" not in config or "aggregations" not in config["identification"]:
+        pytest.skip("record does not contain identification aggregations")
+
+    base_xpath = f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation"
+    for aggregation in config["identification"]["aggregations"]:
+        xpath = (
+            base_xpath
+            + f"[gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString[text()='{aggregation['identifier']['identifier']}'] | gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor[text()='{aggregation['identifier']['identifier']}']]"
+        )
+        association_elements = record.xpath(xpath, namespaces=namespaces.nsmap())
+        assert len(association_elements) == 1
+        association_element = association_elements[0]
+
+        if "association_type" in aggregation.keys():
+            association_type_element = association_element.xpath(
+                f"./gmd:associationType/gmd:DS_AssociationTypeCode[@codeList = 'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode' and @codeListValue = '{aggregation['association_type']}']/text() = '{aggregation['association_type']}'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert association_type_element is True
+
+        if "initiative_type" in aggregation.keys():
+            initiative_type_element = association_element.xpath(
+                f"./gmd:initiativeType/gmd:DS_InitiativeTypeCode[@codeList = 'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_InitiativeTypeCode' and @codeListValue = '{aggregation['initiative_type']}']/text() = '{aggregation['initiative_type']}'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert initiative_type_element is True
+
+        if "identifier" in aggregation.keys():
+            assert_identifier(element=association_element, config=aggregation["identifier"])
 
 
 @pytest.mark.usefixtures("get_record_response")
