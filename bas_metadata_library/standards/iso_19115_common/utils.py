@@ -166,6 +166,7 @@ def convert_from_v1_to_v2_configuration(config: dict) -> dict:
     """
     config = deepcopy(config)
 
+    # a number of top level keys related to the metadata record itself have been moved under a 'metadata' property
     _metadata_keys = ["language", "character_set", "contacts", "date_stamp", "maintenance", "metadata_standard"]
     if any(key in _metadata_keys for key in config.keys()):
         config["metadata"] = {}
@@ -174,6 +175,8 @@ def convert_from_v1_to_v2_configuration(config: dict) -> dict:
                 config["metadata"][key] = config[key]
                 del config[key]
 
+    # resource constraints are now described in a consistent and flexible way, without support for a fixed number of
+    # use-cases, such as copyright and licensing.
     if "resource" in config and "constraints" in config["resource"]:
         constraints = []
         constraint_types = ["access", "usage"]
@@ -207,6 +210,8 @@ def convert_from_v1_to_v2_configuration(config: dict) -> dict:
                     constraints.append(_constraint)
         config["resource"]["constraints"] = constraints
 
+    # distribution information has been moved to a top-level property with support for per-distributor information
+    # and a way to relate a transfer option to a format.
     if "resource" in config and "formats" in config["resource"] and "transfer_options" in config["resource"]:
         distributions: List[dict] = []
 
@@ -238,6 +243,8 @@ def convert_from_v1_to_v2_configuration(config: dict) -> dict:
         del config["resource"]["formats"]
         del config["resource"]["transfer_options"]
 
+    # the 'resource' property is now known as 'identification' to map more closely to the ISO 19115 standard and to
+    # support additional top-level properties for sections such as data quality and attribute definitions.
     if "resource" in config:
         config["identification"] = config["resource"]
         del config["resource"]
@@ -260,6 +267,7 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
     :rtype dict
     :return converted V2 configuration
     """
+    # properties under the 'metadata' property used to be at the top level
     _metadata_keys = ["language", "character_set", "contacts", "date_stamp", "maintenance", "metadata_standard"]
     if any(key in _metadata_keys for key in config["metadata"].keys()):
         for key in _metadata_keys:
@@ -268,10 +276,13 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
     if "metadata" in config:
         del config["metadata"]
 
+    # the 'identification' property used to be known as 'resource'
     if "identification" in config:
         config["resource"] = config["identification"]
         del config["identification"]
 
+    # distribution information used to sit under the 'resource' property, and were not grouped by distributor,
+    # distributors were instead listed as resource/identification points of contact.
     if "distribution" in config:
         config["resource"]["formats"] = []
         config["resource"]["transfer_options"] = []
@@ -293,6 +304,8 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
                     config["resource"]["transfer_options"].append(distribution_option["transfer_option"])
         del config["distribution"]
 
+    # constraints used to be grouped by their type (access or usage) with special properties for known use-cases,
+    # such as copyright and licensing. A best-efforts approach is taken to supporting Known examples of these use-cases.
     if "constraints" in config["resource"]:
         constraints = {"access": [], "usage": []}
         for constraint in config["resource"]["constraints"]:
@@ -303,10 +316,6 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
 
             if "statement" in constraint:
                 _constraint["statement"] = constraint["statement"]
-
-            #
-            # this is all a big hack
-            #
 
             # required citation
             if "href" in constraint and "doi.org" in constraint["href"]:  # pragma: no cover
