@@ -893,7 +893,7 @@ class Identifier(MetadataRecordElement):
             attributes=attributes,
             parent_element=parent_element,
             element_attributes=element_attributes,
-            xpath=f"{xpath}/gmd:MD_Identifier",
+            xpath=f"{xpath}/gmd:RS_Identifier",
         )
 
     def make_config(self) -> dict:
@@ -910,17 +910,17 @@ class Identifier(MetadataRecordElement):
         if len(identifier_href) == 1:
             _["href"] = identifier_href[0]
 
-        identifier_title = self.record.xpath(
-            f"{self.xpath}/gmd:code/gmx:Anchor/@xlink:title", namespaces=self.ns.nsmap()
+        identifier_namespace = self.record.xpath(
+            f"{self.xpath}/gmd:codeSpace/gco:CharacterString/text()", namespaces=self.ns.nsmap()
         )
-        if len(identifier_title) == 1:
-            _["title"] = identifier_title[0]
+        if len(identifier_namespace) == 1:
+            _["namespace"] = identifier_namespace[0]
 
         return _
 
     def make_element(self):
         identifier_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}identifier")
-        identifier_wrapper = SubElement(identifier_container, f"{{{self.ns.gmd}}}MD_Identifier")
+        identifier_wrapper = SubElement(identifier_container, f"{{{self.ns.gmd}}}RS_Identifier")
         identifier_element = SubElement(identifier_wrapper, f"{{{self.ns.gmd}}}code")
 
         if "href" in self.element_attributes:
@@ -935,6 +935,11 @@ class Identifier(MetadataRecordElement):
         else:
             identifier_value = SubElement(identifier_element, f"{{{self.ns.gco}}}CharacterString")
             identifier_value.text = self.element_attributes["identifier"]
+
+        if "namespace" in self.element_attributes:
+            identifier_scheme_element = SubElement(identifier_wrapper, f"{{{self.ns.gmd}}}codeSpace")
+            identifier_scheme_value = SubElement(identifier_scheme_element, f"{{{self.ns.gco}}}CharacterString")
+            identifier_scheme_value.text = self.element_attributes["namespace"]
 
 
 class AnchorElement(MetadataRecordElement):

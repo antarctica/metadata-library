@@ -133,7 +133,9 @@
                                 "title": "Identifier",
                                 "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
                                 "type": "object",
-                                "required": [],
+                                "required": [
+                                    "identifier"
+                                ],
                                 "additionalProperties": false,
                                 "properties": {
                                     "identifier": {
@@ -153,13 +155,13 @@
                                             "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
                                         ]
                                     },
-                                    "title": {
-                                        "title": "Title",
-                                        "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                                    "namespace": {
+                                        "title": "Namespace",
+                                        "description": "The code or identifier for the domain or scheme this identifier is registered within.",
                                         "type": "string",
                                         "examples": [
                                             "doi",
-                                            "grant"
+                                            "orcid"
                                         ]
                                     }
                                 }
@@ -229,7 +231,9 @@
                             "title": "Identifier",
                             "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
                             "type": "object",
-                            "required": [],
+                            "required": [
+                                "identifier"
+                            ],
                             "additionalProperties": false,
                             "properties": {
                                 "identifier": {
@@ -249,13 +253,13 @@
                                         "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
                                     ]
                                 },
-                                "title": {
-                                    "title": "Title",
-                                    "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                                "namespace": {
+                                    "title": "Namespace",
+                                    "description": "The code or identifier for the domain or scheme this identifier is registered within.",
                                     "type": "string",
                                     "examples": [
                                         "doi",
-                                        "grant"
+                                        "orcid"
                                     ]
                                 }
                             }
@@ -2020,7 +2024,9 @@
                     "title": "Identifier",
                     "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
                     "type": "object",
-                    "required": [],
+                    "required": [
+                        "identifier"
+                    ],
                     "additionalProperties": false,
                     "properties": {
                         "identifier": {
@@ -2040,13 +2046,13 @@
                                 "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
                             ]
                         },
-                        "title": {
-                            "title": "Title",
-                            "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                        "namespace": {
+                            "title": "Namespace",
+                            "description": "The code or identifier for the domain or scheme this identifier is registered within.",
                             "type": "string",
                             "examples": [
                                 "doi",
-                                "grant"
+                                "orcid"
                             ]
                         }
                     }
@@ -2059,7 +2065,9 @@
                         "title": "Identifier",
                         "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
                         "type": "object",
-                        "required": [],
+                        "required": [
+                            "identifier"
+                        ],
                         "additionalProperties": false,
                         "properties": {
                             "identifier": {
@@ -2079,13 +2087,13 @@
                                     "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
                                 ]
                             },
-                            "title": {
-                                "title": "Title",
-                                "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                            "namespace": {
+                                "title": "Namespace",
+                                "description": "The code or identifier for the domain or scheme this identifier is registered within.",
                                 "type": "string",
                                 "examples": [
                                     "doi",
-                                    "grant"
+                                    "orcid"
                                 ]
                             }
                         }
@@ -4774,7 +4782,9 @@
                                 "title": "Identifier",
                                 "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
                                 "type": "object",
-                                "required": [],
+                                "required": [
+                                    "identifier"
+                                ],
                                 "additionalProperties": false,
                                 "properties": {
                                     "identifier": {
@@ -4794,13 +4804,13 @@
                                             "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
                                         ]
                                     },
-                                    "title": {
-                                        "title": "Title",
-                                        "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                                    "namespace": {
+                                        "title": "Namespace",
+                                        "description": "The code or identifier for the domain or scheme this identifier is registered within.",
                                         "type": "string",
                                         "examples": [
                                             "doi",
-                                            "grant"
+                                            "orcid"
                                         ]
                                     }
                                 }
@@ -5679,7 +5689,9 @@
                                         "title": "Identifier",
                                         "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
                                         "type": "object",
-                                        "required": [],
+                                        "required": [
+                                            "identifier"
+                                        ],
                                         "additionalProperties": false,
                                         "properties": {
                                             "identifier": {
@@ -5699,13 +5711,13 @@
                                                     "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
                                                 ]
                                             },
-                                            "title": {
-                                                "title": "Title",
-                                                "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                                            "namespace": {
+                                                "title": "Namespace",
+                                                "description": "The code or identifier for the domain or scheme this identifier is registered within.",
                                                 "type": "string",
                                                 "examples": [
                                                     "doi",
-                                                    "grant"
+                                                    "orcid"
                                                 ]
                                             }
                                         }

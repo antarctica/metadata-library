@@ -243,6 +243,15 @@ def convert_from_v1_to_v2_configuration(config: dict) -> dict:
         del config["resource"]["formats"]
         del config["resource"]["transfer_options"]
 
+    # identifiers now use a 'namespace' property instead of 'title' for identifying the type or scheme for identifiers
+    if "resource" in config and "identifiers" in config["resource"]:
+        for index, identifier in enumerate(config["resource"]["identifiers"]):
+            if "title" in identifier.keys():
+                config["resource"]["identifiers"][index]["namespace"] = config["resource"]["identifiers"][index][
+                    "title"
+                ]
+                del config["resource"]["identifiers"][index]["title"]
+
     # the 'resource' property is now known as 'identification' to map more closely to the ISO 19115 standard and to
     # support additional top-level properties for sections such as data quality and attribute definitions.
     if "resource" in config:
@@ -306,7 +315,7 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
 
     # constraints used to be grouped by their type (access or usage) with special properties for known use-cases,
     # such as copyright and licensing. A best-efforts approach is taken to supporting Known examples of these use-cases.
-    if "constraints" in config["resource"]:
+    if "resource" in config and "constraints" in config["resource"]:
         constraints = {"access": [], "usage": []}
         for constraint in config["resource"]["constraints"]:
             _constraint = {}
@@ -345,6 +354,15 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
         if not constraints["usage"]:  # pragma: no cover
             del constraints["usage"]
         config["resource"]["constraints"] = constraints
+
+    # identifiers used to use a 'title' element for their namespace/scheme
+    if "resource" in config and "identifiers" in config["resource"]:
+        for index, identifier in enumerate(config["resource"]["identifiers"]):
+            if "namespace" in identifier.keys():
+                config["resource"]["identifiers"][index]["title"] = config["resource"]["identifiers"][index][
+                    "namespace"
+                ]
+                del config["resource"]["identifiers"][index]["namespace"]
 
     # a number of new properties were not supported in the V1 schema and so are removed to prevent validation errors
     # due to unknown/unexpected properties.

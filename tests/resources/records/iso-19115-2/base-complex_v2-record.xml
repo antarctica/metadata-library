@@ -463,11 +463,14 @@
             <gmd:DS_AssociationTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode" codeListValue="crossReference">crossReference</gmd:DS_AssociationTypeCode>
           </gmd:associationType>
           <gmd:identifier>
-            <gmd:MD_Identifier>
+            <gmd:RS_Identifier>
               <gmd:code>
-                <gmx:Anchor xlink:href="https://doi.org/10.5072/mj04wb80f" xlink:actuate="onRequest" xlink:title="doi">https://doi.org/10.5072/mj04wb80f</gmx:Anchor>
+                <gmx:Anchor xlink:href="https://doi.org/10.5072/mj04wb80f" xlink:actuate="onRequest">https://doi.org/10.5072/mj04wb80f</gmx:Anchor>
               </gmd:code>
-            </gmd:MD_Identifier>
+              <gmd:codeSpace>
+                <gco:CharacterString>doi</gco:CharacterString>
+              </gmd:codeSpace>
+            </gmd:RS_Identifier>
           </gmd:identifier>
         </gmd:MD_AggregateInformation>
       </gmd:aggregationInfo>
