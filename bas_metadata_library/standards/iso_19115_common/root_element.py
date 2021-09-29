@@ -12,7 +12,7 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import Lang
 from bas_metadata_library.standards.iso_19115_common.data_distribution_elements import DataDistribution
 from bas_metadata_library.standards.iso_19115_common.data_identification_elements import DataIdentification
 from bas_metadata_library.standards.iso_19115_common.data_quality_elements import DataQuality
-from bas_metadata_library.standards.iso_19115_common.utils import contacts_have_role, contacts_condense_roles
+from bas_metadata_library.standards.iso_19115_common.utils import contacts_condense_roles
 
 
 class ISOMetadataRecord(MetadataRecordElement):

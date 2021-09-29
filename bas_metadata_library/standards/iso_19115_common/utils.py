@@ -55,29 +55,20 @@ def encode_date_string(date_datetime: Union[date, datetime], date_precision: str
         return f"{date_datetime.year}-{date_datetime.month:02}"
 
 
-def contacts_have_role(contacts: list, role: str) -> bool:  # pragma: no cover
 def decode_date_string(date_datetime: str) -> dict:
     """
-    Checks if at least one contact has a given role
     Parses an ISO 8601 date, partial date or datetime string representation as a python date or datetime object
 
-    E.g. in all the contacts in a resource, do any have the 'distributor' role?
     This method includes support for partial dates (year or year month) via an optional date precision element.
     When applicable, a `date_precision` property will be included in the returned dict to indicate the date object
     is precise to the 'month' or 'year'.
 
-    :type contacts: list
-    :param contacts: list of contacts (point of contacts)
-    :type role: str
-    :param role: role to check for
     This is intended to work around issues where a date is not known for example but Python's date object requires
     one to be set. '1' is used as a default/convention but without a precision flag it isn't possible to know if '1'
     represents the first of the month (and is known), or represents an unknown value.
 
     This method is the inverse of `encode_date_string`.
 
-    :rtype bool
-    :return True if at least one contact has the given role, otherwise False
     Examples:
     * '2012-04-18' is returned as '{date(2012, 4, 18)}'
     * '2012-4-18T22:48:56' is returned as 'datetime(2012, 4, 18, 22, 48, 56)'
@@ -90,9 +81,6 @@ def decode_date_string(date_datetime: str) -> dict:
     :rtype dict
     :return: dict containing a python date/datetime and optionally a date_precision qualifying string
     """
-    for contact in contacts:
-        if role in contact["role"]:
-            return True
     if "T" in date_datetime:
         return {"date": datetime.fromisoformat(date_datetime)}
 
@@ -107,7 +95,6 @@ def decode_date_string(date_datetime: str) -> dict:
         date_datetime = f"{date_datetime}-01"
         _["date_precision"] = "month"
 
-    return False
     _["date"] = datetime.fromisoformat(date_datetime).date()
     return _
 
@@ -205,7 +192,7 @@ def format_distribution_option_consistently(distribution_option: dict) -> dict:
     return _distribution_option
 
 
-def convert_from_v1_to_v2_configuration(config: dict) -> dict:
+def convert_from_v1_to_v2_configuration(config: dict) -> dict:  # pragma: no cover
     """
     Common method to convert a V1 ISO 19115 record configuration to a V2 configuration.
 
@@ -256,7 +243,7 @@ def convert_from_v1_to_v2_configuration(config: dict) -> dict:
                         _constraint["restriction_code"] = "otherRestrictions"
                         if "statement" in constraint["required_citation"]:
                             _constraint["statement"] = constraint["required_citation"]["statement"]
-                        if "doi" in constraint["required_citation"]:  # pragma: no cover
+                        if "doi" in constraint["required_citation"]:
                             _constraint["statement"] = constraint["required_citation"]["doi"]
                             _constraint["href"] = constraint["required_citation"]["doi"]
 
@@ -317,7 +304,7 @@ def convert_from_v1_to_v2_configuration(config: dict) -> dict:
     return config
 
 
-def convert_from_v2_to_v1_configuration(config: dict) -> dict:
+def convert_from_v2_to_v1_configuration(config: dict) -> dict:  # pragma: no cover
     """
     Common method to convert a V2 ISO 19115 record configuration to a V1 configuration.
 
@@ -383,7 +370,7 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
                 _constraint["statement"] = constraint["statement"]
 
             # required citation
-            if "href" in constraint and "doi.org" in constraint["href"]:  # pragma: no cover
+            if "href" in constraint and "doi.org" in constraint["href"]:
                 _constraint["required_citation"] = {"doi": constraint["href"]}
             if "statement" in _constraint and "Cite this information as" in _constraint["statement"]:
                 _constraint["required_citation"] = {"statement": constraint["statement"]}
@@ -405,9 +392,9 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
 
             constraints[constraint["type"]].append(_constraint)
 
-        if not constraints["access"]:  # pragma: no cover
+        if not constraints["access"]:
             del constraints["access"]
-        if not constraints["usage"]:  # pragma: no cover
+        if not constraints["usage"]:
             del constraints["usage"]
         config["resource"]["constraints"] = constraints
 
@@ -420,11 +407,29 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:
                 ]
                 del config["resource"]["identifiers"][index]["namespace"]
 
+    # temporal extents did not allow a date precision to be set
+    if (
+        "resource" in config
+        and "extent" in config["resource"]
+        and "temporal" in config["resource"]["extent"]
+        and "period" in config["resource"]["extent"]["temporal"]
+    ):
+        if (
+            "start" in config["resource"]["extent"]["temporal"]["period"]
+            and "date_precision" in config["resource"]["extent"]["temporal"]["period"]["start"]
+        ):
+            del config["resource"]["extent"]["temporal"]["period"]["start"]["date_precision"]
+        if (
+            "end" in config["resource"]["extent"]["temporal"]["period"]
+            and "date_precision" in config["resource"]["extent"]["temporal"]["period"]["end"]
+        ):
+            del config["resource"]["extent"]["temporal"]["period"]["end"]["date_precision"]
+
     # a number of new properties were not supported in the V1 schema and so are removed to prevent validation errors
     # due to unknown/unexpected properties.
     # TODO: Check this includes other new keys such as 'status'
     _new_resource_identification_keys = ["aggregations"]
-    for key in _new_resource_identification_keys:  # pragma: no cover
+    for key in _new_resource_identification_keys:
         if key in config["resource"].keys():
             del config["resource"][key]
 
