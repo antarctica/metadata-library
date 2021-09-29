@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+* Configuration schema for temporal extent structure to allow date precision qualifier to be set
+  [#99](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/99)
 * Corrected `gco:nillReason` for missing data transfer formats (from `unknown` to `missing`)
   [#64](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/64)
 * Configuration schema for datestamp changed to require date values rather than date-time

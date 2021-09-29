@@ -72,7 +72,10 @@ base_simple_record_v1 = {
                 }
             },
             "temporal": {
-                "period": {"start": datetime.datetime(2018, 9, 14, 0, 0), "end": datetime.datetime(2018, 9, 15, 0, 0)}
+                "period": {
+                    "start": {"date": datetime.date(2018, 1, 1)},
+                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                }
             },
         },
         "credit": "No credit.",
@@ -178,7 +181,10 @@ base_complex_record_v1 = {
                 }
             },
             "temporal": {
-                "period": {"start": datetime.datetime(2018, 9, 14, 0, 0), "end": datetime.datetime(2018, 9, 15, 0, 0)}
+                "period": {
+                    "start": {"date": datetime.date(2018, 1, 1)},
+                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                }
             },
         },
         "credit": "No credit.",
@@ -347,7 +353,10 @@ complete_record_v1 = {
                 }
             },
             "temporal": {
-                "period": {"start": datetime.datetime(2018, 9, 14, 0, 0), "end": datetime.datetime(2018, 9, 15, 0, 0)}
+                "period": {
+                    "start": {"date": datetime.date(2018, 1, 1)},
+                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                }
             },
             "vertical": {
                 "minimum": 20.0,
@@ -613,7 +622,10 @@ base_simple_record_v2 = {
                 }
             },
             "temporal": {
-                "period": {"start": datetime.datetime(2018, 9, 14, 0, 0), "end": datetime.datetime(2018, 9, 15, 0, 0)}
+                "period": {
+                    "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
+                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                }
             },
         },
         "credit": "No credit.",
@@ -751,7 +763,10 @@ base_complex_record_v2 = {
                 }
             },
             "temporal": {
-                "period": {"start": datetime.datetime(2018, 9, 14, 0, 0), "end": datetime.datetime(2018, 9, 15, 0, 0)}
+                "period": {
+                    "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
+                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                }
             },
         },
         "credit": "No credit.",
@@ -950,7 +965,10 @@ complete_record_v2 = {
                 }
             },
             "temporal": {
-                "period": {"start": datetime.datetime(2018, 9, 14, 0, 0), "end": datetime.datetime(2018, 9, 15, 0, 0)}
+                "period": {
+                    "start": {"date": datetime.datetime(2018, 3, 15, 0, 0)},
+                    "end": {"date": datetime.date(2018, 3, 1), "date_precision": "month"},
+                }
             },
             "vertical": {
                 "minimum": 20.0,

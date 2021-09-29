@@ -18,7 +18,7 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import (
     CharacterSet,
     Identifier,
 )
-from bas_metadata_library.standards.iso_19115_common.utils import format_date_string
+from bas_metadata_library.standards.iso_19115_common.utils import encode_date_string, decode_date_string
 
 
 class DataIdentification(MetadataRecordElement):
@@ -1338,9 +1338,9 @@ class TemporalExtent(MetadataRecordElement):
             if "period" not in _.keys():
                 _["period"] = {}
             try:
-                _["period"]["start"] = datetime.fromisoformat(begin_value[0])
+                _["period"]["start"] = decode_date_string(date_datetime=begin_value[0])
             except ValueError:  # pragma: no cover
-                raise RuntimeError("date time could not be parsed as an ISO datetime value")
+                raise RuntimeError("Date/datetime could not be parsed as an ISO date value")
 
         end_value = self.record.xpath(
             f"{self.xpath}/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition/text()",
@@ -1350,9 +1350,9 @@ class TemporalExtent(MetadataRecordElement):
             if "period" not in _.keys():  # pragma: no cover
                 _["period"] = {}
             try:
-                _["period"]["end"] = datetime.fromisoformat(end_value[0])
+                _["period"]["end"] = decode_date_string(date_datetime=end_value[0])
             except ValueError:  # pragma: no cover
-                raise RuntimeError("date time could not be parsed as an ISO datetime value")
+                raise RuntimeError("Date/datetime could not be parsed as an ISO date value")
 
         return _
 
@@ -1367,8 +1367,21 @@ class TemporalExtent(MetadataRecordElement):
                 f"{{{self.ns.gml}}}TimePeriod",
                 attrib={f"{{{self.ns.gml}}}id": "boundingExtent"},
             )
-            begin_position_element = SubElement(time_period_element, f"{{{self.ns.gml}}}beginPosition")
-            begin_position_element.text = format_date_string(self.element_attributes["period"]["start"])
 
+            _date_precision = None
+            if "date_precision" in self.element_attributes["period"]["start"].keys():
+                _date_precision = self.element_attributes["period"]["start"]["date_precision"]
+            begin_position_element = SubElement(time_period_element, f"{{{self.ns.gml}}}beginPosition")
+            begin_position_element.text = encode_date_string(
+                date_datetime=self.element_attributes["period"]["start"]["date"],
+                date_precision=_date_precision,
+            )
+
+            _date_precision = None
+            if "date_precision" in self.element_attributes["period"]["end"].keys():
+                _date_precision = self.element_attributes["period"]["end"]["date_precision"]
             end_position_element = SubElement(time_period_element, f"{{{self.ns.gml}}}endPosition")
-            end_position_element.text = format_date_string(self.element_attributes["period"]["end"])
+            end_position_element.text = encode_date_string(
+                date_datetime=self.element_attributes["period"]["end"]["date"],
+                date_precision=_date_precision,
+            )
