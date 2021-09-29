@@ -262,16 +262,76 @@ To add a new standard:
 
 [WIP]
 
-1. [amend configuration schema](#configuration-schemas)
+1. [amend configuration schema](#configuration-schemas):
+   * new or changed properties should be added to the configuration for the relevant standard (e.g. ISO 19115-1)
+   * typically, this involves adding new elements to the `definitions` property and referencing these in the relevant 
+     parent element (e.g. to the `identification` property)
 2. [generate distribution schemas](#generating-configuration-schemas)
-3. add element class
-4. update test configs
-5. [capture test records](#capturing-static-test-records)
-6. add tests
-7. check test coverage
-8. update `README.md` examples if common element
-9. update `CHANGELOG.md`
-10. if needed, add name to `authors` property in `pyproject.toml`
+3. amend test configs:
+   * new or changed properties should be made to the relevant test record configurations in `tests/resources/configs/`
+   * there are different levels of configuration, from minimal to complete, which should, where possible, build on 
+     each other (e.g. the complete record should include all the properties and values of the minimal record)
+   * the `minimum` configuration should not be changed, as all mandatory elements are already implemented
+   * the `base_simple` configuration should contain elements used most of the time, that use free-text values
+   * the `base_complex` configuration should contain elements used most of the time, that use URL or other 
+     identifier values
+   * the `complete` configuration should contain examples of all supported elements, providing this still produces a 
+     valid record, in order to ensure high test coverage
+   * where possible, configurations should be internally consistent, but this can be ignored if needed
+   * values used for identifiers and other external references should use the correct form/structure but do not need 
+     to exist or relate to the resource described by each configuration (i.e. DOIs should be valid URLs but could be 
+     a DOI for another resource for example)
+4. add relevant [element class](#element-classes):
+   * new or changed elements should be added to the configuration for the relevant package for each standard
+   * for the ISO 19115 family of standards, element classes should be added to the `iso_19115_common` package
+   * the exact module to use within this package will depend on the nature of the element being added, but in general, 
+     elements should be added to the module of their parent element (e.g. `data_identification.py` for elements 
+     under the `identification` record configuration property), elements used across a range of elements should be 
+     added to the `common_elements.py` module
+   * remember to include references to new element class in the parent element class (in both the `make_element` and 
+     `make_config` methods)
+5. until support for Version 1 configuration schemas is removed, add logic to the 
+   `bas_metadata_library.standards.iso_19115_common.utils.convert_from_v1_to_v2_configuration` and/or
+   `bas_metadata_library.standards.iso_19115_common.utils.convert_from_v2_to_v1_configuration` methods as needed
+   * for new elements, this usually consists of deleting configuration properties that don't exist in the V1 schema 
+     (as additional/unexpected keys are not allowed and will therefore fail validation)
+   * for existing elements, logic may be needed to both upgrade and downgrade configurations, especially where 
+     refactoring has occurred between V1 and V2 configurations
+   * where possible, such logic should be generic and agnostic to values used for configuration options, however 
+     there may be cases where this is unavoidable in order to produce a more complete translation between versions
+   * if such logic would prove very unwieldy, and not confined to a limited set of known circumstances, it is ok to 
+     not implement such logic, on the basis that supporting multiple versions is temporary
+6. [capture test records](#capturing-static-test-records)
+    * initially this acts as a good way to check new or changed element classes encode configuration properties 
+      correctly
+    * check the git status of these test records to check existing records have changed how you expect (and haven't 
+      changed things you didn't intend to for example)
+7. add tests
+    * new test cases should be added, or existing test cases updated, in the relevant module within 
+      `tests/bas_metadata_library/`
+    * for the ISO 19115 family of standards, this should be `test_standard_iso_19115_1.py`, unless the element is only
+      part of the ISO 19115-2 standard
+    * providing there are enough test configurations to test all the ways a new element can be used (e.g. with a simple
+      text string or anchor element for example), adding a test case for each element is typically enough to ensure 
+      sufficient test coverage
+    * where this isn't the case, it's suggested to add one or more 'edge case' test cases to test remaining code paths
+      explicitly
+8. check [test coverage](#test-coverage)
+    * for missing coverage, consider adding edge case test cases where applicable
+    * wherever possible, the coverage exemptions should be minimised
+    * there are a number of general types of code that can be exempted as part of an existing convention (but that 
+      will be reviewed in the future):
+        * within `make_config` methods to check whether child elements are empty
+        * within the `convert_from_v1_to_v2_configuration` and `convert_from_v2_to_v1_configuration` utility methods
+    * where exceptions are added, they should be documented as an issue with information on how they will be 
+      addressed in the longer term
+    * issue 
+      [#111](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/111)) 
+      will document existing exceptions and conventions, and look at how these can be removed in the future
+9. update `README.md` examples if common element
+    * this is probably best done before releasing a new version
+10. update `CHANGELOG.md`
+11. if needed, add name to `authors` property in `pyproject.toml`
 
 ### Automatic transfer option / format IDs
 
