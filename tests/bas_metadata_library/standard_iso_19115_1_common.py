@@ -265,21 +265,4 @@ def assert_citation(element: Element, config: dict):
 
     if "identifiers" in config:
         for identifier in config["identifiers"]:
-            identifier_elements = element.xpath(
-                f"./gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor[text()='{identifier['identifier']}'] | "
-                f"./gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString[text()='{identifier['identifier']}']",
-                namespaces=namespaces.nsmap(),
-            )
-            assert len(identifier_elements) == 1
-
-            if "href" in identifier:
-                identifier_href = identifier_elements[0].xpath(
-                    f"@xlink:href = '{identifier['href']}'", namespaces=namespaces.nsmap()
-                )
-                assert identifier_href is True
-
-            if "title" in identifier:
-                identifier_title = identifier_elements[0].xpath(
-                    f"@xlink:title = '{identifier['title']}'", namespaces=namespaces.nsmap()
-                )
-                assert identifier_title is True
+            assert_identifier(element=element, config=identifier)
