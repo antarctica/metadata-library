@@ -554,7 +554,7 @@ minimal_record_v2 = {
     },
     "identification": {
         "title": {"value": "Test Record"},
-        "dates": [{"date": datetime.date(2018, 1, 1), "date_precision": "year", "date_type": "creation"}],
+        "dates": {"creation": {"date": datetime.date(2018, 1, 1), "date_precision": "year"}},
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
         "character_set": "utf-8",
         "language": "eng",
@@ -601,13 +601,10 @@ base_simple_record_v2 = {
     "reference_system_info": {"code": {"value": "urn:ogc:def:crs:EPSG::4326"}},
     "identification": {
         "title": {"value": "Test Record"},
-        "dates": [
-            {"date": datetime.date(2018, 1, 1), "date_precision": "year", "date_type": "creation"},
-            {
-                "date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc),
-                "date_type": "publication",
-            },
-        ],
+        "dates": {
+            "creation": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
+            "publication": {"date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc)},
+        },
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with simple baseline properties only. In this context baseline properties are those that are required, or have default values. Values in this record are non-complex, meaning they are simple character strings rather than anchors. Authorities are not included in elements that support citations.",
         "character_set": "utf-8",
         "language": "eng",
@@ -731,7 +728,7 @@ base_complex_record_v2 = {
         "version": "6.18.3",
         "authority": {
             "title": {"value": "European Petroleum Survey Group (EPSG) Geodetic Parameter Registry"},
-            "dates": [{"date": datetime.date(2008, 11, 12), "date_type": "publication"}],
+            "dates": {"publication": {"date": datetime.date(2008, 11, 12)}},
             "contact": {
                 "organisation": {"name": "European Petroleum Survey Group"},
                 "email": "EPSGadministrator@iogp.org",
@@ -742,13 +739,10 @@ base_complex_record_v2 = {
     },
     "identification": {
         "title": {"value": "Test Record"},
-        "dates": [
-            {"date": datetime.date(2018, 1, 1), "date_precision": "year", "date_type": "creation"},
-            {
-                "date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc),
-                "date_type": "publication",
-            },
-        ],
+        "dates": {
+            "creation": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
+            "publication": {"date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc)},
+        },
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with complex baseline properties only. In this context baseline properties are those that are required, or have default values. Values in this record are complex, meaning they use anchors where relevant rather than simple character strings. Authorities are included in elements that support citations.",
         "character_set": "utf-8",
         "language": "eng",
@@ -818,7 +812,7 @@ base_complex_record_v2 = {
                         "value": "General Multilingual Environmental Thesaurus - INSPIRE themes",
                         "href": "http://www.eionet.europa.eu/gemet/inspire_themes",
                     },
-                    "dates": [{"date": datetime.date(2018, 8, 16), "date_type": "publication"}],
+                    "dates": {"publication": {"date": datetime.date(2018, 8, 16)}},
                     "edition": "4.1.2",
                     "contact": {
                         "organisation": {
@@ -931,7 +925,7 @@ complete_record_v2 = {
         "version": "6.18.3",
         "authority": {
             "title": {"value": "European Petroleum Survey Group (EPSG) Geodetic Parameter Registry"},
-            "dates": [{"date": datetime.date(2008, 11, 12), "date_type": "publication"}],
+            "dates": {"publication": {"date": datetime.date(2008, 11, 12)}},
             "contact": {
                 "organisation": {"name": "European Petroleum Survey Group"},
                 "email": "EPSGadministrator@iogp.org",
@@ -942,15 +936,12 @@ complete_record_v2 = {
     },
     "identification": {
         "title": {"value": "Test Record"},
-        "dates": [
-            {"date": datetime.date(2018, 1, 1), "date_precision": "year", "date_type": "creation"},
-            {"date": datetime.date(2018, 1, 1), "date_precision": "year", "date_type": "revision"},
-            {
-                "date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc),
-                "date_type": "publication",
-            },
-            {"date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc), "date_type": "released"},
-        ],
+        "dates": {
+            "creation": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
+            "revision": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
+            "publication": {"date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc)},
+            "released": {"date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc)},
+        },
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with properties that could typically be included in a record. This does not mean all properties permitted the standard are included, as these are too numerous. Values in this record are complex, meaning they use anchors where relevant rather than simple character strings. Authorities are included in elements that support citations. Identifiers in this record are fake.",
         "character_set": "utf-8",
         "language": "eng",
@@ -1048,7 +1039,7 @@ complete_record_v2 = {
                         "value": "General Multilingual Environmental Thesaurus - INSPIRE themes",
                         "href": "http://www.eionet.europa.eu/gemet/inspire_themes",
                     },
-                    "dates": [{"date": datetime.date(2018, 8, 16), "date_type": "publication"}],
+                    "dates": {"publication": {"date": datetime.date(2018, 8, 16)}},
                     "edition": "4.1.2",
                     "contact": {
                         "organisation": {

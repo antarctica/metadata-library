@@ -1035,17 +1035,30 @@
                 "dates": {
                     "title": "Dates",
                     "description": "A series of dates describing aspects of the resource (creation, update), or dates describing aspects of an element related to the resource.",
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "title": "Date",
-                        "description": "A date describing an aspect of the resource (e.g. when it was created or updated), or a date describing an aspect of an element related to the resource.",
-                        "required": [
-                            "date",
-                            "date_type"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "propertyNames": {
+                        "enum": [
+                            "creation",
+                            "publication",
+                            "revision",
+                            "adopted",
+                            "deprecated",
+                            "distribution",
+                            "expiry",
+                            "inForce",
+                            "lastRevision",
+                            "lastUpdate",
+                            "nextUpdate",
+                            "released",
+                            "superseded",
+                            "unavailable",
+                            "validityBegins",
+                            "validityExpires"
+                        ]
+                    },
+                    "patternProperties": {
+                        ".*": {
                             "date": {
                                 "title": "Date",
                                 "description": "A literal date or date time, including time zone which should be UTC.",
@@ -1067,35 +1080,9 @@
                                 "examples": [
                                     "year"
                                 ]
-                            },
-                            "date_type": {
-                                "title": "The aspect of the resource, or element related to the resource, the date describes.",
-                                "type": "string",
-                                "enum": [
-                                    "creation",
-                                    "publication",
-                                    "revision",
-                                    "adopted",
-                                    "deprecated",
-                                    "distribution",
-                                    "expiry",
-                                    "inForce",
-                                    "lastRevision",
-                                    "lastUpdate",
-                                    "nextUpdate",
-                                    "released",
-                                    "superseded",
-                                    "unavailable",
-                                    "validityBegins",
-                                    "validityExpires"
-                                ],
-                                "examples": [
-                                    "creation"
-                                ]
                             }
                         }
-                    },
-                    "minItems": 1
+                    }
                 },
                 "date_precision": {
                     "title": "Date precision",
@@ -2255,17 +2242,30 @@
                                     "dates": {
                                         "title": "Dates",
                                         "description": "A series of dates describing aspects of the resource (creation, update), or dates describing aspects of an element related to the resource.",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "title": "Date",
-                                            "description": "A date describing an aspect of the resource (e.g. when it was created or updated), or a date describing an aspect of an element related to the resource.",
-                                            "required": [
-                                                "date",
-                                                "date_type"
-                                            ],
-                                            "additionalProperties": false,
-                                            "properties": {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "propertyNames": {
+                                            "enum": [
+                                                "creation",
+                                                "publication",
+                                                "revision",
+                                                "adopted",
+                                                "deprecated",
+                                                "distribution",
+                                                "expiry",
+                                                "inForce",
+                                                "lastRevision",
+                                                "lastUpdate",
+                                                "nextUpdate",
+                                                "released",
+                                                "superseded",
+                                                "unavailable",
+                                                "validityBegins",
+                                                "validityExpires"
+                                            ]
+                                        },
+                                        "patternProperties": {
+                                            ".*": {
                                                 "date": {
                                                     "title": "Date",
                                                     "description": "A literal date or date time, including time zone which should be UTC.",
@@ -2287,35 +2287,9 @@
                                                     "examples": [
                                                         "year"
                                                     ]
-                                                },
-                                                "date_type": {
-                                                    "title": "The aspect of the resource, or element related to the resource, the date describes.",
-                                                    "type": "string",
-                                                    "enum": [
-                                                        "creation",
-                                                        "publication",
-                                                        "revision",
-                                                        "adopted",
-                                                        "deprecated",
-                                                        "distribution",
-                                                        "expiry",
-                                                        "inForce",
-                                                        "lastRevision",
-                                                        "lastUpdate",
-                                                        "nextUpdate",
-                                                        "released",
-                                                        "superseded",
-                                                        "unavailable",
-                                                        "validityBegins",
-                                                        "validityExpires"
-                                                    ],
-                                                    "examples": [
-                                                        "creation"
-                                                    ]
                                                 }
                                             }
-                                        },
-                                        "minItems": 1
+                                        }
                                     },
                                     "edition": {
                                         "title": "Edition",
@@ -2817,17 +2791,30 @@
                                 "dates": {
                                     "title": "Dates",
                                     "description": "A series of dates describing aspects of the resource (creation, update), or dates describing aspects of an element related to the resource.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "title": "Date",
-                                        "description": "A date describing an aspect of the resource (e.g. when it was created or updated), or a date describing an aspect of an element related to the resource.",
-                                        "required": [
-                                            "date",
-                                            "date_type"
-                                        ],
-                                        "additionalProperties": false,
-                                        "properties": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "propertyNames": {
+                                        "enum": [
+                                            "creation",
+                                            "publication",
+                                            "revision",
+                                            "adopted",
+                                            "deprecated",
+                                            "distribution",
+                                            "expiry",
+                                            "inForce",
+                                            "lastRevision",
+                                            "lastUpdate",
+                                            "nextUpdate",
+                                            "released",
+                                            "superseded",
+                                            "unavailable",
+                                            "validityBegins",
+                                            "validityExpires"
+                                        ]
+                                    },
+                                    "patternProperties": {
+                                        ".*": {
                                             "date": {
                                                 "title": "Date",
                                                 "description": "A literal date or date time, including time zone which should be UTC.",
@@ -2849,35 +2836,9 @@
                                                 "examples": [
                                                     "year"
                                                 ]
-                                            },
-                                            "date_type": {
-                                                "title": "The aspect of the resource, or element related to the resource, the date describes.",
-                                                "type": "string",
-                                                "enum": [
-                                                    "creation",
-                                                    "publication",
-                                                    "revision",
-                                                    "adopted",
-                                                    "deprecated",
-                                                    "distribution",
-                                                    "expiry",
-                                                    "inForce",
-                                                    "lastRevision",
-                                                    "lastUpdate",
-                                                    "nextUpdate",
-                                                    "released",
-                                                    "superseded",
-                                                    "unavailable",
-                                                    "validityBegins",
-                                                    "validityExpires"
-                                                ],
-                                                "examples": [
-                                                    "creation"
-                                                ]
                                             }
                                         }
-                                    },
-                                    "minItems": 1
+                                    }
                                 },
                                 "contact": {
                                     "title": "Contact",
@@ -3324,17 +3285,30 @@
                         "dates": {
                             "title": "Dates",
                             "description": "A series of dates describing aspects of the resource (creation, update), or dates describing aspects of an element related to the resource.",
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "title": "Date",
-                                "description": "A date describing an aspect of the resource (e.g. when it was created or updated), or a date describing an aspect of an element related to the resource.",
-                                "required": [
-                                    "date",
-                                    "date_type"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "propertyNames": {
+                                "enum": [
+                                    "creation",
+                                    "publication",
+                                    "revision",
+                                    "adopted",
+                                    "deprecated",
+                                    "distribution",
+                                    "expiry",
+                                    "inForce",
+                                    "lastRevision",
+                                    "lastUpdate",
+                                    "nextUpdate",
+                                    "released",
+                                    "superseded",
+                                    "unavailable",
+                                    "validityBegins",
+                                    "validityExpires"
+                                ]
+                            },
+                            "patternProperties": {
+                                ".*": {
                                     "date": {
                                         "title": "Date",
                                         "description": "A literal date or date time, including time zone which should be UTC.",
@@ -3356,35 +3330,9 @@
                                         "examples": [
                                             "year"
                                         ]
-                                    },
-                                    "date_type": {
-                                        "title": "The aspect of the resource, or element related to the resource, the date describes.",
-                                        "type": "string",
-                                        "enum": [
-                                            "creation",
-                                            "publication",
-                                            "revision",
-                                            "adopted",
-                                            "deprecated",
-                                            "distribution",
-                                            "expiry",
-                                            "inForce",
-                                            "lastRevision",
-                                            "lastUpdate",
-                                            "nextUpdate",
-                                            "released",
-                                            "superseded",
-                                            "unavailable",
-                                            "validityBegins",
-                                            "validityExpires"
-                                        ],
-                                        "examples": [
-                                            "creation"
-                                        ]
                                     }
                                 }
-                            },
-                            "minItems": 1
+                            }
                         },
                         "edition": {
                             "title": "Edition",
@@ -4400,17 +4348,30 @@
                                 "dates": {
                                     "title": "Dates",
                                     "description": "A series of dates describing aspects of the resource (creation, update), or dates describing aspects of an element related to the resource.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "title": "Date",
-                                        "description": "A date describing an aspect of the resource (e.g. when it was created or updated), or a date describing an aspect of an element related to the resource.",
-                                        "required": [
-                                            "date",
-                                            "date_type"
-                                        ],
-                                        "additionalProperties": false,
-                                        "properties": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "propertyNames": {
+                                        "enum": [
+                                            "creation",
+                                            "publication",
+                                            "revision",
+                                            "adopted",
+                                            "deprecated",
+                                            "distribution",
+                                            "expiry",
+                                            "inForce",
+                                            "lastRevision",
+                                            "lastUpdate",
+                                            "nextUpdate",
+                                            "released",
+                                            "superseded",
+                                            "unavailable",
+                                            "validityBegins",
+                                            "validityExpires"
+                                        ]
+                                    },
+                                    "patternProperties": {
+                                        ".*": {
                                             "date": {
                                                 "title": "Date",
                                                 "description": "A literal date or date time, including time zone which should be UTC.",
@@ -4432,35 +4393,9 @@
                                                 "examples": [
                                                     "year"
                                                 ]
-                                            },
-                                            "date_type": {
-                                                "title": "The aspect of the resource, or element related to the resource, the date describes.",
-                                                "type": "string",
-                                                "enum": [
-                                                    "creation",
-                                                    "publication",
-                                                    "revision",
-                                                    "adopted",
-                                                    "deprecated",
-                                                    "distribution",
-                                                    "expiry",
-                                                    "inForce",
-                                                    "lastRevision",
-                                                    "lastUpdate",
-                                                    "nextUpdate",
-                                                    "released",
-                                                    "superseded",
-                                                    "unavailable",
-                                                    "validityBegins",
-                                                    "validityExpires"
-                                                ],
-                                                "examples": [
-                                                    "creation"
-                                                ]
                                             }
                                         }
-                                    },
-                                    "minItems": 1
+                                    }
                                 },
                                 "contact": {
                                     "title": "Contact",
@@ -4798,17 +4733,30 @@
                         "dates": {
                             "title": "Dates",
                             "description": "A series of dates describing aspects of the resource (creation, update), or dates describing aspects of an element related to the resource.",
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "title": "Date",
-                                "description": "A date describing an aspect of the resource (e.g. when it was created or updated), or a date describing an aspect of an element related to the resource.",
-                                "required": [
-                                    "date",
-                                    "date_type"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "propertyNames": {
+                                "enum": [
+                                    "creation",
+                                    "publication",
+                                    "revision",
+                                    "adopted",
+                                    "deprecated",
+                                    "distribution",
+                                    "expiry",
+                                    "inForce",
+                                    "lastRevision",
+                                    "lastUpdate",
+                                    "nextUpdate",
+                                    "released",
+                                    "superseded",
+                                    "unavailable",
+                                    "validityBegins",
+                                    "validityExpires"
+                                ]
+                            },
+                            "patternProperties": {
+                                ".*": {
                                     "date": {
                                         "title": "Date",
                                         "description": "A literal date or date time, including time zone which should be UTC.",
@@ -4830,35 +4778,9 @@
                                         "examples": [
                                             "year"
                                         ]
-                                    },
-                                    "date_type": {
-                                        "title": "The aspect of the resource, or element related to the resource, the date describes.",
-                                        "type": "string",
-                                        "enum": [
-                                            "creation",
-                                            "publication",
-                                            "revision",
-                                            "adopted",
-                                            "deprecated",
-                                            "distribution",
-                                            "expiry",
-                                            "inForce",
-                                            "lastRevision",
-                                            "lastUpdate",
-                                            "nextUpdate",
-                                            "released",
-                                            "superseded",
-                                            "unavailable",
-                                            "validityBegins",
-                                            "validityExpires"
-                                        ],
-                                        "examples": [
-                                            "creation"
-                                        ]
                                     }
                                 }
-                            },
-                            "minItems": 1
+                            }
                         },
                         "edition": {
                             "title": "Edition",
@@ -5325,17 +5247,30 @@
                                             "dates": {
                                                 "title": "Dates",
                                                 "description": "A series of dates describing aspects of the resource (creation, update), or dates describing aspects of an element related to the resource.",
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "object",
-                                                    "title": "Date",
-                                                    "description": "A date describing an aspect of the resource (e.g. when it was created or updated), or a date describing an aspect of an element related to the resource.",
-                                                    "required": [
-                                                        "date",
-                                                        "date_type"
-                                                    ],
-                                                    "additionalProperties": false,
-                                                    "properties": {
+                                                "type": "object",
+                                                "additionalProperties": false,
+                                                "propertyNames": {
+                                                    "enum": [
+                                                        "creation",
+                                                        "publication",
+                                                        "revision",
+                                                        "adopted",
+                                                        "deprecated",
+                                                        "distribution",
+                                                        "expiry",
+                                                        "inForce",
+                                                        "lastRevision",
+                                                        "lastUpdate",
+                                                        "nextUpdate",
+                                                        "released",
+                                                        "superseded",
+                                                        "unavailable",
+                                                        "validityBegins",
+                                                        "validityExpires"
+                                                    ]
+                                                },
+                                                "patternProperties": {
+                                                    ".*": {
                                                         "date": {
                                                             "title": "Date",
                                                             "description": "A literal date or date time, including time zone which should be UTC.",
@@ -5357,35 +5292,9 @@
                                                             "examples": [
                                                                 "year"
                                                             ]
-                                                        },
-                                                        "date_type": {
-                                                            "title": "The aspect of the resource, or element related to the resource, the date describes.",
-                                                            "type": "string",
-                                                            "enum": [
-                                                                "creation",
-                                                                "publication",
-                                                                "revision",
-                                                                "adopted",
-                                                                "deprecated",
-                                                                "distribution",
-                                                                "expiry",
-                                                                "inForce",
-                                                                "lastRevision",
-                                                                "lastUpdate",
-                                                                "nextUpdate",
-                                                                "released",
-                                                                "superseded",
-                                                                "unavailable",
-                                                                "validityBegins",
-                                                                "validityExpires"
-                                                            ],
-                                                            "examples": [
-                                                                "creation"
-                                                            ]
                                                         }
                                                     }
-                                                },
-                                                "minItems": 1
+                                                }
                                             },
                                             "edition": {
                                                 "title": "Edition",
