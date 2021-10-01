@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import date as _date, datetime as _datetime
 
 from lxml.etree import Element
@@ -242,14 +243,16 @@ def assert_citation(element: Element, config: dict):
     if "dates" in config:
         date_elements = element.xpath("./gmd:date/gmd:CI_Date", namespaces=namespaces.nsmap())
         assert len(date_elements) == len(config["dates"])
-        for date_config in config["dates"]:
+        for date_type, date_config in config["dates"].items():
+            _date_config = deepcopy(date_config)
+            _date_config["date_type"] = date_type
             date_elements = element.xpath(
                 f"./gmd:date/gmd:CI_Date[gmd:dateType"
-                f"[gmd:CI_DateTypeCode[@codeListValue='{date_config['date_type']}']]]",
+                f"[gmd:CI_DateTypeCode[@codeListValue='{_date_config['date_type']}']]]",
                 namespaces=namespaces.nsmap(),
             )
             assert len(date_elements) == 1
-            assert_date(element=date_elements[0], config=date_config)
+            assert_date(element=date_elements[0], config=_date_config)
 
     if "contact" in config:
         contact_elements = element.xpath(

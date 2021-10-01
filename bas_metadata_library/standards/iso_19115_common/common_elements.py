@@ -656,7 +656,7 @@ class Citation(MetadataRecordElement):
                 _["title"] = {}
             _["title"]["href"] = title_href[0]
 
-        _dates = []
+        _dates = {}
         dates_length = int(
             self.record.xpath(
                 f"count({self.xpath}/gmd:date)",
@@ -667,8 +667,10 @@ class Citation(MetadataRecordElement):
             date_ = Date(record=self.record, attributes=self.attributes, xpath=f"({self.xpath}/gmd:date)[{date_index}]")
             _date = date_.make_config()
             if bool(_date):
-                _dates.append(_date)
-        if len(_dates) > 0:
+                _date_type = _date["date_type"]
+                del _date["date_type"]
+                _dates[_date_type] = _date
+        if bool(_dates):
             _["dates"] = _dates
 
         edition_value = self.record.xpath(
@@ -724,12 +726,14 @@ class Citation(MetadataRecordElement):
                 title_value.text = self.element_attributes["title"]["value"]
 
         if "dates" in self.element_attributes:
-            for date_attributes in self.element_attributes["dates"]:
+            for date_type, date_attributes in self.element_attributes["dates"].items():
+                _date_attributes = deepcopy(date_attributes)
+                _date_attributes["date_type"] = date_type
                 citation_date = Date(
                     record=self.record,
                     attributes=self.attributes,
                     parent_element=citation_element,
-                    element_attributes=date_attributes,
+                    element_attributes=_date_attributes,
                 )
                 citation_date.make_element()
 

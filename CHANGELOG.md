@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed [BREAKING!]
 
+* Dates refactored to use properties for each date type, rather than an array of objects containing a date type
+  [#99](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/99)
 * Distributors, Formats and Transfer Options refactored to per-distributor versions
   [#87](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/87)
 * Modules for standards no longer include a version (e.g. `bas_metadata_library.standards.iso_19115_2` rather than 
