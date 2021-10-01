@@ -114,7 +114,108 @@ print(minimal_record_config)
 
 ### Migrating to new configuration versions
 
-TODO: [#118](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/118).
+### Version 1 to version 2
+
+**Note:** The version 1 configuration schema is deprecated and will be removed in the next version 
+[#116](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/116).
+
+Utility methods are provided within the V1 and V2 [Record configuration](#configuration-classes) classes to convert to
+and from the V2/V1 [Record Configuration Schema](#configuration-schemas).
+
+**Note:** The version 1 and version 2 schemas are largely, but not fully, backwards compatible. Additional elements 
+added to the version 2 schema (i.e. for elements the version 1 schema didn't support) will be dropped to prevent 
+validation errors. For some elements (access/usage constraints), hard coded conversions are used for known use cases.
+
+To convert a record configuration from version 1 to version 2 (lossless for known use cases):
+
+```python
+from datetime import date
+
+from bas_metadata_library.standards.iso_19115_1 import (
+    MetadataRecordConfigV1 as ISO19115_1_MetadataRecordConfigV1,
+    MetadataRecord as ISO19115_1_MetadataRecord,
+)
+
+configuration_object = {
+    "language": "eng",
+    "character_set": "utf-8",
+    "hierarchy_level": "dataset",
+    "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+    "date_stamp": date(2018, 10, 18),
+    "resource": {
+        "title": {"value": "Test Record"},
+        "dates": [{"date": date(2018, 1, 1), "date_precision": "year", "date_type": "creation"}],
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "character_set": "utf-8",
+        "language": "eng",
+        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+        "extent": {
+            "geographic": {
+                "bounding_box": {
+                    "west_longitude": -45.61521,
+                    "east_longitude": -27.04976,
+                    "south_latitude": -68.1511,
+                    "north_latitude": -54.30761,
+                }
+            }
+        },
+    },
+}
+configurationV1 = ISO19115_1_MetadataRecordConfigV1(**configuration_object)
+configurationV2 = configurationV1.convert_to_v2_configuration()
+
+# encode converted configuration into an XML document
+record = ISO19115_1_MetadataRecord(configurationV2)
+document = record.generate_xml_document()
+
+# output document
+print(document)
+```
+
+To convert a record configuration from version 2 to version 1 (lossy):
+
+```python
+from datetime import date
+
+from bas_metadata_library.standards.iso_19115_1 import (
+    MetadataRecordConfigV2 as ISO19115_1_MetadataRecordConfigV2,
+    MetadataRecordConfigV1 as ISO19115_1_MetadataRecordConfigV1
+)
+
+configuration_object = {
+    "hierarchy_level": "dataset",
+    "metadata": {
+        "language": "eng",
+        "character_set": "utf-8",
+        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "date_stamp": date(2018, 10, 18),
+    },
+    "identification": {
+        "title": {"value": "Test Record"},
+        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "character_set": "utf-8",
+        "language": "eng",
+        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+        "extent": {
+            "geographic": {
+                "bounding_box": {
+                    "west_longitude": -45.61521,
+                    "east_longitude": -27.04976,
+                    "south_latitude": -68.1511,
+                    "north_latitude": -54.30761,
+                }
+            }
+        },
+    },
+}
+configurationV2 = ISO19115_1_MetadataRecordConfigV2(**configuration_object)
+configurationV1 = ISO19115_1_MetadataRecordConfigV1()
+configurationV1.convert_from_v2_configuration(configuration=configurationV2)
+
+# print V1 configuration
+print(configurationV1.config)
+```
 
 ### HTML entities
 
@@ -200,7 +301,8 @@ Configuration classes are defined at the root of each standard or profile, along
 [Metadata Element](#element-classes) and XML namespaces.
 
 A configuration class will exist for each supported configuration schema with methods to convert from one version to
-another.
+another, see the [Record configuration schema migration](#migrating-to-new-configuration-versions) section for more 
+information.
 
 ### Configuration schemas
 
