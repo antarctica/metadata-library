@@ -1,6 +1,7 @@
 import json
 
 from typing import Optional
+from pathlib import Path
 
 from jsonschema import validate
 
@@ -68,9 +69,10 @@ class Namespaces(object):
 
 class MetadataRecordConfig(object):
     """
-    Manages the configuration for a metadata record
+    Represents the configuration for a metadata record
 
-    Values in this configuration are used direct or computed values in elements in a metadata record.
+    The record configuration can either be passed directly as a Python object (dict), when instantiating an instance of
+    this class, or by using the `load()` or `loads()` methods to load the configuration from a JSON document.
 
     The structure and values of this configuration are specified by a JSON schema, and which should be used to validate
     configuration instances using the 'validate()' method.
@@ -93,6 +95,27 @@ class MetadataRecordConfig(object):
         if self.schema is not None:
             _config = json.loads(json.dumps(self.config, default=str))
             return validate(instance=_config, schema=self.schema)
+
+    def load(self, file: Path) -> None:
+        """
+        Loads a record configuration from a JSON encoded file
+
+        The path to the file to read from should be expressed using a Python pathlib.Path object.
+
+        :type file: Path
+        :param file: path to the JSON encoded file to load from
+        """
+        with open(str(file), mode="r") as file:
+            self.config = json.load(fp=file)
+
+    def loads(self, string: str) -> None:
+        """
+        Loads a record configuration from a JSON encoded string
+
+        :type string: str
+        :param string: JSON encoded string to load from
+        """
+        self.config = json.loads(s=string)
 
 
 class MetadataRecord(object):

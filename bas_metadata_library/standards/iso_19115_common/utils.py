@@ -20,6 +20,38 @@ def _sort_dict_by_keys(dictionary: dict) -> dict:
     return {k: _sort_dict_by_keys(v) if isinstance(v, dict) else v for k, v in sorted(dictionary.items())}
 
 
+def _parse_date_properties(dictionary: dict) -> dict:
+    """
+    Utility method to recursively convert any values with a key of 'date' or 'date_stamp' into a Python date or
+    datetime object.
+
+    :type dictionary: dict
+    :param dictionary: input dictionary
+
+    :rtype dict
+    :return dictionary with parsed property values
+    """
+    for k, v in dictionary.items():
+        if isinstance(v, list):
+            for iv in v:
+                if isinstance(iv, dict):
+                    _parse_date_properties(dictionary=iv)
+        elif isinstance(v, dict):
+            _parse_date_properties(dictionary=v)
+        elif isinstance(v, str) and (k == "date" or k == "date_stamp"):
+            if "T" in v:
+                try:
+                    dictionary[k] = datetime.fromisoformat(v)
+                except ValueError:
+                    pass
+            else:
+                try:
+                    dictionary[k] = date.fromisoformat(v)
+                except ValueError:
+                    pass
+    return dictionary
+
+
 def encode_date_string(date_datetime: Union[date, datetime], date_precision: str = None) -> str:
     """
     Formats a python date or datetime object as an ISO 8601 date or datetime string representation
@@ -193,6 +225,7 @@ def format_distribution_option_consistently(distribution_option: dict) -> dict:
 
 
 def _convert_dates(dates: Union[dict, list], from_version: str, to_version: str) -> Union[dict, list]:
+def parse_config_from_json(config: dict) -> dict:
     """
     Internal utility method to convert a date object between configuration versions.
 
@@ -206,8 +239,11 @@ def _convert_dates(dates: Union[dict, list], from_version: str, to_version: str)
     ```
 
     E.g. version 2:
+    Parse a record configuration loaded from a JSON encoded document
 
     {'creation': {'date': '2012-04-20'}}
+    Specifically this method looks for any string encoded date or datetime values and converts them to their Python
+    equivalents. E.g. '2012-02-20' becomes date(2012, 2, 20).
 
     :type dates: list or dict (depending on version)
     :param dates: list or dict to convert
@@ -245,9 +281,13 @@ def _convert_all_dates(config: dict, from_version: str, to_version: str) -> dict
     :param from_version: configuration version to convert from (source)
     :type to_version: str
     :param to_version: configuration version to convert to (target)
+    :type config: dict
+    :param config: record configuration
 
     :rtype list or dict (depending on version)
     :return target record configuration
+    :rtype dict
+    :return parsed record configuration
     """
     # reference system information contains a citation in the authority element
     if (
@@ -278,6 +318,7 @@ def _convert_all_dates(config: dict, from_version: str, to_version: str) -> dict
                 )
 
     return config
+    return _parse_date_properties(dictionary=config)
 
 
 def convert_from_v1_to_v2_configuration(config: dict) -> dict:  # pragma: no cover

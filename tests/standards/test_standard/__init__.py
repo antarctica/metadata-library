@@ -46,8 +46,6 @@ class MetadataRecordConfig(_MetadataRecordConfig):
             configuration_schema_data = json.load(configuration_schema_file)
         self.schema = configuration_schema_data
 
-        self.validate()
-
 
 class MetadataRecord(_MetadataRecord):
     def __init__(self, configuration: MetadataRecordConfig = None, record: str = None):

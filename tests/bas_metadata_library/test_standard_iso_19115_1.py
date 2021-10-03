@@ -1,4 +1,6 @@
 # noinspection PyUnresolvedReferences
+from pathlib import Path
+
 import pytest
 
 from copy import deepcopy
@@ -58,6 +60,38 @@ def test_invalid_configuration_v2():
         configuration = MetadataRecordConfigV2(**config)
         configuration.validate()
     assert "'hierarchy_level' is a required property" in str(e.value)
+
+
+def test_configuration_v1_from_json_file():
+    configuration = MetadataRecordConfigV1()
+    configuration.load(file=Path("tests/resources/configs/iso19115_1_standard_minimal_record_v1.json"))
+    configuration.validate()
+    assert configuration.config == configs_safe_v1["minimal_v1"]
+
+
+def test_configuration_v1_from_json_string():
+    with open(str(Path("tests/resources/configs/iso19115_1_standard_minimal_record_v1.json")), mode="r") as file:
+        config_str = file.read()
+        configuration = MetadataRecordConfigV1()
+        configuration.loads(string=config_str)
+        configuration.validate()
+        assert configuration.config == configs_safe_v1["minimal_v1"]
+
+
+def test_configuration_v2_from_json_file():
+    configuration = MetadataRecordConfigV2()
+    configuration.load(file=Path("tests/resources/configs/iso19115_1_standard_minimal_record_v2.json"))
+    configuration.validate()
+    assert configuration.config == configs_safe_v2["minimal_v2"]
+
+
+def test_configuration_v2_from_json_string():
+    with open(str(Path("tests/resources/configs/iso19115_1_standard_minimal_record_v2.json")), mode="r") as file:
+        config_str = file.read()
+        configuration = MetadataRecordConfigV2()
+        configuration.loads(string=config_str)
+        configuration.validate()
+        assert configuration.config == configs_safe_v2["minimal_v2"]
 
 
 @pytest.mark.usefixtures("app_client")

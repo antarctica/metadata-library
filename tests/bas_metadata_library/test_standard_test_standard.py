@@ -2,6 +2,7 @@
 import pytest
 
 from http import HTTPStatus
+from pathlib import Path
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
@@ -18,9 +19,25 @@ standard = "test-standard"
 
 def test_invalid_configuration():
     config = {"invalid-configuration": "invalid-configuration"}
+    configuration = MetadataRecordConfig(**config)
     with pytest.raises(ValidationError) as e:
-        MetadataRecordConfig(**config)
+        configuration.validate()
     assert "'resource' is a required property" in str(e.value)
+
+
+def test_configuration_from_json_file():
+    configuration = MetadataRecordConfig()
+    configuration.load(file=Path("tests/resources/configs/test_metadata_standard_minimal_record.json"))
+    configuration.validate()
+    assert configuration.config == minimal_config
+
+
+def test_configuration_from_json_string():
+    _config = '{"resource": {"title": {"value": "Test Record"}}}'
+    configuration = MetadataRecordConfig()
+    configuration.loads(string=_config)
+    configuration.validate()
+    assert configuration.config == minimal_config
 
 
 @pytest.mark.usefixtures("app_client")
