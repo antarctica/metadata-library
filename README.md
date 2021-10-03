@@ -54,7 +54,9 @@ $ pip install bas-metadata-library
 
 ## Usage
 
-To generate an ISO 19115 metadata record and return it as an XML document:
+### Encode XML document from record configuration
+
+To generate an ISO 19115 metadata record from a Python record configuration and return it as an XML document:
 
 ```python
 from datetime import date
@@ -93,8 +95,22 @@ document = record.generate_xml_document()
 print(document)
 ```
 
-Where `metadata_configs.record` is a Python dictionary implementing the relevant schema for each standard, documented
-in the [BAS Metadata Standards](https://metadata-standards.data.bas.ac.uk) project.
+
+#### Disabling XML declaration
+
+To disable the XML declaration (i.e. `<?xml version='1.0' encoding='utf-8'?>`), you can set the `xml_declaration` 
+parameter to false. This is sometimes needed when the generated XML documented needs to be embedded into a larger 
+document, such as a CSW transaction.
+
+```python
+# disable XML declaration
+document = record.generate_xml_document(xml_declaration=False)
+
+# output document
+print(document)
+```
+
+### Decode record configuration from XML document
 
 To reverse this process and convert a XML record into a configuration object:
 

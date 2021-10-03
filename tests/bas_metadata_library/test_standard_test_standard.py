@@ -10,7 +10,7 @@ from http import HTTPStatus
 from jsonschema import ValidationError
 from lxml.etree import ElementTree, XML, tostring
 
-from tests.resources.configs.test_metadata_standard import configs_all as configs
+from tests.resources.configs.test_metadata_standard import configs_all as configs, minimal_record as minimal_config
 from tests.standards.test_standard import Namespaces, MetadataRecordConfig, MetadataRecord
 
 standard = "test-standard"
@@ -48,6 +48,22 @@ def test_xml_declaration(client, config_name):
     record = ElementTree(XML(response.data))
     assert record.docinfo.xml_version == "1.0"
     assert record.docinfo.encoding == "utf-8"
+
+
+def test_xml_declaration_enabled():
+    config = minimal_config
+    configuration = MetadataRecordConfig(**config)
+    record = MetadataRecord(configuration=configuration)
+    document = record.generate_xml_document(xml_declaration=True)
+    assert "<?xml version='1.0' encoding='utf-8'?>" in document.decode()
+
+
+def test_xml_declaration_disabled():
+    config = minimal_config
+    configuration = MetadataRecordConfig(**config)
+    record = MetadataRecord(configuration=configuration)
+    document = record.generate_xml_document(xml_declaration=False)
+    assert "<?xml version='1.0' encoding='utf-8'?>" not in document.decode()
 
 
 @pytest.mark.usefixtures("get_record_response")
