@@ -2756,6 +2756,14 @@
                         }
                     }
                 },
+                "purpose": {
+                    "title": "Purpose",
+                    "description": "Resource summary.",
+                    "type": "string",
+                    "examples": [
+                        "Fictitious test record."
+                    ]
+                },
                 "progress": {
                     "title": "Progress",
                     "description": "The status of the resource, or element related to the resource.",
@@ -4748,6 +4756,14 @@
                             "type": "string",
                             "examples": [
                                 "This abstract, and the record to which it belongs, is fictitious."
+                            ]
+                        },
+                        "purpose": {
+                            "title": "Purpose",
+                            "description": "Resource summary.",
+                            "type": "string",
+                            "examples": [
+                                "Fictitious test record."
                             ]
                         },
                         "credit": {

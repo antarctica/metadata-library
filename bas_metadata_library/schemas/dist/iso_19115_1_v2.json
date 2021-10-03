@@ -1028,6 +1028,14 @@
                 }
             }
         },
+        "purpose": {
+            "title": "Purpose",
+            "description": "Resource summary.",
+            "type": "string",
+            "examples": [
+                "Fictitious test record."
+            ]
+        },
         "progress": {
             "title": "Progress",
             "description": "The status of the resource, or element related to the resource.",
@@ -1522,6 +1530,9 @@
                 },
                 "abstract": {
                     "$ref": "#/definitions/abstract"
+                },
+                "purpose": {
+                    "$ref": "#/definitions/purpose"
                 },
                 "credit": {
                     "$ref": "#/definitions/credit"

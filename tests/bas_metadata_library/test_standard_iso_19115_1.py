@@ -416,6 +416,23 @@ def test_identification_abstract(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
+def test_identification_purpose(get_record_response, config_name):
+    record = get_record_response(standard=standard, config=config_name)
+    config = configs_safe_v2[config_name]
+
+    if "identification" not in config or "purpose" not in config["identification"]:
+        pytest.skip("record does not contain an identification purpose")
+
+    identification_purpose_value = record.xpath(
+        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString/text() = "
+        f"'{config['identification']['purpose']}'",
+        namespaces=namespaces.nsmap(),
+    )
+    assert identification_purpose_value is True
+
+
+@pytest.mark.usefixtures("get_record_response")
+@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
 def test_identification_credit(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
