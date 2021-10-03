@@ -1028,6 +1028,26 @@ complete_record_v2 = {
             },
         ],
         "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"},
+        "graphic_overviews": [
+            {
+                "identifier": "thumbnail",
+                "href": "https://example.com/img/thumbnail.jpeg",
+                "description": "General overview of resource",
+                "mime_type": "image/jpeg",
+            },
+            {
+                "identifier": "cover-front",
+                "href": "https://example.com/img/cover-front.jpeg",
+                "description": "Front cover of resource",
+                "mime_type": "image/jpeg",
+            },
+            {
+                "identifier": "cover-back",
+                "href": "https://example.com/img/cover-back.jpeg",
+                "description": "Back cover of resource",
+                "mime_type": "image/jpeg",
+            },
+        ],
         "keywords": [
             {
                 "terms": [

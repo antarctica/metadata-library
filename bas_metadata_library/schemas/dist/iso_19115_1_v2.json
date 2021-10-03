@@ -653,6 +653,59 @@
                 }
             }
         },
+        "graphic_overviews": {
+            "title": "Graphic overview",
+            "description": "One or more images that summarise the resource visually.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "identifier",
+                    "href",
+                    "mime_type"
+                ],
+                "properties": {
+                    "identifier": {
+                        "title": "Identifier",
+                        "description": "Unique name or reference to differentiate each graphic overview.",
+                        "type": "string",
+                        "examples": [
+                            "thumbnail"
+                        ]
+                    },
+                    "href": {
+                        "title": "URL",
+                        "description": "URL to the graphic overview file.",
+                        "type": "string",
+                        "format": "uri",
+                        "examples": [
+                            "https://example.com/thumbnail.png"
+                        ]
+                    },
+                    "description": {
+                        "title": "Description",
+                        "description": "Free text description of the graphic overview, typically used for alternative text.",
+                        "type": "string",
+                        "examples": [
+                            "Thumbnail"
+                        ]
+                    },
+                    "mime_type": {
+                        "title": "MIME type",
+                        "description": "File format or media type for the graphic overview.",
+                        "type": "string",
+                        "enum": [
+                            "image/jpeg",
+                            "image/png"
+                        ],
+                        "examples": [
+                            "image/png"
+                        ]
+                    }
+                }
+            }
+        },
         "geographic_extent": {
             "title": "Geographic extent",
             "description": "A description of the area the resource covers.",
@@ -1490,6 +1543,9 @@
                 },
                 "maintenance": {
                     "$ref": "#/definitions/maintenance"
+                },
+                "graphic_overviews": {
+                    "$ref": "#/definitions/graphic_overviews"
                 },
                 "keywords": {
                     "$ref": "#/definitions/keywords"
