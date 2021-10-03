@@ -7,7 +7,7 @@ from typing import Union, List
 
 def _sort_dict_by_keys(dictionary: dict) -> dict:
     """
-    Utility method to sort a dictionary by it's keys recursively.
+    Utility method to recursively sort a dictionary by it's keys.
 
     Keys are sorted alphabetically in ascending order.
 
@@ -50,6 +50,94 @@ def _parse_date_properties(dictionary: dict) -> dict:
                 except ValueError:
                     pass
     return dictionary
+
+
+def _convert_dates(dates: Union[dict, list], from_version: str, to_version: str) -> Union[dict, list]:
+    """
+    Internal utility method to convert a date object between configuration versions.
+
+    For configuration version 1, dates were objects in a list, with each item containing a date_type property,
+    for configuration version 2, dates are objects within an object, with the date type used as property keys.
+
+    E.g. version 1:
+
+    ```
+    [{'date': '2012-04-20', 'date_type': 'creation'}]
+    ```
+
+    E.g. version 2:
+
+    {'creation': {'date': '2012-04-20'}}
+
+    :type dates: list or dict (depending on version)
+    :param dates: list or dict to convert
+    :type from_version: str
+    :param from_version: configuration version to convert from (source)
+    :type to_version: str
+    :param to_version: configuration version to convert to (target)
+
+    :rtype list or dict (depending on version)
+    :return converted list or dict of dates
+    """
+    if from_version == "v1" and to_version == "v2":
+        _dates = {}
+        for _date in dates:
+            _date_type = _date["date_type"]
+            del _date["date_type"]
+            _dates[_date_type] = _date
+        return _dates
+
+    elif from_version == "v2" and to_version == "v1":
+        _dates = []
+        for _date_type, _date in dates.items():
+            _date["date_type"] = _date_type
+            _dates.append(_date)
+        return _dates
+
+
+def _convert_all_dates(config: dict, from_version: str, to_version: str) -> dict:
+    """
+    Internal utility method to convert dates in citation elements between configuration versions.
+
+    :type config: list or dict (depending on version)
+    :param config: source record configuration
+    :type from_version: str
+    :param from_version: configuration version to convert from (source)
+    :type to_version: str
+    :param to_version: configuration version to convert to (target)
+
+    :rtype list or dict (depending on version)
+    :return target record configuration
+    """
+    # reference system information contains a citation in the authority element
+    if (
+        "reference_system_info" in config.keys()
+        and "authority" in config["reference_system_info"].keys()
+        and "dates" in config["reference_system_info"]["authority"].keys()
+    ):
+        config["reference_system_info"]["authority"]["dates"] = _convert_dates(
+            dates=config["reference_system_info"]["authority"]["dates"],
+            from_version=from_version,
+            to_version=to_version,
+        )
+
+    # resource/identity contains a citation for the overall resource
+    if "resource" in config.keys() and "dates" in config["resource"].keys():
+        config["resource"]["dates"] = _convert_dates(
+            dates=config["resource"]["dates"], from_version=from_version, to_version=to_version
+        )
+
+    # keywords contains a citation in the thesaurus element
+    if "resource" in config and "keywords" in config["resource"]:
+        for keyword_index, keywords in enumerate(config["resource"]["keywords"]):
+            if "thesaurus" in keywords.keys() and "dates" in keywords["thesaurus"].keys():
+                config["resource"]["keywords"][keyword_index]["thesaurus"]["dates"] = _convert_dates(
+                    dates=config["resource"]["keywords"][keyword_index]["thesaurus"]["dates"],
+                    from_version=from_version,
+                    to_version=to_version,
+                )
+
+    return config
 
 
 def encode_date_string(date_datetime: Union[date, datetime], date_precision: str = None) -> str:
@@ -224,100 +312,19 @@ def format_distribution_option_consistently(distribution_option: dict) -> dict:
     return _distribution_option
 
 
-def _convert_dates(dates: Union[dict, list], from_version: str, to_version: str) -> Union[dict, list]:
 def parse_config_from_json(config: dict) -> dict:
     """
-    Internal utility method to convert a date object between configuration versions.
-
-    For configuration version 1, dates were objects in a list, with each item containing a date_type property,
-    for configuration version 2, dates are objects within an object, with the date type used as property keys.
-
-    E.g. version 1:
-
-    ```
-    [{'date': '2012-04-20', 'date_type': 'creation'}]
-    ```
-
-    E.g. version 2:
     Parse a record configuration loaded from a JSON encoded document
 
-    {'creation': {'date': '2012-04-20'}}
     Specifically this method looks for any string encoded date or datetime values and converts them to their Python
     equivalents. E.g. '2012-02-20' becomes date(2012, 2, 20).
 
-    :type dates: list or dict (depending on version)
-    :param dates: list or dict to convert
-    :type from_version: str
-    :param from_version: configuration version to convert from (source)
-    :type to_version: str
-    :param to_version: configuration version to convert to (target)
-
-    :rtype list or dict (depending on version)
-    :return converted list or dict of dates
-    """
-    if from_version == "v1" and to_version == "v2":
-        _dates = {}
-        for _date in dates:
-            _date_type = _date["date_type"]
-            del _date["date_type"]
-            _dates[_date_type] = _date
-        return _dates
-
-    elif from_version == "v2" and to_version == "v1":
-        _dates = []
-        for _date_type, _date in dates.items():
-            _date["date_type"] = _date_type
-            _dates.append(_date)
-        return _dates
-
-
-def _convert_all_dates(config: dict, from_version: str, to_version: str) -> dict:
-    """
-    Internal utility method to convert dates in citation elements between configuration versions.
-
-    :type config: list or dict (depending on version)
-    :param config: source record configuration
-    :type from_version: str
-    :param from_version: configuration version to convert from (source)
-    :type to_version: str
-    :param to_version: configuration version to convert to (target)
     :type config: dict
     :param config: record configuration
 
-    :rtype list or dict (depending on version)
-    :return target record configuration
     :rtype dict
     :return parsed record configuration
     """
-    # reference system information contains a citation in the authority element
-    if (
-        "reference_system_info" in config.keys()
-        and "authority" in config["reference_system_info"].keys()
-        and "dates" in config["reference_system_info"]["authority"].keys()
-    ):
-        config["reference_system_info"]["authority"]["dates"] = _convert_dates(
-            dates=config["reference_system_info"]["authority"]["dates"],
-            from_version=from_version,
-            to_version=to_version,
-        )
-
-    # resource/identity contains a citation for the overall resource
-    if "resource" in config.keys() and "dates" in config["resource"].keys():
-        config["resource"]["dates"] = _convert_dates(
-            dates=config["resource"]["dates"], from_version=from_version, to_version=to_version
-        )
-
-    # keywords contains a citation in the thesaurus element
-    if "resource" in config and "keywords" in config["resource"]:
-        for keyword_index, keywords in enumerate(config["resource"]["keywords"]):
-            if "thesaurus" in keywords.keys() and "dates" in keywords["thesaurus"].keys():
-                config["resource"]["keywords"][keyword_index]["thesaurus"]["dates"] = _convert_dates(
-                    dates=config["resource"]["keywords"][keyword_index]["thesaurus"]["dates"],
-                    from_version=from_version,
-                    to_version=to_version,
-                )
-
-    return config
     return _parse_date_properties(dictionary=config)
 
 

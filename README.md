@@ -150,7 +150,7 @@ print(minimal_record_config)
 
 ### Migrating to new configuration versions
 
-### Version 1 to version 2
+#### Version 1 to version 2
 
 **Note:** The version 1 configuration schema is deprecated and will be removed in the next version 
 [#116](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/116).
