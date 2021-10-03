@@ -30,6 +30,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+* Support for disabling the XML declaration in encoded documents (needed for CSW transactions)
+  [#76](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/76)
 * ID attributes for distribution Format and Transfer Option elements
   [#108](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/108)
 * Resource credit element
