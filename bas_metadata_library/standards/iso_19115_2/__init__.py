@@ -1,6 +1,8 @@
 import json
 
 from copy import deepcopy
+from pathlib import Path
+
 from importlib_resources import path as resource_path
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
@@ -14,6 +16,7 @@ from bas_metadata_library.standards.iso_19115_common.root_element import ISOMeta
 from bas_metadata_library.standards.iso_19115_common.utils import (
     convert_from_v1_to_v2_configuration,
     convert_from_v2_to_v1_configuration,
+    parse_config_from_json,
 )
 
 
@@ -35,6 +38,13 @@ class MetadataRecordConfigV1(_MetadataRecordConfig):
             with open(configuration_schema_file_path) as configuration_schema_file:
                 configuration_schema_data = json.load(configuration_schema_file)
         self.schema = configuration_schema_data
+
+    def load(self, file: Path) -> None:
+        with open(str(file), mode="r") as file:
+            self.config = parse_config_from_json(config=json.load(fp=file))
+
+    def loads(self, string: str) -> None:
+        self.config = parse_config_from_json(config=json.loads(s=string))
 
     def convert_to_v2_configuration(self) -> "MetadataRecordConfigV2":
         config = deepcopy(self.config)
@@ -65,6 +75,13 @@ class MetadataRecordConfigV2(_MetadataRecordConfig):
             with open(configuration_schema_file_path) as configuration_schema_file:
                 configuration_schema_data = json.load(configuration_schema_file)
         self.schema = configuration_schema_data
+
+    def load(self, file: Path) -> None:
+        with open(str(file), mode="r") as file:
+            self.config = parse_config_from_json(config=json.load(fp=file))
+
+    def loads(self, string: str) -> None:
+        self.config = parse_config_from_json(config=json.loads(s=string))
 
 
 class MetadataRecord(_MetadataRecord):

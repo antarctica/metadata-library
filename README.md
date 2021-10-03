@@ -95,6 +95,26 @@ document = record.generate_xml_document()
 print(document)
 ```
 
+#### Loading a record configuration from JSON
+
+The `load()` and `loads()` methods on the configuration class can be used to load a record configuration encoded as a
+JSON file or JSON string respectively:
+
+```python
+from pathlib import Path
+
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+
+configuration = MetadataRecordConfigV2()
+configuration.load(path=Path("/path/to/file.json"))
+```
+
+```python
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+
+configuration = MetadataRecordConfigV2()
+configuration.loads(string='{"file_identifier": "696770d9-7cd8-40f0-b269-11af1687c772"}')
+```
 
 #### Disabling XML declaration
 
@@ -130,7 +150,7 @@ print(minimal_record_config)
 
 ### Migrating to new configuration versions
 
-### Version 1 to version 2
+#### Version 1 to version 2
 
 **Note:** The version 1 configuration schema is deprecated and will be removed in the next version 
 [#116](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/116).
