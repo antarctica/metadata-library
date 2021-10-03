@@ -569,8 +569,7 @@ def convert_from_v2_to_v1_configuration(config: dict) -> dict:  # pragma: no cov
 
     # a number of new properties were not supported in the V1 schema and so are removed to prevent validation errors
     # due to unknown/unexpected properties.
-    # TODO: Check this includes other new keys such as 'status'
-    _new_resource_identification_keys = ["aggregations", "graphic_overviews"]
+    _new_resource_identification_keys = ["aggregations", "graphic_overviews", "status", "purpose"]
     for key in _new_resource_identification_keys:
         if key in config["resource"].keys():
             del config["resource"][key]

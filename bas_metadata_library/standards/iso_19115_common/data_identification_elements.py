@@ -43,6 +43,15 @@ class DataIdentification(MetadataRecordElement):
         if _abstract != "":
             _["abstract"] = _abstract
 
+        purpose = Purpose(
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose",
+        )
+        _purpose = purpose.make_config()
+        if _purpose != "":
+            _["purpose"] = _purpose
+
         credit = Credit(
             record=self.record,
             attributes=self.attributes,
@@ -260,13 +269,23 @@ class DataIdentification(MetadataRecordElement):
         )
         abstract.make_element()
 
-        credit = Credit(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.attributes["identification"],
-        )
-        credit.make_element()
+        if "purpose" in self.attributes["identification"]:
+            purpose = Purpose(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes["identification"],
+            )
+            purpose.make_element()
+
+        if "credit" in self.attributes["identification"]:
+            credit = Credit(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes["identification"],
+            )
+            credit.make_element()
 
         if "contacts" in self.attributes["identification"]:
             for point_of_contact_attributes in self.attributes["identification"]["contacts"]:
@@ -420,6 +439,22 @@ class Abstract(MetadataRecordElement):
         abstract_value.text = self.element_attributes["abstract"]
 
 
+class Purpose(MetadataRecordElement):
+    def make_config(self) -> str:
+        _ = ""
+
+        purpose_value = self.record.xpath(f"{self.xpath}/gco:CharacterString/text()", namespaces=self.ns.nsmap())
+        if len(purpose_value) == 1:
+            _ = purpose_value[0]
+
+        return _
+
+    def make_element(self):
+        purpose_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}purpose")
+        purpose_value = SubElement(purpose_element, f"{{{self.ns.gco}}}CharacterString")
+        purpose_value.text = self.element_attributes["purpose"]
+
+
 class Credit(MetadataRecordElement):
     def make_config(self) -> str:
         _ = ""
@@ -431,10 +466,9 @@ class Credit(MetadataRecordElement):
         return _
 
     def make_element(self):
-        if "credit" in self.element_attributes:
-            credit_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}credit")
-            credit_value = SubElement(credit_element, f"{{{self.ns.gco}}}CharacterString")
-            credit_value.text = self.element_attributes["credit"]
+        credit_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}credit")
+        credit_value = SubElement(credit_element, f"{{{self.ns.gco}}}CharacterString")
+        credit_value.text = self.element_attributes["credit"]
 
 
 class Status(CodeListElement):
