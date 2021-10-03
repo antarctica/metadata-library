@@ -88,6 +88,25 @@ class DataIdentification(MetadataRecordElement):
         if bool(_identification_maintenance):
             _["maintenance"] = _identification_maintenance
 
+        _graphic_overviews = []
+        graphics_length = int(
+            self.record.xpath(
+                f"count({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview)",
+                namespaces=self.ns.nsmap(),
+            )
+        )
+        for graphic_index in range(1, graphics_length + 1):
+            graphic_overview = GraphicOverview(
+                record=self.record,
+                attributes=self.attributes,
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview)[{graphic_index}]",
+            )
+            _graphic_overview = graphic_overview.make_config()
+            if bool(_graphic_overview):
+                _graphic_overviews.append(_graphic_overview)
+        if len(_graphic_overviews) > 0:
+            _["graphic_overviews"] = _graphic_overviews
+
         _descriptive_keywords = []
         keywords_length = int(
             self.record.xpath(
@@ -272,6 +291,16 @@ class DataIdentification(MetadataRecordElement):
                 element_attributes=self.element_attributes["identification"]["maintenance"],
             )
             identification_maintenance.make_element()
+
+        if "graphic_overviews" in self.attributes["identification"]:
+            for graphic_overview_attributes in self.attributes["identification"]["graphic_overviews"]:
+                graphic_overview = GraphicOverview(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_identification_element,
+                    element_attributes=graphic_overview_attributes,
+                )
+                graphic_overview.make_element()
 
         if "keywords" in self.attributes["identification"]:
             for keyword_attributes in self.attributes["identification"]["keywords"]:
@@ -479,6 +508,58 @@ class ResourceMaintenance(MetadataRecordElement):
             element_attributes=self.element_attributes,
         )
         maintenance_information.make_element()
+
+
+class GraphicOverview(MetadataRecordElement):
+    def make_config(self) -> dict:
+        _ = {}
+
+        identifier_value = self.record.xpath(f"{self.xpath}/@id", namespaces=self.ns.nsmap())
+        if len(identifier_value) == 1:
+            _["identifier"] = identifier_value[0]
+
+        href_value = self.record.xpath(
+            f"{self.xpath}/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString/text()", namespaces=self.ns.nsmap()
+        )
+        if len(href_value) == 1:
+            _["href"] = href_value[0]
+
+        description_value = self.record.xpath(
+            f"{self.xpath}/gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString/text()",
+            namespaces=self.ns.nsmap(),
+        )
+        if len(description_value) == 1:
+            _["description"] = description_value[0]
+
+        mime_type_value = self.record.xpath(
+            f"{self.xpath}/gmd:MD_BrowseGraphic/gmd:fileType/gco:CharacterString/text()", namespaces=self.ns.nsmap()
+        )
+        if len(mime_type_value) == 1:
+            _["mime_type"] = mime_type_value[0]
+
+        return _
+
+    def make_element(self):
+        graphic_wrapper = SubElement(
+            self.parent_element,
+            f"{{{self.ns.gmd}}}graphicOverview",
+            attrib={"id": self.element_attributes["identifier"]},
+        )
+        graphic_element = SubElement(graphic_wrapper, f"{{{self.ns.gmd}}}MD_BrowseGraphic")
+
+        href_element = SubElement(graphic_element, f"{{{self.ns.gmd}}}fileName")
+        href_value = SubElement(href_element, f"{{{self.ns.gco}}}CharacterString")
+        href_value.text = self.element_attributes["href"]
+
+        if "description" in self.element_attributes:
+            description_element = SubElement(graphic_element, f"{{{self.ns.gmd}}}fileDescription")
+            description_value = SubElement(description_element, f"{{{self.ns.gco}}}CharacterString")
+            description_value.text = self.element_attributes["description"]
+
+        if "mime_type" in self.element_attributes:
+            mime_type_element = SubElement(graphic_element, f"{{{self.ns.gmd}}}fileType")
+            mime_type_value = SubElement(mime_type_element, f"{{{self.ns.gco}}}CharacterString")
+            mime_type_value.text = self.element_attributes["mime_type"]
 
 
 class DescriptiveKeywords(MetadataRecordElement):

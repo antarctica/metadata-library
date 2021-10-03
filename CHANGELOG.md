@@ -30,6 +30,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+* Resource graphic overview element
+  [#72](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/72)
 * Support for loading record configurations from JSON files or strings
   [#95](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/95)
 * Support for disabling the XML declaration in encoded documents (needed for CSW transactions)
