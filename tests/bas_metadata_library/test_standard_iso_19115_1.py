@@ -1,5 +1,4 @@
-# noinspection PyUnresolvedReferences
-from pathlib import Path
+import datetime
 
 import pytest
 
@@ -7,12 +6,12 @@ from copy import deepcopy
 from datetime import date
 from typing import List
 from http import HTTPStatus
+from pathlib import Path
 
 from jsonschema import ValidationError
-from backports.datetime_fromisoformat import MonkeyPatch
 
 # Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
-from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently, encode_date_string
+from backports.datetime_fromisoformat import MonkeyPatch
 
 MonkeyPatch.patch_fromisoformat()
 
@@ -42,6 +41,8 @@ from tests.resources.configs.iso19115_1_standard import (
     configs_v2_all,
 )
 
+from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently, encode_date_string
+
 standard = "iso-19115-1"
 namespaces = Namespaces()
 
@@ -66,7 +67,11 @@ def test_configuration_v1_from_json_file():
     configuration = MetadataRecordConfigV1()
     configuration.load(file=Path("tests/resources/configs/iso19115_1_standard_minimal_record_v1.json"))
     configuration.validate()
-    assert configuration.config == configs_safe_v1["minimal_v1"]
+    _config = deepcopy(configs_safe_v1["minimal_v1"])
+    _config["resource"]["dates"].append(
+        {"date": datetime.datetime(2018, 1, 1, 10, 0, 0, tzinfo=datetime.timezone.utc), "date_type": "revision"}
+    )
+    assert configuration.config == _config
 
 
 def test_configuration_v1_from_json_string():
@@ -75,14 +80,22 @@ def test_configuration_v1_from_json_string():
         configuration = MetadataRecordConfigV1()
         configuration.loads(string=config_str)
         configuration.validate()
-        assert configuration.config == configs_safe_v1["minimal_v1"]
+        _config = deepcopy(configs_safe_v1["minimal_v1"])
+        _config["resource"]["dates"].append(
+            {"date": datetime.datetime(2018, 1, 1, 10, 0, 0, tzinfo=datetime.timezone.utc), "date_type": "revision"}
+        )
+        assert configuration.config == _config
 
 
 def test_configuration_v2_from_json_file():
     configuration = MetadataRecordConfigV2()
     configuration.load(file=Path("tests/resources/configs/iso19115_1_standard_minimal_record_v2.json"))
     configuration.validate()
-    assert configuration.config == configs_safe_v2["minimal_v2"]
+    _config = deepcopy(configs_safe_v2["minimal_v2"])
+    _config["identification"]["dates"]["revision"] = {
+        "date": datetime.datetime(2018, 1, 1, 10, 0, 0, tzinfo=datetime.timezone.utc)
+    }
+    assert configuration.config == _config
 
 
 def test_configuration_v2_from_json_string():
@@ -91,7 +104,11 @@ def test_configuration_v2_from_json_string():
         configuration = MetadataRecordConfigV2()
         configuration.loads(string=config_str)
         configuration.validate()
-        assert configuration.config == configs_safe_v2["minimal_v2"]
+        _config = deepcopy(configs_safe_v2["minimal_v2"])
+        _config["identification"]["dates"]["revision"] = {
+            "date": datetime.datetime(2018, 1, 1, 10, 0, 0, tzinfo=datetime.timezone.utc)
+        }
+        assert configuration.config == _config
 
 
 @pytest.mark.usefixtures("app_client")

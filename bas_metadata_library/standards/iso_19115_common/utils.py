@@ -42,12 +42,12 @@ def _parse_date_properties(dictionary: dict) -> dict:
             if "T" in v:
                 try:
                     dictionary[k] = datetime.fromisoformat(v)
-                except ValueError:
+                except ValueError:  # pragma: no cover
                     pass
             else:
                 try:
                     dictionary[k] = date.fromisoformat(v)
-                except ValueError:
+                except ValueError:  # pragma: no cover
                     pass
     return dictionary
 
