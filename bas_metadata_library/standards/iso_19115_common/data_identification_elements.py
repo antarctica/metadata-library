@@ -260,13 +260,14 @@ class DataIdentification(MetadataRecordElement):
         )
         abstract.make_element()
 
-        credit = Credit(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.attributes["identification"],
-        )
-        credit.make_element()
+        if "credit" in self.attributes["identification"]:
+            credit = Credit(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes["identification"],
+            )
+            credit.make_element()
 
         if "contacts" in self.attributes["identification"]:
             for point_of_contact_attributes in self.attributes["identification"]["contacts"]:
@@ -431,10 +432,9 @@ class Credit(MetadataRecordElement):
         return _
 
     def make_element(self):
-        if "credit" in self.element_attributes:
-            credit_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}credit")
-            credit_value = SubElement(credit_element, f"{{{self.ns.gco}}}CharacterString")
-            credit_value.text = self.element_attributes["credit"]
+        credit_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}credit")
+        credit_value = SubElement(credit_element, f"{{{self.ns.gco}}}CharacterString")
+        credit_value.text = self.element_attributes["credit"]
 
 
 class Status(CodeListElement):

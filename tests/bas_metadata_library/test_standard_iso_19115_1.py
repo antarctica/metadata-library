@@ -387,7 +387,7 @@ def test_identification_citation(get_record_response, config_name):
     config = configs_safe_v2[config_name]
 
     if "identification" not in config:
-        pytest.skip("record does not contain a identification citation")
+        pytest.skip("record does not contain an identification citation")
 
     identification_citation_elements = record.xpath(
         "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation",
@@ -404,7 +404,7 @@ def test_identification_abstract(get_record_response, config_name):
     config = configs_safe_v2[config_name]
 
     if "identification" not in config or "abstract" not in config["identification"]:
-        pytest.skip("record does not contain a identification abstract")
+        pytest.skip("record does not contain an identification abstract")
 
     identification_abstract_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString/text() = "
@@ -747,7 +747,7 @@ def test_identification_spatial_representation_type(get_record_response, config_
     config = configs_safe_v2[config_name]
 
     if "identification" not in config or "spatial_representation_type" not in config["identification"]:
-        pytest.skip("record does not contain a identification spatial representation type")
+        pytest.skip("record does not contain an identification spatial representation type")
 
     # noinspection HttpUrlsUsage
     spatial_representation_type_elements = record.xpath(
@@ -768,7 +768,7 @@ def test_identification_spatial_resolution(get_record_response, config_name):
     config = configs_safe_v2[config_name]
 
     if "identification" not in config or "spatial_resolution" not in config["identification"]:
-        pytest.skip("record does not contain a resource spatial resolution")
+        pytest.skip("record does not contain an identification spatial resolution")
 
     if config["identification"]["spatial_resolution"] is not None:
         raise NotImplementedError(
@@ -790,7 +790,7 @@ def test_identification_language(get_record_response, config_name):
     config = configs_safe_v2[config_name]
 
     if "identification" not in config or "language" not in config["identification"]:
-        pytest.skip("record does not contain a identification language")
+        pytest.skip("record does not contain an identification language")
 
     # noinspection HttpUrlsUsage
     language_value = record.xpath(
