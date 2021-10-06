@@ -699,7 +699,7 @@ Through [Continuous Integration](#continuous-integration), each commit is tested
 To check locally:
 
 ```shell
-$ docker compose run app bandit -r .
+$ docker compose run app bandit -r . -x './tests'
 ```
 
 ### Editor support
