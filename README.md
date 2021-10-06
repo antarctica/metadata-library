@@ -662,6 +662,8 @@ $ docker compose push app
 
 ```shell
 $ docker compose run app ash
+$ apk update
+$ apk add build-base cargo
 $ poetry update
 ```
 
@@ -671,6 +673,18 @@ Then rebuild the development container, and if you can, push to GitLab:
 $ docker compose build app
 $ docker compose push app
 ```
+
+#### `jsonschema` package
+
+The `jsonschema` dependency is locked to version 3.2.0 because version 4.0 > dropped Python 3.6 support. This 
+library cannot require newer Python versions to ensure it can be used in projects that run on BAS IT infrastructure.
+
+#### `lxml` package
+
+The `lxml` dependency takes a long time to install/update inside the container image because it needs to be installed 
+from source each time the container is built. This is because Alpine Linux, used by the official Python Docker base 
+images, is not supported by the Python [manylinux](https://github.com/pypa/manylinux) system, and therefore cannot use
+pre-built, binary, wheels.
 
 ### Static security scanning
 
