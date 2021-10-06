@@ -74,7 +74,7 @@ pep8-app:
 bandit-app:
   stage: 🧪 test
   script:
-    - "bandit -r ."
+    - "bandit -r . -x './tests'"
 
 build-dev:
   stage: 🏗 build

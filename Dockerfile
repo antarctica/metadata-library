@@ -19,12 +19,8 @@ RUN apk add --no-cache build-base cargo
 RUN python3 -m venv $APPVENV
 ENV PATH="$APPVENV/bin:$PATH"
 
-# pre-install known wheels to save time
-ADD http://bsl-repoa.nerc-bas.ac.uk/magic/v1/libraries/python/wheels/linux_x86_64/cp36m/lxml-4.5.2-cp36-cp36m-linux_x86_64.whl /tmp/wheelhouse/
-RUN pip install --no-index --find-links=file:///tmp/wheelhouse lxml==4.5.2
-
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir poetry==1.0.0
+    pip install --no-cache-dir poetry==1.1.11
 
 COPY pyproject.toml poetry.toml poetry.lock $APPPATH
 RUN poetry install --no-root --no-interaction --no-ansi
