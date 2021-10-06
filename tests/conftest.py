@@ -6,7 +6,7 @@ from flask.testing import FlaskClient
 #
 # This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
-from lxml.etree import ElementTree, fromstring
+from lxml.etree import ElementTree, fromstring  # nosec
 
 from app import create_app
 
