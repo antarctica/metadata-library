@@ -810,6 +810,23 @@ def test_identification_spatial_resolution(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
+def test_identification_character_set(get_record_response, config_name):
+    record = get_record_response(standard=standard, config=config_name)
+    config = configs_safe_v2[config_name]
+
+    if "identification" not in config or "character_set" not in config["identification"]:
+        pytest.skip("record does not contain an identification character set")
+
+    # noinspection HttpUrlsUsage
+    character_string_value = record.xpath(
+        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:characterSet/gmd:MD_CharacterSetCode/text() = '{config['identification']['character_set']}'",
+        namespaces=namespaces.nsmap(),
+    )
+    assert character_string_value is True
+
+
+@pytest.mark.usefixtures("get_record_response")
+@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
 def test_identification_language(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]

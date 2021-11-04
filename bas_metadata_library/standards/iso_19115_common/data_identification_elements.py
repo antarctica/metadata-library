@@ -209,7 +209,7 @@ class DataIdentification(MetadataRecordElement):
             xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:characterSet",
         )
         _character_set = character_set.make_config()
-        if _character_set != "":  # pragma: no cover
+        if _character_set != "":
             _["character_set"] = _character_set
 
         _topic_categories = []
