@@ -778,26 +778,34 @@ def test_identification_spatial_representation_type(get_record_response, config_
     assert spatial_representation_type_elements is True
 
 
+def _test_identification_spatial_resolution(record, config):
+    if "identification" not in config or "spatial_resolution" not in config["identification"]:
+        pytest.skip("record does not contain an identification spatial resolution")
+
+    if config["identification"]["spatial_resolution"] is None:
+        spatial_resolution_value = record.xpath(
+            "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution"
+            "/gmd:distance/@gco:nilReason = 'inapplicable'",
+            namespaces=namespaces.nsmap(),
+        )
+    elif config["identification"]["spatial_resolution"] is not None:
+        spatial_resolution_value = record.xpath(
+            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution"
+            f"/gmd:distance/gco:Distance/text() = '{config['identification']['spatial_resolution']}'",
+            namespaces=namespaces.nsmap(),
+        )
+    else:
+        spatial_resolution_value = False
+
+    assert spatial_resolution_value is True
+
+
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
 def test_identification_spatial_resolution(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
-
-    if "identification" not in config or "spatial_resolution" not in config["identification"]:
-        pytest.skip("record does not contain an identification spatial resolution")
-
-    if config["identification"]["spatial_resolution"] is not None:
-        raise NotImplementedError(
-            "Testing support for spatial resolutions other than 'inapplicable' has not yet been added"
-        )
-
-    spatial_resolution_value = record.xpath(
-        "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution"
-        "/gmd:distance/@gco:nilReason = 'inapplicable'",
-        namespaces=namespaces.nsmap(),
-    )
-    assert spatial_resolution_value is True
+    _test_identification_spatial_resolution(record=record, config=config)
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -1217,6 +1225,16 @@ def test_edge_case_datestamp_invalid_date():
     with pytest.raises(RuntimeError) as e:
         record.make_config()
     assert e.value.args[0] == "Datestamp could not be parsed as an ISO date value"
+
+
+def test_edge_case_spatial_resolution_null():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["identification"]["spatial_resolution"] = None
+    config_ = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config_).generate_xml_document()
+    record = fromstring(record)
+
+    _test_identification_spatial_resolution(record=record, config=config)
 
 
 def test_edge_case_date_invalid_date():

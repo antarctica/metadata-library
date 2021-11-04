@@ -1121,6 +1121,7 @@ complete_record_v2 = {
         ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
+        "spatial_resolution": "1:1000000",
         "lineage": "Example lineage statement",
         "edition": "2",
         "identifiers": [
