@@ -1317,6 +1317,26 @@ def test_edge_case_temporal_extent_end_invalid_date():
     assert e.value.args[0] == "Date/datetime could not be parsed as an ISO date value"
 
 
+def test_edge_case_temporal_extent_begin_missing_date():
+    with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
+        record_data = record_file.read()
+
+    # remove whitespace from record to allow easier manipulation
+    xml_parser = XMLParser(remove_blank_text=True)
+    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_data = tostring(record_element).decode()
+
+    # intentionally break record with an invalid datestamp
+    record_data = record_data.replace(
+        "</gmd:EX_Extent>",
+        '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:endPosition>2018-03</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
+    )
+
+    record = MetadataRecord(record=record_data)
+    config = record.make_config().config
+    assert "end" in config["identification"]["extent"]["temporal"]["period"]
+
+
 class MockResponse:
     def raise_for_status(self):
         pass

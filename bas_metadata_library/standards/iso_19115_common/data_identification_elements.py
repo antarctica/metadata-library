@@ -1466,7 +1466,7 @@ class TemporalExtent(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(end_value) == 1:
-            if "period" not in _.keys():  # pragma: no cover
+            if "period" not in _.keys():
                 _["period"] = {}
             try:
                 _["period"]["end"] = decode_date_string(date_datetime=end_value[0])
