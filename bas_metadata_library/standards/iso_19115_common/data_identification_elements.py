@@ -1454,7 +1454,7 @@ class TemporalExtent(MetadataRecordElement):
                 _["period"] = {}
             try:
                 _["period"]["start"] = decode_date_string(date_datetime=begin_value[0])
-            except ValueError:  # pragma: no cover
+            except ValueError:
                 raise RuntimeError("Date/datetime could not be parsed as an ISO date value")
 
         end_value = self.record.xpath(
@@ -1466,7 +1466,7 @@ class TemporalExtent(MetadataRecordElement):
                 _["period"] = {}
             try:
                 _["period"]["end"] = decode_date_string(date_datetime=end_value[0])
-            except ValueError:  # pragma: no cover
+            except ValueError:
                 raise RuntimeError("Date/datetime could not be parsed as an ISO date value")
 
         return _

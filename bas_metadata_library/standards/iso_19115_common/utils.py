@@ -40,15 +40,9 @@ def _parse_date_properties(dictionary: dict) -> dict:
             _parse_date_properties(dictionary=v)
         elif isinstance(v, str) and (k == "date" or k == "date_stamp"):
             if "T" in v:
-                try:
-                    dictionary[k] = datetime.fromisoformat(v)
-                except ValueError:  # pragma: no cover
-                    pass
+                dictionary[k] = datetime.fromisoformat(v)
             else:
-                try:
-                    dictionary[k] = date.fromisoformat(v)
-                except ValueError:  # pragma: no cover
-                    pass
+                dictionary[k] = date.fromisoformat(v)
     return dictionary
 
 
