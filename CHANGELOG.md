@@ -68,6 +68,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+* Addressing test coverage exemptions
+  [#111](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/111)
 * Identifiers structure changed in v2 record configuration (`title` property is now `namespace`)
   [#105](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/105)
 * Constraints structure changed in v2 record configuration

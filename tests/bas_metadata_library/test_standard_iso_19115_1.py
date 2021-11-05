@@ -19,7 +19,7 @@ MonkeyPatch.patch_fromisoformat()
 #
 # This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
-from lxml.etree import ElementTree, XML, fromstring, tostring
+from lxml.etree import ElementTree, XML, fromstring, tostring, XMLParser
 
 from bas_metadata_library.standards.iso_19115_1 import (
     Namespaces,
@@ -1196,6 +1196,90 @@ def test_edge_case_identifier_without_href():
         namespaces=namespaces.nsmap(),
     )
     assert identifier_value is True
+
+
+def test_edge_case_datestamp_invalid_date():
+    with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
+        record_data = record_file.read()
+
+    # remove whitespace from record to allow easier manipulation
+    xml_parser = XMLParser(remove_blank_text=True)
+    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_data = tostring(record_element).decode()
+
+    # intentionally break record with an invalid datestamp
+    record_data = record_data.replace(
+        "<gmd:dateStamp><gco:Date>2018-10-18</gco:Date></gmd:dateStamp>",
+        "<gmd:dateStamp><gco:Date>?NotADate?</gco:Date></gmd:dateStamp>",
+    )
+
+    record = MetadataRecord(record=record_data)
+    with pytest.raises(RuntimeError) as e:
+        record.make_config()
+    assert e.value.args[0] == "Datestamp could not be parsed as an ISO date value"
+
+
+def test_edge_case_date_invalid_date():
+    with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
+        record_data = record_file.read()
+
+    # remove whitespace from record to allow easier manipulation
+    xml_parser = XMLParser(remove_blank_text=True)
+    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_data = tostring(record_element).decode()
+
+    # intentionally break record with an invalid datestamp
+    record_data = record_data.replace(
+        '<gmd:CI_Date><gmd:date><gco:Date>2018</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date>',
+        '<gmd:CI_Date><gmd:date><gco:Date>?NotADate?</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date>',
+    )
+
+    record = MetadataRecord(record=record_data)
+    with pytest.raises(RuntimeError) as e:
+        record.make_config()
+    assert e.value.args[0] == "Date/datetime could not be parsed as an ISO date value"
+
+
+def test_edge_case_temporal_extent_begin_invalid_date():
+    with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
+        record_data = record_file.read()
+
+    # remove whitespace from record to allow easier manipulation
+    xml_parser = XMLParser(remove_blank_text=True)
+    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_data = tostring(record_element).decode()
+
+    # intentionally break record with an invalid datestamp
+    record_data = record_data.replace(
+        "</gmd:EX_Extent>",
+        '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:beginPosition>?NotADate?</gml:beginPosition><gml:endPosition>2018-03</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
+    )
+
+    record = MetadataRecord(record=record_data)
+    with pytest.raises(RuntimeError) as e:
+        record.make_config()
+    assert e.value.args[0] == "Date/datetime could not be parsed as an ISO date value"
+
+
+def test_edge_case_temporal_extent_end_invalid_date():
+    with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
+        record_data = record_file.read()
+
+    # remove whitespace from record to allow easier manipulation
+    xml_parser = XMLParser(remove_blank_text=True)
+    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_data = tostring(record_element).decode()
+
+    # intentionally break record with an invalid datestamp
+    record_data = record_data.replace(
+        "</gmd:EX_Extent>",
+        '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:beginPosition>2018-03-15T00:00:00</gml:beginPosition><gml:endPosition>?NotADate?</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
+    )
+
+    record = MetadataRecord(record=record_data)
+    with pytest.raises(RuntimeError) as e:
+        record.make_config()
+    assert e.value.args[0] == "Date/datetime could not be parsed as an ISO date value"
 
 
 class MockResponse:
