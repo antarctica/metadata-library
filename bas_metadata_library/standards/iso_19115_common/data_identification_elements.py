@@ -1,7 +1,3 @@
-import requests
-
-from datetime import datetime
-
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
