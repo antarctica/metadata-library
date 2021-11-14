@@ -1337,6 +1337,263 @@ def test_edge_case_temporal_extent_begin_missing_date():
     assert "end" in config["identification"]["extent"]["temporal"]["period"]
 
 
+def test_edge_case_distribution_option_format_no_properties():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        }
+                    },
+                }
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config).generate_xml_document().decode()
+    record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
+    record = tostring(record_element).decode()
+    record = record.replace(
+        '<gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt"><gmd:name><gco:CharacterString>netCDF</gco:CharacterString></gmd:name><gmd:version gco:nilReason="missing"/></gmd:MD_Format>',
+        '<gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt"></gmd:MD_Format>',
+    )
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _record.make_config().config["distribution"][0]["distribution_options"] == [
+        {
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "function": "download",
+                }
+            }
+        }
+    ]
+
+
+def test_edge_case_distribution_option_transfer_options_no_properties():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        }
+                    },
+                }
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config).generate_xml_document().decode()
+    record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
+    record = tostring(record_element).decode()
+    record = record.replace(
+        '<gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo"><gmd:onLine><gmd:CI_OnlineResource><gmd:linkage><gmd:URL>https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371</gmd:URL></gmd:linkage><gmd:name><gco:CharacterString>Get Data</gco:CharacterString></gmd:name><gmd:description><gco:CharacterString>Download measurement data</gco:CharacterString></gmd:description><gmd:function><gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode></gmd:function></gmd:CI_OnlineResource></gmd:onLine></gmd:MD_DigitalTransferOptions>',
+        '<gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo"></gmd:MD_DigitalTransferOptions>',
+    )
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _record.make_config().config["distribution"][0]["distribution_options"] == [
+        {"transfer_option": {"format": "netCDF"}}
+    ]
+
+
+def test_edge_case_distribution_option_no_id():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        }
+                    },
+                }
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config).generate_xml_document().decode()
+    record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
+    record = tostring(record_element).decode()
+    record = record.replace('<gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt">', "<gmd:MD_Format>")
+    record = record.replace(
+        '<gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo">',
+        "<gmd:MD_DigitalTransferOptions>",
+    )
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["distribution"][0]["distribution_options"] == [
+        {"format": {"format": "netCDF"}},
+        {
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "function": "download",
+                }
+            }
+        },
+    ]
+
+
+def test_edge_case_distribution_option_more_formats_than_transfer_options():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        }
+                    },
+                },
+                {"format": {"format": "netCDF-x"}, "transfer_option": {"online_resource": {"href": ""}}},
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    del record.attributes["distribution"][0]["distribution_options"][1]["transfer_option"]
+    record = record.generate_xml_document().decode()
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["distribution"][0]["distribution_options"] == [
+        {
+            "format": {"format": "netCDF"},
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "function": "download",
+                }
+            },
+        },
+        {"transfer_option": {"format": "netCDF-x"}},
+    ]
+
+
+def test_edge_case_distribution_option_transfer_option_size_no_unit():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        },
+                        "size": {"magnitude": 40.0},
+                    },
+                },
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    record = record.generate_xml_document().decode()
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["distribution"][0]["distribution_options"][0]["transfer_option"]["size"] == {"magnitude": 40}
+
+
 class MockResponse:
     def raise_for_status(self):
         pass
