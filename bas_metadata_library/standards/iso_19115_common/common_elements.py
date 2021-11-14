@@ -89,7 +89,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(individual_href) > 0:
-            if "individual" not in _.keys():  # pragma: no cover
+            if "individual" not in _.keys():
                 _["individual"] = {}
             _["individual"]["href"] = individual_href[0]
 
@@ -98,8 +98,6 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(individual_title) > 0:
-            if "individual" not in _.keys():  # pragma: no cover
-                _["individual"] = {}
             _["individual"]["title"] = individual_title[0]
 
         organisation_name = self.record.xpath(
@@ -108,7 +106,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(organisation_name) > 0:
-            if "organisation" not in _.keys():  # pragma: no cover
+            if "organisation" not in _.keys():
                 _["organisation"] = {}
             _["organisation"]["name"] = organisation_name[0]
 
@@ -117,7 +115,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(organisation_href) > 0:
-            if "organisation" not in _.keys():  # pragma: no cover
+            if "organisation" not in _.keys():
                 _["organisation"] = {}
             _["organisation"]["href"] = organisation_href[0]
 
@@ -126,8 +124,6 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(organisation_title) > 0:
-            if "organisation" not in _.keys():  # pragma: no cover
-                _["organisation"] = {}
             _["organisation"]["title"] = organisation_title[0]
 
         phone_value = self.record.xpath(
@@ -154,7 +150,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(city_value) > 0:
-            if "address" not in _.keys():  # pragma: no cover
+            if "address" not in _.keys():
                 _["address"] = {}
             _["address"]["city"] = city_value[0]
 
@@ -164,7 +160,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(administrative_area_value) > 0:
-            if "address" not in _.keys():  # pragma: no cover
+            if "address" not in _.keys():
                 _["address"] = {}
             _["address"]["administrative_area"] = administrative_area_value[0]
 
@@ -174,7 +170,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(postal_code_value) > 0:
-            if "address" not in _.keys():  # pragma: no cover
+            if "address" not in _.keys():
                 _["address"] = {}
             _["address"]["postal_code"] = postal_code_value[0]
 
@@ -184,7 +180,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(country_value) > 0:
-            if "address" not in _.keys():  # pragma: no cover
+            if "address" not in _.keys():
                 _["address"] = {}
             _["address"]["country"] = country_value[0]
 
@@ -202,8 +198,6 @@ class ResponsibleParty(MetadataRecordElement):
             xpath=f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource",
         )
         _online_resource = online_resource.make_config()
-        if list(_online_resource.keys()) == ["function"] and _online_resource["function"] == "":  # pragma: no cover
-            _online_resource = {}
         if bool(_online_resource):
             _["online_resource"] = _online_resource
 
@@ -652,7 +646,7 @@ class Citation(MetadataRecordElement):
 
         title_href = self.record.xpath(f"{self.xpath}/gmd:title/gmx:Anchor/@xlink:href", namespaces=self.ns.nsmap())
         if len(title_href) == 1:
-            if "title" not in _.keys():  # pragma: no cover
+            if "title" not in _.keys():
                 _["title"] = {}
             _["title"]["href"] = title_href[0]
 

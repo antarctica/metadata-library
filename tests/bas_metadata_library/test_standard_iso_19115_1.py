@@ -1594,6 +1594,98 @@ def test_edge_case_distribution_option_transfer_option_size_no_unit():
     assert _config.config["distribution"][0]["distribution_options"][0]["transfer_option"]["size"] == {"magnitude": 40}
 
 
+def test_edge_case_citation_title_anchor_no_value_with_href():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["identification"]["keywords"] = [
+        {
+            "terms": [
+                {"term": "Atmospheric conditions", "href": "https://www.eionet.europa.eu/gemet/en/inspire-theme/ac"}
+            ],
+            "type": "theme",
+            "thesaurus": {
+                "title": {
+                    "value": "General Multilingual Environmental Thesaurus - INSPIRE themes",
+                    "href": "http://www.eionet.europa.eu/gemet/inspire_themes",
+                },
+                "dates": {"publication": {"date": datetime.date(2018, 8, 16)}},
+                "edition": "4.1.2",
+                "contact": {
+                    "organisation": {
+                        "name": "European Environment Information and Observation Network (EIONET), European Environment Agency (EEA)"
+                    },
+                    "email": "helpdesk@eionet.europa.eu",
+                    "online_resource": {
+                        "href": "https://www.eionet.europa.eu/gemet/en/themes/",
+                        "title": "General Multilingual Environmental Thesaurus (GEMET) themes",
+                        "function": "information",
+                    },
+                    "role": ["publisher"],
+                },
+            },
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    record = record.generate_xml_document().decode()
+    record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
+    record = tostring(record_element).decode()
+    record = record.replace("General Multilingual Environmental Thesaurus - INSPIRE themes", "")
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["identification"]["keywords"][0]["thesaurus"]["title"] == {
+        "href": "http://www.eionet.europa.eu/gemet/inspire_themes"
+    }
+
+
+@pytest.mark.parametrize("contact_type", ["individual", "organisation"])
+def test_edge_case_responsible_party_anchor_no_value_with_href(contact_type):
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["metadata"]["contacts"][0][contact_type] = {"name": "*Name to be removed*", "href": "*Test value*"}
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    record = record.generate_xml_document().decode()
+    record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
+    record = tostring(record_element).decode()
+    record = record.replace("*Name to be removed*", "")
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["metadata"]["contacts"][0][contact_type] == {"href": "*Test value*"}
+
+
+@pytest.mark.parametrize(
+    "address_config",
+    [
+        {
+            "city": "Cambridge",
+            "administrative_area": "Cambridgeshire",
+            "postal_code": "CB3 0ET",
+            "country": "United Kingdom",
+        },
+        {
+            "administrative_area": "Cambridgeshire",
+            "postal_code": "CB3 0ET",
+            "country": "United Kingdom",
+        },
+        {
+            "postal_code": "CB3 0ET",
+            "country": "United Kingdom",
+        },
+        {
+            "country": "United Kingdom",
+        },
+    ],
+)
+def test_edge_case_responsible_party_incomplete_address(address_config):
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["metadata"]["contacts"][0]["address"] = address_config
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    record = record.generate_xml_document().decode()
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["metadata"]["contacts"][0]["address"] == address_config
+
+
 class MockResponse:
     def raise_for_status(self):
         pass
