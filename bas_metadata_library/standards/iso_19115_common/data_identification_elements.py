@@ -1,7 +1,3 @@
-import requests
-
-from datetime import datetime
-
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
@@ -191,7 +187,7 @@ class DataIdentification(MetadataRecordElement):
             xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution",
         )
         _spatial_resolution = spatial_resolution.make_config()
-        if _spatial_resolution != "":  # pragma: no cover
+        if _spatial_resolution != "":
             _["spatial_resolution"] = _spatial_resolution
 
         language = Language(
@@ -209,7 +205,7 @@ class DataIdentification(MetadataRecordElement):
             xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:characterSet",
         )
         _character_set = character_set.make_config()
-        if _character_set != "":  # pragma: no cover
+        if _character_set != "":
             _["character_set"] = _character_set
 
         _topic_categories = []
@@ -369,7 +365,7 @@ class DataIdentification(MetadataRecordElement):
             )
             status.make_element()
 
-        if "spatial_resolution" in self.attributes["identification"]:  # pragma: no cover
+        if "spatial_resolution" in self.attributes["identification"]:
             spatial_resolution = SpatialResolution(
                 record=self.record,
                 attributes=self.attributes,
@@ -1099,12 +1095,12 @@ class SpatialRepresentationType(CodeListElement):
         self.attribute = "spatial_representation_type"
 
 
-class SpatialResolution(MetadataRecordElement):  # pragma: no cover
+class SpatialResolution(MetadataRecordElement):
     def make_config(self) -> str:
         _ = ""
 
         spatial_resolution_value = self.record.xpath(
-            f"{self.xpath}/gmd:MD_Resolution/gco:Distance/text()", namespaces=self.ns.nsmap()
+            f"{self.xpath}/gmd:MD_Resolution/gmd:distance/gco:Distance/text()", namespaces=self.ns.nsmap()
         )
         if len(spatial_resolution_value) == 1:
             _ = spatial_resolution_value[0]
@@ -1117,8 +1113,12 @@ class SpatialResolution(MetadataRecordElement):  # pragma: no cover
 
         if self.element_attributes["spatial_resolution"] is None:
             SubElement(
-                resolution_element, f"{{{self.ns.gco}}}Distance", attrib={f"{{{self.ns.gco}}}nilReason": "inapplicable"}
+                resolution_element, f"{{{self.ns.gmd}}}distance", attrib={f"{{{self.ns.gco}}}nilReason": "inapplicable"}
             )
+        else:
+            distance_element = SubElement(resolution_element, f"{{{self.ns.gmd}}}distance")
+            distance_value = SubElement(distance_element, f"{{{self.ns.gco}}}Distance")
+            distance_value.text = self.element_attributes["spatial_resolution"]
 
 
 class TopicCategory(MetadataRecordElement):
@@ -1462,7 +1462,7 @@ class TemporalExtent(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(end_value) == 1:
-            if "period" not in _.keys():  # pragma: no cover
+            if "period" not in _.keys():
                 _["period"] = {}
             try:
                 _["period"]["end"] = decode_date_string(date_datetime=end_value[0])

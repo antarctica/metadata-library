@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import date
 from typing import Optional
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
@@ -120,8 +120,6 @@ class Contact(MetadataRecordElement):
     def make_config(self) -> dict:
         responsible_party = ResponsibleParty(record=self.record, attributes=self.attributes, xpath=self.xpath)
         _responsible_party = responsible_party.make_config()
-        if not bool(_responsible_party):  # pragma: no cover
-            return {}
 
         return _responsible_party
 
@@ -243,8 +241,6 @@ class ReferenceSystemInfo(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(code_href) == 1:
-            if "code" not in _.keys():  # pragma: no cover
-                _["code"] = {}
             _["code"]["href"] = code_href[0]
 
         version_value = self.record.xpath(

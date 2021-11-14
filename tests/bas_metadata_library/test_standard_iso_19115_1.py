@@ -13,8 +13,6 @@ from jsonschema import ValidationError
 # Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
 from backports.datetime_fromisoformat import MonkeyPatch
 
-MonkeyPatch.patch_fromisoformat()
-
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
@@ -42,6 +40,9 @@ from tests.resources.configs.iso19115_1_standard import (
 )
 
 from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently, encode_date_string
+
+
+MonkeyPatch.patch_fromisoformat()
 
 standard = "iso-19115-1"
 namespaces = Namespaces()
@@ -778,26 +779,51 @@ def test_identification_spatial_representation_type(get_record_response, config_
     assert spatial_representation_type_elements is True
 
 
+def _test_identification_spatial_resolution(record, config):
+    if "identification" not in config or "spatial_resolution" not in config["identification"]:
+        pytest.skip("record does not contain an identification spatial resolution")
+
+    if config["identification"]["spatial_resolution"] is None:
+        spatial_resolution_value = record.xpath(
+            "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution"
+            "/gmd:distance/@gco:nilReason = 'inapplicable'",
+            namespaces=namespaces.nsmap(),
+        )
+    elif config["identification"]["spatial_resolution"] is not None:
+        spatial_resolution_value = record.xpath(
+            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution"
+            f"/gmd:distance/gco:Distance/text() = '{config['identification']['spatial_resolution']}'",
+            namespaces=namespaces.nsmap(),
+        )
+    else:
+        spatial_resolution_value = False
+
+    assert spatial_resolution_value is True
+
+
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
 def test_identification_spatial_resolution(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
+    _test_identification_spatial_resolution(record=record, config=config)
 
-    if "identification" not in config or "spatial_resolution" not in config["identification"]:
-        pytest.skip("record does not contain an identification spatial resolution")
 
-    if config["identification"]["spatial_resolution"] is not None:
-        raise NotImplementedError(
-            "Testing support for spatial resolutions other than 'inapplicable' has not yet been added"
-        )
+@pytest.mark.usefixtures("get_record_response")
+@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
+def test_identification_character_set(get_record_response, config_name):
+    record = get_record_response(standard=standard, config=config_name)
+    config = configs_safe_v2[config_name]
 
-    spatial_resolution_value = record.xpath(
-        "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution"
-        "/gmd:distance/@gco:nilReason = 'inapplicable'",
+    if "identification" not in config or "character_set" not in config["identification"]:
+        pytest.skip("record does not contain an identification character set")
+
+    # noinspection HttpUrlsUsage
+    character_string_value = record.xpath(
+        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:characterSet/gmd:MD_CharacterSetCode/text() = '{config['identification']['character_set']}'",
         namespaces=namespaces.nsmap(),
     )
-    assert spatial_resolution_value is True
+    assert character_string_value is True
 
 
 @pytest.mark.usefixtures("get_record_response")
@@ -1201,39 +1227,37 @@ def test_edge_case_identifier_without_href():
 def test_edge_case_datestamp_invalid_date():
     with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
         record_data = record_file.read()
-
-    # remove whitespace from record to allow easier manipulation
-    xml_parser = XMLParser(remove_blank_text=True)
-    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
-
-    # intentionally break record with an invalid datestamp
     record_data = record_data.replace(
         "<gmd:dateStamp><gco:Date>2018-10-18</gco:Date></gmd:dateStamp>",
         "<gmd:dateStamp><gco:Date>?NotADate?</gco:Date></gmd:dateStamp>",
     )
-
     record = MetadataRecord(record=record_data)
     with pytest.raises(RuntimeError) as e:
         record.make_config()
     assert e.value.args[0] == "Datestamp could not be parsed as an ISO date value"
 
 
+def test_edge_case_spatial_resolution_null():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["identification"]["spatial_resolution"] = None
+    config_ = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config_).generate_xml_document()
+    record = fromstring(record)
+
+    _test_identification_spatial_resolution(record=record, config=config)
+
+
 def test_edge_case_date_invalid_date():
     with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
         record_data = record_file.read()
-
-    # remove whitespace from record to allow easier manipulation
-    xml_parser = XMLParser(remove_blank_text=True)
-    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
-
-    # intentionally break record with an invalid datestamp
     record_data = record_data.replace(
         '<gmd:CI_Date><gmd:date><gco:Date>2018</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date>',
         '<gmd:CI_Date><gmd:date><gco:Date>?NotADate?</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date>',
     )
-
     record = MetadataRecord(record=record_data)
     with pytest.raises(RuntimeError) as e:
         record.make_config()
@@ -1243,18 +1267,12 @@ def test_edge_case_date_invalid_date():
 def test_edge_case_temporal_extent_begin_invalid_date():
     with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
         record_data = record_file.read()
-
-    # remove whitespace from record to allow easier manipulation
-    xml_parser = XMLParser(remove_blank_text=True)
-    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
-
-    # intentionally break record with an invalid datestamp
     record_data = record_data.replace(
         "</gmd:EX_Extent>",
         '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:beginPosition>?NotADate?</gml:beginPosition><gml:endPosition>2018-03</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
     )
-
     record = MetadataRecord(record=record_data)
     with pytest.raises(RuntimeError) as e:
         record.make_config()
@@ -1264,22 +1282,379 @@ def test_edge_case_temporal_extent_begin_invalid_date():
 def test_edge_case_temporal_extent_end_invalid_date():
     with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
         record_data = record_file.read()
-
-    # remove whitespace from record to allow easier manipulation
-    xml_parser = XMLParser(remove_blank_text=True)
-    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
-
-    # intentionally break record with an invalid datestamp
     record_data = record_data.replace(
         "</gmd:EX_Extent>",
         '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:beginPosition>2018-03-15T00:00:00</gml:beginPosition><gml:endPosition>?NotADate?</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
     )
-
     record = MetadataRecord(record=record_data)
     with pytest.raises(RuntimeError) as e:
         record.make_config()
     assert e.value.args[0] == "Date/datetime could not be parsed as an ISO date value"
+
+
+def test_edge_case_temporal_extent_begin_missing_date():
+    with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
+        record_data = record_file.read()
+    record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
+    record_data = tostring(record_element).decode()
+    record_data = record_data.replace(
+        "</gmd:EX_Extent>",
+        '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:endPosition>2018-03</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
+    )
+    record = MetadataRecord(record=record_data)
+    config = record.make_config().config
+    assert "end" in config["identification"]["extent"]["temporal"]["period"]
+
+
+def test_edge_case_distribution_option_format_no_properties():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        }
+                    },
+                }
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config).generate_xml_document().decode()
+    record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
+    record = tostring(record_element).decode()
+    record = record.replace(
+        '<gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt"><gmd:name><gco:CharacterString>netCDF</gco:CharacterString></gmd:name><gmd:version gco:nilReason="missing"/></gmd:MD_Format>',
+        '<gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt"></gmd:MD_Format>',
+    )
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _record.make_config().config["distribution"][0]["distribution_options"] == [
+        {
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "function": "download",
+                }
+            }
+        }
+    ]
+
+
+def test_edge_case_distribution_option_transfer_options_no_properties():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        }
+                    },
+                }
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config).generate_xml_document().decode()
+    record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
+    record = tostring(record_element).decode()
+    record = record.replace(
+        '<gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo"><gmd:onLine><gmd:CI_OnlineResource><gmd:linkage><gmd:URL>https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371</gmd:URL></gmd:linkage><gmd:name><gco:CharacterString>Get Data</gco:CharacterString></gmd:name><gmd:description><gco:CharacterString>Download measurement data</gco:CharacterString></gmd:description><gmd:function><gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode></gmd:function></gmd:CI_OnlineResource></gmd:onLine></gmd:MD_DigitalTransferOptions>',
+        '<gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo"></gmd:MD_DigitalTransferOptions>',
+    )
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _record.make_config().config["distribution"][0]["distribution_options"] == [
+        {"transfer_option": {"format": "netCDF"}}
+    ]
+
+
+def test_edge_case_distribution_option_no_id():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        }
+                    },
+                }
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config).generate_xml_document().decode()
+    record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
+    record = tostring(record_element).decode()
+    record = record.replace('<gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt">', "<gmd:MD_Format>")
+    record = record.replace(
+        '<gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo">',
+        "<gmd:MD_DigitalTransferOptions>",
+    )
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["distribution"][0]["distribution_options"] == [
+        {"format": {"format": "netCDF"}},
+        {
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "function": "download",
+                }
+            }
+        },
+    ]
+
+
+def test_edge_case_distribution_option_more_formats_than_transfer_options():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        }
+                    },
+                },
+                {"format": {"format": "netCDF-x"}, "transfer_option": {"online_resource": {"href": ""}}},
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    del record.attributes["distribution"][0]["distribution_options"][1]["transfer_option"]
+    record = record.generate_xml_document().decode()
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["distribution"][0]["distribution_options"] == [
+        {
+            "format": {"format": "netCDF"},
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "function": "download",
+                }
+            },
+        },
+        {"transfer_option": {"format": "netCDF-x"}},
+    ]
+
+
+def test_edge_case_distribution_option_transfer_option_size_no_unit():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "netCDF"},
+                    "transfer_option": {
+                        "online_resource": {
+                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                            "title": "Get Data",
+                            "description": "Download measurement data",
+                            "function": "download",
+                        },
+                        "size": {"magnitude": 40.0},
+                    },
+                },
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    record = record.generate_xml_document().decode()
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["distribution"][0]["distribution_options"][0]["transfer_option"]["size"] == {"magnitude": 40}
+
+
+def test_edge_case_citation_title_anchor_no_value_with_href():
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["identification"]["keywords"] = [
+        {
+            "terms": [
+                {"term": "Atmospheric conditions", "href": "https://www.eionet.europa.eu/gemet/en/inspire-theme/ac"}
+            ],
+            "type": "theme",
+            "thesaurus": {
+                "title": {
+                    "value": "General Multilingual Environmental Thesaurus - INSPIRE themes",
+                    "href": "http://www.eionet.europa.eu/gemet/inspire_themes",
+                },
+                "dates": {"publication": {"date": datetime.date(2018, 8, 16)}},
+                "edition": "4.1.2",
+                "contact": {
+                    "organisation": {
+                        "name": "European Environment Information and Observation Network (EIONET), European Environment Agency (EEA)"
+                    },
+                    "email": "helpdesk@eionet.europa.eu",
+                    "online_resource": {
+                        "href": "https://www.eionet.europa.eu/gemet/en/themes/",
+                        "title": "General Multilingual Environmental Thesaurus (GEMET) themes",
+                        "function": "information",
+                    },
+                    "role": ["publisher"],
+                },
+            },
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    record = record.generate_xml_document().decode()
+    record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
+    record = tostring(record_element).decode()
+    record = record.replace("General Multilingual Environmental Thesaurus - INSPIRE themes", "")
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["identification"]["keywords"][0]["thesaurus"]["title"] == {
+        "href": "http://www.eionet.europa.eu/gemet/inspire_themes"
+    }
+
+
+@pytest.mark.parametrize("contact_type", ["individual", "organisation"])
+def test_edge_case_responsible_party_anchor_no_value_with_href(contact_type):
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["metadata"]["contacts"][0][contact_type] = {"name": "*Name to be removed*", "href": "*Test value*"}
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    record = record.generate_xml_document().decode()
+    record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
+    record = tostring(record_element).decode()
+    record = record.replace("*Name to be removed*", "")
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["metadata"]["contacts"][0][contact_type] == {"href": "*Test value*"}
+
+
+@pytest.mark.parametrize(
+    "address_config",
+    [
+        {
+            "city": "Cambridge",
+            "administrative_area": "Cambridgeshire",
+            "postal_code": "CB3 0ET",
+            "country": "United Kingdom",
+        },
+        {
+            "administrative_area": "Cambridgeshire",
+            "postal_code": "CB3 0ET",
+            "country": "United Kingdom",
+        },
+        {
+            "postal_code": "CB3 0ET",
+            "country": "United Kingdom",
+        },
+        {
+            "country": "United Kingdom",
+        },
+    ],
+)
+def test_edge_case_responsible_party_incomplete_address(address_config):
+    config = deepcopy(configs_safe_v2["complete_v2"])
+    config["metadata"]["contacts"][0]["address"] = address_config
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    record = record.generate_xml_document().decode()
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["metadata"]["contacts"][0]["address"] == address_config
 
 
 class MockResponse:

@@ -181,19 +181,19 @@ class Distribution(MetadataRecordElement):
                 del distribution_format["_id"]
                 _distribution_formats[_id] = distribution_format
                 continue
-            _unmatched_distribution_formats.append(distribution_format)  # pragma: no cover
+            _unmatched_distribution_formats.append(distribution_format)
         for transfer_option in transfer_options:
             if "_id" in transfer_option:
                 _id = transfer_option["_id"]
                 del transfer_option["_id"]
                 _transfer_options[_id] = transfer_option
                 continue
-            _unmatched_transfer_options.append(transfer_option)  # pragma: no cover
+            _unmatched_transfer_options.append(transfer_option)
 
         # try to match up items or add to unmatched list
         if len(_distribution_formats) >= len(_transfer_options):
             for fmt_id, distribution_format in _distribution_formats.items():
-                if fmt_id not in _transfer_options.keys():  # pragma: no cover
+                if fmt_id not in _transfer_options.keys():
                     _unmatched_transfer_options.append(distribution_format)
                     continue
 
@@ -216,7 +216,7 @@ class Distribution(MetadataRecordElement):
 
         # add all unmatched items as non-complete distribution options
         for unmatched_distribution_format in _unmatched_distribution_formats:
-            distribution_options.append({"format": unmatched_distribution_format})  # pragma: no cover
+            distribution_options.append({"format": unmatched_distribution_format})
         for unmatched_transfer_options in _unmatched_transfer_options:
             distribution_options.append({"transfer_option": unmatched_transfer_options})
 
@@ -227,8 +227,6 @@ class Distributor(MetadataRecordElement):
     def make_config(self) -> dict:
         responsible_party = ResponsibleParty(record=self.record, attributes=self.attributes, xpath=self.xpath)
         _responsible_party = responsible_party.make_config()
-        if not bool(_responsible_party):  # pragma: no cover
-            return {}
 
         return _responsible_party
 
@@ -275,10 +273,10 @@ class DistributorFormat(MetadataRecordElement):
             f"{self.xpath}/gmd:MD_Format/gmd:version/gco:CharacterString/text()",
             namespaces=self.ns.nsmap(),
         )
-        if len(version_value) == 1:  # pragma: no cover
+        if len(version_value) == 1:
             _["version"] = version_value[0]
 
-        if list(_.keys()) == ["_id"]:  # pragma: no cover
+        if list(_.keys()) == ["_id"]:
             _ = {}
         return _
 
@@ -338,7 +336,7 @@ class DistributorTransferOption(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(size_magnitude) == 1:
-            if "size" not in _.keys():  # pragma: no cover
+            if "size" not in _.keys():
                 _["size"] = {}
             _["size"]["magnitude"] = format_numbers_consistently(size_magnitude[0])
 
@@ -348,12 +346,10 @@ class DistributorTransferOption(MetadataRecordElement):
             xpath=f"{self.xpath}/gmd:MD_DigitalTransferOptions/gmd:onLine",
         )
         _online_resource = online_resource.make_config()
-        if list(_online_resource.keys()) == ["function"] and _online_resource["function"] == "":  # pragma: no cover
-            _online_resource = {}
         if bool(_online_resource):
             _["online_resource"] = _online_resource
 
-        if list(_.keys()) == ["_id"]:  # pragma: no cover
+        if list(_.keys()) == ["_id"]:
             _ = {}
         return _
 

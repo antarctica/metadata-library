@@ -55,6 +55,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+* Adding missing tests for code coverage
+  [#111](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/111)
 * Configuration schema for temporal extent structure to allow date precision qualifier to be set
   [#99](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/99)
 * Corrected `gco:nillReason` for missing data transfer formats (from `unknown` to `missing`)

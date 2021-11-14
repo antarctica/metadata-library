@@ -110,10 +110,6 @@ class ISOMetadataRecord(MetadataRecordElement):
         if "identification" in _.keys() and "contacts" in _["identification"].keys():
             _["identification"]["contacts"] = contacts_condense_roles(contacts=_["identification"]["contacts"])
 
-        if not _["metadata"]:  # pragma: no cover
-            del _["metadata"]
-        if not _["identification"]:  # pragma: no cover
-            del _["identification"]
         if not _["distribution"]:
             del _["distribution"]
 
