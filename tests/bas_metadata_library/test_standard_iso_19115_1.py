@@ -13,8 +13,6 @@ from jsonschema import ValidationError
 # Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
 from backports.datetime_fromisoformat import MonkeyPatch
 
-MonkeyPatch.patch_fromisoformat()
-
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
@@ -42,6 +40,9 @@ from tests.resources.configs.iso19115_1_standard import (
 )
 
 from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently, encode_date_string
+
+
+MonkeyPatch.patch_fromisoformat()
 
 standard = "iso-19115-1"
 namespaces = Namespaces()
@@ -1226,18 +1227,12 @@ def test_edge_case_identifier_without_href():
 def test_edge_case_datestamp_invalid_date():
     with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
         record_data = record_file.read()
-
-    # remove whitespace from record to allow easier manipulation
-    xml_parser = XMLParser(remove_blank_text=True)
-    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
-
-    # intentionally break record with an invalid datestamp
     record_data = record_data.replace(
         "<gmd:dateStamp><gco:Date>2018-10-18</gco:Date></gmd:dateStamp>",
         "<gmd:dateStamp><gco:Date>?NotADate?</gco:Date></gmd:dateStamp>",
     )
-
     record = MetadataRecord(record=record_data)
     with pytest.raises(RuntimeError) as e:
         record.make_config()
@@ -1257,18 +1252,12 @@ def test_edge_case_spatial_resolution_null():
 def test_edge_case_date_invalid_date():
     with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
         record_data = record_file.read()
-
-    # remove whitespace from record to allow easier manipulation
-    xml_parser = XMLParser(remove_blank_text=True)
-    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
-
-    # intentionally break record with an invalid datestamp
     record_data = record_data.replace(
         '<gmd:CI_Date><gmd:date><gco:Date>2018</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date>',
         '<gmd:CI_Date><gmd:date><gco:Date>?NotADate?</gco:Date></gmd:date><gmd:dateType><gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode></gmd:dateType></gmd:CI_Date>',
     )
-
     record = MetadataRecord(record=record_data)
     with pytest.raises(RuntimeError) as e:
         record.make_config()
@@ -1278,18 +1267,12 @@ def test_edge_case_date_invalid_date():
 def test_edge_case_temporal_extent_begin_invalid_date():
     with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
         record_data = record_file.read()
-
-    # remove whitespace from record to allow easier manipulation
-    xml_parser = XMLParser(remove_blank_text=True)
-    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
-
-    # intentionally break record with an invalid datestamp
     record_data = record_data.replace(
         "</gmd:EX_Extent>",
         '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:beginPosition>?NotADate?</gml:beginPosition><gml:endPosition>2018-03</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
     )
-
     record = MetadataRecord(record=record_data)
     with pytest.raises(RuntimeError) as e:
         record.make_config()
@@ -1299,18 +1282,12 @@ def test_edge_case_temporal_extent_begin_invalid_date():
 def test_edge_case_temporal_extent_end_invalid_date():
     with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
         record_data = record_file.read()
-
-    # remove whitespace from record to allow easier manipulation
-    xml_parser = XMLParser(remove_blank_text=True)
-    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
-
-    # intentionally break record with an invalid datestamp
     record_data = record_data.replace(
         "</gmd:EX_Extent>",
         '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:beginPosition>2018-03-15T00:00:00</gml:beginPosition><gml:endPosition>?NotADate?</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
     )
-
     record = MetadataRecord(record=record_data)
     with pytest.raises(RuntimeError) as e:
         record.make_config()
@@ -1320,18 +1297,12 @@ def test_edge_case_temporal_extent_end_invalid_date():
 def test_edge_case_temporal_extent_begin_missing_date():
     with open(f"tests/resources/records/iso-19115-1/minimal_v2-record.xml") as record_file:
         record_data = record_file.read()
-
-    # remove whitespace from record to allow easier manipulation
-    xml_parser = XMLParser(remove_blank_text=True)
-    record_element = XML(record_data.encode(), parser=xml_parser)
+    record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
-
-    # intentionally break record with an invalid datestamp
     record_data = record_data.replace(
         "</gmd:EX_Extent>",
         '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:endPosition>2018-03</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
     )
-
     record = MetadataRecord(record=record_data)
     config = record.make_config().config
     assert "end" in config["identification"]["extent"]["temporal"]["period"]
