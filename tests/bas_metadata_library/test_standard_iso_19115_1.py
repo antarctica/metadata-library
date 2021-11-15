@@ -865,7 +865,7 @@ def test_identification_topics(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_identification_geographic_bounding_box_extent(get_record_response, config_name):
+def test_identification_geographic_extent_bounding_box(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
@@ -875,7 +875,7 @@ def test_identification_geographic_bounding_box_extent(get_record_response, conf
         or "geographic" not in config["identification"]["extent"]
         or "bounding_box" not in config["identification"]["extent"]["geographic"]
     ):
-        pytest.skip("record does not contain a geographic bounding box extent")
+        pytest.skip("record does not contain a geographic extent bounding box")
 
     west_bounding_box_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
@@ -908,6 +908,32 @@ def test_identification_geographic_bounding_box_extent(get_record_response, conf
         namespaces=namespaces.nsmap(),
     )
     assert north_bounding_box_value is True
+
+
+@pytest.mark.usefixtures("get_record_response")
+@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
+def test_identification_geographic_extent_identifier(get_record_response, config_name):
+    record = get_record_response(standard=standard, config=config_name)
+    config = configs_safe_v2[config_name]
+
+    if (
+        "identification" not in config
+        or "extent" not in config["identification"]
+        or "geographic" not in config["identification"]["extent"]
+        or "identifier" not in config["identification"]["extent"]["geographic"]
+    ):
+        pytest.skip("record does not contain a geographic extent identifier")
+
+    geographic_extent_identifier_elements = record.xpath(
+        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription",
+        namespaces=namespaces.nsmap(),
+    )
+    assert len(geographic_extent_identifier_elements) == 1
+    assert_identifier(
+        element=geographic_extent_identifier_elements[0],
+        config=config["identification"]["extent"]["geographic"]["identifier"],
+        identifier_container="gmd:geographicIdentifier",
+    )
 
 
 @pytest.mark.usefixtures("get_record_response")

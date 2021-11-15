@@ -1683,7 +1683,12 @@
                                     "title": "Bounding box",
                                     "description": "A set of coordinates for a rectangle that encloses the resource.",
                                     "type": "object",
-                                    "required": [],
+                                    "required": [
+                                        "west_longitude",
+                                        "east_longitude",
+                                        "south_latitude",
+                                        "north_latitude"
+                                    ],
                                     "additionalProperties": false,
                                     "properties": {
                                         "west_longitude": {
@@ -1727,6 +1732,51 @@
                                             ]
                                         }
                                     }
+                                },
+                                "identifier": {
+                                    "allOf": [
+                                        {
+                                            "title": "Geographic Identifier",
+                                            "description": "A geographic identifier relating to the area or location of the resource."
+                                        },
+                                        {
+                                            "title": "Identifier",
+                                            "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                            "type": "object",
+                                            "required": [
+                                                "identifier"
+                                            ],
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "identifier": {
+                                                    "title": "Identifier (value)",
+                                                    "description": "Identifier value, this may be a URL.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                    ]
+                                                },
+                                                "href": {
+                                                    "title": "URL",
+                                                    "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                                    "type": "string",
+                                                    "format": "uri",
+                                                    "examples": [
+                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                    ]
+                                                },
+                                                "namespace": {
+                                                    "title": "Namespace",
+                                                    "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "doi",
+                                                        "orcid"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
                             }
                         },
@@ -2041,7 +2091,12 @@
                             "title": "Bounding box",
                             "description": "A set of coordinates for a rectangle that encloses the resource.",
                             "type": "object",
-                            "required": [],
+                            "required": [
+                                "west_longitude",
+                                "east_longitude",
+                                "south_latitude",
+                                "north_latitude"
+                            ],
                             "additionalProperties": false,
                             "properties": {
                                 "west_longitude": {
@@ -2085,6 +2140,51 @@
                                     ]
                                 }
                             }
+                        },
+                        "identifier": {
+                            "allOf": [
+                                {
+                                    "title": "Geographic Identifier",
+                                    "description": "A geographic identifier relating to the area or location of the resource."
+                                },
+                                {
+                                    "title": "Identifier",
+                                    "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                    "type": "object",
+                                    "required": [
+                                        "identifier"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "identifier": {
+                                            "title": "Identifier (value)",
+                                            "description": "Identifier value, this may be a URL.",
+                                            "type": "string",
+                                            "examples": [
+                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                            ]
+                                        },
+                                        "href": {
+                                            "title": "URL",
+                                            "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                            "type": "string",
+                                            "format": "uri",
+                                            "examples": [
+                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                            ]
+                                        },
+                                        "namespace": {
+                                            "title": "Namespace",
+                                            "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                                            "type": "string",
+                                            "examples": [
+                                                "doi",
+                                                "orcid"
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 },
@@ -5962,7 +6062,12 @@
                                             "title": "Bounding box",
                                             "description": "A set of coordinates for a rectangle that encloses the resource.",
                                             "type": "object",
-                                            "required": [],
+                                            "required": [
+                                                "west_longitude",
+                                                "east_longitude",
+                                                "south_latitude",
+                                                "north_latitude"
+                                            ],
                                             "additionalProperties": false,
                                             "properties": {
                                                 "west_longitude": {
@@ -6006,6 +6111,51 @@
                                                     ]
                                                 }
                                             }
+                                        },
+                                        "identifier": {
+                                            "allOf": [
+                                                {
+                                                    "title": "Geographic Identifier",
+                                                    "description": "A geographic identifier relating to the area or location of the resource."
+                                                },
+                                                {
+                                                    "title": "Identifier",
+                                                    "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                                    "type": "object",
+                                                    "required": [
+                                                        "identifier"
+                                                    ],
+                                                    "additionalProperties": false,
+                                                    "properties": {
+                                                        "identifier": {
+                                                            "title": "Identifier (value)",
+                                                            "description": "Identifier value, this may be a URL.",
+                                                            "type": "string",
+                                                            "examples": [
+                                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                            ]
+                                                        },
+                                                        "href": {
+                                                            "title": "URL",
+                                                            "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                                            "type": "string",
+                                                            "format": "uri",
+                                                            "examples": [
+                                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                            ]
+                                                        },
+                                                        "namespace": {
+                                                            "title": "Namespace",
+                                                            "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                                                            "type": "string",
+                                                            "examples": [
+                                                                "doi",
+                                                                "orcid"
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            ]
                                         }
                                     }
                                 },

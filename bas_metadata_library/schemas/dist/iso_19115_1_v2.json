@@ -719,7 +719,12 @@
                     "title": "Bounding box",
                     "description": "A set of coordinates for a rectangle that encloses the resource.",
                     "type": "object",
-                    "required": [],
+                    "required": [
+                        "west_longitude",
+                        "east_longitude",
+                        "south_latitude",
+                        "north_latitude"
+                    ],
                     "additionalProperties": false,
                     "properties": {
                         "west_longitude": {
@@ -763,6 +768,17 @@
                             ]
                         }
                     }
+                },
+                "identifier": {
+                    "allOf": [
+                        {
+                            "title": "Geographic Identifier",
+                            "description": "A geographic identifier relating to the area or location of the resource."
+                        },
+                        {
+                            "$ref": "#/definitions/identifier"
+                        }
+                    ]
                 }
             }
         },

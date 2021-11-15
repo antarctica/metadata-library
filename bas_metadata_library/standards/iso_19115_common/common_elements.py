@@ -885,6 +885,7 @@ class Identifier(MetadataRecordElement):
             element_attributes=element_attributes,
             xpath=f"{xpath}/gmd:RS_Identifier",
         )
+        self.identifier_container = f"{{{self.ns.gmd}}}identifier"
 
     def make_config(self) -> dict:
         _ = {}
@@ -909,7 +910,7 @@ class Identifier(MetadataRecordElement):
         return _
 
     def make_element(self):
-        identifier_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}identifier")
+        identifier_container = SubElement(self.parent_element, self.identifier_container)
         identifier_wrapper = SubElement(identifier_container, f"{{{self.ns.gmd}}}RS_Identifier")
         identifier_element = SubElement(identifier_wrapper, f"{{{self.ns.gmd}}}code")
 
