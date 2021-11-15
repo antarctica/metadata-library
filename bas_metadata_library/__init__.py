@@ -197,15 +197,15 @@ class MetadataRecordElement(object):
 
     def __init__(
         self,
-        record: MetadataRecord,
+        record: Element,
         attributes: dict,
         parent_element: Element = None,
         element_attributes: dict = None,
         xpath: str = None,
     ):
         """
-        :type record: MetadataRecord
-        :param record: Overall root element of a metadata record
+        :type record: Element
+        :param record: overall root element of a metadata record
         :type attributes: dict
         :param attributes: all attributes for a metadata record, from a record's configuration
         :type parent_element: Element
