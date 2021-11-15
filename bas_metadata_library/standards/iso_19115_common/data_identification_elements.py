@@ -1218,6 +1218,15 @@ class GeographicExtent(MetadataRecordElement):
         if bool(_bounding_box):
             _["bounding_box"] = _bounding_box
 
+        identifier = Identifier(
+            record=self.record,
+            attributes=self.attributes,
+            xpath=f"{self.xpath}/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier",
+        )
+        _identifier = identifier.make_config()
+        if bool(_identifier):
+            _["identifier"] = _identifier
+
         return _
 
     def make_element(self):
@@ -1231,6 +1240,19 @@ class GeographicExtent(MetadataRecordElement):
                 element_attributes=self.element_attributes["bounding_box"],
             )
             bounding_box.make_element()
+
+        if "identifier" in self.element_attributes:
+            geographic_description_element = SubElement(
+                geographic_extent_element, f"{{{self.ns.gmd}}}EX_GeographicDescription"
+            )
+            identifier = Identifier(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=geographic_description_element,
+                element_attributes=self.element_attributes["identifier"],
+            )
+            identifier.identifier_container = f"{{{self.ns.gmd}}}geographicIdentifier"
+            identifier.make_element()
 
 
 class BoundingBox(MetadataRecordElement):

@@ -204,10 +204,10 @@ def assert_date(element: Element, config: dict):
         assert date_type_elements is True
 
 
-def assert_identifier(element: Element, config: dict):
+def assert_identifier(element: Element, config: dict, identifier_container: str = "gmd:identifier"):
     identifier_elements = element.xpath(
-        f"./gmd:identifier/gmd:RS_Identifier/gmd:code/gmx:Anchor[text()='{config['identifier']}'] | "
-        f"./gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString[text()='{config['identifier']}']",
+        f"./{identifier_container}/gmd:RS_Identifier/gmd:code/gmx:Anchor[text()='{config['identifier']}'] | "
+        f"./{identifier_container}/gmd:RS_Identifier/gmd:code/gco:CharacterString[text()='{config['identifier']}']",
         namespaces=namespaces.nsmap(),
     )
     assert len(identifier_elements) == 1
@@ -220,7 +220,7 @@ def assert_identifier(element: Element, config: dict):
 
     if "namespace" in config:
         identifier_namespace_elements = element.xpath(
-            f"./gmd:identifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString[text()='{config['namespace']}']",
+            f"./{identifier_container}/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString[text()='{config['namespace']}']",
             namespaces=namespaces.nsmap(),
         )
         assert len(identifier_namespace_elements) == 1
