@@ -57,6 +57,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+* Correct Python typing for MetadataRecord.record property
+  [#120](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/120)
 * Adding missing tests for code coverage
   [#111](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/111)
 * Configuration schema for temporal extent structure to allow date precision qualifier to be set
