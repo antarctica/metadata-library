@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "bas-metadata-library"
 version = "0.0.0"
-license = "OGL-UK-3.0"
+license = "MIT"
 description = "Python library for generating metadata records"
 authors = [
     "Felix Fennell <felnne@bas.ac.uk>",
@@ -13,7 +13,7 @@ repository = "https://github.com/antarctica/metadata-library"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Development Status :: 5 - Production/Stable",
-    "License :: Other/Proprietary License",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
