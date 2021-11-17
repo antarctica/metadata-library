@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bas-metadata-library"
-version = "0.0.0"
+version = "0.5.0-rc.0"
 license = "MIT"
 description = "Python library for generating metadata records"
 authors = [

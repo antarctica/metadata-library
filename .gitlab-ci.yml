@@ -93,7 +93,6 @@ publish-app-stage:
   stage: 🚚 publish
   before_script:
     - "poetry config pypi-token.pypi-testing $PYPI_TEST_TOKEN --local"
-    - "python support/python-packaging/parse_version.py $(git describe --tags) --pyproject"
   script:
     - "poetry publish --build --repository pypi-testing --no-interaction"
   artifacts:
@@ -111,7 +110,6 @@ publish-app-prod:
   stage: 🚚 publish
   before_script:
     - "poetry config pypi-token.pypi $PYPI_TOKEN --local"
-    - "python support/python-packaging/parse_version.py $(git describe --tags) --pyproject"
   script:
     - "poetry publish --build --repository pypi --no-interaction"
   artifacts:

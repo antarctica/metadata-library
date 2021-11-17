@@ -795,8 +795,6 @@ This project is distributed as a Python package, hosted in [PyPi](https://pypi.o
 Source and binary packages are built and published automatically using
 [Poetry](https://python-poetry.org/docs/cli/#publish) in [Continuous Delivery](#continuous-deployment).
 
-Package versions are determined automatically using the `support/python-packaging/parse_version.py` script.
-
 ### Continuous Deployment
 
 A Continuous Deployment process using GitLab's CI/CD platform is configured in `.gitlab-ci.yml`.
@@ -807,7 +805,8 @@ For all releases:
 
 1. create a release branch
 2. close release in `CHANGELOG.md`
-3. push changes, merge the release branch into `master` and tag with version
+3. bump package version using `docker compose run app poetry version`
+4. push changes, merge the release branch into `master` and tag with version
 
 ## Feedback
 
