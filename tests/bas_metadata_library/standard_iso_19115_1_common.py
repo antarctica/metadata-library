@@ -61,6 +61,13 @@ def assert_responsible_party(element: Element, config: dict):
             assert len(organisation_titles) == 1
             assert organisation_titles[0] == config["organisation"]["title"]
 
+    if "position" in config:
+        position_value = element.xpath(
+            f"./gmd:positionName/gco:CharacterString/text() = " f"'{config['position']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert position_value is True
+
     if "phone" in config:
         phone_value = element.xpath(
             f"./gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString/text() = "

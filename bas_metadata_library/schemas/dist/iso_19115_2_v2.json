@@ -560,6 +560,14 @@
                                 }
                             }
                         },
+                        "position": {
+                            "title": "Position",
+                            "description": "Position or role held.",
+                            "type": "string",
+                            "examples": [
+                                "Atmospheric Chemist"
+                            ]
+                        },
                         "email": {
                             "title": "Email",
                             "description": "Email address.",
@@ -859,6 +867,14 @@
                                         ]
                                     }
                                 }
+                            },
+                            "position": {
+                                "title": "Position",
+                                "description": "Position or role held.",
+                                "type": "string",
+                                "examples": [
+                                    "Atmospheric Chemist"
+                                ]
                             },
                             "email": {
                                 "title": "Email",
@@ -1212,6 +1228,14 @@
                                             ]
                                         }
                                     }
+                                },
+                                "position": {
+                                    "title": "Position",
+                                    "description": "Position or role held.",
+                                    "type": "string",
+                                    "examples": [
+                                        "Atmospheric Chemist"
+                                    ]
                                 },
                                 "email": {
                                     "title": "Email",
@@ -2559,6 +2583,14 @@
                                                     }
                                                 }
                                             },
+                                            "position": {
+                                                "title": "Position",
+                                                "description": "Position or role held.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "Atmospheric Chemist"
+                                                ]
+                                            },
                                             "email": {
                                                 "title": "Email",
                                                 "description": "Email address.",
@@ -3106,6 +3138,14 @@
                                                 }
                                             }
                                         },
+                                        "position": {
+                                            "title": "Position",
+                                            "description": "Position or role held.",
+                                            "type": "string",
+                                            "examples": [
+                                                "Atmospheric Chemist"
+                                            ]
+                                        },
                                         "email": {
                                             "title": "Email",
                                             "description": "Email address.",
@@ -3609,6 +3649,14 @@
                                             ]
                                         }
                                     }
+                                },
+                                "position": {
+                                    "title": "Position",
+                                    "description": "Position or role held.",
+                                    "type": "string",
+                                    "examples": [
+                                        "Atmospheric Chemist"
+                                    ]
                                 },
                                 "email": {
                                     "title": "Email",
@@ -4167,6 +4215,14 @@
                                             }
                                         }
                                     },
+                                    "position": {
+                                        "title": "Position",
+                                        "description": "Position or role held.",
+                                        "type": "string",
+                                        "examples": [
+                                            "Atmospheric Chemist"
+                                        ]
+                                    },
                                     "email": {
                                         "title": "Email",
                                         "description": "Email address.",
@@ -4663,6 +4719,14 @@
                                                 }
                                             }
                                         },
+                                        "position": {
+                                            "title": "Position",
+                                            "description": "Position or role held.",
+                                            "type": "string",
+                                            "examples": [
+                                                "Atmospheric Chemist"
+                                            ]
+                                        },
                                         "email": {
                                             "title": "Email",
                                             "description": "Email address.",
@@ -5111,6 +5175,14 @@
                                                 ]
                                             }
                                         }
+                                    },
+                                    "position": {
+                                        "title": "Position",
+                                        "description": "Position or role held.",
+                                        "type": "string",
+                                        "examples": [
+                                            "Atmospheric Chemist"
+                                        ]
                                     },
                                     "email": {
                                         "title": "Email",
@@ -5632,6 +5704,14 @@
                                                                 ]
                                                             }
                                                         }
+                                                    },
+                                                    "position": {
+                                                        "title": "Position",
+                                                        "description": "Position or role held.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "Atmospheric Chemist"
+                                                        ]
                                                     },
                                                     "email": {
                                                         "title": "Email",
@@ -6489,6 +6569,14 @@
                                                         ]
                                                     }
                                                 }
+                                            },
+                                            "position": {
+                                                "title": "Position",
+                                                "description": "Position or role held.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "Atmospheric Chemist"
+                                                ]
                                             },
                                             "email": {
                                                 "title": "Email",
