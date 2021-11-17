@@ -775,6 +775,7 @@ base_complex_record_v2 = {
                     "title": "orcid",
                 },
                 "organisation": {"name": "British Antarctic Survey"},
+                "position": "Atmospheric Chemist",
                 "email": "conwat@bas.ac.uk",
                 "role": ["author"],
                 "online_resource": {
@@ -992,6 +993,7 @@ complete_record_v2 = {
                     "title": "orcid",
                 },
                 "organisation": {"name": "British Antarctic Survey"},
+                "position": "Atmospheric Chemist",
                 "email": "conwat@bas.ac.uk",
                 "role": ["author"],
                 "online_resource": {
@@ -1008,6 +1010,7 @@ complete_record_v2 = {
                     "title": "orcid",
                 },
                 "organisation": {"name": "British Antarctic Survey"},
+                "position": "Friend",
                 "email": "conwat@bas.ac.uk",
                 "online_resource": {
                     "href": "https://sandbox.orcid.org/0000-0001-5652-1129",

@@ -126,6 +126,13 @@ class ResponsibleParty(MetadataRecordElement):
         if len(organisation_title) > 0:
             _["organisation"]["title"] = organisation_title[0]
 
+        position_value = self.record.xpath(
+            f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:positionName/gco:CharacterString/text()",
+            namespaces=self.ns.nsmap(),
+        )
+        if len(position_value) > 0:
+            _["position"] = position_value[0]
+
         phone_value = self.record.xpath(
             f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:phone/"
             f"gmd:CI_Telephone/gmd:voice/gco:CharacterString/text()",
@@ -242,6 +249,11 @@ class ResponsibleParty(MetadataRecordElement):
             else:
                 organisation_name_value = SubElement(organisation_element, f"{{{self.ns.gco}}}CharacterString")
                 organisation_name_value.text = self.element_attributes["organisation"]["name"]
+
+        if "position" in self.element_attributes:
+            position_name_element = SubElement(responsible_party_element, f"{{{self.ns.gmd}}}positionName")
+            position_name_value = SubElement(position_name_element, f"{{{self.ns.gco}}}CharacterString")
+            position_name_value.text = self.element_attributes["position"]
 
         if (
             "phone" in self.element_attributes

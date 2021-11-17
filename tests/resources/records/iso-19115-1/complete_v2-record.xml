@@ -228,6 +228,9 @@
           <gmd:organisationName>
             <gco:CharacterString>British Antarctic Survey</gco:CharacterString>
           </gmd:organisationName>
+          <gmd:positionName>
+            <gco:CharacterString>Atmospheric Chemist</gco:CharacterString>
+          </gmd:positionName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
               <gmd:address>
@@ -268,6 +271,9 @@
           <gmd:organisationName>
             <gco:CharacterString>British Antarctic Survey</gco:CharacterString>
           </gmd:organisationName>
+          <gmd:positionName>
+            <gco:CharacterString>Friend</gco:CharacterString>
+          </gmd:positionName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
               <gmd:address>
