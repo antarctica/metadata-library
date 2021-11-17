@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.5.0-rc.1 - 2021-11-17
+
+### Fixed
+
+* Switched to direct package versioning to avoid errors parsing pre-release versions
+  [#124](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/124)
+
+### Removed
+
+* Unnecessary GitLab CD job for releases
+  [#125](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/125)
+
 ## 0.5.0-rc.0 - 2021-11-17
 
 ### Changed [BREAKING!]
