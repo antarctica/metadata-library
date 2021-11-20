@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.5.0-rc.3 - 2021-11-20
+
 ### Fixed
 
 * JSON Schema inheritance fixed (`iso-19115-2-v2.json` inherited `iso-19115-2-v1.json` rather than `iso-19115-1-v2.json`)
