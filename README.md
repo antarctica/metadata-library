@@ -32,17 +32,17 @@ consistency with *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_
 | -------- | -------- | --------------- | ----------------- | ------------- |
 | -        | -        | -               | -                 | -             |
 
-**Note:** Support for profiles has been temporarily removed to allow underlying standards to be implemented more
-easily, and to wait until stable profiles for UK PDC Discovery metadata have been developed and approved.
+**Note:** Support for profiles has been removed to allow underlying standards to be implemented more easily, and to 
+wait until stable profiles for UK PDC Discovery metadata have been developed and approved.
 
 ### Supported configuration versions
 
-| Standard         | Profile | Configuration Version                                                                                                 | Status     | Notes                                         |
-| ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------- | ---------- | --------------------------------------------- |
-| ISO 19115:2003   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json) | Deprecated | Stable version to be replaced by `v2`         |
-| ISO 19115:2003   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json) | Alpha      | New version under development to replace `v1` |
-| ISO 19115-2:2009 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json) | Deprecated | Stable version to be replaced by `v2`         |
-| ISO 19115-2:2009 | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json) | Alpha      | New version under development to replace `v1` |
+| Standard         | Profile | Configuration Version                                                                                                 | Status     | Notes                               |
+| ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------- |
+| ISO 19115:2003   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json) | Deprecated | Deprecated version replaced by `v2` |
+| ISO 19115:2003   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json) | Live       | Stable version                      |
+| ISO 19115-2:2009 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json) | Deprecated | Deprecated version replaced by `v2` |
+| ISO 19115-2:2009 | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json) | Live       | Stable version                      |
 
 ## Installation
 
