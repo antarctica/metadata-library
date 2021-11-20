@@ -32,17 +32,17 @@ consistency with *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_
 | -------- | -------- | --------------- | ----------------- | ------------- |
 | -        | -        | -               | -                 | -             |
 
-**Note:** Support for profiles has been temporarily removed to allow underlying standards to be implemented more
-easily, and to wait until stable profiles for UK PDC Discovery metadata have been developed and approved.
+**Note:** Support for profiles has been removed to allow underlying standards to be implemented more easily, and to 
+wait until stable profiles for UK PDC Discovery metadata have been developed and approved.
 
 ### Supported configuration versions
 
-| Standard         | Profile | Configuration Version                                                                                                 | Status     | Notes                                         |
-| ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------- | ---------- | --------------------------------------------- |
-| ISO 19115:2003   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json) | Deprecated | Stable version to be replaced by `v2`         |
-| ISO 19115:2003   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json) | Alpha      | New version under development to replace `v1` |
-| ISO 19115-2:2009 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json) | Deprecated | Stable version to be replaced by `v2`         |
-| ISO 19115-2:2009 | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json) | Alpha      | New version under development to replace `v1` |
+| Standard         | Profile | Configuration Version                                                                                                 | Status     | Notes                               |
+| ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------- |
+| ISO 19115:2003   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json) | Deprecated | Deprecated version replaced by `v2` |
+| ISO 19115:2003   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json) | Live       | Stable version                      |
+| ISO 19115-2:2009 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json) | Deprecated | Deprecated version replaced by `v2` |
+| ISO 19115-2:2009 | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json) | Live       | Stable version                      |
 
 ## Installation
 
@@ -63,14 +63,16 @@ from datetime import date
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecord
 
 minimal_record_config = {
-    "language": "eng",
-    "character_set": "utf-8",
     "hierarchy_level": "dataset",
-    "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
-    "date_stamp": date(2018, 10, 18),
-    "resource": {
+    "metadata": {
+        "language": "eng",
+        "character_set": "utf-8",
+        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "date_stamp": date(2018, 10, 18),
+    },
+    "identification": {
         "title": {"value": "Test Record"},
-        "dates": [{"date": date(2018, 1, 1), "date_precision": "year", "date_type": "creation"}],
+        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
         "character_set": "utf-8",
         "language": "eng",
@@ -92,7 +94,7 @@ record = MetadataRecord(configuration=configuration)
 document = record.generate_xml_document()
 
 # output document
-print(document)
+print(document.decode())
 ```
 
 #### Loading a record configuration from JSON
@@ -106,7 +108,7 @@ from pathlib import Path
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
 
 configuration = MetadataRecordConfigV2()
-configuration.load(path=Path("/path/to/file.json"))
+configuration.load(file=Path("/path/to/file.json"))
 ```
 
 ```python
