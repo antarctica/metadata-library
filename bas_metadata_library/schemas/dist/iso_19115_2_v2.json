@@ -4074,8 +4074,8 @@
             "required": [
                 "$schema",
                 "hierarchy_level",
-                "identification",
-                "metadata"
+                "metadata",
+                "identification"
             ],
             "additionalProperties": false,
             "properties": {
@@ -4086,6 +4086,40 @@
                     "format": "uri",
                     "examples": [
                         "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
+                    ]
+                },
+                "file_identifier": {
+                    "title": "File identifier",
+                    "description": "Identifier for the record describing the resource. This is almost always a UUID (v4).",
+                    "type": "string",
+                    "examples": [
+                        "86bd7a1a-845d-48a9-8d71-59fdf7290556"
+                    ]
+                },
+                "hierarchy_level": {
+                    "title": "Hierarchy level",
+                    "description": "The kind and scope of information the resource consists of and describes.",
+                    "type": "string",
+                    "enum": [
+                        "attribute",
+                        "attributeType",
+                        "collectionHardware",
+                        "collectionSession",
+                        "dataset",
+                        "series",
+                        "nonGeographicDataset",
+                        "dimensionGroup",
+                        "feature",
+                        "featureType",
+                        "propertyType",
+                        "fieldSession",
+                        "software",
+                        "service",
+                        "model",
+                        "tile"
+                    ],
+                    "examples": [
+                        "dataset"
                     ]
                 },
                 "metadata": {
@@ -4469,40 +4503,6 @@
                             }
                         }
                     }
-                },
-                "file_identifier": {
-                    "title": "File identifier",
-                    "description": "Identifier for the record describing the resource. This is almost always a UUID (v4).",
-                    "type": "string",
-                    "examples": [
-                        "86bd7a1a-845d-48a9-8d71-59fdf7290556"
-                    ]
-                },
-                "hierarchy_level": {
-                    "title": "Hierarchy level",
-                    "description": "The kind and scope of information the resource consists of and describes.",
-                    "type": "string",
-                    "enum": [
-                        "attribute",
-                        "attributeType",
-                        "collectionHardware",
-                        "collectionSession",
-                        "dataset",
-                        "series",
-                        "nonGeographicDataset",
-                        "dimensionGroup",
-                        "feature",
-                        "featureType",
-                        "propertyType",
-                        "fieldSession",
-                        "software",
-                        "service",
-                        "model",
-                        "tile"
-                    ],
-                    "examples": [
-                        "dataset"
-                    ]
                 },
                 "reference_system_info": {
                     "title": "Reference system information",

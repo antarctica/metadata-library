@@ -1484,8 +1484,8 @@
   "required": [
     "$schema",
     "hierarchy_level",
-    "identification",
-    "metadata"
+    "metadata",
+    "identification"
   ],
   "additionalProperties": false,
   "properties": {
@@ -1497,6 +1497,12 @@
       "examples": [
         "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
       ]
+    },
+    "file_identifier": {
+      "$ref": "#/definitions/file_identifier"
+    },
+    "hierarchy_level": {
+      "$ref": "#/definitions/hierarchy_level"
     },
     "metadata": {
       "title": "Metadata",
@@ -1529,12 +1535,6 @@
           "$ref": "#/definitions/metadata_standard"
         }
       }
-    },
-    "file_identifier": {
-      "$ref": "#/definitions/file_identifier"
-    },
-    "hierarchy_level": {
-      "$ref": "#/definitions/hierarchy_level"
     },
     "reference_system_info": {
       "$ref": "#/definitions/reference_system_info"
