@@ -1482,12 +1482,22 @@
   },
   "type": "object",
   "required": [
+    "$schema",
     "hierarchy_level",
     "identification",
     "metadata"
   ],
   "additionalProperties": false,
   "properties": {
+    "$schema": {
+      "title": "JSON Schema",
+      "description": "JSON Schema keyword indicating the schema a document complies with.",
+      "type": "string",
+      "format": "uri",
+      "examples": [
+        "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
+      ]
+    },
     "metadata": {
       "title": "Metadata",
       "description": "Information about the metadata record describing the resource.",
