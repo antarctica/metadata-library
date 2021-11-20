@@ -1487,7 +1487,6 @@
     },
     "type": "object",
     "required": [
-        "$schema",
         "hierarchy_level",
         "metadata",
         "identification"
