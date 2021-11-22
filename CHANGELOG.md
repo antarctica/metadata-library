@@ -7,10 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.5.0-rc.5 - 2021-11-22
+
 ### Fixed
 
 * Temporal extents in V1 record configurations may not have been date objects but direct values
   [#134](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/132)
+* Python package version inconsistency
+  [#133](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/133)
 
 ## 0.5.0-rc.4 - 2021-11-22
 
