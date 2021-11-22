@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.5.0-rc.4 - 2021-11-22
+
 ### Fixed
 
 * Parsing year only dates in a JSON record configuration
