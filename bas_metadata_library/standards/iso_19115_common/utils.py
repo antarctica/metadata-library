@@ -188,8 +188,8 @@ def decode_date_string(date_datetime: str) -> dict:
     Examples:
     * '2012-04-18' is returned as '{date(2012, 4, 18)}'
     * '2012-4-18T22:48:56' is returned as 'datetime(2012, 4, 18, 22, 48, 56)'
-    * '2012' is returned as {'date(2012, 4, 18), date_precision='year'}
-    * '2012-04' is returned as {'date(2012, 4, 18), date_precision='month'}
+    * '2012' is returned as {'date(2012, 1, 1), date_precision='year'}
+    * '2012-04' is returned as {'date(2012, 1, 1), date_precision='month'}
 
     :type date_datetime: str
     :param date_datetime: ISO 8601 formatted date/datetime
