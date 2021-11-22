@@ -45,6 +45,10 @@ def _parse_date_properties(dictionary: dict) -> dict:
             dictionary[k] = _date["date"]
             if "date_precision" in _date.keys() and "date_precision" not in dictionary.keys():
                 dictionary["date_precision"] = _date["date_precision"]
+        # required for V1 configurations - remove when support is dropped
+        elif isinstance(v, str) and (k == "start" or k == "end"):  # pragma: no cover
+            dictionary[k] = decode_date_string(date_datetime=v)["date"]
+
     return dictionary
 
 
@@ -429,6 +433,30 @@ def convert_from_v1_to_v2_configuration(config: dict) -> dict:  # pragma: no cov
 
     # sets of dates now use object keys for the date type, rather than an array with the date type as a property
     config = _convert_all_dates(config=config, from_version="v1", to_version="v2")
+
+    # in some V1 records, temporal extents were not wrapped in date objects
+    if (
+        "resource" in config
+        and "extent" in config["resource"]
+        and "temporal" in config["resource"]["extent"]
+        and "period" in config["resource"]["extent"]["temporal"]
+        and "start" in config["resource"]["extent"]["temporal"]["period"]
+        and isinstance(config["resource"]["extent"]["temporal"]["period"]["start"], date)
+    ):
+        config["resource"]["extent"]["temporal"]["period"]["start"] = {
+            "date": config["resource"]["extent"]["temporal"]["period"]["start"]
+        }
+    if (
+        "resource" in config
+        and "extent" in config["resource"]
+        and "temporal" in config["resource"]["extent"]
+        and "period" in config["resource"]["extent"]["temporal"]
+        and "end" in config["resource"]["extent"]["temporal"]["period"]
+        and isinstance(config["resource"]["extent"]["temporal"]["period"]["end"], date)
+    ):
+        config["resource"]["extent"]["temporal"]["period"]["end"] = {
+            "date": config["resource"]["extent"]["temporal"]["period"]["end"]
+        }
 
     # the 'resource' property is now known as 'identification' to map more closely to the ISO 19115 standard and to
     # support additional top-level properties for sections such as data quality and attribute definitions.
