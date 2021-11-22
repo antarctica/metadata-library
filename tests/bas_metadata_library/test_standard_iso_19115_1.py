@@ -1,4 +1,5 @@
 import datetime
+import json
 
 import pytest
 
@@ -1681,6 +1682,16 @@ def test_edge_case_responsible_party_incomplete_address(address_config):
     _record = MetadataRecord(record=record)
     _config = _record.make_config()
     assert _config.config["metadata"]["contacts"][0]["address"] == address_config
+
+
+def test_edge_case_parse_config_year_only_date_no_precision():
+    _config = deepcopy(configs_safe_v2["minimal_v2"])
+    _config["metadata"]["date_stamp"] = "2018-10-18"
+    _config["identification"]["dates"]["creation"] = {"date": "2018"}
+    _config = json.dumps(_config)
+    config = MetadataRecordConfigV2()
+    config.loads(string=_config)
+    assert config.config["identification"]["dates"]["creation"] == {"date": date(2018, 1, 1), "date_precision": "year"}
 
 
 class MockResponse:

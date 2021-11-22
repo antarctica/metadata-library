@@ -23,7 +23,7 @@ def _sort_dict_by_keys(dictionary: dict) -> dict:
 def _parse_date_properties(dictionary: dict) -> dict:
     """
     Utility method to recursively convert any values with a key of 'date' or 'date_stamp' into a Python date or
-    datetime object.
+    datetime object using the `decode_date_string()` utility method.
 
     :type dictionary: dict
     :param dictionary: input dictionary
@@ -31,18 +31,20 @@ def _parse_date_properties(dictionary: dict) -> dict:
     :rtype dict
     :return dictionary with parsed property values
     """
-    for k, v in dictionary.items():
+    for k, v in list(dictionary.items()):
         if isinstance(v, list):
             for iv in v:
                 if isinstance(iv, dict):
                     _parse_date_properties(dictionary=iv)
         elif isinstance(v, dict):
             _parse_date_properties(dictionary=v)
-        elif isinstance(v, str) and (k == "date" or k == "date_stamp"):
-            if "T" in v:
-                dictionary[k] = datetime.fromisoformat(v)
-            else:
-                dictionary[k] = date.fromisoformat(v)
+        elif isinstance(v, str) and k == "date_stamp":
+            dictionary[k] = date.fromisoformat(v)
+        elif isinstance(v, str) and k == "date":
+            _date = decode_date_string(date_datetime=v)
+            dictionary[k] = _date["date"]
+            if "date_precision" in _date.keys() and "date_precision" not in dictionary.keys():
+                dictionary["date_precision"] = _date["date_precision"]
     return dictionary
 
 
@@ -186,8 +188,8 @@ def decode_date_string(date_datetime: str) -> dict:
     Examples:
     * '2012-04-18' is returned as '{date(2012, 4, 18)}'
     * '2012-4-18T22:48:56' is returned as 'datetime(2012, 4, 18, 22, 48, 56)'
-    * '2012' is returned as {'date(2012, 4, 18), date_precision='year'}
-    * '2012-04' is returned as {'date(2012, 4, 18), date_precision='month'}
+    * '2012' is returned as {'date(2012, 1, 1), date_precision='year'}
+    * '2012-04' is returned as {'date(2012, 1, 1), date_precision='month'}
 
     :type date_datetime: str
     :param date_datetime: ISO 8601 formatted date/datetime
