@@ -23,7 +23,7 @@ def _sort_dict_by_keys(dictionary: dict) -> dict:
 def _parse_date_properties(dictionary: dict) -> dict:
     """
     Utility method to recursively convert any values with a key of 'date' or 'date_stamp' into a Python date or
-    datetime object.
+    datetime object using the `decode_date_string()` utility method.
 
     :type dictionary: dict
     :param dictionary: input dictionary
@@ -31,18 +31,20 @@ def _parse_date_properties(dictionary: dict) -> dict:
     :rtype dict
     :return dictionary with parsed property values
     """
-    for k, v in dictionary.items():
+    for k, v in list(dictionary.items()):
         if isinstance(v, list):
             for iv in v:
                 if isinstance(iv, dict):
                     _parse_date_properties(dictionary=iv)
         elif isinstance(v, dict):
             _parse_date_properties(dictionary=v)
-        elif isinstance(v, str) and (k == "date" or k == "date_stamp"):
-            if "T" in v:
-                dictionary[k] = datetime.fromisoformat(v)
-            else:
-                dictionary[k] = date.fromisoformat(v)
+        elif isinstance(v, str) and k == "date_stamp":
+            dictionary[k] = date.fromisoformat(v)
+        elif isinstance(v, str) and k == "date":
+            _date = decode_date_string(date_datetime=v)
+            dictionary[k] = _date["date"]
+            if "date_precision" in _date.keys() and "date_precision" not in dictionary.keys():
+                dictionary["date_precision"] = _date["date_precision"]
     return dictionary
 
 
