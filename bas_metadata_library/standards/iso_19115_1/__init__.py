@@ -20,6 +20,7 @@ from bas_metadata_library.standards.iso_19115_common.utils import (
     convert_from_v1_to_v2_configuration,
     convert_from_v2_to_v1_configuration,
     parse_config_from_json,
+    encode_config_for_json,
 )
 
 
@@ -122,6 +123,13 @@ class MetadataRecordConfigV2(_MetadataRecordConfig):
 
     def loads(self, string: str) -> None:
         self.config = parse_config_from_json(config=json.loads(s=string))
+
+    def dump(self, file: Path) -> None:
+        with open(str(file), mode="w") as file:
+            json.dump(encode_config_for_json(config=self.config), file)
+
+    def dumps(self) -> str:
+        return json.dumps(encode_config_for_json(config=self.config))
 
 
 class MetadataRecord(_MetadataRecord):

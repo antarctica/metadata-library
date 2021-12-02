@@ -52,6 +52,40 @@ def _parse_date_properties(dictionary: dict) -> dict:
     return dictionary
 
 
+def _encode_date_properties(dictionary: dict) -> dict:
+    """
+    Utility method to recursively convert any date values into a string value using the `encode_date_string()` utility
+    method.
+
+    Dates are represented as an dict with a date property, containing a date or datetime object, plus an optional date
+    precision value. As dates are dicts, it's necessary for this method to check, when recusing through values, whether
+    a value is a date dict, or a property dict. Otherwise this method will produce incorrect results.
+
+    :type dictionary: dict
+    :param dictionary: input dictionary
+
+    :rtype dict
+    :return dictionary with encoded property values
+    """
+    for k, v in list(dictionary.items()):
+        if isinstance(v, list):
+            for iv in v:
+                if isinstance(iv, dict):
+                    _encode_date_properties(dictionary=iv)
+        elif isinstance(v, dict) and list(v.keys()) == ["date"]:
+            # date or datetime export
+            dictionary[k] = encode_date_string(date_datetime=v["date"])
+        elif isinstance(v, dict) and list(v.keys()) == ["date", "date_precision"]:
+            # date or datetime export with precision
+            dictionary[k] = encode_date_string(date_datetime=v["date"], date_precision=v["date_precision"])
+        elif isinstance(v, dict):
+            _encode_date_properties(dictionary=v)
+        elif isinstance(v, date) and k == "date_stamp":
+            dictionary[k] = v.isoformat()
+
+    return dictionary
+
+
 def _convert_dates(dates: Union[dict, list], from_version: str, to_version: str) -> Union[dict, list]:
     """
     Internal utility method to convert a date object between configuration versions.
@@ -319,6 +353,8 @@ def parse_config_from_json(config: dict) -> dict:
     Specifically this method looks for any string encoded date or datetime values and converts them to their Python
     equivalents. E.g. '2012-02-20' becomes date(2012, 2, 20).
 
+    This method is the reverse of `encode_config_from_json()`.
+
     :type config: dict
     :param config: record configuration
 
@@ -326,6 +362,24 @@ def parse_config_from_json(config: dict) -> dict:
     :return parsed record configuration
     """
     return _parse_date_properties(dictionary=config)
+
+
+def encode_config_for_json(config: dict) -> dict:
+    """
+    Prepare a record configuration for use in a JSON encoded document
+
+    Specifically this method looks for any date or datetime values and converts them to their string equivalents.
+    E.g. date(2012, 2, 20) becomes '2012-02-20'.
+
+    This method is the reverse of `parse_config_from_json()`.
+
+    :type config: dict
+    :param config: record configuration
+
+    :rtype dict
+    :return encoded record configuration
+    """
+    return _encode_date_properties(dictionary=config)
 
 
 def convert_from_v1_to_v2_configuration(config: dict) -> dict:  # pragma: no cover

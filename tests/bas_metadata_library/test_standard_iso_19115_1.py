@@ -8,6 +8,7 @@ from datetime import date
 from typing import List
 from http import HTTPStatus
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from jsonschema import ValidationError
 
@@ -26,6 +27,8 @@ from bas_metadata_library.standards.iso_19115_1 import (
     MetadataRecordConfigV2,
     MetadataRecord,
 )
+from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently, encode_date_string
+
 from tests.bas_metadata_library.standard_iso_19115_1_common import (
     assert_responsible_party,
     assert_maintenance,
@@ -33,14 +36,11 @@ from tests.bas_metadata_library.standard_iso_19115_1_common import (
     assert_online_resource,
     assert_identifier,
 )
-
 from tests.resources.configs.iso19115_1_standard import (
     configs_safe_v1,
     configs_safe_v2,
     configs_v2_all,
 )
-
-from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently, encode_date_string
 
 
 MonkeyPatch.patch_fromisoformat()
@@ -111,6 +111,130 @@ def test_configuration_v2_from_json_string():
             "date": datetime.datetime(2018, 1, 1, 10, 0, 0, tzinfo=datetime.timezone.utc)
         }
         assert configuration.config == _config
+
+
+def test_configuration_v2_to_json_file():
+    _config = deepcopy(configs_safe_v2["minimal_v2"])
+    _config["identification"]["dates"]["revision"] = {
+        "date": datetime.datetime(2018, 1, 1, 10, 0, 0, tzinfo=datetime.timezone.utc)
+    }
+    configuration = MetadataRecordConfigV2(**_config)
+
+    with TemporaryDirectory() as tmp_dir_name:
+        config_path = Path(tmp_dir_name).joinpath("config.json")
+        configuration.dump(file=config_path)
+
+        with open(config_path, mode="r") as config_file:
+            config = json.load(config_file)
+            config = json.dumps(config)
+            # this should assert the encoded config object is the same as the test file used in the JSON loads method
+            # note: this means adding a revision date as we modify the minimal record for test coverage
+            config_ = json.dumps(
+                {
+                    "hierarchy_level": "dataset",
+                    "metadata": {
+                        "language": "eng",
+                        "character_set": "utf-8",
+                        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+                        "date_stamp": "2018-10-18",
+                    },
+                    "identification": {
+                        "title": {"value": "Test Record"},
+                        "dates": {"creation": "2018", "revision": "2018-01-01T10:00:00+00:00"},
+                        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+                        "character_set": "utf-8",
+                        "language": "eng",
+                        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+                        "extent": {
+                            "geographic": {
+                                "bounding_box": {
+                                    "west_longitude": -45.61521,
+                                    "east_longitude": -27.04976,
+                                    "south_latitude": -68.1511,
+                                    "north_latitude": -54.30761,
+                                }
+                            }
+                        },
+                    },
+                }
+            )
+            assert config == config_
+
+
+def test_configuration_v2_to_json_string():
+    _config = deepcopy(configs_safe_v2["minimal_v2"])
+    _config["identification"]["dates"]["revision"] = {
+        "date": datetime.datetime(2018, 1, 1, 10, 0, 0, tzinfo=datetime.timezone.utc)
+    }
+    configuration = MetadataRecordConfigV2(**_config)
+    config = configuration.dumps()
+    # this should assert the encoded config object is the same as the test file used in the JSON loads method
+    config_ = json.dumps(
+        {
+            "hierarchy_level": "dataset",
+            "metadata": {
+                "language": "eng",
+                "character_set": "utf-8",
+                "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+                "date_stamp": "2018-10-18",
+            },
+            "identification": {
+                "title": {"value": "Test Record"},
+                "dates": {"creation": "2018", "revision": "2018-01-01T10:00:00+00:00"},
+                "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+                "character_set": "utf-8",
+                "language": "eng",
+                "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+                "extent": {
+                    "geographic": {
+                        "bounding_box": {
+                            "west_longitude": -45.61521,
+                            "east_longitude": -27.04976,
+                            "south_latitude": -68.1511,
+                            "north_latitude": -54.30761,
+                        }
+                    }
+                },
+            },
+        }
+    )
+    assert config == config_
+
+
+def test_configuration_v2_json_round_trip():
+    # this should be the same as the test file used in the JSON loads method
+    config = {
+        "hierarchy_level": "dataset",
+        "metadata": {
+            "language": "eng",
+            "character_set": "utf-8",
+            "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+            "date_stamp": "2018-10-18",
+        },
+        "identification": {
+            "title": {"value": "Test Record"},
+            "dates": {"creation": "2018"},
+            "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+            "character_set": "utf-8",
+            "language": "eng",
+            "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+            "extent": {
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                }
+            },
+        },
+    }
+    _config = json.dumps(config)
+    configuration = MetadataRecordConfigV2()
+    configuration.loads(_config)
+    config_ = configuration.dumps()
+    assert _config == config_
 
 
 @pytest.mark.usefixtures("app_client")
