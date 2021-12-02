@@ -1,5 +1,9 @@
+import json
+
 import pytest
 
+from copy import deepcopy
+from tempfile import TemporaryDirectory
 from http import HTTPStatus
 from pathlib import Path
 
@@ -37,6 +41,26 @@ def test_configuration_from_json_string():
     configuration.loads(string=_config)
     configuration.validate()
     assert configuration.config == minimal_config
+
+
+def test_configuration_to_json_file():
+    config = deepcopy(configs["minimal"])
+    configuration = MetadataRecordConfig(**config)
+
+    with TemporaryDirectory() as tmp_dir_name:
+        config_path = Path(tmp_dir_name).joinpath("config.json")
+        configuration.dump(file=config_path)
+        with open(config_path, mode="r") as config_file:
+            _config = json.load(config_file)
+            assert _config == config
+
+
+def test_configuration_to_json_string():
+    config = deepcopy(configs["minimal"])
+    configuration = MetadataRecordConfig(**config)
+    _config = configuration.dumps()
+    config_ = json.dumps(config, indent=2)
+    assert _config == config_
 
 
 @pytest.mark.usefixtures("app_client")

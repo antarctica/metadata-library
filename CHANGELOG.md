@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+* Adding missing JSON dump/dumps methods to configuration classes
+  [#135](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/135)
+
 ## 0.5.0-rc.5 - 2021-11-22
 
 ### Fixed

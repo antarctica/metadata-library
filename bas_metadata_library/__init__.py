@@ -117,6 +117,27 @@ class MetadataRecordConfig(object):
         """
         self.config = json.loads(s=string)
 
+    def dump(self, file: Path) -> None:
+        """
+        Dumps a record configuration as a JSON encoded file
+
+        The path to the file to read from should be expressed using a Python pathlib.Path object.
+
+        :type file: Path
+        :param file: path at which to create a JSON encoded file
+        """
+        with open(str(file), mode="w") as file:
+            json.dump(self.config, file)
+
+    def dumps(self) -> str:
+        """
+        Dumps a record configuration as a JSON encoded string
+
+        :rtype str
+        :returns record configuration as a JSON encoded string
+        """
+        return json.dumps(self.config, indent=2)
+
 
 class MetadataRecord(object):
     """
