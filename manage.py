@@ -44,6 +44,7 @@ def generate_schemas():
         {"id": "iso_19115_2_v1", "resolve": True},
         {"id": "iso_19115_1_v2", "resolve": False},
         {"id": "iso_19115_2_v2", "resolve": True},
+        {"id": "iec_pas_61174_0_v1", "resolve": False},
     ]
 
     for schema in schemas:
