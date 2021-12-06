@@ -123,8 +123,14 @@ def test_standard_version(version):
     assert float(route_version[0]) == version
 
 
-def test_edge_case_standard_verson_invalid():
-    pass
+def test_edge_case_standard_version_invalid():
+    version = "invalid"
+    config = MetadataRecordConfigV1(**configs_v1["minimal_v1"])
+    record = MetadataRecord(configuration=config)
+    with pytest.raises(ValueError) as e:
+        # noinspection PyTypeChecker
+        record.generate_xml_document(version=version)
+    assert f"Invalid standard version [{version}], valid values: 1.0, 1.2" in str(e.value)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
