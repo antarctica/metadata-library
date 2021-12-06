@@ -6,14 +6,13 @@ Python library for generating metadata records.
 
 ### Purpose
 
-This library is designed to assist in generating metadata records for the discovery of datasets, services and related
-resources. As a library, this project is intended to be used as a dependency within other tools and services, to
-avoid the need to duplicate the implementation of complex and verbose metadata standards.
+This library is designed to assist in generating metadata records for the discovery of datasets, services, features 
+and related resources. This project is intended to be used as a dependency within other tools and services, to avoid 
+the need to duplicate the implementation of complex and verbose metadata standards.
 
-This library is built around the needs of the British Antarctic Survey and NERC (UK) Polar Data Centre. This means only
-standards, and elements of these standards, used by BAS or the UK PDC are supported. However, additions that would
-enable this library to be useful to other organisations and use-case are welcome as contributions providing they do not
-add significant complexity or maintenance.
+At a high level, this library allows a configuration object, representing the fields/structure of a standard, to be 
+encoded into the formal representation set out by that standard (typically in XML). It also allows a formal 
+representation to be decoded back into a configuration object, which can be more easily used or manipulated in software.
 
 ### Supported standards
 
@@ -52,7 +51,37 @@ wait until stable profiles for UK PDC Discovery metadata have been developed and
 | IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Alpha      | Experimental                        |
 
 **Note:** The *IEC 61174:2015* and *IEC PAS 61174:2021* standards share the same configuration schema, as the 
-differences between these standards do not impact the input configuration.
+differences between these standards do not impact the record configuration.
+
+### Supported standards coverage
+
+This library is built around the needs of the British Antarctic Survey and the NERC (UK) Polar Data Centre. This means 
+only standards, and elements of these standards, used by BAS or the UK PDC are supported. However, additions that would
+enable this library to be useful to other organisations and use-case are welcome as contributions providing they do not
+add significant complexity or maintenance.
+
+| Standard           | Coverage | Coverage Summary                                                                                 |
+| ------------------ | -------- | ------------------------------------------------------------------------------------------------ |
+| ISO 19115:2003     | Good     | All mandatory elements are supported with a good number of commonly used additional elements     |
+| ISO 19115-2:2009   | Minimal  | With the exception of the root element, no additional elements from this extension are supported |
+| IEC 61174:2015     | Minimal  | All mandatory elements supported plus a limited number of optional route information attributes  |
+| IEC PAS 61174:2021 | Minimal  | All mandatory elements supported plus a limited number of optional route information attributes  |
+
+#### Coverage for IEC PAS 61174:2021
+
+Support for this standard is currently limited to these properties:
+
+| Element                                   | Reference | Obligation |
+| ----------------------------------------- | --------- | ---------- |
+| `route`                                   | *4.5.2*   | Mandatory  | 
+| `route.routeInfo.routeAuthor`             | *4.5.3*   | Optional   | 
+| `route.routeInfo.routeName`               | *4.5.3*   | Mandatory  | 
+| `route.routeInfo.routeStatus`             | *4.5.3*   | Optional   | 
+| `route.waypoints`                         | *4.5.4*   | Mandatory  | 
+| `route.waypoints.*.waypoint.id`           | *4.5.6*   | Mandatory  | 
+| `route.waypoints.*.waypoint.revision`     | *4.5.6*   | Mandatory  | 
+| `route.waypoints.*.waypoint.position.lat` | *4.5.6*   | Mandatory  | 
+| `route.waypoints.*.waypoint.position.lon` | *4.5.6*   | Mandatory  | 
 
 ## Installation
 
@@ -64,12 +93,13 @@ $ pip install bas-metadata-library
 
 ## Usage
 
-### Encode XML document from record configuration
+### Encode an ISO 19115 metadata record
 
 To generate an ISO 19115 metadata record from a Python record configuration and return it as an XML document:
 
 ```python
 from datetime import date
+
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecord
 
 minimal_record_config = {
@@ -107,44 +137,48 @@ document = record.generate_xml_document()
 print(document.decode())
 ```
 
-#### Loading a record configuration from JSON
+### Encode an IEC 61174 route information record
 
-The `load()` and `loads()` methods on the configuration class can be used to load a record configuration encoded as a
-JSON file or JSON string respectively:
+To encode to a RTZ file:
+
+```python
+from bas_metadata_library.standards.iec_pas_61174_0_v1 import MetadataRecordConfigV1, MetadataRecord
+
+minimal_record_config = {"route_name": "minimal-test-route",
+    "waypoints": [
+        {"id": 1001, "revision": 0, "position": {"lat": 5, "lon": 50}},
+        {"id": 1002, "revision": 0, "position": {"lat": 5, "lon": 50}},
+        {"id": 1003, "revision": 0, "position": {"lat": 5, "lon": 50}},
+    ],
+}
+configuration = MetadataRecordConfigV1(**minimal_record_config)
+record = MetadataRecord(configuration=configuration)
+document = record.generate_xml_document()
+
+# output document
+print(document.decode())
+```
+
+To encode to a RTZP package:
 
 ```python
 from pathlib import Path
 
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+from bas_metadata_library.standards.iec_pas_61174_0_v1 import MetadataRecordConfigV1, MetadataRecord
 
-configuration = MetadataRecordConfigV2()
-configuration.load(file=Path("/path/to/file.json"))
+minimal_record_config = {"route_name": "minimal-test-route",
+    "waypoints": [
+        {"id": 1001, "revision": 0, "position": {"lat": 5, "lon": 50}},
+        {"id": 1002, "revision": 0, "position": {"lat": 5, "lon": 50}},
+        {"id": 1003, "revision": 0, "position": {"lat": 5, "lon": 50}},
+    ],
+}
+configuration = MetadataRecordConfigV1(**minimal_record_config)
+record = MetadataRecord(configuration=configuration)
+record.generate_rtzp_archive(file=Path('/path/to/file.rtzp'))
 ```
 
-```python
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
-
-configuration = MetadataRecordConfigV2()
-configuration.loads(string='{"file_identifier": "696770d9-7cd8-40f0-b269-11af1687c772"}')
-```
-
-#### Disabling XML declaration
-
-To disable the XML declaration (i.e. `<?xml version='1.0' encoding='utf-8'?>`), you can set the `xml_declaration`
-parameter to false. This is sometimes needed when the generated XML documented needs to be embedded into a larger
-document, such as a CSW transaction.
-
-```python
-# disable XML declaration
-document = record.generate_xml_document(xml_declaration=False)
-
-# output document
-print(document)
-```
-
-### Decode record configuration from XML document
-
-To reverse this process and convert a XML record into a configuration object:
+### Decode an ISO 19115 metadata record
 
 ```python
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecord
@@ -160,12 +194,158 @@ minimal_record_config = configuration.config
 print(minimal_record_config)
 ```
 
+### Decode an IEC 61174 route information record
+
+To decode from a RTZ file:
+
+```python
+from bas_metadata_library.standards.iec_pas_61174_0_v1 import MetadataRecord
+
+with open(f"minimal-record.rtz") as record_file:
+    record_data = record_file.read()
+
+record = MetadataRecord(record=record_data)
+configuration = record.make_config()
+minimal_record_config = configuration.config
+
+# output configuration
+print(minimal_record_config)
+```
+
+To decode from a RTZP package:
+
+```python
+from pathlib import Path
+
+from bas_metadata_library.standards.iec_pas_61174_0_v1 import MetadataRecord
+
+record = MetadataRecord()
+record.load_from_rtzp_archive(file=Path('/path/to/file.rtzp'))
+configuration = record.make_config()
+minimal_record_config = configuration.config
+
+# output configuration
+print(minimal_record_config)
+```
+
+### Loading a record configuration from JSON
+
+**The example below is for the ISO 19115 standard but this applies to all standards.**
+
+The `load()` and `loads()` methods on the configuration class can be used to load a record configuration encoded as a
+JSON file or JSON string respectively:
+
+```python
+from pathlib import Path
+
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+
+configuration = MetadataRecordConfigV2()
+configuration.load(file=Path("/path/to/file.json"))
+```
+
+### Dumping a record configuration to JSON
+
+**The example below is for the ISO 19115 standard but this applies to all standards.**
+
+The `dump()` and `dumps()` methods on the configuration class can be used to dump a record configuration to a JSON 
+encoded file or string respectively:
+
+```python
+from datetime import date
+from pathlib import Path
+
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+
+minimal_record_config = {
+    "hierarchy_level": "dataset",
+    "metadata": {
+        "language": "eng",
+        "character_set": "utf-8",
+        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "date_stamp": date(2018, 10, 18),
+    },
+    "identification": {
+        "title": {"value": "Test Record"},
+        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "character_set": "utf-8",
+        "language": "eng",
+        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+        "extent": {
+            "geographic": {
+                "bounding_box": {
+                    "west_longitude": -45.61521,
+                    "east_longitude": -27.04976,
+                    "south_latitude": -68.1511,
+                    "north_latitude": -54.30761,
+                }
+            }
+        },
+    },
+}
+configuration = MetadataRecordConfigV2(**minimal_record_config)
+configuration.dump(file=Path('/path/to/file.json'))
+```
+
+### HTML entities
+
+Do not include HTML entities in input to this generator, as they will be double escaped by [Lxml](https://lxml.de), the
+underlying XML processing library used by this project. Instead, literal characters should be used (e.g. `>`), which
+will be escaped as needed automatically. This applies to any unicode character, such as accents (e.g. `å`) and
+symbols (e.g. `µ`).
+
+E.g. If `&gt;`, the HTML entity for `>` (greater than), were used as input, it would be escaped again to `&amp;gt;`
+which will not be valid output.
+
+### ISO 19115 - linkages between transfer options and formats
+
+To support generating a table of download options for a resource (such as [1]), this library uses a 'distribution
+option' concept to group related formats and transfer option elements in [Record Configurations](#configuration-classes).
+
+In ISO these elements are independent of each other, with no formal mechanism to associate formats and transfer options.
+As this library seeks to be fully reversible between a configuration object and XML, this information would be lost
+once records are encoded as XML.
+
+To avoid this, this library uses the ID attribute available in both format and transfer option elements with values
+can be used when decoding XML to reconstruct these associations. This functionality should be fully transparent to the
+user, except for these auto-generated IDs being present in records.
+
+See the [Automatic transfer option / format IDs](#iso-19115-automatic-transfer-option--format-ids) section for more 
+details.
+
+**Note:** Do not modify these IDs, as this will break this functionality.
+
+[1]
+
+| Format     | Size   | Download Link                |
+| ---------- | ------ | ---------------------------- |
+| CSV        | 68 kB  | [Link](https://example.com/) |
+| GeoPackage | 1.2 MB | [Link](https://example.com/) |
+
+### Disabling XML declaration
+
+**WARNING:** This feature is deprecated.
+
+**The example below is for the ISO 19115 standard but this applies to all standards.**
+
+To disable the XML declaration (i.e. `<?xml version='1.0' encoding='utf-8'?>`), you can set the `xml_declaration`
+parameter to false. This is sometimes needed when the generated XML documented needs to be embedded into a larger
+document, such as a CSW transaction.
+
+```python
+# disable XML declaration
+document = record.generate_xml_document(xml_declaration=False)
+
+# output document
+print(document)
+```
+
 ### Migrating to new configuration versions
 
-#### Version 1 to version 2
+#### ISO 19115 Version 1 to version 2
 
-**Note:** The version 1 configuration schema is deprecated and will be removed in the next version
-[#116](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/116).
+**WARNING:** This feature is deprecated.
 
 Utility methods are provided within the V1 and V2 [Record configuration](#configuration-classes) classes to convert to
 and from the V2/V1 [Record Configuration Schema](#configuration-schemas).
@@ -264,40 +444,6 @@ configurationV1.convert_from_v2_configuration(configuration=configurationV2)
 # print V1 configuration
 print(configurationV1.config)
 ```
-
-### HTML entities
-
-Do not include HTML entities in input to this generator, as they will be double escaped by [Lxml](https://lxml.de), the
-underlying XML processing library used by this project. Instead, literal characters should be used (e.g. `>`), which
-will be escaped as needed automatically. This applies to any unicode character, such as accents (e.g. `å`) and
-symbols (e.g. `µ`).
-
-E.g. If `&gt;`, the HTML entity for `>` (greater than), were used as input, it would be escaped again to `&amp;gt;`
-which will not be valid output.
-
-### Linking transfer options and formats
-
-To support generating a table of download options for a resource (such as [1]), this library uses a 'distribution
-option' concept to group related formats and transfer option elements in [Record Configurations](#configuration-classes).
-
-In ISO these elements are independent of each other, with no formal mechanism to associate formats and transfer options.
-As this library seeks to be fully reversible between a configuration object and XML, this information would be lost
-once records are encoded as XML.
-
-To avoid this, this library uses the ID attribute available in both format and transfer option elements with values
-can be used when decoding XML to reconstruct these associations. This functionality should be fully transparent to the
-user, except for these auto-generated IDs being present in records.
-
-See the [Automatic transfer option / format IDs](#automatic-transfer-option--format-ids) section for more details.
-
-**Note:** Do not modify these IDs, as this will break this functionality.
-
-[1]
-
-| Format     | Size   | Download Link                |
-| ---------- | ------ | ---------------------------- |
-| CSV        | 68 kB  | [Link](https://example.com/) |
-| GeoPackage | 1.2 MB | [Link](https://example.com/) |
 
 ## Implementation
 
@@ -398,15 +544,16 @@ To add a new standard:
 
 1. create a new module under `bas_metadata_library.standards`, e.g. `bas_metadata_library.standards.foo_v1/__init__.py`
 2. in this module, overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed
-3. create a suitable metadata configuration JSON schema in `bas_metadata_library.standards_schemas/`
-   e.g. `bas_metadata_library.standards_schemas/foo_v1/configuration-schema.json`
-4. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
-   the configuration schema within the BAS Metadata Standards website
-5. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
+3. create a suitable metadata configuration JSON schema in `bas_metadata_library.schemas.src`
+   e.g. `bas_metadata_library.schemas.src.foo_v1.json`
+4. update the `generate_schemas` method in `manage.py` to generate distribution schemas
+5. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
+   the distribution schema within the BAS Metadata Standards website
+6. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
    `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
-6. update the inbuilt Flask application in `app.py` with a route for generating test records for the new standard
-7. use the inbuilt Flask application to generate the test records and save to `tests/resources/records/`
-8. add relevant [tests](#testing) with methods to test each metadata element class and test records
+7. update the inbuilt Flask application in `app.py` with a route for generating test records for the new standard
+8. use the inbuilt Flask application to generate the test records and save to `tests/resources/records/`
+9. add relevant [tests](#testing) with methods to test each metadata element class and test records
 
 ### Adding a new element to an existing standard
 
@@ -483,7 +630,7 @@ To add a new standard:
 10. update `CHANGELOG.md`
 11. if needed, add name to `authors` property in `pyproject.toml`
 
-### Automatic transfer option / format IDs
+### ISO 19115 - Automatic transfer option / format IDs
 
 ID attributes are automatically added to `gmd:MD_Format` and `gmd:MD_DigitalTransferOptions` elements in order to
 reconstruct related formats and transfer options (see the
