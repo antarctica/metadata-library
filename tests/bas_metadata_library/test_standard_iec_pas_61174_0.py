@@ -46,6 +46,15 @@ def test_edge_case_invalid_configuration_v1_route_name(route_name):
     assert f"'{route_name}' does not match" in str(e.value)
 
 
+def test_edge_case_invalid_configuration_v1_geometry_type():
+    config = deepcopy(configs_v1["minimal_v1"])
+    config["waypoints"][0]['position']['geometry_type'] = 'invalid'
+    with pytest.raises(ValidationError) as e:
+        configuration = MetadataRecordConfigV1(**config)
+        configuration.validate()
+    assert "'invalid' is not one of ['loxodrome', 'orthodrome']" in str(e.value)
+
+
 def test_configuration_v1_from_json_file():
     configuration = MetadataRecordConfigV1()
     configuration.load(file=Path("tests/resources/configs/iec_pas_61174_0_standard_minimal_record_v1.json"))

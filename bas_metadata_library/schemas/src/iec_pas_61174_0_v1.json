@@ -31,6 +31,15 @@
           "examples": [
             -1.371093202427128
           ]
+        },
+        "geometry_type": {
+          "title": "Geometry Type",
+          "description": "Geometry type of leg (loxodrome [rhumb line] or orthodrome [great circle])",
+          "type": "string",
+          "enum": [
+            "loxodrome",
+            "orthodrome"
+          ]
         }
       }
     },

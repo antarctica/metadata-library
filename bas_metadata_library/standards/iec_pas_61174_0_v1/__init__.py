@@ -340,8 +340,17 @@ class Position(MetadataRecordElement):
         if len(lon) > 0:
             _["lon"] = int(lon[0])
 
+        geometry_type = self.record.xpath(
+            f"{self.xpath}/rtz:position/@geometryType",
+            namespaces=self.ns.nsmap(suppress_root_namespace=True),
+        )
+        if len(geometry_type) > 0:
+            _["geometry_type"] = geometry_type[0]
+
         return _
 
     def make_element(self) -> None:
         attributes = {"lat": str(self.element_attributes["lat"]), "lon": str(self.element_attributes["lon"])}
+        if 'geometry_type' in self.element_attributes:
+            attributes['geometryType'] = self.element_attributes['geometry_type']
         SubElement(self.parent_element, f"{{{self.ns.rtz}}}position", attrib=attributes)

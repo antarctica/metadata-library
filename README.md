@@ -71,17 +71,18 @@ add significant complexity or maintenance.
 
 Support for this standard is currently limited to these properties:
 
-| Element                                   | Reference | Obligation |
-| ----------------------------------------- | --------- | ---------- |
-| `route`                                   | *4.5.2*   | Mandatory  | 
-| `route.routeInfo.routeAuthor`             | *4.5.3*   | Optional   | 
-| `route.routeInfo.routeName`               | *4.5.3*   | Mandatory  | 
-| `route.routeInfo.routeStatus`             | *4.5.3*   | Optional   | 
-| `route.waypoints`                         | *4.5.4*   | Mandatory  | 
-| `route.waypoints.*.waypoint.id`           | *4.5.6*   | Mandatory  | 
-| `route.waypoints.*.waypoint.revision`     | *4.5.6*   | Mandatory  | 
-| `route.waypoints.*.waypoint.position.lat` | *4.5.6*   | Mandatory  | 
-| `route.waypoints.*.waypoint.position.lon` | *4.5.6*   | Mandatory  | 
+| Element                                        | Reference | Obligation |
+| ---------------------------------------------- | --------- | ---------- |
+| `route`                                        | *4.5.2*   | Mandatory  | 
+| `route.routeInfo.routeAuthor`                  | *4.5.3*   | Optional   | 
+| `route.routeInfo.routeName`                    | *4.5.3*   | Mandatory  | 
+| `route.routeInfo.routeStatus`                  | *4.5.3*   | Optional   | 
+| `route.waypoints`                              | *4.5.4*   | Mandatory  | 
+| `route.waypoints.*.waypoint.id`                | *4.5.6*   | Mandatory  | 
+| `route.waypoints.*.waypoint.revision`          | *4.5.6*   | Mandatory  | 
+| `route.waypoints.*.waypoint.position.lat`      | *4.5.6*   | Mandatory  | 
+| `route.waypoints.*.waypoint.position.lon`      | *4.5.6*   | Mandatory  | 
+| `route.waypoints.*.waypoint.position.geometry` | *4.5.6*   | Optional   | 
 
 ## Installation
 

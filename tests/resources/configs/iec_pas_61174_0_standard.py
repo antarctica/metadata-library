@@ -12,9 +12,9 @@ complete_record_v1 = {
     "route_name": "complete-test-route",
     "route_status": "complete",
     "waypoints": [
-        {"id": 1001, "revision": 0, "position": {"lat": 5, "lon": 50}},
-        {"id": 1002, "revision": 0, "position": {"lat": 5, "lon": 50}},
-        {"id": 1003, "revision": 0, "position": {"lat": 5, "lon": 50}},
+        {"id": 1001, "revision": 0, "position": {"lat": 5, "lon": 50, "geometry_type": "orthodrome"}},
+        {"id": 1002, "revision": 0, "position": {"lat": 5, "lon": 50, "geometry_type": "orthodrome"}},
+        {"id": 1003, "revision": 0, "position": {"lat": 5, "lon": 50, "geometry_type": "orthodrome"}},
     ],
 }
 
