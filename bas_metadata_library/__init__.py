@@ -123,8 +123,6 @@ class MetadataRecordConfig(object):
         """
         Loads a record configuration from a JSON encoded file
 
-        The path to the file to read from should be expressed using a Python pathlib.Path object.
-
         :type file: Path
         :param file: path to the JSON encoded file to load from
         """
@@ -220,13 +218,13 @@ class MetadataRecord(object):
         """
         Generates an XML document and tree from an XML element defining a record
 
-        The XML document is encoded as a UTF-8 string, with pretty-printing, and by default, an XML declaration.
+        The XML document is encoded as a UTF-8 byte string, with pretty-printing, and by default, an XML declaration.
 
         :type xml_declaration: bool
         :param xml_declaration: Whether to include an XML declaration, defaults to True
 
-        :rtype str
-        :return: XML document string representing a record
+        :rtype bytes
+        :return: XML document in bytes
         """
         self.record = self.make_element()
         document = ElementTree(self.record)
