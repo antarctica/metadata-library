@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* Initial support for IEC PAS 61174 standards (RTZ route planning)
+  [#139](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/139)
+
 ## 0.5.0 - 2021-12-02
 
 ### Fixed
