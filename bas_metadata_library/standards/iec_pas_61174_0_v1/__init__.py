@@ -1,4 +1,6 @@
 import json
+
+from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
@@ -140,6 +142,10 @@ class MetadataRecord(_MetadataRecord):
         """
         if version not in [1.0, 1.2]:
             raise ValueError(f"Invalid standard version [{version}], valid values: 1.0, 1.2")
+
+        if version == 1.2:
+            self.validate()
+
         if version == 1.0:
             self.record.attrib["version"] = str(1.0)
             self.record.attrib[f"{{{self.ns.xsi}}}schemaLocation"] = self.record.attrib[
@@ -179,6 +185,16 @@ class MetadataRecord(_MetadataRecord):
         with ZipFile(str(file)) as rtzp_file:
             self.record = fromstring(rtzp_file.read(rtzp_file.namelist()[0]))
             self.metadata_record = Route(record=self.record, attributes=self.attributes, xpath=self.xpath)
+
+    def validate(self) -> None:
+        pass
+        with resource_path("bas_metadata_library.schemas.xsd", "rtz_1_2.xsd") as schema_file_path:
+            with open(schema_file_path) as validation_schema_file:
+                validation_schema_document = fromstring(validation_schema_file.read().encode())
+
+        validation_schema = XMLSchema(validation_schema_document)
+        validation_document: MetadataRecord = deepcopy(self)
+        validation_schema.assertValid(validation_document.make_element())
 
 
 class Route(MetadataRecordElement):
