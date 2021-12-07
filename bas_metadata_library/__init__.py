@@ -26,25 +26,48 @@ class Namespaces(object):
 
     _schema_locations = {}
 
-    def __init__(self, namespaces: dict = None):
+    def __init__(self, namespaces: dict = None, root_namespace: str = None):
         """
+        Root namespace support.
+
+        The root namespace parameter is optional for use in standards that require a default namespace.
+
+        When encoding data, this has the effect of not including a prefix in elements when encoded (e.g. `foo` instead
+        of `ns:foo`). When decoding data, this behaviour must be suppressed using the relevant override parameter in
+        the `nsmap()` method.
+
         @type namespaces: dict
         @param namespaces: dictionary of namespaces to add
+        @type root_namespace: str
+        @param root_namespace: optional namespace to use as unprefixed
         """
         self._namespaces = {}
+        self.root_namespace = root_namespace
         if namespaces is not None:
             self._namespaces = {**self._namespaces, **namespaces}
 
-    def nsmap(self) -> dict:
+    def nsmap(self, suppress_root_namespace: bool = False) -> dict:
         """
-        Indexes namespaces by their prefix
+        Create a namespace map.
+
+        Indexes namespaces by their prefix.
 
         E.g. {'xlink': 'http://www.w3.org/1999/xlink'}
 
+        When a root namespace is set, a default namespace will be set by using the `None` constant for the relevant
+        dict key (this is an lxml convention). This will create an invalid namespace map for use in XPath queries, this
+        can be overcome using the `suppress_root_namespace` parameter, which will create a 'regular' map.
+
+        :type suppress_root_namespace: bool
+        :param suppress_root_namespace: When true, respects a root prefix as a default if set
         :return: dictionary of Namespaces indexed by prefix
         """
         nsmap = {}
         for prefix, namespace in self._namespaces.items():
+            if hasattr(self, "root_namespace") and namespace == self.root_namespace and not suppress_root_namespace:
+                nsmap[None] = namespace
+                continue
+
             nsmap[prefix] = namespace
 
         return nsmap
@@ -99,8 +122,6 @@ class MetadataRecordConfig(object):
     def load(self, file: Path) -> None:
         """
         Loads a record configuration from a JSON encoded file
-
-        The path to the file to read from should be expressed using a Python pathlib.Path object.
 
         :type file: Path
         :param file: path to the JSON encoded file to load from
@@ -197,13 +218,13 @@ class MetadataRecord(object):
         """
         Generates an XML document and tree from an XML element defining a record
 
-        The XML document is encoded as a UTF-8 string, with pretty-printing, and by default, an XML declaration.
+        The XML document is encoded as a UTF-8 byte string, with pretty-printing, and by default, an XML declaration.
 
         :type xml_declaration: bool
         :param xml_declaration: Whether to include an XML declaration, defaults to True
 
-        :rtype str
-        :return: XML document string representing a record
+        :rtype bytes
+        :return: XML document in bytes
         """
         self.record = self.make_element()
         document = ElementTree(self.record)
