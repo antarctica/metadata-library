@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<route xmlns="http://www.cirm.org/RTZ/1/0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="http://www.cirm.org/RTZ/1/0 https://www.cirm.org/rtz/RTZ%20Schema%20version%201_2.xsd">
+<route xmlns="http://www.cirm.org/RTZ/1/2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="http://www.cirm.org/RTZ/1/2 https://www.cirm.org/rtz/RTZ%20Schema%20version%201_2.xsd">
   <routeInfo routeName="minimal-test-route"/>
   <waypoints>
     <waypoint id="1001" revision="0">

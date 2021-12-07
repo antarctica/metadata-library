@@ -1,15 +1,18 @@
 <?xml version='1.0' encoding='utf-8'?>
-<route xmlns="http://www.cirm.org/RTZ/1/0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="http://www.cirm.org/RTZ/1/0 https://www.cirm.org/rtz/RTZ%20Schema%20version%201_2.xsd">
+<route xmlns="http://www.cirm.org/RTZ/1/2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="http://www.cirm.org/RTZ/1/2 https://www.cirm.org/rtz/RTZ%20Schema%20version%201_2.xsd">
   <routeInfo routeAuthor="Constance Watson" routeName="complete-test-route" routeStatus="complete"/>
   <waypoints>
     <waypoint id="1001" revision="0">
-      <position lat="5" lon="50" geometryType="orthodrome"/>
+      <position lat="5" lon="50"/>
+      <leg geometryType="Orthodrome"/>
     </waypoint>
     <waypoint id="1002" revision="0">
-      <position lat="5" lon="50" geometryType="orthodrome"/>
+      <position lat="5" lon="50"/>
+      <leg geometryType="Orthodrome"/>
     </waypoint>
     <waypoint id="1003" revision="0">
-      <position lat="5" lon="50" geometryType="orthodrome"/>
+      <position lat="5" lon="50"/>
+      <leg geometryType="Orthodrome"/>
     </waypoint>
   </waypoints>
 </route>

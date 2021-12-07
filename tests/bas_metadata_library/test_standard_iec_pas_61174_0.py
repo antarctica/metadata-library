@@ -48,11 +48,11 @@ def test_edge_case_invalid_configuration_v1_route_name(route_name):
 
 def test_edge_case_invalid_configuration_v1_geometry_type():
     config = deepcopy(configs_v1["minimal_v1"])
-    config["waypoints"][0]['position']['geometry_type'] = 'invalid'
+    config["waypoints"][0]['leg'] = {'geometry_type': 'invalid'}
     with pytest.raises(ValidationError) as e:
         configuration = MetadataRecordConfigV1(**config)
         configuration.validate()
-    assert "'invalid' is not one of ['loxodrome', 'orthodrome']" in str(e.value)
+    assert "'invalid' is not one of ['Loxodrome', 'Orthodrome']" in str(e.value)
 
 
 def test_configuration_v1_from_json_file():
@@ -172,6 +172,15 @@ def test_lossless_conversion_v1(get_record_response, config_name):
     record_ = MetadataRecord(configuration=config).generate_xml_document().decode()
     assert _record == record_
     assert _config == config_
+
+
+@pytest.mark.parametrize("config_name", list(configs_v1.keys()))
+def test_record_schema_validation_valid(config_name):
+    pass
+    config = MetadataRecordConfigV1(**configs_v1[config_name])
+    record = MetadataRecord(configuration=config)
+    record.validate()
+    assert True is True
 
 
 def test_rtzp_encode():

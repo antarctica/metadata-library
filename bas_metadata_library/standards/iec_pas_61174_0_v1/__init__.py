@@ -25,7 +25,7 @@ class Namespaces(_Namespaces):
     Defines the namespaces for this standard
     """
 
-    rtz = "http://www.cirm.org/RTZ/1/0"
+    rtz = "http://www.cirm.org/RTZ/1/2"
     xsi = "http://www.w3.org/2001/XMLSchema-instance"
 
     _schema_locations = {
@@ -303,6 +303,20 @@ class Waypoints(MetadataRecordElement):
             if bool(_position):
                 _waypoint["position"] = _position
 
+            leg = self.record.xpath(
+                f"{self.xpath}/rtz:waypoints/rtz:waypoint[{waypoint_index}]/rtz:leg",
+                namespaces=self.ns.nsmap(suppress_root_namespace=True),
+            )
+            if len(leg) > 0:
+                leg = Leg(
+                    record=self.record,
+                    attributes=self.attributes,
+                    xpath=f"{self.xpath}/rtz:waypoints/rtz:waypoint[{waypoint_index}]",
+                )
+                _leg = leg.make_config()
+                if bool(_leg):
+                    _waypoint["leg"] = _leg
+
             if bool(_waypoint):
                 _.append(_waypoint)
 
@@ -313,6 +327,7 @@ class Waypoints(MetadataRecordElement):
         for waypoint in self.element_attributes["waypoints"]:
             attributes = {"id": str(waypoint["id"]), "revision": str(waypoint["revision"])}
             waypoint_element = SubElement(waypoints_element, f"{{{self.ns.rtz}}}waypoint", attrib=attributes)
+
             position = Position(
                 record=self.record,
                 attributes=self.attributes,
@@ -320,6 +335,15 @@ class Waypoints(MetadataRecordElement):
                 parent_element=waypoint_element,
             )
             position.make_element()
+
+            if 'leg' in waypoint:
+                leg = Leg(
+                    record=self.record,
+                    attributes=self.attributes,
+                    element_attributes=waypoint["leg"],
+                    parent_element=waypoint_element,
+                )
+                leg.make_element()
 
 
 class Position(MetadataRecordElement):
@@ -340,8 +364,19 @@ class Position(MetadataRecordElement):
         if len(lon) > 0:
             _["lon"] = int(lon[0])
 
+        return _
+
+    def make_element(self) -> None:
+        attributes = {"lat": str(self.element_attributes["lat"]), "lon": str(self.element_attributes["lon"])}
+        SubElement(self.parent_element, f"{{{self.ns.rtz}}}position", attrib=attributes)
+
+
+class Leg(MetadataRecordElement):
+    def make_config(self) -> dict:
+        _ = {}
+
         geometry_type = self.record.xpath(
-            f"{self.xpath}/rtz:position/@geometryType",
+            f"{self.xpath}/rtz:leg/@geometryType",
             namespaces=self.ns.nsmap(suppress_root_namespace=True),
         )
         if len(geometry_type) > 0:
@@ -350,7 +385,7 @@ class Position(MetadataRecordElement):
         return _
 
     def make_element(self) -> None:
-        attributes = {"lat": str(self.element_attributes["lat"]), "lon": str(self.element_attributes["lon"])}
+        attributes = {}
         if 'geometry_type' in self.element_attributes:
             attributes['geometryType'] = self.element_attributes['geometry_type']
-        SubElement(self.parent_element, f"{{{self.ns.rtz}}}position", attrib=attributes)
+        SubElement(self.parent_element, f"{{{self.ns.rtz}}}leg", attrib=attributes)

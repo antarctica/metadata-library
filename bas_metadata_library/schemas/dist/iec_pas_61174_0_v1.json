@@ -4,6 +4,22 @@
     "title": "UK PDC Metadata Record Generator - IEC 61174:2015 / IEC PAS 61174:2021 v1 configuration schema",
     "description": "Metadata record configuration schema for the IEC 61174:2015 and IEC PAS 61174:2021 metadata standards (version 1)",
     "definitions": {
+        "leg": {
+            "type": "object",
+            "required": [],
+            "additionalProperties": false,
+            "properties": {
+                "geometry_type": {
+                    "title": "Geometry Type",
+                    "description": "Geometry type of leg (loxodrome [rhumb line] or orthodrome [great circle])",
+                    "type": "string",
+                    "enum": [
+                        "Loxodrome",
+                        "Orthodrome"
+                    ]
+                }
+            }
+        },
         "position": {
             "type": "object",
             "required": [
@@ -92,6 +108,9 @@
                     },
                     "position": {
                         "$ref": "#/definitions/position"
+                    },
+                    "leg": {
+                        "$ref": "#/definitions/leg"
                     }
                 }
             }
