@@ -352,7 +352,7 @@ class Waypoints(MetadataRecordElement):
             )
             position.make_element()
 
-            if 'leg' in waypoint:
+            if "leg" in waypoint:
                 leg = Leg(
                     record=self.record,
                     attributes=self.attributes,
@@ -402,6 +402,6 @@ class Leg(MetadataRecordElement):
 
     def make_element(self) -> None:
         attributes = {}
-        if 'geometry_type' in self.element_attributes:
-            attributes['geometryType'] = self.element_attributes['geometry_type']
+        if "geometry_type" in self.element_attributes:
+            attributes["geometryType"] = self.element_attributes["geometry_type"]
         SubElement(self.parent_element, f"{{{self.ns.rtz}}}leg", attrib=attributes)

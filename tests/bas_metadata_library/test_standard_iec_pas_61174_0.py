@@ -48,7 +48,7 @@ def test_edge_case_invalid_configuration_v1_route_name(route_name):
 
 def test_edge_case_invalid_configuration_v1_geometry_type():
     config = deepcopy(configs_v1["minimal_v1"])
-    config["waypoints"][0]['leg'] = {'geometry_type': 'invalid'}
+    config["waypoints"][0]["leg"] = {"geometry_type": "invalid"}
     with pytest.raises(ValidationError) as e:
         configuration = MetadataRecordConfigV1(**config)
         configuration.validate()
