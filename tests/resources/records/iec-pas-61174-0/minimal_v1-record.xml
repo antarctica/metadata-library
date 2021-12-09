@@ -3,13 +3,13 @@
   <routeInfo routeName="minimal-test-route"/>
   <waypoints>
     <waypoint id="1001" revision="0">
-      <position lat="5" lon="50"/>
+      <position lat="5.5" lon="50.55"/>
     </waypoint>
     <waypoint id="1002" revision="0">
-      <position lat="5" lon="50"/>
+      <position lat="5.5" lon="50.55"/>
     </waypoint>
     <waypoint id="1003" revision="0">
-      <position lat="5" lon="50"/>
+      <position lat="5.5" lon="50.55"/>
     </waypoint>
   </waypoints>
 </route>

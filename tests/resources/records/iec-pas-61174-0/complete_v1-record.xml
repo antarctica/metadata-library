@@ -3,15 +3,15 @@
   <routeInfo routeAuthor="Constance Watson" routeName="complete-test-route" routeStatus="complete"/>
   <waypoints>
     <waypoint id="1001" revision="0">
-      <position lat="5" lon="50"/>
+      <position lat="5.5" lon="50.55"/>
       <leg geometryType="Orthodrome"/>
     </waypoint>
     <waypoint id="1002" revision="0">
-      <position lat="5" lon="50"/>
+      <position lat="5.5" lon="50.55"/>
       <leg geometryType="Orthodrome"/>
     </waypoint>
     <waypoint id="1003" revision="0">
-      <position lat="5" lon="50"/>
+      <position lat="5.5" lon="50.55"/>
       <leg geometryType="Orthodrome"/>
     </waypoint>
   </waypoints>

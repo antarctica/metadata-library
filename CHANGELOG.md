@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+* Incorrect casting of IEC 61174 waypoint position lat/lon values to integers instead of floats
+  [#143](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/143)
+
 ## 0.6.0 - 2021-12-07
 
 ### Added
