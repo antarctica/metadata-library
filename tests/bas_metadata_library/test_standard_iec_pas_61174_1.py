@@ -125,9 +125,7 @@ def test_standard_version():
         "/rtz:route/@xsi:schemaLocation", namespaces=namespaces.nsmap(suppress_root_namespace=True)
     )
     route_version = _record.xpath("/rtz:route/@version", namespaces=namespaces.nsmap(suppress_root_namespace=True))
-    assert (
-        f"https://www.cirm.org/rtz/RTZ%20Schema%20version%201_2.xsd" in schema_locations[0]
-    )
+    assert f"https://www.cirm.org/rtz/RTZ%20Schema%20version%201_2.xsd" in schema_locations[0]
     assert float(route_version[0]) == 1.2
 
 

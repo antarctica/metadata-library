@@ -15,7 +15,10 @@ from bas_metadata_library import (
     MetadataRecord as _MetadataRecord,
     MetadataRecordElement as _MetadataRecordElement,
 )
-from bas_metadata_library.standards.iec_pas_61174_common.utils import generate_rtzp_archive as _generate_rtzp_archive, load_record_from_rtzp_archive
+from bas_metadata_library.standards.iec_pas_61174_common.utils import (
+    generate_rtzp_archive as _generate_rtzp_archive,
+    load_record_from_rtzp_archive,
+)
 
 
 class Namespaces(_Namespaces):
@@ -132,7 +135,9 @@ class MetadataRecord(_MetadataRecord):
         :type file: Path
         :param file: path at which to create RTZP data container
         """
-        _generate_rtzp_archive(file=file, rtz_name=self.attributes['route_name'], rtz_document=self.generate_xml_document().decode())
+        _generate_rtzp_archive(
+            file=file, rtz_name=self.attributes["route_name"], rtz_document=self.generate_xml_document().decode()
+        )
 
     def load_from_rtzp_archive(self, file: Path):
         """
