@@ -1,0 +1,290 @@
+{
+    "$id": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "UK PDC Metadata Record Generator - IEC PAS 61174:2021 v1 configuration schema",
+    "description": "Metadata record configuration schema for the IEC PAS 61174:2021 metadata standard (version 1)",
+    "definitions": {},
+    "allOf": [
+        {
+            "$id": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json",
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "title": "UK PDC Metadata Record Generator - IEC 61174:2015 v1 configuration schema",
+            "description": "Metadata record configuration schema for the IEC 61174:2015 metadata standard (version 1)",
+            "definitions": {
+                "leg": {
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": false,
+                    "properties": {
+                        "geometry_type": {
+                            "title": "Geometry Type",
+                            "description": "Geometry type of leg (loxodrome [rhumb line] or orthodrome [great circle])",
+                            "type": "string",
+                            "enum": [
+                                "Loxodrome",
+                                "Orthodrome"
+                            ]
+                        }
+                    }
+                },
+                "position": {
+                    "type": "object",
+                    "required": [
+                        "lat",
+                        "lon"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "lat": {
+                            "title": "Latitude",
+                            "description": "Degrees latitude (decimal)",
+                            "type": "number",
+                            "minimum": -90.0,
+                            "maximum": 90.0,
+                            "examples": [
+                                50.75216574674486
+                            ]
+                        },
+                        "lon": {
+                            "title": "Longitude",
+                            "description": "Degrees longitude (decimal)",
+                            "type": "number",
+                            "minimum": -180.0,
+                            "maximum": 180.0,
+                            "examples": [
+                                -1.371093202427128
+                            ]
+                        },
+                        "geometry_type": {
+                            "title": "Geometry Type",
+                            "description": "Geometry type of leg (loxodrome [rhumb line] or orthodrome [great circle])",
+                            "type": "string",
+                            "enum": [
+                                "loxodrome",
+                                "orthodrome"
+                            ]
+                        }
+                    }
+                },
+                "route_author": {
+                    "title": "Route Author",
+                    "description": "Author of route",
+                    "type": "string",
+                    "examples": [
+                        "Constance Watson",
+                        "RoutePlanner 5000"
+                    ]
+                },
+                "route_name": {
+                    "title": "Route Name",
+                    "description": "Name of route",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9-_]+$",
+                    "examples": [
+                        "Route 51A"
+                    ]
+                },
+                "route_status": {
+                    "title": "Route Status",
+                    "description": "Description of route",
+                    "type": "string",
+                    "examples": [
+                        "Logistics run from base X to base y with opportunistic science transect"
+                    ]
+                },
+                "waypoints": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "revision",
+                            "position"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "id": {
+                                "title": "Identifier",
+                                "description": "Waypoint identifier, unique within route, value does NOT imply waypoint order",
+                                "type": "integer"
+                            },
+                            "revision": {
+                                "title": "Revision",
+                                "description": "Waypoint revision, indicating how many times a waypoint has been modified, 0 indexed",
+                                "type": "integer"
+                            },
+                            "position": {
+                                "type": "object",
+                                "required": [
+                                    "lat",
+                                    "lon"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "lat": {
+                                        "title": "Latitude",
+                                        "description": "Degrees latitude (decimal)",
+                                        "type": "number",
+                                        "minimum": -90.0,
+                                        "maximum": 90.0,
+                                        "examples": [
+                                            50.75216574674486
+                                        ]
+                                    },
+                                    "lon": {
+                                        "title": "Longitude",
+                                        "description": "Degrees longitude (decimal)",
+                                        "type": "number",
+                                        "minimum": -180.0,
+                                        "maximum": 180.0,
+                                        "examples": [
+                                            -1.371093202427128
+                                        ]
+                                    },
+                                    "geometry_type": {
+                                        "title": "Geometry Type",
+                                        "description": "Geometry type of leg (loxodrome [rhumb line] or orthodrome [great circle])",
+                                        "type": "string",
+                                        "enum": [
+                                            "loxodrome",
+                                            "orthodrome"
+                                        ]
+                                    }
+                                }
+                            },
+                            "leg": {
+                                "type": "object",
+                                "required": [],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "geometry_type": {
+                                        "title": "Geometry Type",
+                                        "description": "Geometry type of leg (loxodrome [rhumb line] or orthodrome [great circle])",
+                                        "type": "string",
+                                        "enum": [
+                                            "Loxodrome",
+                                            "Orthodrome"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "type": "object",
+            "required": [
+                "route_name",
+                "waypoints"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "route_author": {
+                    "title": "Route Author",
+                    "description": "Author of route",
+                    "type": "string",
+                    "examples": [
+                        "Constance Watson",
+                        "RoutePlanner 5000"
+                    ]
+                },
+                "route_name": {
+                    "title": "Route Name",
+                    "description": "Name of route",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9-_]+$",
+                    "examples": [
+                        "Route 51A"
+                    ]
+                },
+                "route_status": {
+                    "title": "Route Status",
+                    "description": "Description of route",
+                    "type": "string",
+                    "examples": [
+                        "Logistics run from base X to base y with opportunistic science transect"
+                    ]
+                },
+                "waypoints": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "revision",
+                            "position"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "id": {
+                                "title": "Identifier",
+                                "description": "Waypoint identifier, unique within route, value does NOT imply waypoint order",
+                                "type": "integer"
+                            },
+                            "revision": {
+                                "title": "Revision",
+                                "description": "Waypoint revision, indicating how many times a waypoint has been modified, 0 indexed",
+                                "type": "integer"
+                            },
+                            "position": {
+                                "type": "object",
+                                "required": [
+                                    "lat",
+                                    "lon"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "lat": {
+                                        "title": "Latitude",
+                                        "description": "Degrees latitude (decimal)",
+                                        "type": "number",
+                                        "minimum": -90.0,
+                                        "maximum": 90.0,
+                                        "examples": [
+                                            50.75216574674486
+                                        ]
+                                    },
+                                    "lon": {
+                                        "title": "Longitude",
+                                        "description": "Degrees longitude (decimal)",
+                                        "type": "number",
+                                        "minimum": -180.0,
+                                        "maximum": 180.0,
+                                        "examples": [
+                                            -1.371093202427128
+                                        ]
+                                    },
+                                    "geometry_type": {
+                                        "title": "Geometry Type",
+                                        "description": "Geometry type of leg (loxodrome [rhumb line] or orthodrome [great circle])",
+                                        "type": "string",
+                                        "enum": [
+                                            "loxodrome",
+                                            "orthodrome"
+                                        ]
+                                    }
+                                }
+                            },
+                            "leg": {
+                                "type": "object",
+                                "required": [],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "geometry_type": {
+                                        "title": "Geometry Type",
+                                        "description": "Geometry type of leg (loxodrome [rhumb line] or orthodrome [great circle])",
+                                        "type": "string",
+                                        "enum": [
+                                            "Loxodrome",
+                                            "Orthodrome"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

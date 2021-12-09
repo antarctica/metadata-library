@@ -13,10 +13,15 @@ from bas_metadata_library.standards.iec_pas_61174_0_v1 import (
     MetadataRecordConfigV1 as IEC_PAS_61174_0_MetadataRecordConfigV1,
     MetadataRecord as IEC_PAS_61174_0_MetadataRecord,
 )
+from bas_metadata_library.standards.iec_pas_61174_1_v1 import (
+    MetadataRecordConfigV1 as IEC_PAS_61174_1_MetadataRecordConfigV1,
+    MetadataRecord as IEC_PAS_61174_1_MetadataRecord,
+)
 
 from tests.resources.configs.iso19115_1_standard import configs_all as iso19115_1_v1_standard_configs
 from tests.resources.configs.iso19115_2_standard import configs_all as iso19115_2_v1_standard_configs
 from tests.resources.configs.iec_pas_61174_0_standard import configs_v1 as iec_pas_61174_0_standard_configs
+from tests.resources.configs.iec_pas_61174_1_standard import configs_v1 as iec_pas_61174_1_standard_configs
 from tests.resources.configs.test_metadata_standard import configs_all as test_metadata_standard_configs
 
 app = create_app()
@@ -30,6 +35,7 @@ def capture_test_records():
         "iso-19115-1": {"configurations": list(iso19115_1_v1_standard_configs.keys())},
         "iso-19115-2": {"configurations": list(iso19115_2_v1_standard_configs.keys())},
         "iec-pas-61174-0": {"configurations": list(iec_pas_61174_0_standard_configs.keys())},
+        "iec-pas-61174-1": {"configurations": list(iec_pas_61174_1_standard_configs.keys())},
     }
     for standard, options in standards.items():
         for config in options["configurations"]:
@@ -42,11 +48,17 @@ def capture_test_records():
             with open(response_file_path, mode="w") as response_file:
                 response_file.write(response.text)
 
-    # Capture RTZP file separately for IEC PAS 61174-0 standard
+    # Capture RTZP files separately for IEC PAS 61174 standard
+
     print(f"saving RTZP archive for 'standards/iec-pas-61174-0/minimal-v1'")
     rtz_config = IEC_PAS_61174_0_MetadataRecordConfigV1(**iec_pas_61174_0_standard_configs["minimal_v1"])
     rtz_record = IEC_PAS_61174_0_MetadataRecord(configuration=rtz_config)
     rtz_record.generate_rtzp_archive(file=Path(f"./tests/resources/records/iec-pas-61174-0/minimal-v1-record.rtzp"))
+
+    print(f"saving RTZP archive for 'standards/iec-pas-61174-1/minimal-v1'")
+    rtz_config = IEC_PAS_61174_1_MetadataRecordConfigV1(**iec_pas_61174_1_standard_configs["minimal_v1"])
+    rtz_record = IEC_PAS_61174_1_MetadataRecord(configuration=rtz_config)
+    rtz_record.generate_rtzp_archive(file=Path(f"./tests/resources/records/iec-pas-61174-1/minimal-v1-record.rtzp"))
 
 
 @app.cli.command()
@@ -58,6 +70,7 @@ def generate_schemas():
         {"id": "iso_19115_1_v2", "resolve": False},
         {"id": "iso_19115_2_v2", "resolve": True},
         {"id": "iec_pas_61174_0_v1", "resolve": False},
+        {"id": "iec_pas_61174_1_v1", "resolve": True},
     ]
 
     for schema in schemas:
