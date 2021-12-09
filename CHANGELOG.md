@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed [BREAKING!]
+
+* Splitting IEC 61174 standards into separate modules (61174-0, 61174-1)
+  [#144](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/143)
+
 ### Fixed
 
 * Incorrect casting of IEC 61174 waypoint position lat/lon values to integers instead of floats

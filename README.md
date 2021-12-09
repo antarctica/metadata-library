@@ -21,14 +21,11 @@ representation to be decoded back into a configuration object, which can be more
 | [ISO 19115:2003](https://www.iso.org/standard/26020.html)       | [ISO 19139:2007](https://www.iso.org/standard/32557.html)       | `bas_metadata_library.standards.iso_19115_1_v1`     | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/46)   |
 | [ISO 19115-2:2009](https://www.iso.org/standard/39229.html)     | [ISO 19139-2:2012](https://www.iso.org/standard/57104.html)     | `bas_metadata_library.standards.iso_19115_2_v1`     | [#50](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50)   |
 | [IEC 61174:2015](https://webstore.iec.ch/publication/23128)     | [IEC 61174:2015](https://webstore.iec.ch/publication/23128)     | `bas_metadata_library.standards.iec_pas_61174_0_v1` | [#139](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/139) |
-| [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | `bas_metadata_library.standards.iec_pas_61174_0_v1` | [#139](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/139) |
+| [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | `bas_metadata_library.standards.iec_pas_61174_1_v1` | [#139](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/144) |
 
 **Note:** In this library, the *ISO 19115:2003* standard is referred to as *ISO-19115-1* (`iso_19115_1_v1`) for
 consistency with *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_v1`). In the future, the
 [ISO 19115-1:2014](https://www.iso.org/standard/53798.html) standard will be referred to as *ISO-19115-3*.
-
-**Note:** In this library, because the differences between the *IEC PAS 61174:2015* and *ICE-PAS-61174-0* standards 
-are minor, both are implemented as `iec_pas_61174_0_v1`, with support for both the `1.0` and `1.2` versions.
 
 ### Supported profiles
 
@@ -48,10 +45,7 @@ wait until stable profiles for UK PDC Discovery metadata have been developed and
 | ISO 19115-2:2009   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Deprecated | Deprecated version replaced by `v2` |
 | ISO 19115-2:2009   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Live       | Stable version                      |
 | IEC 61174:2015     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Alpha      | Experimental                        |
-| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Alpha      | Experimental                        |
-
-**Note:** The *IEC 61174:2015* and *IEC PAS 61174:2021* standards share the same configuration schema, as the 
-differences between these standards do not impact the record configuration.
+| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Alpha      | Experimental                        |
 
 ### Supported standards coverage
 

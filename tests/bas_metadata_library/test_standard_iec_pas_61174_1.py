@@ -15,16 +15,16 @@ from jsonschema import ValidationError
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
 from lxml.etree import ElementTree, XML, tostring, fromstring
 
-from bas_metadata_library.standards.iec_pas_61174_0_v1 import (
+from bas_metadata_library.standards.iec_pas_61174_1_v1 import (
     Namespaces,
     MetadataRecordConfigV1,
     MetadataRecord,
 )
 
-from tests.resources.configs.iec_pas_61174_0_standard import configs_v1
+from tests.resources.configs.iec_pas_61174_1_standard import configs_v1
 
 
-standard = "iec-pas-61174-0"
+standard = "iec-pas-61174-1"
 namespaces = Namespaces()
 
 
@@ -57,13 +57,13 @@ def test_edge_case_invalid_configuration_v1_geometry_type():
 
 def test_configuration_v1_from_json_file():
     configuration = MetadataRecordConfigV1()
-    configuration.load(file=Path("tests/resources/configs/iec_pas_61174_0_standard_minimal_record_v1.json"))
+    configuration.load(file=Path("tests/resources/configs/iec_pas_61174_1_standard_minimal_record_v1.json"))
     configuration.validate()
     assert configuration.config == configs_v1["minimal_v1"]
 
 
 def test_configuration_v1_from_json_string():
-    with open(str(Path("tests/resources/configs/iec_pas_61174_0_standard_minimal_record_v1.json")), mode="r") as file:
+    with open(str(Path("tests/resources/configs/iec_pas_61174_1_standard_minimal_record_v1.json")), mode="r") as file:
         config_str = file.read()
         configuration = MetadataRecordConfigV1()
         configuration.loads(string=config_str)
@@ -82,7 +82,7 @@ def test_response(client, config_name):
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
 def test_complete_record(client, config_name):
-    with open(f"tests/resources/records/iec-pas-61174-0/{config_name}-record.xml") as expected_contents_file:
+    with open(f"tests/resources/records/iec-pas-61174-1/{config_name}-record.xml") as expected_contents_file:
         expected_contents = expected_contents_file.read()
 
     response = client.get(f"/standards/{standard}/{config_name}")
@@ -126,14 +126,14 @@ def test_standard_version():
     )
     route_version = _record.xpath("/rtz:route/@version", namespaces=namespaces.nsmap(suppress_root_namespace=True))
     assert (
-        f"https://www.cirm.org/rtz/RTZ%20Schema%20version%201_0.xsd" in schema_locations[0]
+        f"https://www.cirm.org/rtz/RTZ%20Schema%20version%201_2.xsd" in schema_locations[0]
     )
-    assert float(route_version[0]) == 1.0
+    assert float(route_version[0]) == 1.2
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
 def test_parse_existing_record_v1(config_name):
-    with open(f"tests/resources/records/iec-pas-61174-0/{config_name}-record.xml") as record_file:
+    with open(f"tests/resources/records/iec-pas-61174-1/{config_name}-record.xml") as record_file:
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)
@@ -163,6 +163,15 @@ def test_lossless_conversion_v1(get_record_response, config_name):
     assert _config == config_
 
 
+@pytest.mark.parametrize("config_name", list(configs_v1.keys()))
+def test_record_schema_validation_valid(config_name):
+    pass
+    config = MetadataRecordConfigV1(**configs_v1[config_name])
+    record = MetadataRecord(configuration=config)
+    record.validate()
+    assert True is True
+
+
 def test_rtzp_encode():
     config = MetadataRecordConfigV1(**configs_v1["minimal_v1"])
     record = MetadataRecord(configuration=config)
@@ -182,6 +191,6 @@ def test_rtzp_encode():
 
 def test_rtzp_decode():
     record = MetadataRecord()
-    record.load_from_rtzp_archive(file=Path(f"./tests/resources/records/iec-pas-61174-0/minimal-v1-record.rtzp"))
+    record.load_from_rtzp_archive(file=Path(f"./tests/resources/records/iec-pas-61174-1/minimal-v1-record.rtzp"))
     config = record.make_config().config
     assert config == configs_v1["minimal_v1"]

@@ -1,8 +1,8 @@
 {
     "$id": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "UK PDC Metadata Record Generator - IEC 61174:2015 / IEC PAS 61174:2021 v1 configuration schema",
-    "description": "Metadata record configuration schema for the IEC 61174:2015 and IEC PAS 61174:2021 metadata standards (version 1)",
+    "title": "UK PDC Metadata Record Generator - IEC 61174:2015 v1 configuration schema",
+    "description": "Metadata record configuration schema for the IEC 61174:2015 metadata standard (version 1)",
     "definitions": {
         "leg": {
             "type": "object",

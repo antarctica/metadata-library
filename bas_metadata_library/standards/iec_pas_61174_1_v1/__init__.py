@@ -1,13 +1,15 @@
 import json
 
+from copy import deepcopy
 from pathlib import Path
+from typing import Dict, Any
 
 from importlib_resources import path as resource_path
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import Element, SubElement, fromstring  # nosec
+from lxml.etree import Element, SubElement, XMLSchema, fromstring  # nosec
 
 from bas_metadata_library import (
     Namespaces as _Namespaces,
@@ -29,7 +31,7 @@ class Namespaces(_Namespaces):
     xsi = "http://www.w3.org/2001/XMLSchema-instance"
 
     _schema_locations = {
-        "rtz": "https://www.cirm.org/rtz/RTZ%20Schema%20version%201_0.xsd",
+        "rtz": "https://www.cirm.org/rtz/RTZ%20Schema%20version%201_2.xsd",
     }
 
     def __init__(self):
@@ -81,7 +83,7 @@ class MetadataRecordConfigV1(_MetadataRecordConfig):
         self.config = kwargs
 
         with resource_path(
-            "bas_metadata_library.schemas.dist", "iec_pas_61174_0_v1.json"
+            "bas_metadata_library.schemas.dist", "iec_pas_61174_1_v1.json"
         ) as configuration_schema_file_path:
             with open(configuration_schema_file_path) as configuration_schema_file:
                 configuration_schema_data = json.load(configuration_schema_file)
@@ -101,7 +103,7 @@ class MetadataRecord(_MetadataRecord):
         self.record = Element(
             f"{{{self.ns.rtz}}}route",
             attrib={
-                "version": str(1.0),
+                "version": str(1.2),
                 f"{{{self.ns.xsi}}}schemaLocation": self.ns.schema_locations(),
             },
             nsmap=self.ns.nsmap(),
@@ -110,7 +112,7 @@ class MetadataRecord(_MetadataRecord):
 
         if configuration is not None:
             configuration.validate()
-            self.attributes = configuration.config
+            self.attributes: Dict[str, Any] = configuration.config
 
         if record is not None:
             self.record = fromstring(record.encode())
@@ -143,6 +145,16 @@ class MetadataRecord(_MetadataRecord):
         """
         self.record = load_record_from_rtzp_archive(file=file)
         self.metadata_record = Route(record=self.record, attributes=self.attributes, xpath=self.xpath)
+
+    def validate(self) -> None:
+        pass
+        with resource_path("bas_metadata_library.schemas.xsd", "rtz_1_2.xsd") as schema_file_path:
+            with open(schema_file_path) as validation_schema_file:
+                validation_schema_document = fromstring(validation_schema_file.read().encode())
+
+        validation_schema = XMLSchema(validation_schema_document)
+        validation_document: MetadataRecord = deepcopy(self)
+        validation_schema.assertValid(validation_document.make_element())
 
 
 class Route(MetadataRecordElement):
