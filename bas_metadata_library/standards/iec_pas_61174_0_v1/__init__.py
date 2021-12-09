@@ -371,14 +371,14 @@ class Position(MetadataRecordElement):
             namespaces=self.ns.nsmap(suppress_root_namespace=True),
         )
         if len(lat) > 0:
-            _["lat"] = int(lat[0])
+            _["lat"] = float(lat[0])
 
         lon = self.record.xpath(
             f"{self.xpath}/rtz:position/@lon",
             namespaces=self.ns.nsmap(suppress_root_namespace=True),
         )
         if len(lon) > 0:
-            _["lon"] = int(lon[0])
+            _["lon"] = float(lon[0])
 
         return _
 

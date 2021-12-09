@@ -5,24 +5,24 @@
       "id": 1001,
       "revision": 0,
       "position": {
-        "lat": 5,
-        "lon": 50
+        "lat": 5.5,
+        "lon": 50.55
       }
     },
     {
       "id": 1002,
       "revision": 0,
       "position": {
-        "lat": 5,
-        "lon": 50
+        "lat": 5.5,
+        "lon": 50.55
       }
     },
     {
       "id": 1003,
       "revision": 0,
       "position": {
-        "lat": 5,
-        "lon": 50
+        "lat": 5.5,
+        "lon": 50.55
       }
     }
   ]
