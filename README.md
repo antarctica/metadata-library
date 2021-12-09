@@ -67,9 +67,9 @@ add significant complexity or maintenance.
 | IEC 61174:2015     | Minimal  | All mandatory elements supported plus a limited number of optional route information attributes  |
 | IEC PAS 61174:2021 | Minimal  | All mandatory elements supported plus a limited number of optional route information attributes  |
 
-#### Coverage for IEC PAS 61174:2021
+#### Coverage for IEC 61174
 
-Support for this standard is currently limited to these properties:
+As required by the IEC 61174 standard, this library supports the following properties within this standard:
 
 | Element                                        | Reference | Obligation |
 | ---------------------------------------------- | --------- | ---------- |
@@ -83,6 +83,16 @@ Support for this standard is currently limited to these properties:
 | `route.waypoints.*.waypoint.position.lat`      | *4.5.6*   | Mandatory  | 
 | `route.waypoints.*.waypoint.position.lon`      | *4.5.6*   | Mandatory  | 
 | `route.waypoints.*.waypoint.position.geometry` | *4.5.6*   | Optional   | 
+
+This list is exhaustive. No extensions are supported.
+
+References in the above table relate to the IEC PAS 61174:2021 standards document: 
+https://webstore.iec.ch/publication/67774. 
+
+Full citation:
+
+> IEC 61174:2015, Maritime navigation and radiocommunication equipment and systems – Electronic chart display and 
+> information system (ECDIS) – Operational and performance requirements, methods of testing and required test results
 
 ## Installation
 
