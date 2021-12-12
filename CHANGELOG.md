@@ -7,14 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.7.1 - 2021-12-12
+
 ### Fixed
 
 * Incorrect namespace for IEC 61174:2015 standard
-  [#150](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/143)
+  [#150](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/150)
 * Added logic to prevent RTZP test files being updated necessarily
   [#151](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/143)
 
-## 0.7.0 - 2021-12-09
+## 0.7.0 - 2021-12-09 [BREAKING!]
 
 ### Changed [BREAKING!]
 
@@ -84,7 +86,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Unnecessary GitLab CD job for releases
   [#125](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/125)
 
-## 0.5.0-rc.0 - 2021-11-17
+## 0.5.0-rc.0 - 2021-11-17 [BREAKING!]
 
 ### Changed [BREAKING!]
 
@@ -198,7 +200,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Updated minimal usage example
 
-## [0.3.0] 2020-08-25
+## [0.3.0] 2020-08-25 [BREAKING!]
 
 ### Changed [BREAKING!]
 
