@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Incorrect namespace for IEC 61174:2015 standard
   [#150](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/143)
+* Added logic to prevent RTZP test files being updated necessarily
+  [#151](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/143)
 
 ## 0.7.0 - 2021-12-09
 
