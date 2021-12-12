@@ -28,7 +28,7 @@ class Namespaces(_Namespaces):
     Defines the namespaces for this standard
     """
 
-    rtz = "http://www.cirm.org/RTZ/1/2"
+    rtz = "http://www.cirm.org/RTZ/1/0"
     xsi = "http://www.w3.org/2001/XMLSchema-instance"
 
     _schema_locations = {
