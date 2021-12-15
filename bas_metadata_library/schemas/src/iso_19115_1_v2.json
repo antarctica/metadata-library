@@ -1030,6 +1030,14 @@
             "The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry."
           ]
         },
+        "protocol": {
+          "title":  "Protocol",
+          "description": "Description of the Protocol",
+          "type": "string",
+          "examples": [
+            "WWW:LINK-1.0-http--link"
+          ]
+        },
         "function": {
           "title": "Function",
           "description": "The kind of action or service the external website or page provides.",

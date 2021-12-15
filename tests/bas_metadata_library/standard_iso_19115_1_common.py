@@ -156,6 +156,13 @@ def assert_online_resource(element: Element, config: dict):
         )
         assert description_values is True
 
+    if "protocol" in config:
+        protocol_values = element.xpath(
+            f"./gmd:protocol/gco:CharacterString/text() = '{config['protocol']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert protocol_values is True
+
     if "function" in config:
         function_elements = element.xpath(
             f"./gmd:function/gmd:CI_OnLineFunctionCode[@codeList = 'http://standards.iso.org/ittf/"

@@ -400,7 +400,7 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt">
+            <gmd:MD_Format id="ab68236b5f3101b19525385b4af5cedacbfc790b-fmt">
               <gmd:name>
                 <gco:CharacterString>netCDF</gco:CharacterString>
               </gmd:name>
@@ -408,7 +408,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo">
+            <gmd:MD_DigitalTransferOptions id="ab68236b5f3101b19525385b4af5cedacbfc790b-tfo">
               <gmd:onLine>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
@@ -420,6 +420,9 @@
                   <gmd:description>
                     <gco:CharacterString>Download measurement data</gco:CharacterString>
                   </gmd:description>
+                  <gmd:protocol>
+                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                  </gmd:protocol>
                   <gmd:function>
                     <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
                   </gmd:function>

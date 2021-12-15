@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* Protocol element
+  [#68](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/68)
+
 ## 0.7.1 - 2021-12-12
 
 ### Fixed
@@ -96,7 +101,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#99](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/99)
 * Distributors, Formats and Transfer Options refactored to per-distributor versions
   [#87](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/87)
-* Modules for standards no longer include a version (e.g. `bas_metadata_library.standards.iso_19115_2` rather than 
+* Modules for standards no longer include a version (e.g. `bas_metadata_library.standards.iso_19115_2` rather than
   `bas_metadata_library.standards.iso_19115_2_v1`)
   [#102](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/102)
 * `MetadataRecordConfiguration` classes renamed to include version (e.g. `MetadataRecordConfigurationV1`)
@@ -131,11 +136,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#80](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/80)
 * Version 2 configurations for ISO 19115-1 and ISO 19115-2 to support backwards incompatible schema changes
   [#102](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/102)
-* Resource identification status element 
+* Resource identification status element
   [#77](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/77)
 * Resource identification aggregation element
   [#106](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/106)
-* Updated project Python dependencies 
+* Updated project Python dependencies
   [#119](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/119)
 
 ### Fixed
@@ -169,7 +174,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#109](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/109)
 * Using definitions property consistently in configuration schemas
   [#115](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/115)
-* Configuration schemas relocated to `schemas` module and split into source and distribution versions to avoid relying 
+* Configuration schemas relocated to `schemas` module and split into source and distribution versions to avoid relying
   on remote schemas during development
   [#101](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/101)
 * README documentation improvements
@@ -204,7 +209,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed [BREAKING!]
 
-* Namespace for ISO 19115(-0) changed from `bas_metadata_library.standards.iso_19115_v1` to 
+* Namespace for ISO 19115(-0) changed from `bas_metadata_library.standards.iso_19115_v1` to
   `bas_metadata_library.standards.iso_19115_1_v1`
 
 ### Added
@@ -218,7 +223,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 * incorrect DOI used in tests
-* incorrect minimal record configuration for ISO 19115 standards family 
+* incorrect minimal record configuration for ISO 19115 standards family
 
 ### Changed
 
@@ -292,7 +297,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Roles were not correctly outputted in cited ResponsibleParty elements
 * Incorrect namespace used for OnlineResource FunctionCode test
 * OnlineResources were incorrectly placed in ResponsibleParties, rather than inside a ContentInfo element [#33]
-* Controlled titles in responsible parties (ISNI and ORCID) following 
+* Controlled titles in responsible parties (ISNI and ORCID) following
   [uk-pdc/metadata-infrastructure/metadata-standards#92]
 * Adding better URL for netCDF MIME type
 * Adding missing change log header

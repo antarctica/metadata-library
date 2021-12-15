@@ -5,7 +5,8 @@ license = "MIT"
 description = "Python library for generating metadata records"
 authors = [
     "Felix Fennell <felnne@bas.ac.uk>",
-    "Luke McDonald <ludona@bas.ac.uk>"
+    "Luke McDonald <ludona@bas.ac.uk>",
+    "Jason White <jasite@bas.ac.uk>"
 ]
 readme = "README.md"
 homepage = "https://github.com/antarctica/metadata-library"

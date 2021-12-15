@@ -813,7 +813,7 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format id="e5ae05f8f9f7bba3a0ef2149869b7dafa2f2445b-fmt">
+            <gmd:MD_Format id="8a4e1a367baa41f18011c36f014fa96cfa66e36b-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca" xlink:actuate="onRequest">netCDF</gmx:Anchor>
               </gmd:name>
@@ -823,7 +823,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="e5ae05f8f9f7bba3a0ef2149869b7dafa2f2445b-tfo">
+            <gmd:MD_DigitalTransferOptions id="8a4e1a367baa41f18011c36f014fa96cfa66e36b-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>MB</gco:CharacterString>
               </gmd:unitsOfDistribution>
@@ -841,6 +841,9 @@
                   <gmd:description>
                     <gco:CharacterString>Download measurement data</gco:CharacterString>
                   </gmd:description>
+                  <gmd:protocol>
+                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                  </gmd:protocol>
                   <gmd:function>
                     <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
                   </gmd:function>
@@ -896,7 +899,7 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format id="fccae538a6c9c218854f5212bee513e9aeb85ac6-fmt">
+            <gmd:MD_Format id="b74eb5a9f47362f0136e7cd0f14b8674035bba74-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://www.iana.org/assignments/media-types/application/pdf" xlink:actuate="onRequest">PDF</gmx:Anchor>
               </gmd:name>
@@ -906,7 +909,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="fccae538a6c9c218854f5212bee513e9aeb85ac6-tfo">
+            <gmd:MD_DigitalTransferOptions id="b74eb5a9f47362f0136e7cd0f14b8674035bba74-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>KB</gco:CharacterString>
               </gmd:unitsOfDistribution>
@@ -924,6 +927,9 @@
                   <gmd:description>
                     <gco:CharacterString>Download information as an Adobe PDF.</gco:CharacterString>
                   </gmd:description>
+                  <gmd:protocol>
+                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                  </gmd:protocol>
                   <gmd:function>
                     <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
                   </gmd:function>
@@ -932,7 +938,7 @@
             </gmd:MD_DigitalTransferOptions>
           </gmd:distributorTransferOptions>
           <gmd:distributorFormat>
-            <gmd:MD_Format id="e07ef4190d00e0ddb70b91272209403b2b2b4b7c-fmt">
+            <gmd:MD_Format id="6505a72622f18b9486ef088beee5ce57f3acb4af-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://www.iana.org/assignments/media-types/image/png" xlink:actuate="onRequest">PNG</gmx:Anchor>
               </gmd:name>
@@ -942,7 +948,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="e07ef4190d00e0ddb70b91272209403b2b2b4b7c-tfo">
+            <gmd:MD_DigitalTransferOptions id="6505a72622f18b9486ef088beee5ce57f3acb4af-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>MB</gco:CharacterString>
               </gmd:unitsOfDistribution>
@@ -960,6 +966,9 @@
                   <gmd:description>
                     <gco:CharacterString>Download information as a PNG image.</gco:CharacterString>
                   </gmd:description>
+                  <gmd:protocol>
+                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                  </gmd:protocol>
                   <gmd:function>
                     <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
                   </gmd:function>
