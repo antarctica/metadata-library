@@ -468,9 +468,6 @@
       </gmd:resourceConstraints>
       <gmd:aggregationInfo>
         <gmd:MD_AggregateInformation>
-          <gmd:associationType>
-            <gmd:DS_AssociationTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode" codeListValue="crossReference">crossReference</gmd:DS_AssociationTypeCode>
-          </gmd:associationType>
           <gmd:aggregateDataSetIdentifier>
             <gmd:RS_Identifier>
               <gmd:code>
@@ -481,6 +478,9 @@
               </gmd:codeSpace>
             </gmd:RS_Identifier>
           </gmd:aggregateDataSetIdentifier>
+          <gmd:associationType>
+            <gmd:DS_AssociationTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode" codeListValue="crossReference">crossReference</gmd:DS_AssociationTypeCode>
+          </gmd:associationType>
         </gmd:MD_AggregateInformation>
       </gmd:aggregationInfo>
       <gmd:spatialRepresentationType>
