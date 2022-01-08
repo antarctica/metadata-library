@@ -1738,111 +1738,123 @@
                             "title": "Geographic extent",
                             "description": "A description of the area the resource covers.",
                             "type": "object",
-                            "required": [
-                                "bounding_box"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                                "bounding_box": {
-                                    "title": "Bounding box",
-                                    "description": "A set of coordinates for a rectangle that encloses the resource.",
-                                    "type": "object",
+                            "oneOf": [
+                                {
                                     "required": [
-                                        "west_longitude",
-                                        "east_longitude",
-                                        "south_latitude",
-                                        "north_latitude"
+                                        "bounding_box"
                                     ],
                                     "additionalProperties": false,
                                     "properties": {
-                                        "west_longitude": {
-                                            "title": "West longitude",
-                                            "description": "Western most longitude.",
-                                            "type": "number",
-                                            "maximum": 180,
-                                            "minimum": -180,
-                                            "examples": [
-                                                "-120"
-                                            ]
-                                        },
-                                        "east_longitude": {
-                                            "title": "East longitude",
-                                            "description": "Eastern most longitude.",
-                                            "type": "number",
-                                            "maximum": 180,
-                                            "minimum": -180,
-                                            "examples": [
-                                                "-120"
-                                            ]
-                                        },
-                                        "south_latitude": {
-                                            "title": "South latitude",
-                                            "description": "Southern most latitude.",
-                                            "type": "number",
-                                            "maximum": 90,
-                                            "minimum": -90,
-                                            "examples": [
-                                                "-60"
-                                            ]
-                                        },
-                                        "north_latitude": {
-                                            "title": "North latitude",
-                                            "description": "Northern latitude.",
-                                            "type": "number",
-                                            "maximum": 90,
-                                            "minimum": -90,
-                                            "examples": [
-                                                "-60"
-                                            ]
-                                        }
-                                    }
-                                },
-                                "identifier": {
-                                    "allOf": [
-                                        {
-                                            "title": "Geographic Identifier",
-                                            "description": "A geographic identifier relating to the area or location of the resource."
-                                        },
-                                        {
-                                            "title": "Identifier",
-                                            "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                        "bounding_box": {
+                                            "title": "Bounding box",
+                                            "description": "A set of coordinates for a rectangle that encloses the resource.",
                                             "type": "object",
                                             "required": [
-                                                "identifier"
+                                                "west_longitude",
+                                                "east_longitude",
+                                                "south_latitude",
+                                                "north_latitude"
                                             ],
                                             "additionalProperties": false,
                                             "properties": {
-                                                "identifier": {
-                                                    "title": "Identifier (value)",
-                                                    "description": "Identifier value, this may be a URL.",
-                                                    "type": "string",
+                                                "west_longitude": {
+                                                    "title": "West longitude",
+                                                    "description": "Western most longitude.",
+                                                    "type": "number",
+                                                    "maximum": 180,
+                                                    "minimum": -180,
                                                     "examples": [
-                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                        "-120"
                                                     ]
                                                 },
-                                                "href": {
-                                                    "title": "URL",
-                                                    "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
-                                                    "type": "string",
-                                                    "format": "uri",
+                                                "east_longitude": {
+                                                    "title": "East longitude",
+                                                    "description": "Eastern most longitude.",
+                                                    "type": "number",
+                                                    "maximum": 180,
+                                                    "minimum": -180,
                                                     "examples": [
-                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                        "-120"
                                                     ]
                                                 },
-                                                "namespace": {
-                                                    "title": "Namespace",
-                                                    "description": "The code or identifier for the domain or scheme this identifier is registered within.",
-                                                    "type": "string",
+                                                "south_latitude": {
+                                                    "title": "South latitude",
+                                                    "description": "Southern most latitude.",
+                                                    "type": "number",
+                                                    "maximum": 90,
+                                                    "minimum": -90,
                                                     "examples": [
-                                                        "doi",
-                                                        "orcid"
+                                                        "-60"
+                                                    ]
+                                                },
+                                                "north_latitude": {
+                                                    "title": "North latitude",
+                                                    "description": "Northern latitude.",
+                                                    "type": "number",
+                                                    "maximum": 90,
+                                                    "minimum": -90,
+                                                    "examples": [
+                                                        "-60"
                                                     ]
                                                 }
                                             }
                                         }
-                                    ]
+                                    }
+                                },
+                                {
+                                    "required": [
+                                        "identifier"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "identifier": {
+                                            "allOf": [
+                                                {
+                                                    "title": "Geographic Identifier",
+                                                    "description": "A geographic identifier relating to the area or location of the resource."
+                                                },
+                                                {
+                                                    "title": "Identifier",
+                                                    "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                                    "type": "object",
+                                                    "required": [
+                                                        "identifier"
+                                                    ],
+                                                    "additionalProperties": false,
+                                                    "properties": {
+                                                        "identifier": {
+                                                            "title": "Identifier (value)",
+                                                            "description": "Identifier value, this may be a URL.",
+                                                            "type": "string",
+                                                            "examples": [
+                                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                            ]
+                                                        },
+                                                        "href": {
+                                                            "title": "URL",
+                                                            "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                                            "type": "string",
+                                                            "format": "uri",
+                                                            "examples": [
+                                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                            ]
+                                                        },
+                                                        "namespace": {
+                                                            "title": "Namespace",
+                                                            "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                                                            "type": "string",
+                                                            "examples": [
+                                                                "doi",
+                                                                "orcid"
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
                                 }
-                            }
+                            ]
                         },
                         "vertical": {
                             "title": "Vertical extent",
@@ -2146,111 +2158,123 @@
                     "title": "Geographic extent",
                     "description": "A description of the area the resource covers.",
                     "type": "object",
-                    "required": [
-                        "bounding_box"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                        "bounding_box": {
-                            "title": "Bounding box",
-                            "description": "A set of coordinates for a rectangle that encloses the resource.",
-                            "type": "object",
+                    "oneOf": [
+                        {
                             "required": [
-                                "west_longitude",
-                                "east_longitude",
-                                "south_latitude",
-                                "north_latitude"
+                                "bounding_box"
                             ],
                             "additionalProperties": false,
                             "properties": {
-                                "west_longitude": {
-                                    "title": "West longitude",
-                                    "description": "Western most longitude.",
-                                    "type": "number",
-                                    "maximum": 180,
-                                    "minimum": -180,
-                                    "examples": [
-                                        "-120"
-                                    ]
-                                },
-                                "east_longitude": {
-                                    "title": "East longitude",
-                                    "description": "Eastern most longitude.",
-                                    "type": "number",
-                                    "maximum": 180,
-                                    "minimum": -180,
-                                    "examples": [
-                                        "-120"
-                                    ]
-                                },
-                                "south_latitude": {
-                                    "title": "South latitude",
-                                    "description": "Southern most latitude.",
-                                    "type": "number",
-                                    "maximum": 90,
-                                    "minimum": -90,
-                                    "examples": [
-                                        "-60"
-                                    ]
-                                },
-                                "north_latitude": {
-                                    "title": "North latitude",
-                                    "description": "Northern latitude.",
-                                    "type": "number",
-                                    "maximum": 90,
-                                    "minimum": -90,
-                                    "examples": [
-                                        "-60"
-                                    ]
-                                }
-                            }
-                        },
-                        "identifier": {
-                            "allOf": [
-                                {
-                                    "title": "Geographic Identifier",
-                                    "description": "A geographic identifier relating to the area or location of the resource."
-                                },
-                                {
-                                    "title": "Identifier",
-                                    "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                "bounding_box": {
+                                    "title": "Bounding box",
+                                    "description": "A set of coordinates for a rectangle that encloses the resource.",
                                     "type": "object",
                                     "required": [
-                                        "identifier"
+                                        "west_longitude",
+                                        "east_longitude",
+                                        "south_latitude",
+                                        "north_latitude"
                                     ],
                                     "additionalProperties": false,
                                     "properties": {
-                                        "identifier": {
-                                            "title": "Identifier (value)",
-                                            "description": "Identifier value, this may be a URL.",
-                                            "type": "string",
+                                        "west_longitude": {
+                                            "title": "West longitude",
+                                            "description": "Western most longitude.",
+                                            "type": "number",
+                                            "maximum": 180,
+                                            "minimum": -180,
                                             "examples": [
-                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                "-120"
                                             ]
                                         },
-                                        "href": {
-                                            "title": "URL",
-                                            "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
-                                            "type": "string",
-                                            "format": "uri",
+                                        "east_longitude": {
+                                            "title": "East longitude",
+                                            "description": "Eastern most longitude.",
+                                            "type": "number",
+                                            "maximum": 180,
+                                            "minimum": -180,
                                             "examples": [
-                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                "-120"
                                             ]
                                         },
-                                        "namespace": {
-                                            "title": "Namespace",
-                                            "description": "The code or identifier for the domain or scheme this identifier is registered within.",
-                                            "type": "string",
+                                        "south_latitude": {
+                                            "title": "South latitude",
+                                            "description": "Southern most latitude.",
+                                            "type": "number",
+                                            "maximum": 90,
+                                            "minimum": -90,
                                             "examples": [
-                                                "doi",
-                                                "orcid"
+                                                "-60"
+                                            ]
+                                        },
+                                        "north_latitude": {
+                                            "title": "North latitude",
+                                            "description": "Northern latitude.",
+                                            "type": "number",
+                                            "maximum": 90,
+                                            "minimum": -90,
+                                            "examples": [
+                                                "-60"
                                             ]
                                         }
                                     }
                                 }
-                            ]
+                            }
+                        },
+                        {
+                            "required": [
+                                "identifier"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "identifier": {
+                                    "allOf": [
+                                        {
+                                            "title": "Geographic Identifier",
+                                            "description": "A geographic identifier relating to the area or location of the resource."
+                                        },
+                                        {
+                                            "title": "Identifier",
+                                            "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                            "type": "object",
+                                            "required": [
+                                                "identifier"
+                                            ],
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "identifier": {
+                                                    "title": "Identifier (value)",
+                                                    "description": "Identifier value, this may be a URL.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                    ]
+                                                },
+                                                "href": {
+                                                    "title": "URL",
+                                                    "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                                    "type": "string",
+                                                    "format": "uri",
+                                                    "examples": [
+                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                    ]
+                                                },
+                                                "namespace": {
+                                                    "title": "Namespace",
+                                                    "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "doi",
+                                                        "orcid"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
                         }
-                    }
+                    ]
                 },
                 "hierarchy_level": {
                     "title": "Hierarchy level",
@@ -6256,111 +6280,123 @@
                                     "title": "Geographic extent",
                                     "description": "A description of the area the resource covers.",
                                     "type": "object",
-                                    "required": [
-                                        "bounding_box"
-                                    ],
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "bounding_box": {
-                                            "title": "Bounding box",
-                                            "description": "A set of coordinates for a rectangle that encloses the resource.",
-                                            "type": "object",
+                                    "oneOf": [
+                                        {
                                             "required": [
-                                                "west_longitude",
-                                                "east_longitude",
-                                                "south_latitude",
-                                                "north_latitude"
+                                                "bounding_box"
                                             ],
                                             "additionalProperties": false,
                                             "properties": {
-                                                "west_longitude": {
-                                                    "title": "West longitude",
-                                                    "description": "Western most longitude.",
-                                                    "type": "number",
-                                                    "maximum": 180,
-                                                    "minimum": -180,
-                                                    "examples": [
-                                                        "-120"
-                                                    ]
-                                                },
-                                                "east_longitude": {
-                                                    "title": "East longitude",
-                                                    "description": "Eastern most longitude.",
-                                                    "type": "number",
-                                                    "maximum": 180,
-                                                    "minimum": -180,
-                                                    "examples": [
-                                                        "-120"
-                                                    ]
-                                                },
-                                                "south_latitude": {
-                                                    "title": "South latitude",
-                                                    "description": "Southern most latitude.",
-                                                    "type": "number",
-                                                    "maximum": 90,
-                                                    "minimum": -90,
-                                                    "examples": [
-                                                        "-60"
-                                                    ]
-                                                },
-                                                "north_latitude": {
-                                                    "title": "North latitude",
-                                                    "description": "Northern latitude.",
-                                                    "type": "number",
-                                                    "maximum": 90,
-                                                    "minimum": -90,
-                                                    "examples": [
-                                                        "-60"
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "identifier": {
-                                            "allOf": [
-                                                {
-                                                    "title": "Geographic Identifier",
-                                                    "description": "A geographic identifier relating to the area or location of the resource."
-                                                },
-                                                {
-                                                    "title": "Identifier",
-                                                    "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                                "bounding_box": {
+                                                    "title": "Bounding box",
+                                                    "description": "A set of coordinates for a rectangle that encloses the resource.",
                                                     "type": "object",
                                                     "required": [
-                                                        "identifier"
+                                                        "west_longitude",
+                                                        "east_longitude",
+                                                        "south_latitude",
+                                                        "north_latitude"
                                                     ],
                                                     "additionalProperties": false,
                                                     "properties": {
-                                                        "identifier": {
-                                                            "title": "Identifier (value)",
-                                                            "description": "Identifier value, this may be a URL.",
-                                                            "type": "string",
+                                                        "west_longitude": {
+                                                            "title": "West longitude",
+                                                            "description": "Western most longitude.",
+                                                            "type": "number",
+                                                            "maximum": 180,
+                                                            "minimum": -180,
                                                             "examples": [
-                                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                "-120"
                                                             ]
                                                         },
-                                                        "href": {
-                                                            "title": "URL",
-                                                            "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
-                                                            "type": "string",
-                                                            "format": "uri",
+                                                        "east_longitude": {
+                                                            "title": "East longitude",
+                                                            "description": "Eastern most longitude.",
+                                                            "type": "number",
+                                                            "maximum": 180,
+                                                            "minimum": -180,
                                                             "examples": [
-                                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                "-120"
                                                             ]
                                                         },
-                                                        "namespace": {
-                                                            "title": "Namespace",
-                                                            "description": "The code or identifier for the domain or scheme this identifier is registered within.",
-                                                            "type": "string",
+                                                        "south_latitude": {
+                                                            "title": "South latitude",
+                                                            "description": "Southern most latitude.",
+                                                            "type": "number",
+                                                            "maximum": 90,
+                                                            "minimum": -90,
                                                             "examples": [
-                                                                "doi",
-                                                                "orcid"
+                                                                "-60"
+                                                            ]
+                                                        },
+                                                        "north_latitude": {
+                                                            "title": "North latitude",
+                                                            "description": "Northern latitude.",
+                                                            "type": "number",
+                                                            "maximum": 90,
+                                                            "minimum": -90,
+                                                            "examples": [
+                                                                "-60"
                                                             ]
                                                         }
                                                     }
                                                 }
-                                            ]
+                                            }
+                                        },
+                                        {
+                                            "required": [
+                                                "identifier"
+                                            ],
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "identifier": {
+                                                    "allOf": [
+                                                        {
+                                                            "title": "Geographic Identifier",
+                                                            "description": "A geographic identifier relating to the area or location of the resource."
+                                                        },
+                                                        {
+                                                            "title": "Identifier",
+                                                            "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                                            "type": "object",
+                                                            "required": [
+                                                                "identifier"
+                                                            ],
+                                                            "additionalProperties": false,
+                                                            "properties": {
+                                                                "identifier": {
+                                                                    "title": "Identifier (value)",
+                                                                    "description": "Identifier value, this may be a URL.",
+                                                                    "type": "string",
+                                                                    "examples": [
+                                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                    ]
+                                                                },
+                                                                "href": {
+                                                                    "title": "URL",
+                                                                    "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                                                    "type": "string",
+                                                                    "format": "uri",
+                                                                    "examples": [
+                                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                    ]
+                                                                },
+                                                                "namespace": {
+                                                                    "title": "Namespace",
+                                                                    "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                                                                    "type": "string",
+                                                                    "examples": [
+                                                                        "doi",
+                                                                        "orcid"
+                                                                    ]
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
                                         }
-                                    }
+                                    ]
                                 },
                                 "vertical": {
                                     "title": "Vertical extent",

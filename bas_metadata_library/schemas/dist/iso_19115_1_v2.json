@@ -718,77 +718,89 @@
             "title": "Geographic extent",
             "description": "A description of the area the resource covers.",
             "type": "object",
-            "required": [
-                "bounding_box"
-            ],
-            "additionalProperties": false,
-            "properties": {
-                "bounding_box": {
-                    "title": "Bounding box",
-                    "description": "A set of coordinates for a rectangle that encloses the resource.",
-                    "type": "object",
+            "oneOf": [
+                {
                     "required": [
-                        "west_longitude",
-                        "east_longitude",
-                        "south_latitude",
-                        "north_latitude"
+                        "bounding_box"
                     ],
                     "additionalProperties": false,
                     "properties": {
-                        "west_longitude": {
-                            "title": "West longitude",
-                            "description": "Western most longitude.",
-                            "type": "number",
-                            "maximum": 180,
-                            "minimum": -180,
-                            "examples": [
-                                "-120"
-                            ]
-                        },
-                        "east_longitude": {
-                            "title": "East longitude",
-                            "description": "Eastern most longitude.",
-                            "type": "number",
-                            "maximum": 180,
-                            "minimum": -180,
-                            "examples": [
-                                "-120"
-                            ]
-                        },
-                        "south_latitude": {
-                            "title": "South latitude",
-                            "description": "Southern most latitude.",
-                            "type": "number",
-                            "maximum": 90,
-                            "minimum": -90,
-                            "examples": [
-                                "-60"
-                            ]
-                        },
-                        "north_latitude": {
-                            "title": "North latitude",
-                            "description": "Northern latitude.",
-                            "type": "number",
-                            "maximum": 90,
-                            "minimum": -90,
-                            "examples": [
-                                "-60"
-                            ]
+                        "bounding_box": {
+                            "title": "Bounding box",
+                            "description": "A set of coordinates for a rectangle that encloses the resource.",
+                            "type": "object",
+                            "required": [
+                                "west_longitude",
+                                "east_longitude",
+                                "south_latitude",
+                                "north_latitude"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "west_longitude": {
+                                    "title": "West longitude",
+                                    "description": "Western most longitude.",
+                                    "type": "number",
+                                    "maximum": 180,
+                                    "minimum": -180,
+                                    "examples": [
+                                        "-120"
+                                    ]
+                                },
+                                "east_longitude": {
+                                    "title": "East longitude",
+                                    "description": "Eastern most longitude.",
+                                    "type": "number",
+                                    "maximum": 180,
+                                    "minimum": -180,
+                                    "examples": [
+                                        "-120"
+                                    ]
+                                },
+                                "south_latitude": {
+                                    "title": "South latitude",
+                                    "description": "Southern most latitude.",
+                                    "type": "number",
+                                    "maximum": 90,
+                                    "minimum": -90,
+                                    "examples": [
+                                        "-60"
+                                    ]
+                                },
+                                "north_latitude": {
+                                    "title": "North latitude",
+                                    "description": "Northern latitude.",
+                                    "type": "number",
+                                    "maximum": 90,
+                                    "minimum": -90,
+                                    "examples": [
+                                        "-60"
+                                    ]
+                                }
+                            }
                         }
                     }
                 },
-                "identifier": {
-                    "allOf": [
-                        {
-                            "title": "Geographic Identifier",
-                            "description": "A geographic identifier relating to the area or location of the resource."
-                        },
-                        {
-                            "$ref": "#/definitions/identifier"
+                {
+                    "required": [
+                        "identifier"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "identifier": {
+                            "allOf": [
+                                {
+                                    "title": "Geographic Identifier",
+                                    "description": "A geographic identifier relating to the area or location of the resource."
+                                },
+                                {
+                                    "$ref": "#/definitions/identifier"
+                                }
+                            ]
                         }
-                    ]
+                    }
                 }
-            }
+            ]
         },
         "hierarchy_level": {
             "title": "Hierarchy level",
