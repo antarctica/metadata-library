@@ -858,8 +858,8 @@ def test_identification_aggregations(client, config_name):
     for aggregation in config["identification"]["aggregations"]:
         xpath = (
             base_xpath
-            + f"[gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString[text()='{aggregation['identifier']['identifier']}'] "
-            f"| gmd:identifier/gmd:RS_Identifier/gmd:code/gmx:Anchor[text()='{aggregation['identifier']['identifier']}']]"
+            + f"[gmd:aggregateDataSetIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString[text()='{aggregation['identifier']['identifier']}'] "
+            f"| gmd:aggregateDataSetIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor[text()='{aggregation['identifier']['identifier']}']]"
         )
         association_elements = record.xpath(xpath, namespaces=namespaces.nsmap())
         assert len(association_elements) == 1
@@ -880,7 +880,11 @@ def test_identification_aggregations(client, config_name):
             assert initiative_type_element is True
 
         if "identifier" in aggregation.keys():
-            assert_identifier(element=association_element, config=aggregation["identifier"])
+            assert_identifier(
+                element=association_element,
+                config=aggregation["identifier"],
+                identifier_container="gmd:aggregateDataSetIdentifier",
+            )
 
 
 @pytest.mark.usefixtures("get_record_response")
