@@ -14,7 +14,11 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import (
     CharacterSet,
     Identifier,
 )
-from bas_metadata_library.standards.iso_19115_common.utils import encode_date_string, decode_date_string
+from bas_metadata_library.standards.iso_19115_common.utils import (
+    encode_date_string,
+    decode_date_string,
+    format_numbers_consistently,
+)
 
 
 class DataIdentification(MetadataRecordElement):
@@ -1100,25 +1104,31 @@ class SpatialResolution(MetadataRecordElement):
         _ = ""
 
         spatial_resolution_value = self.record.xpath(
-            f"{self.xpath}/gmd:MD_Resolution/gmd:distance/gco:Distance/text()", namespaces=self.ns.nsmap()
+            f"{self.xpath}/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer/text()",
+            namespaces=self.ns.nsmap(),
         )
         if len(spatial_resolution_value) == 1:
-            _ = spatial_resolution_value[0]
+            _ = format_numbers_consistently(spatial_resolution_value[0])
 
         return _
 
     def make_element(self):
-        resolution_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}spatialResolution")
-        resolution_element = SubElement(resolution_wrapper, f"{{{self.ns.gmd}}}MD_Resolution")
-
         if self.element_attributes["spatial_resolution"] is None:
             SubElement(
-                resolution_element, f"{{{self.ns.gmd}}}distance", attrib={f"{{{self.ns.gco}}}nilReason": "inapplicable"}
+                self.parent_element,
+                f"{{{self.ns.gmd}}}spatialResolution",
+                attrib={f"{{{self.ns.gco}}}nilReason": "inapplicable"},
             )
         else:
-            distance_element = SubElement(resolution_element, f"{{{self.ns.gmd}}}distance")
-            distance_value = SubElement(distance_element, f"{{{self.ns.gco}}}Distance")
-            distance_value.text = self.element_attributes["spatial_resolution"]
+            resolution_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}spatialResolution")
+            resolution_element = SubElement(resolution_wrapper, f"{{{self.ns.gmd}}}MD_Resolution")
+            equivalent_scale_wrapper = SubElement(resolution_element, f"{{{self.ns.gmd}}}equivalentScale")
+            equivalent_scale_element = SubElement(
+                equivalent_scale_wrapper, f"{{{self.ns.gmd}}}MD_RepresentativeFraction"
+            )
+            denominator_element = SubElement(equivalent_scale_element, f"{{{self.ns.gmd}}}denominator")
+            denominator_value = SubElement(denominator_element, f"{{{self.ns.gco}}}Integer")
+            denominator_value.text = str(self.element_attributes["spatial_resolution"])
 
 
 class TopicCategory(MetadataRecordElement):

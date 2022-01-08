@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Protocol element
   [#68](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/68)
 
+### Fixed
+
+* Spatial representation (scale) element used incorrect ISO elements
+  [#155](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/155)
+
 ## 0.7.1 - 2021-12-12
 
 ### Fixed
