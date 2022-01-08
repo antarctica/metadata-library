@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#160](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/160)
 * Disabling PyPi testing releases to avoid version clashes when merging into master branch
   [#153](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/153)
+* Missing scope code options in ISO 19115 JSON config
+  [#162](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/162)
 
 ## 0.7.1 - 2021-12-12
 
