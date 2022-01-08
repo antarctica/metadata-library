@@ -16,9 +16,6 @@
 # - PyPi (production) - create tokens at https://pypi.org/manage/account/
 # > PYPI_TOKEN (protected): "[Sensitive]"
 #
-# - PyPi (staging) - create tokens at https://test.pypi.org/manage/account/
-# > PYPI_TEST_TOKEN (protected): "[Sensitive]"
-#
 # - GitLab - create token as the 'bot_magic_ci' user
 # > GITLAB_ACCESS_TOKEN: "[Sensitive]"
 
@@ -87,23 +84,6 @@ build-dev:
   except:
     - master
     - tags
-
-publish-app-stage:
-  stage: 🚚 publish
-  before_script:
-    - "poetry config pypi-token.pypi-testing $PYPI_TEST_TOKEN --local"
-  script:
-    - "poetry publish --build --repository pypi-testing --no-interaction"
-  artifacts:
-    name: "$CI_BUILD_TOKEN-build"
-    paths:
-      - dist
-    expire_in: 1 month
-  only:
-    - master
-  environment:
-    name: staging
-    url: https://test.pypi.org/project/bas-metadata-library/
 
 publish-app-prod:
   stage: 🚚 publish
