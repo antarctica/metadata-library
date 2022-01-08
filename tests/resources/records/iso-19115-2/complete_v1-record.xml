@@ -699,7 +699,7 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format id="95b254a28d8fbfe321380f4b9f85d1e77ea7fcee-fmt">
+            <gmd:MD_Format id="bml-95b254a28d8fbfe321380f4b9f85d1e77ea7fcee-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca" xlink:actuate="onRequest">netCDF</gmx:Anchor>
               </gmd:name>
@@ -707,7 +707,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="95b254a28d8fbfe321380f4b9f85d1e77ea7fcee-tfo">
+            <gmd:MD_DigitalTransferOptions id="bml-95b254a28d8fbfe321380f4b9f85d1e77ea7fcee-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>MB</gco:CharacterString>
               </gmd:unitsOfDistribution>
@@ -733,7 +733,7 @@
             </gmd:MD_DigitalTransferOptions>
           </gmd:distributorTransferOptions>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="579b86d6b6d912d870587f6bdfe0072ee57685db-tfo">
+            <gmd:MD_DigitalTransferOptions id="bml-579b86d6b6d912d870587f6bdfe0072ee57685db-tfo">
               <gmd:onLine>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>

@@ -260,7 +260,9 @@ class DistributorFormat(MetadataRecordElement):
 
         format_id = self.record.xpath(f"{self.xpath}/gmd:MD_Format/@id", namespaces=self.ns.nsmap())
         if len(format_id) == 1:
-            _["_id"] = format_id[0].replace("-fmt", "")
+            _id: str = format_id[0].replace("bml-", "")
+            _id = _id.replace("-fmt", "")
+            _["_id"] = _id
 
         format_name = self.record.xpath(
             f"{self.xpath}/gmd:MD_Format/gmd:name/gco:CharacterString/text() | "
@@ -293,7 +295,7 @@ class DistributorFormat(MetadataRecordElement):
         distribution_format_element = SubElement(
             distribution_format_wrapper,
             f"{{{self.ns.gmd}}}MD_Format",
-            attrib={"id": f"{self.element_attributes['_id']}-fmt"},
+            attrib={"id": f"bml-{self.element_attributes['_id']}-fmt"},
         )
 
         format_name_element = SubElement(distribution_format_element, f"{{{self.ns.gmd}}}name")
@@ -328,7 +330,9 @@ class DistributorTransferOption(MetadataRecordElement):
 
         format_id = self.record.xpath(f"{self.xpath}/gmd:MD_DigitalTransferOptions/@id", namespaces=self.ns.nsmap())
         if len(format_id) == 1:
-            _["_id"] = format_id[0].replace("-tfo", "")
+            _id: str = format_id[0].replace("bml-", "")
+            _id = _id.replace("-tfo", "")
+            _["_id"] = _id
 
         size_unit = self.record.xpath(
             f"{self.xpath}/gmd:MD_DigitalTransferOptions/gmd:unitsOfDistribution/gco:CharacterString/text()",
@@ -366,7 +370,7 @@ class DistributorTransferOption(MetadataRecordElement):
         transfer_options_wrapper = SubElement(
             transfer_options_container,
             f"{{{self.ns.gmd}}}MD_DigitalTransferOptions",
-            attrib={"id": f"{self.element_attributes['_id']}-tfo"},
+            attrib={"id": f"bml-{self.element_attributes['_id']}-tfo"},
         )
 
         if "size" in self.element_attributes:
