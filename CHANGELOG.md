@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#159](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/159)
 * Element used for aggregation identifier
   [#160](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/160)
+* Disabling PyPi testing releases to avoid version clashes when merging into master branch
+  [#153](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/153)
 
 ## 0.7.1 - 2021-12-12
 
