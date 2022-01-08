@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#155](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/155)
 * Spatial extent element used incorrect structure where multiple type of spatial extent where used
   [#156](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/156)
+* Order of ISO elements to match sequence proscribed by XML schema
+  [#157](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/157)
 
 ## 0.7.1 - 2021-12-12
 
