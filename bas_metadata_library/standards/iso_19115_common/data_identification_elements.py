@@ -954,6 +954,15 @@ class Aggregation(MetadataRecordElement):
         aggregation_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}aggregationInfo")
         aggregation_element = SubElement(aggregation_wrapper, f"{{{self.ns.gmd}}}MD_AggregateInformation")
 
+        identifier = Identifier(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=aggregation_element,
+            element_attributes=self.element_attributes["identifier"],
+            identifier_container=f"{{{self.ns.gmd}}}aggregateDataSetIdentifier",
+        )
+        identifier.make_element()
+
         association_type = AssociationType(
             record=self.record,
             attributes=self.attributes,
@@ -970,14 +979,6 @@ class Aggregation(MetadataRecordElement):
                 element_attributes=self.element_attributes,
             )
             initiative_type.make_element()
-
-        identifier = Identifier(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=aggregation_element,
-            element_attributes=self.element_attributes["identifier"],
-        )
-        identifier.make_element()
 
 
 class AssociationType(CodeListElement):
