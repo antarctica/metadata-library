@@ -548,7 +548,7 @@ class GraphicOverview(MetadataRecordElement):
     def make_config(self) -> dict:
         _ = {}
 
-        identifier_value = self.record.xpath(f"{self.xpath}/@id", namespaces=self.ns.nsmap())
+        identifier_value = self.record.xpath(f"{self.xpath}/gmd:MD_BrowseGraphic/@id", namespaces=self.ns.nsmap())
         if len(identifier_value) == 1:
             _["identifier"] = identifier_value[0]
 
@@ -577,9 +577,12 @@ class GraphicOverview(MetadataRecordElement):
         graphic_wrapper = SubElement(
             self.parent_element,
             f"{{{self.ns.gmd}}}graphicOverview",
+        )
+        graphic_element = SubElement(
+            graphic_wrapper,
+            f"{{{self.ns.gmd}}}MD_BrowseGraphic",
             attrib={"id": self.element_attributes["identifier"]},
         )
-        graphic_element = SubElement(graphic_wrapper, f"{{{self.ns.gmd}}}MD_BrowseGraphic")
 
         href_element = SubElement(graphic_element, f"{{{self.ns.gmd}}}fileName")
         href_value = SubElement(href_element, f"{{{self.ns.gco}}}CharacterString")

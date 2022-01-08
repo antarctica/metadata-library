@@ -478,8 +478,8 @@
           </gmd:maintenanceNote>
         </gmd:MD_MaintenanceInformation>
       </gmd:resourceMaintenance>
-      <gmd:graphicOverview id="thumbnail">
-        <gmd:MD_BrowseGraphic>
+      <gmd:graphicOverview>
+        <gmd:MD_BrowseGraphic id="thumbnail">
           <gmd:fileName>
             <gco:CharacterString>https://example.com/img/thumbnail.jpeg</gco:CharacterString>
           </gmd:fileName>
@@ -491,8 +491,8 @@
           </gmd:fileType>
         </gmd:MD_BrowseGraphic>
       </gmd:graphicOverview>
-      <gmd:graphicOverview id="cover-front">
-        <gmd:MD_BrowseGraphic>
+      <gmd:graphicOverview>
+        <gmd:MD_BrowseGraphic id="cover-front">
           <gmd:fileName>
             <gco:CharacterString>https://example.com/img/cover-front.jpeg</gco:CharacterString>
           </gmd:fileName>
@@ -504,8 +504,8 @@
           </gmd:fileType>
         </gmd:MD_BrowseGraphic>
       </gmd:graphicOverview>
-      <gmd:graphicOverview id="cover-back">
-        <gmd:MD_BrowseGraphic>
+      <gmd:graphicOverview>
+        <gmd:MD_BrowseGraphic id="cover-back">
           <gmd:fileName>
             <gco:CharacterString>https://example.com/img/cover-back.jpeg</gco:CharacterString>
           </gmd:fileName>

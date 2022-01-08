@@ -691,27 +691,27 @@ def test_graphic_overviews(get_record_response, config_name):
 
     for graphic_overview in config["identification"]["graphic_overviews"]:
         graphic_overview_elements = record.xpath(
-            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview[@id='{graphic_overview['identifier']}']",
+            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic[@id='{graphic_overview['identifier']}']",
             namespaces=namespaces.nsmap(),
         )
         assert len(graphic_overview_elements) == 1
 
         href_element = graphic_overview_elements[0].xpath(
-            f"./gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString/text() = '{graphic_overview['href']}'",
+            f"./gmd:fileName/gco:CharacterString/text() = '{graphic_overview['href']}'",
             namespaces=namespaces.nsmap(),
         )
         assert href_element is True
 
         if "description" in graphic_overview:
             description_element = graphic_overview_elements[0].xpath(
-                f"./gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString/text() = '{graphic_overview['description']}'",
+                f"./gmd:fileDescription/gco:CharacterString/text() = '{graphic_overview['description']}'",
                 namespaces=namespaces.nsmap(),
             )
             assert description_element is True
 
         if "mime_type" in graphic_overview:
             mime_type_element = graphic_overview_elements[0].xpath(
-                f"./gmd:MD_BrowseGraphic/gmd:fileType/gco:CharacterString/text() = '{graphic_overview['mime_type']}'",
+                f"./gmd:fileType/gco:CharacterString/text() = '{graphic_overview['mime_type']}'",
                 namespaces=namespaces.nsmap(),
             )
             assert mime_type_element is True
