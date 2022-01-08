@@ -471,7 +471,7 @@
           <gmd:associationType>
             <gmd:DS_AssociationTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode" codeListValue="crossReference">crossReference</gmd:DS_AssociationTypeCode>
           </gmd:associationType>
-          <gmd:identifier>
+          <gmd:aggregateDataSetIdentifier>
             <gmd:RS_Identifier>
               <gmd:code>
                 <gmx:Anchor xlink:href="https://doi.org/10.5072/mj04wb80f" xlink:actuate="onRequest">https://doi.org/10.5072/mj04wb80f</gmx:Anchor>
@@ -480,7 +480,7 @@
                 <gco:CharacterString>doi</gco:CharacterString>
               </gmd:codeSpace>
             </gmd:RS_Identifier>
-          </gmd:identifier>
+          </gmd:aggregateDataSetIdentifier>
         </gmd:MD_AggregateInformation>
       </gmd:aggregationInfo>
       <gmd:spatialRepresentationType>

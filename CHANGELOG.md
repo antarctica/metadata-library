@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#158](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/158)
 * XML IDs for distribution format and transfer option elements
   [#159](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/159)
+* Element used for aggregation identifier
+  [#160](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/160)
 
 ## 0.7.1 - 2021-12-12
 

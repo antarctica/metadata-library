@@ -4,6 +4,8 @@ from datetime import datetime
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
+from typing import Optional
+
 from lxml.etree import SubElement, Element  # nosec
 
 from bas_metadata_library import MetadataRecord as _MetadataRecord, MetadataRecord
@@ -901,6 +903,7 @@ class Identifier(MetadataRecordElement):
         parent_element: Element = None,
         element_attributes: dict = None,
         xpath: str = None,
+        identifier_container: Optional[str] = f"{{http://www.isotc211.org/2005/gmd}}identifier",
     ):
         super().__init__(
             record=record,
@@ -909,7 +912,7 @@ class Identifier(MetadataRecordElement):
             element_attributes=element_attributes,
             xpath=f"{xpath}/gmd:RS_Identifier",
         )
-        self.identifier_container = f"{{{self.ns.gmd}}}identifier"
+        self.identifier_container = identifier_container
 
     def make_config(self) -> dict:
         _ = {}

@@ -942,7 +942,7 @@ class Aggregation(MetadataRecordElement):
         identifier = Identifier(
             record=self.record,
             attributes=self.attributes,
-            xpath=f"{self.xpath}/gmd:MD_AggregateInformation/gmd:identifier",
+            xpath=f"{self.xpath}/gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier",
         )
         _identifier = identifier.make_config()
         if bool(_identifier):
