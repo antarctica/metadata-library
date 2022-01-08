@@ -94,16 +94,8 @@ def test_xml_declaration_enabled():
     config = minimal_config
     configuration = MetadataRecordConfig(**config)
     record = MetadataRecord(configuration=configuration)
-    document = record.generate_xml_document(xml_declaration=True)
+    document = record.generate_xml_document()
     assert "<?xml version='1.0' encoding='utf-8'?>" in document.decode()
-
-
-def test_xml_declaration_disabled():
-    config = minimal_config
-    configuration = MetadataRecordConfig(**config)
-    record = MetadataRecord(configuration=configuration)
-    document = record.generate_xml_document(xml_declaration=False)
-    assert "<?xml version='1.0' encoding='utf-8'?>" not in document.decode()
 
 
 @pytest.mark.usefixtures("get_record_response")
