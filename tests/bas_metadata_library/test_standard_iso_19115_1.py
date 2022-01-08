@@ -21,6 +21,7 @@ from backports.datetime_fromisoformat import MonkeyPatch
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
 from lxml.etree import ElementTree, XML, fromstring, tostring, XMLParser
 
+from bas_metadata_library import RecordValidationError
 from bas_metadata_library.standards.iso_19115_1 import (
     Namespaces,
     MetadataRecordConfigV1,
@@ -1896,3 +1897,20 @@ def test_lossless_conversion_v2(get_record_response, config_name):
     record_ = MetadataRecord(configuration=config).generate_xml_document().decode()
     assert _record == record_
     assert _config == config_
+
+
+@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
+def test_record_schema_validation_valid(config_name):
+    config = MetadataRecordConfigV2(**configs_safe_v2[config_name])
+    record = MetadataRecord(configuration=config)
+    record.validate()
+    assert True is True
+
+
+def test_record_schema_validation_invalid():
+    config = deepcopy(MetadataRecordConfigV2(**configs_safe_v2["minimal_v2"]))
+    record = MetadataRecord(configuration=config)
+    with pytest.raises(RecordValidationError) as e:
+        record.attributes["identification"]["spatial_resolution"] = "invalid"
+        record.validate()
+    assert "Record validation failed:" in str(e.value)

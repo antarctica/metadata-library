@@ -15,6 +15,7 @@ from jsonschema import ValidationError
 # should be safe. In any case the test environment is not exposed and so does not present a risk.
 from lxml.etree import ElementTree, XML, tostring, fromstring
 
+from bas_metadata_library import RecordValidationError
 from bas_metadata_library.standards.iec_pas_61174_1_v1 import (
     Namespaces,
     MetadataRecordConfigV1,
@@ -170,6 +171,15 @@ def test_record_schema_validation_valid(config_name):
     record = MetadataRecord(configuration=config)
     record.validate()
     assert True is True
+
+
+def test_record_schema_validation_invalid():
+    config = deepcopy(MetadataRecordConfigV1(**configs_v1["minimal_v1"]))
+    record = MetadataRecord(configuration=config)
+    with pytest.raises(RecordValidationError) as e:
+        record.attributes["waypoints"][0]["leg"] = {"geometry_type": "invalid"}
+        record.validate()
+    assert "Record validation failed:" in str(e.value)
 
 
 def test_rtzp_encode():
