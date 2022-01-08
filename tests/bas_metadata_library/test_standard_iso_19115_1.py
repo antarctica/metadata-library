@@ -1494,8 +1494,8 @@ def test_edge_case_distribution_option_format_no_properties():
     record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
     record = tostring(record_element).decode()
     record = record.replace(
-        '<gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt"><gmd:name><gco:CharacterString>netCDF</gco:CharacterString></gmd:name><gmd:version gco:nilReason="missing"/></gmd:MD_Format>',
-        '<gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt"></gmd:MD_Format>',
+        '<gmd:MD_Format id="bml-7c0728ad873c8067873930212a8658fa1f010120-fmt"><gmd:name><gco:CharacterString>netCDF</gco:CharacterString></gmd:name><gmd:version gco:nilReason="missing"/></gmd:MD_Format>',
+        '<gmd:MD_Format id="bml-7c0728ad873c8067873930212a8658fa1f010120-fmt"></gmd:MD_Format>',
     )
     _record = MetadataRecord(record=record)
     _config = _record.make_config()
@@ -1550,8 +1550,8 @@ def test_edge_case_distribution_option_transfer_options_no_properties():
     record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
     record = tostring(record_element).decode()
     record = record.replace(
-        '<gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo"><gmd:onLine><gmd:CI_OnlineResource><gmd:linkage><gmd:URL>https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371</gmd:URL></gmd:linkage><gmd:name><gco:CharacterString>Get Data</gco:CharacterString></gmd:name><gmd:description><gco:CharacterString>Download measurement data</gco:CharacterString></gmd:description><gmd:function><gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode></gmd:function></gmd:CI_OnlineResource></gmd:onLine></gmd:MD_DigitalTransferOptions>',
-        '<gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo"></gmd:MD_DigitalTransferOptions>',
+        '<gmd:MD_DigitalTransferOptions id="bml-7c0728ad873c8067873930212a8658fa1f010120-tfo"><gmd:onLine><gmd:CI_OnlineResource><gmd:linkage><gmd:URL>https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371</gmd:URL></gmd:linkage><gmd:name><gco:CharacterString>Get Data</gco:CharacterString></gmd:name><gmd:description><gco:CharacterString>Download measurement data</gco:CharacterString></gmd:description><gmd:function><gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode></gmd:function></gmd:CI_OnlineResource></gmd:onLine></gmd:MD_DigitalTransferOptions>',
+        '<gmd:MD_DigitalTransferOptions id="bml-7c0728ad873c8067873930212a8658fa1f010120-tfo"></gmd:MD_DigitalTransferOptions>',
     )
     _record = MetadataRecord(record=record)
     _config = _record.make_config()
@@ -1596,9 +1596,9 @@ def test_edge_case_distribution_option_no_id():
     record = MetadataRecord(configuration=config).generate_xml_document().decode()
     record_element = XML(record.encode(), parser=XMLParser(remove_blank_text=True))
     record = tostring(record_element).decode()
-    record = record.replace('<gmd:MD_Format id="7c0728ad873c8067873930212a8658fa1f010120-fmt">', "<gmd:MD_Format>")
+    record = record.replace('<gmd:MD_Format id="bml-7c0728ad873c8067873930212a8658fa1f010120-fmt">', "<gmd:MD_Format>")
     record = record.replace(
-        '<gmd:MD_DigitalTransferOptions id="7c0728ad873c8067873930212a8658fa1f010120-tfo">',
+        '<gmd:MD_DigitalTransferOptions id="bml-7c0728ad873c8067873930212a8658fa1f010120-tfo">',
         "<gmd:MD_DigitalTransferOptions>",
     )
     _record = MetadataRecord(record=record)

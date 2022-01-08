@@ -805,7 +805,7 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format id="8a4e1a367baa41f18011c36f014fa96cfa66e36b-fmt">
+            <gmd:MD_Format id="bml-8a4e1a367baa41f18011c36f014fa96cfa66e36b-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca" xlink:actuate="onRequest">netCDF</gmx:Anchor>
               </gmd:name>
@@ -815,7 +815,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="8a4e1a367baa41f18011c36f014fa96cfa66e36b-tfo">
+            <gmd:MD_DigitalTransferOptions id="bml-8a4e1a367baa41f18011c36f014fa96cfa66e36b-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>MB</gco:CharacterString>
               </gmd:unitsOfDistribution>
@@ -891,7 +891,7 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format id="b74eb5a9f47362f0136e7cd0f14b8674035bba74-fmt">
+            <gmd:MD_Format id="bml-b74eb5a9f47362f0136e7cd0f14b8674035bba74-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://www.iana.org/assignments/media-types/application/pdf" xlink:actuate="onRequest">PDF</gmx:Anchor>
               </gmd:name>
@@ -911,7 +911,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="b74eb5a9f47362f0136e7cd0f14b8674035bba74-tfo">
+            <gmd:MD_DigitalTransferOptions id="bml-b74eb5a9f47362f0136e7cd0f14b8674035bba74-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>KB</gco:CharacterString>
               </gmd:unitsOfDistribution>
@@ -940,7 +940,7 @@
             </gmd:MD_DigitalTransferOptions>
           </gmd:distributorTransferOptions>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="6505a72622f18b9486ef088beee5ce57f3acb4af-tfo">
+            <gmd:MD_DigitalTransferOptions id="bml-6505a72622f18b9486ef088beee5ce57f3acb4af-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>MB</gco:CharacterString>
               </gmd:unitsOfDistribution>
