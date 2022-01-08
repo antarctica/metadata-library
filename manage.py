@@ -60,10 +60,7 @@ def capture_test_records():
     rtz_1_config = IEC_PAS_61174_1_MetadataRecordConfigV1(**iec_pas_61174_1_standard_configs["minimal_v1"])
     rtz_1_record = IEC_PAS_61174_1_MetadataRecord(configuration=rtz_1_config)
 
-    rtzp_records = {
-        "iec-pas-61174-0": rtz_0_record,
-        "iec-pas-61174-1": rtz_1_record
-    }
+    rtzp_records = {"iec-pas-61174-0": rtz_0_record, "iec-pas-61174-1": rtz_1_record}
 
     for rtzp_standard, rtzp_record in rtzp_records.items():
         _update_rtzp_artefact_if_changed(rtzp_standard=rtzp_standard, rtzp_record=rtzp_record)
@@ -97,7 +94,9 @@ def generate_schemas():
             json.dump(dist_schema_data, dist_schema_file, indent=4)
 
 
-def _update_rtzp_artefact_if_changed(rtzp_standard: str, rtzp_record: Union[IEC_PAS_61174_0_MetadataRecord, IEC_PAS_61174_1_MetadataRecord]):
+def _update_rtzp_artefact_if_changed(
+    rtzp_standard: str, rtzp_record: Union[IEC_PAS_61174_0_MetadataRecord, IEC_PAS_61174_1_MetadataRecord]
+):
     """
     Checks whether a RTZP archive created for a IEC PAS 61174 based record differs compared to an earlier archive.
 

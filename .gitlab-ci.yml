@@ -10,8 +10,8 @@
 #   Sensitive values are represented by "[Sensitive]"
 #
 # - AWS IAM id/secret keys for 'bas-gitlab-ci-bas-metadata-generator' user
-# > AWS_ACCESS_KEY_ID: "[Sensetive]"
-# > AWS_SECRET_ACCESS_KEY: "[Sensetive]"
+# > AWS_ACCESS_KEY_ID: "[Sensitive]"
+# > AWS_SECRET_ACCESS_KEY: "[Sensitive]"
 #
 # - PyPi (production) - create tokens at https://pypi.org/manage/account/
 # > PYPI_TOKEN (protected): "[Sensitive]"

@@ -294,7 +294,7 @@ def format_numbers_consistently(number: Union[int, float]) -> Union[int, float]:
     """
     Formats numeric values in a consistent way.
 
-    Prevents inconsistencies with how numbers are formatted (e.g. should '12.0' be '12'?)
+    Prevents inconsistencies with how numbers are formatted (e.g. '12.0' as '12')
 
     :type number: float or int
     :param number: numeric value to format

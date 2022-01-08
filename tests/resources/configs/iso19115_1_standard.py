@@ -1,7 +1,5 @@
 import datetime
 
-from copy import deepcopy
-
 minimal_record_v1 = {
     "language": "eng",
     "character_set": "utf-8",
