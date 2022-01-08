@@ -752,12 +752,11 @@ base_complex_record_v2 = {
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extent": {
             "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
+                "identifier": {
+                    "identifier": "ANTARCTICA",
+                    "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/70fb5a3b-35b1-4048-a8be-56a0d865281c",
+                    "namespace": "gcmd-keywords-location",
+                },
             },
             "temporal": {
                 "period": {
@@ -959,12 +958,7 @@ complete_record_v2 = {
                     "east_longitude": -27.04976,
                     "south_latitude": -68.1511,
                     "north_latitude": -54.30761,
-                },
-                "identifier": {
-                    "identifier": "ANTARCTICA",
-                    "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/70fb5a3b-35b1-4048-a8be-56a0d865281c",
-                    "namespace": "gcmd-keywords-location",
-                },
+                }
             },
             "temporal": {
                 "period": {

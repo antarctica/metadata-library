@@ -1250,8 +1250,7 @@ class GeographicExtent(MetadataRecordElement):
                 element_attributes=self.element_attributes["bounding_box"],
             )
             bounding_box.make_element()
-
-        if "identifier" in self.element_attributes:
+        elif "identifier" in self.element_attributes:
             geographic_description_element = SubElement(
                 geographic_extent_element, f"{{{self.ns.gmd}}}EX_GeographicDescription"
             )
