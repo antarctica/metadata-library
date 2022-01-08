@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#153](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/153)
 * Missing scope code options in ISO 19115 JSON config
   [#162](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/162)
+* Missing JSON dump method for 19115-2 standard
+  [#163](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/163)
 
 ## 0.7.1 - 2021-12-12
 
