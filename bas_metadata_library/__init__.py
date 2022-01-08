@@ -227,14 +227,11 @@ class MetadataRecord(object):
         metadata_record = None
         return metadata_record
 
-    def generate_xml_document(self, xml_declaration: bool = True) -> bytes:
+    def generate_xml_document(self) -> bytes:
         """
         Generates an XML document and tree from an XML element defining a record
 
-        The XML document is encoded as a UTF-8 byte string, with pretty-printing, and by default, an XML declaration.
-
-        :type xml_declaration: bool
-        :param xml_declaration: Whether to include an XML declaration, defaults to True
+        The XML document is encoded as a UTF-8 byte string, with pretty-printing and an XML declaration.
 
         :rtype bytes
         :return: XML document in bytes
@@ -242,7 +239,7 @@ class MetadataRecord(object):
         self.record = self.make_element()
         document = ElementTree(self.record)
 
-        return element_string(document, pretty_print=True, xml_declaration=xml_declaration, encoding="utf-8")
+        return element_string(document, pretty_print=True, xml_declaration=True, encoding="utf-8")
 
     def validate(self, xsd_path: Path) -> None:
         """

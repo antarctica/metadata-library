@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed [BREAKING!]
+
+* Removed option to disable XML declaration when encoding a record into XML
+  [#140](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/140)
+
 ### Added
 
 * Schema validation for ISO 19115 standards
