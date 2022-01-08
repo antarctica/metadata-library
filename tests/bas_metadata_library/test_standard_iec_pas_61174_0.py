@@ -105,7 +105,7 @@ def test_xml_namespaces(get_record_response, config_name):
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
     # `None` is used as a key as the RTZ namespace is the root namespace
-    assert record.nsmap[None] == 'http://www.cirm.org/RTZ/1/0'
+    assert record.nsmap[None] == "http://www.cirm.org/RTZ/1/0"
 
 
 @pytest.mark.usefixtures("get_record_response")

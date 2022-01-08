@@ -19,7 +19,6 @@ from jsonschema import validate
 from lxml.etree import Element, ElementTree, tostring as element_string, fromstring  # nosec
 
 
-# Base classes
 class RecordValidationError(Exception):
     """
     Internal error indicating a record has failed schema validation

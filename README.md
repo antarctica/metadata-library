@@ -1,18 +1,18 @@
 # BAS Metadata Library
 
-Python library for generating metadata records.
+Python library for generating metadata and data records.
 
 ## Overview
 
 ### Purpose
 
-This library is designed to assist in generating metadata records for the discovery of datasets, services, features 
-and related resources. This project is intended to be used as a dependency within other tools and services, to avoid 
-the need to duplicate the implementation of complex and verbose metadata standards.
+This library is designed to assist in generating metadata and data records, primarily for the discovery of datasets, 
+services, features and related resources. This project is intended to be used as a dependnecy, to avoid the need to 
+duplicate the implementation of complex and verbose metadata and data standards.
 
 At a high level, this library allows a configuration object, representing the fields/structure of a standard, to be 
-encoded into the formal representation set out by that standard (typically in XML). It also allows a formal 
-representation to be decoded back into a configuration object, which can be more easily used or manipulated in software.
+encoded into its formal representation set out by that standard (typically using XML). It also allows such a formal 
+representation to be decoded back into a configuration object, which can be more easily used or manipulated.
 
 ### Supported standards
 
@@ -34,7 +34,7 @@ consistency with *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_
 | -        | -        | -               | -                 | -             |
 
 **Note:** Support for profiles has been removed to allow underlying standards to be implemented more easily, and to
-wait until stable profiles for UK PDC Discovery metadata have been developed and approved.
+wait until a stable profile for UK PDC Discovery metadata has been developed and approved.
 
 ### Supported configuration versions
 
@@ -54,12 +54,14 @@ only standards, and elements of these standards, used by BAS or the UK PDC are s
 enable this library to be useful to other organisations and use-case are welcome as contributions providing they do not
 add significant complexity or maintenance.
 
-| Standard           | Coverage | Coverage Summary                                                                                 |
-| ------------------ | -------- | ------------------------------------------------------------------------------------------------ |
-| ISO 19115:2003     | Good     | All mandatory elements are supported with a good number of commonly used additional elements     |
-| ISO 19115-2:2009   | Minimal  | With the exception of the root element, no additional elements from this extension are supported |
-| IEC 61174:2015     | Minimal  | All mandatory elements supported plus a limited number of optional route information attributes  |
-| IEC PAS 61174:2021 | Minimal  | All mandatory elements supported plus a limited number of optional route information attributes  |
+| Standard           | Coverage | Coverage Summary                                                                                     |
+| ------------------ | -------- |------------------------------------------------------------------------------------------------------|
+| ISO 19115:2003     | Good     | All mandatory elements are supported with a good number of commonly used additional elements         |
+| ISO 19115-2:2009   | Minimal  | No elements from this extension are supported, with the exception of the root element                |
+| IEC 61174:2015     | Minimal  | All mandatory elements are supported, plus a limited number of optional route information attributes |
+| IEC PAS 61174:2021 | Minimal  | All mandatory elements are supported, plus a limited number of optional route information attributes |
+
+**Note:** ISO 19115 extensions (i.e. `gmd:metadataExtensionInfo` elements) are not supported.
 
 #### Coverage for IEC 61174
 
@@ -581,15 +583,15 @@ print(configurationV1.config)
 
 ## Implementation
 
-This library is implemented in Python and consists of a set of classes used to generate XML metadata records from a
-configuration object, or to generate a configuration object from an XML record.
+This library is implemented in Python and consists of a set of classes used to generate XML metadata and data records 
+from a configuration object, or to generate a configuration object from an XML record.
 
+Each [supported Standard](#supported-standards) is implemented as a module under `bas_metadata_library.standards`. Each 
+[Supported Profile](#supported-profiles) is implemented as modules under their respective standard.
 
-Each [supported Standard](#supported-standards) and [Supported Profile](#supported-profiles) is implemented as a module
-under `bas_metadata_library.standards` (where profiles are implemented as modules under their respective standard).
 ### Base classes
 
-For each, classes inherited from these parent classes are defined:
+For each standard and profile, instances of these base classes are defined:
 
 * `Namespaces`
 * `MetadataRecord`
@@ -617,8 +619,8 @@ Specifically, at least two methods are implemented:
 * `make_element()` which builds an XML element using values from a configuration object
 * `make_config()` which uses typically XPath expressions to build a configuration object from XML
 
-These methods may be simple (if encoding or decoding a simple free text value for example), or quite complex through
-the use of sub-elements (which themselves may contain sub-elements as needed).
+These methods may be simple (if encoding or decoding a simple free text value for example), or quite complex, using
+sub-elements (which themselves may contain sub-elements as needed).
 
 ### Record schemas
 
@@ -666,19 +668,22 @@ information.
 
 ### Configuration schemas
 
-Allowed configuration values for each [supported Standard](#supported-standards) and
-[Supported Profile](#supported-profiles) are described by a [JSON Schema](https://json-schema.org). These configuration
-schemas include which configuration properties are required, and in some cases, allowed values for these properties.
+Allowed properties and values for record configurations for each [supported Standard](#supported-standards) and
+[Supported Profile](#supported-profiles) are defined using a [JSON Schema](https://json-schema.org). These schemas 
+define any required properties, and any properties with enumerated values.
 
-Configuration schemas are stored as JSON files in the `bas_metadata_library.standards_schemas` module and loaded as
-resource files from within this package. Schemas are also made available externally through the BAS Metadata Standards
-website, [metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk), to allow:
+Configuration schemas are stored as JSON files in the `bas_metadata_library.schemas` module, and loaded as
+resource files from within this package to validate record configurations. Schemas are also made available externally 
+through the BAS Metadata Standards website, 
+[metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk), to allow:
 
-1. other applications to ensure their output will be compatible with this library but that can't, or don't want to,
-   use this library
-2. to allow schema inheritance/extension where used for standards that inherit from other standards (such as profiles)
+1. other applications to ensure their output will be compatible with this library - where they can't, or don't want to,
+   use this library directly
+2. schema inheritance/extension - for standards that inherit from other standards (such as extensions or profiles)
 
-Configuration schemas a versioned (e.g. `v1`, `v2`) to allow for backwards incompatible changes to be made.
+Configuration schemas are versioned (e.g. `v1`, `v2`) to allow for backwards incompatible changes to be made. 
+Upgrade/Downgrade methods will be provided for a limited time to assist migrating record configurations between schema
+versions.
 
 #### Source and distribution schemas
 
@@ -723,7 +728,7 @@ To add a new standard:
 
 ### Adding a new element to an existing standard
 
-[WIP]
+**Note:** These instructions are specific to the ISO 19115 metadata standards family.
 
 1. [amend configuration schema](#configuration-schemas):
    * new or changed properties should be added to the configuration for the relevant standard (e.g. ISO 19115-1)
@@ -769,7 +774,7 @@ To add a new standard:
       correctly
     * check the git status of these test records to check existing records have changed how you expect (and haven't
       changed things you didn't intend to for example)
-7. add tests
+7. add tests:
     * new test cases should be added, or existing test cases updated, in the relevant module within
       `tests/bas_metadata_library/`
     * for the ISO 19115 family of standards, this should be `test_standard_iso_19115_1.py`, unless the element is only
@@ -779,7 +784,7 @@ To add a new standard:
       sufficient test coverage
     * where this isn't the case, it's suggested to add one or more 'edge case' test cases to test remaining code paths
       explicitly
-8. check [test coverage](#test-coverage)
+8. check [test coverage](#test-coverage):
     * for missing coverage, consider adding edge case test cases where applicable
     * wherever possible, the coverage exemptions should be minimised
     * there are a number of general types of code that can be exempted as part of an existing convention (but that
@@ -791,7 +796,7 @@ To add a new standard:
     * issue
       [#111](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/111))
       will document existing exceptions and conventions, and look at how these can be removed in the future
-9. update `README.md` examples if common element
+9. update `README.md` examples if common element:
     * this is probably best done before releasing a new version
 10. update `CHANGELOG.md`
 11. if needed, add name to `authors` property in `pyproject.toml`
@@ -1148,7 +1153,7 @@ information.
 
 ## License
 
-Copyright (c) 2019-2021 UK Research and Innovation (UKRI), British Antarctic Survey.
+Copyright (c) 2019-2022 UK Research and Innovation (UKRI), British Antarctic Survey.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

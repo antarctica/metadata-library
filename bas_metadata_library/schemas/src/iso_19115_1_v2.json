@@ -1057,7 +1057,7 @@
           ]
         },
         "protocol": {
-          "title":  "Protocol",
+          "title": "Protocol",
           "description": "Description of the Protocol",
           "type": "string",
           "examples": [
