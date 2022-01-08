@@ -96,6 +96,24 @@ This package can be installed using Pip from [PyPi](https://pypi.org/project/bas
 $ pip install bas-metadata-library
 ```
 
+This package depends on native libraries for XML encoding and decoding:
+
+* `libxml2`
+* `libxslt`
+
+This package depends on native binaries for XML validation:
+
+* `xmllint`
+
+Most Operating Systems include these libraries and packages by default. However, others, particularly minimal OSes 
+require these packages to be installed separately. Required packages for supported Operating Systems are:
+
+| Operating System      | Required Packages              | Notes                |
+|-----------------------|--------------------------------|----------------------|
+| Alpine Linux (Docker) | `libxslt-dev`, `libxml2-utils` | -                    |
+| CentOS 7              | -                              | Installed by default |
+| CentOS 7 (Docker)     | -                              | Installed by default |
+
 ## Usage
 
 ### Encode an ISO 19115 metadata record
@@ -293,6 +311,120 @@ configuration = MetadataRecordConfigV2(**minimal_record_config)
 configuration.dump(file=Path('/path/to/file.json'))
 ```
 
+### Validating a record
+
+**The example below is for the ISO 19115 standard but this applies to all standards.**
+
+The formal encoding of a record can be validated against one or more XML schemas relevant to each metadata or data 
+standard. Records are not validated automatically, and so must be validated explicitly:
+
+```python
+from datetime import date
+
+from bas_metadata_library import RecordValidationError
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecord
+
+minimal_record_config = {
+    "hierarchy_level": "dataset",
+    "metadata": {
+        "language": "eng",
+        "character_set": "utf-8",
+        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "date_stamp": date(2018, 10, 18),
+    },
+    "identification": {
+        "title": {"value": "Test Record"},
+        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "character_set": "utf-8",
+        "language": "eng",
+        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+        "extent": {
+            "geographic": {
+                "bounding_box": {
+                    "west_longitude": -45.61521,
+                    "east_longitude": -27.04976,
+                    "south_latitude": -68.1511,
+                    "north_latitude": -54.30761,
+                }
+            }
+        },
+    },
+}
+configuration = MetadataRecordConfigV2(**minimal_record_config)
+record = MetadataRecord(configuration=configuration)
+
+try:
+    record.validate()
+except RecordValidationError as e:
+    print('Record invalid')
+    print(e)
+```
+
+Where the contents of the record is invalid, a `RecordValidationError` exception will be raised. Printing this 
+exception will return validation errors. 
+
+These errors should not happen, and if they do are considered internal bugs. Please report any in the 
+[Project Issue Tracker](#issue-tracking) if you are internal to BAS, or as [Feedback](#feedback) if you are not.
+
+See the [Record Schemas](#record-schemas) section for more information on how validation works.
+
+### Validating a record configuration
+
+**The example below is for the ISO 19115 standard but this applies to all standards.**
+
+Record configurations will be validated automatically using a JSON Schema relevant to each metadata or data standard.
+
+To explicitly validate a record configuration:
+
+```python
+from datetime import date
+
+from jsonschema import ValidationError
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+
+minimal_record_config = {
+    "hierarchy_level": "dataset",
+    "metadata": {
+        "language": "eng",
+        "character_set": "utf-8",
+        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "date_stamp": date(2018, 10, 18),
+    },
+    "identification": {
+        "title": {"value": "Test Record"},
+        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "character_set": "utf-8",
+        "language": "eng",
+        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+        "extent": {
+            "geographic": {
+                "bounding_box": {
+                    "west_longitude": -45.61521,
+                    "east_longitude": -27.04976,
+                    "south_latitude": -68.1511,
+                    "north_latitude": -54.30761,
+                }
+            }
+        },
+    },
+}
+configuration = MetadataRecordConfigV2(**minimal_record_config)
+
+try:
+    configuration.validate()
+except ValidationError as e:
+    print('Record configuration invalid')
+    print(e)
+```
+
+Where the contents of the record is invalid, a 
+[`ValidationError`](https://python-jsonschema.readthedocs.io/en/stable/errors/#jsonschema.exceptions.ValidationError) 
+exception will be raised by the underlying JSON Schema library. Printing this exception will return validation errors. 
+
+See the [Record Configuration Schemas](#configuration-schemas) section for more information.
+
 ### HTML entities
 
 Do not include HTML entities in input to this generator, as they will be double escaped by [Lxml](https://lxml.de), the
@@ -305,21 +437,18 @@ which will not be valid output.
 
 ### ISO 19115 - linkages between transfer options and formats
 
-To support generating a table of download options for a resource (such as [1]), this library uses a 'distribution
-option' concept to group related formats and transfer option elements in [Record Configurations](#configuration-classes).
+In ISO 19115, there is no formal mechanism to associate file distribution formats and transfer options. As this library 
+seeks to be fully reversible between a configuration object and formal XML encoding, associations between these elements
+would be lost when records are encoded as XML. These associations are used to produce download tables such as [1].
 
-In ISO these elements are independent of each other, with no formal mechanism to associate formats and transfer options.
-As this library seeks to be fully reversible between a configuration object and XML, this information would be lost
-once records are encoded as XML.
+In [Record Configurations](#configuration-classes), these associations are encoded using a 'distribution option' 
+concept. In formal XML records, these associations are encoded using `xsd:ID` attributes in `gmd:MD_Format` and 
+`gmd:DigitalTransferOptions` elements, with values that allow these associations to be reconstructed when decoding XML.
 
-To avoid this, this library uses the ID attribute available in both format and transfer option elements with values
-can be used when decoding XML to reconstruct these associations. This functionality should be fully transparent to the
-user, except for these auto-generated IDs being present in records.
+**Note:** Do not modify automatically assigned IDs, as this will break this functionality.
 
-See the [Automatic transfer option / format IDs](#iso-19115-automatic-transfer-option--format-ids) section for more 
-details.
-
-**Note:** Do not modify these IDs, as this will break this functionality.
+See the [Automatic transfer option / format IDs](#iso-19115-automatic-transfer-option-format-ids) section for more 
+information.
 
 [1]
 
@@ -455,10 +584,10 @@ print(configurationV1.config)
 This library is implemented in Python and consists of a set of classes used to generate XML metadata records from a
 configuration object, or to generate a configuration object from an XML record.
 
-### Metadata Record classes
 
 Each [supported Standard](#supported-standards) and [Supported Profile](#supported-profiles) is implemented as a module
 under `bas_metadata_library.standards` (where profiles are implemented as modules under their respective standard).
+### Base classes
 
 For each, classes inherited from these parent classes are defined:
 
@@ -475,7 +604,7 @@ The `MetadataRecordConfig` class represents the [Configuration](#configuration-c
 `MetadataRecord`, either for new records, or derived from existing records. This class provides methods to validate the
 configuration used in a record for example.
 
-### Element classes
+### Record element classes
 
 Each supported element, in each [supported standard](#supported-standards), inherit and use the `MetadataRecordElement`
 class to:
@@ -490,6 +619,38 @@ Specifically, at least two methods are implemented:
 
 These methods may be simple (if encoding or decoding a simple free text value for example), or quite complex through
 the use of sub-elements (which themselves may contain sub-elements as needed).
+
+### Record schemas
+
+Allowed elements, attributes and values for each [supported Standard](#supported-standards) and
+[Supported Profile](#supported-profiles) are defined using one or more [XML Schemas](https://www.w3.org/XML/Schema). 
+These schemas define any required entities, and any entities with enumerated values. Schemas are usually published by 
+standards organisations to facilitate record validation.
+
+For performance reasons, and to ensure required schemas are not unavailable (due to remote locations being reorganised,
+or during server maintenance etc.), these schema files are stored within this package. Schemas are stored as XML Schema 
+Definition (XSD) files in the `bas_metadata_library.schemas.xsd` module, and loaded as resource files for use in record
+validation.
+
+**Note:** For technical reasons, XSDs included locally in this project are contained in a Zip archive 
+`bas_metadata_library.schemas.xsd/xsd-archive.zip`. This archive will be automatically unzipped to a temporary 
+location during validation.
+
+**Note:** To support local validation, imported or included schema locations in local versions of XML schemas, have 
+been modified. These changes do not materially change the contents of any schema.
+
+**Note:** In some cases, material changes *have* been made to local versions of schemas, in order to workaround 
+specific issues. These changes will be documented and explained, to allow users to understand the effect they will 
+have, and why they have been made.
+
+#### Altered Metadata Schema - Geographic Metadata (GMD)
+
+The ISO *Geographic Metadata (GMD)* schema (used directly for the ISO 19115-0 standard, and indirectly in the ISO 
+19115-2 standard) has been modified to:
+
+1. include the ISO *Geographic Metadata XML (GMX)* schema:
+    * in order to allow Anchor elements to substitute primitive/simple values (such as character strings and integers), 
+    * as defined in the ISO 19139:2007 and ISO 19139:2012 standards
 
 ### Configuration classes
 

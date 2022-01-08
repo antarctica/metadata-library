@@ -8,7 +8,7 @@ ENV PYTHONPATH=$APPPATH
 RUN mkdir $APPPATH
 WORKDIR $APPPATH
 
-RUN apk add --no-cache libxslt-dev libffi-dev openssl-dev git
+RUN apk add --no-cache libxslt-dev libffi-dev openssl-dev libxml2-utils git
 
 
 FROM base as build

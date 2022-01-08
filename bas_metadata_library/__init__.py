@@ -1,8 +1,16 @@
 import json
 
+# Exempting Bandit security issue (using subprocess)
+# see notes in `MetadataRecord.validate` method.
+import subprocess  # nosec
+
 from typing import Optional
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from zipfile import ZipFile
+from copy import deepcopy
 
+from importlib_resources import path as resource_path
 from jsonschema import validate
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
@@ -12,6 +20,12 @@ from lxml.etree import Element, ElementTree, tostring as element_string, fromstr
 
 
 # Base classes
+class RecordValidationError(Exception):
+    """
+    Internal error indicating a record has failed schema validation
+    """
+
+    pass
 
 
 class Namespaces(object):
@@ -230,6 +244,53 @@ class MetadataRecord(object):
         document = ElementTree(self.record)
 
         return element_string(document, pretty_print=True, xml_declaration=xml_declaration, encoding="utf-8")
+
+    def validate(self, xsd_path: Path) -> None:
+        """
+        Validates the contents of a record against a given XSD schema
+
+        The external `xmllint` binary is used to validate records as the `lxml` methods did not easily support relative
+        paths for schemas that use imports/includes (which includes the ISO 19115 family).
+
+        Schemas are loaded from a Zip archive to allow the `importlib.path` method to be used (which only supports
+        files). This Zip is extracted to a temporary directory managed by Python. The current record object is written
+        to the same temporary directory to easily pass to the `xmllint` binary.
+
+        The `xmllint` binary only returns a 0 exit code if the record validates successfully. Therefore, any other exit
+        code can be considered a validation failure, and returned as a `RecordValidationError` exception.
+
+        It is assumed this method will be overridden in concrete implementations of this class. Specifically it's
+        assumed the `xsd_path` parameter will be hard coded to a schema suitable for the standard each class implements.
+
+        :type xsd_path: Path
+        :param xsd_path: Path relative to `bas_metadata_library.schemas.xsd` to the schema to validate against
+        """
+        with resource_path("bas_metadata_library.schemas.xsd", "xsd-archive.zip") as schemas_archive_path:
+            with ZipFile(str(schemas_archive_path)) as schemas_archive:
+                with TemporaryDirectory() as schemas_archive_directory_path:
+                    schemas_archive.extractall(path=schemas_archive_directory_path)
+                    schema_path = Path(schemas_archive_directory_path).joinpath(xsd_path)
+
+                    document_path = Path(schemas_archive_directory_path).joinpath("record.xml")
+                    validation_document: MetadataRecord = deepcopy(self)
+                    with open(document_path, mode="w") as document_file:
+                        document_data = validation_document.generate_xml_document().decode()
+                        document_file.write(document_data)
+
+                    try:
+                        # Exempting Bandit security issue (using subprocess)
+                        # Checking for untrusted input is not a concern for this library, rather those implementing
+                        # this library should ensure it is used in a way that is secure (i.e. it is context dependent).
+                        #
+                        # Use `capture_output=True` in future when we can use Python 3.7+
+                        subprocess.run(  # nosec
+                            args=["xmllint", "--noout", "--schema", str(schema_path), str(document_path)],
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            check=True,
+                        )
+                    except subprocess.CalledProcessError as e:
+                        raise RecordValidationError(f"Record validation failed: {e.stderr.decode()}")
 
 
 class MetadataRecordElement(object):

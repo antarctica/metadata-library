@@ -151,15 +151,9 @@ class MetadataRecord(_MetadataRecord):
         self.record = load_record_from_rtzp_archive(file=file)
         self.metadata_record = Route(record=self.record, attributes=self.attributes, xpath=self.xpath)
 
+    # noinspection PyMethodOverriding
     def validate(self) -> None:
-        pass
-        with resource_path("bas_metadata_library.schemas.xsd", "rtz_1_2.xsd") as schema_file_path:
-            with open(schema_file_path) as validation_schema_file:
-                validation_schema_document = fromstring(validation_schema_file.read().encode())
-
-        validation_schema = XMLSchema(validation_schema_document)
-        validation_document: MetadataRecord = deepcopy(self)
-        validation_schema.assertValid(validation_document.make_element())
+        super().validate(xsd_path=Path("rtz/rtz_1_2.xsd"))
 
 
 class Route(MetadataRecordElement):

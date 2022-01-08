@@ -117,3 +117,7 @@ class MetadataRecord(_MetadataRecord):
 
     def make_element(self) -> Element:
         return self.metadata_record.make_element()
+
+    # noinspection PyMethodOverriding
+    def validate(self) -> None:
+        super().validate(xsd_path=Path("gmi/gmi.xsd"))
