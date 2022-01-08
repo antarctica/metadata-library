@@ -910,14 +910,12 @@ def _test_identification_spatial_resolution(record, config):
 
     if config["identification"]["spatial_resolution"] is None:
         spatial_resolution_value = record.xpath(
-            "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution"
-            "/gmd:distance/@gco:nilReason = 'inapplicable'",
+            "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/@gco:nilReason = 'inapplicable'",
             namespaces=namespaces.nsmap(),
         )
     elif config["identification"]["spatial_resolution"] is not None:
         spatial_resolution_value = record.xpath(
-            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution"
-            f"/gmd:distance/gco:Distance/text() = '{config['identification']['spatial_resolution']}'",
+            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer/text() = '{config['identification']['spatial_resolution']}'",
             namespaces=namespaces.nsmap(),
         )
     else:

@@ -1163,13 +1163,14 @@
     },
     "spatial_resolution": {
       "title": "Spatial resolution",
-      "description": "Describes the resolution of the resource's spatial information. May be set to null to indicate no resolution.",
+      "description": "Describes the resolution of the resource's spatial information. May be set to null to indicate resolution is inapplicable.",
       "type": [
-        "string",
+        "number",
         "null"
       ],
       "examples": [
-        "1:1000000",
+        "1000000",
+        "1.24",
         null
       ]
     },
