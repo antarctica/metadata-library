@@ -287,6 +287,15 @@ class DataIdentification(MetadataRecordElement):
             )
             credit.make_element()
 
+        if "status" in self.attributes["identification"]:
+            status = Status(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes["identification"],
+            )
+            status.make_element()
+
         if "contacts" in self.attributes["identification"]:
             for point_of_contact_attributes in self.attributes["identification"]["contacts"]:
                 for role in point_of_contact_attributes["role"]:
@@ -360,15 +369,6 @@ class DataIdentification(MetadataRecordElement):
             )
             spatial_representation_type.make_element()
 
-        if "status" in self.attributes["identification"]:
-            status = Status(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=data_identification_element,
-                element_attributes=self.attributes["identification"],
-            )
-            status.make_element()
-
         if "spatial_resolution" in self.attributes["identification"]:
             spatial_resolution = SpatialResolution(
                 record=self.record,
@@ -378,14 +378,6 @@ class DataIdentification(MetadataRecordElement):
             )
             spatial_resolution.make_element()
 
-        character_set = CharacterSet(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.attributes["identification"],
-        )
-        character_set.make_element()
-
         language = Language(
             record=self.record,
             attributes=self.attributes,
@@ -393,6 +385,14 @@ class DataIdentification(MetadataRecordElement):
             element_attributes=self.attributes["identification"],
         )
         language.make_element()
+
+        character_set = CharacterSet(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=data_identification_element,
+            element_attributes=self.attributes["identification"],
+        )
+        character_set.make_element()
 
         if "topics" in self.attributes["identification"]:
             for topic_attribute in self.attributes["identification"]["topics"]:

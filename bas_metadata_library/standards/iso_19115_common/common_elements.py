@@ -389,6 +389,11 @@ class OnlineResource(MetadataRecordElement):
             )
             linkage.make_element()
 
+        if "protocol" in self.element_attributes:
+            protocol_element = SubElement(online_resource_element, f"{{{self.ns.gmd}}}protocol")
+            protocol_value = SubElement(protocol_element, f"{{{self.ns.gco}}}CharacterString")
+            protocol_value.text = self.element_attributes["protocol"]
+
         if "title" in self.element_attributes:
             title_wrapper = SubElement(online_resource_element, f"{{{self.ns.gmd}}}name")
             title_element = SubElement(title_wrapper, f"{{{self.ns.gco}}}CharacterString")
@@ -398,11 +403,6 @@ class OnlineResource(MetadataRecordElement):
             title_wrapper = SubElement(online_resource_element, f"{{{self.ns.gmd}}}description")
             title_element = SubElement(title_wrapper, f"{{{self.ns.gco}}}CharacterString")
             title_element.text = self.element_attributes["description"]
-
-        if "protocol" in self.element_attributes:
-            protocol_element = SubElement(online_resource_element, f"{{{self.ns.gmd}}}protocol")
-            protocol_value = SubElement(protocol_element, f"{{{self.ns.gco}}}CharacterString")
-            protocol_value.text = self.element_attributes["protocol"]
 
         if "function" in self.element_attributes:
             function = OnlineRole(

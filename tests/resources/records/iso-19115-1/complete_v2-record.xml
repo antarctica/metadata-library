@@ -220,6 +220,9 @@
       <gmd:credit>
         <gco:CharacterString>No credit.</gco:CharacterString>
       </gmd:credit>
+      <gmd:status>
+        <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="completed">completed</gmd:MD_ProgressCode>
+      </gmd:status>
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:individualName>
@@ -665,9 +668,6 @@
       <gmd:spatialRepresentationType>
         <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="textTable">textTable</gmd:MD_SpatialRepresentationTypeCode>
       </gmd:spatialRepresentationType>
-      <gmd:status>
-        <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="completed">completed</gmd:MD_ProgressCode>
-      </gmd:status>
       <gmd:spatialResolution>
         <gmd:MD_Resolution>
           <gmd:equivalentScale>
@@ -679,12 +679,12 @@
           </gmd:equivalentScale>
         </gmd:MD_Resolution>
       </gmd:spatialResolution>
-      <gmd:characterSet>
-        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf-8">utf-8</gmd:MD_CharacterSetCode>
-      </gmd:characterSet>
       <gmd:language>
         <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng">eng</gmd:LanguageCode>
       </gmd:language>
+      <gmd:characterSet>
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf-8">utf-8</gmd:MD_CharacterSetCode>
+      </gmd:characterSet>
       <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>
@@ -827,15 +827,15 @@
                   <gmd:linkage>
                     <gmd:URL>https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371</gmd:URL>
                   </gmd:linkage>
+                  <gmd:protocol>
+                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                  </gmd:protocol>
                   <gmd:name>
                     <gco:CharacterString>Get Data</gco:CharacterString>
                   </gmd:name>
                   <gmd:description>
                     <gco:CharacterString>Download measurement data</gco:CharacterString>
                   </gmd:description>
-                  <gmd:protocol>
-                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-                  </gmd:protocol>
                   <gmd:function>
                     <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
                   </gmd:function>
@@ -900,6 +900,16 @@
               </gmd:version>
             </gmd:MD_Format>
           </gmd:distributorFormat>
+          <gmd:distributorFormat>
+            <gmd:MD_Format id="bml-6505a72622f18b9486ef088beee5ce57f3acb4af-fmt">
+              <gmd:name>
+                <gmx:Anchor xlink:href="https://www.iana.org/assignments/media-types/image/png" xlink:actuate="onRequest">PNG</gmx:Anchor>
+              </gmd:name>
+              <gmd:version>
+                <gco:CharacterString>1</gco:CharacterString>
+              </gmd:version>
+            </gmd:MD_Format>
+          </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
             <gmd:MD_DigitalTransferOptions id="b74eb5a9f47362f0136e7cd0f14b8674035bba74-tfo">
               <gmd:unitsOfDistribution>
@@ -913,15 +923,15 @@
                   <gmd:linkage>
                     <gmd:URL>https://data.bas.ac.uk/download/1a13e804-ceca-4f7b-9001-6e976872eec0</gmd:URL>
                   </gmd:linkage>
+                  <gmd:protocol>
+                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                  </gmd:protocol>
                   <gmd:name>
                     <gco:CharacterString>PDF</gco:CharacterString>
                   </gmd:name>
                   <gmd:description>
                     <gco:CharacterString>Download information as an Adobe PDF.</gco:CharacterString>
                   </gmd:description>
-                  <gmd:protocol>
-                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-                  </gmd:protocol>
                   <gmd:function>
                     <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
                   </gmd:function>
@@ -929,16 +939,6 @@
               </gmd:onLine>
             </gmd:MD_DigitalTransferOptions>
           </gmd:distributorTransferOptions>
-          <gmd:distributorFormat>
-            <gmd:MD_Format id="6505a72622f18b9486ef088beee5ce57f3acb4af-fmt">
-              <gmd:name>
-                <gmx:Anchor xlink:href="https://www.iana.org/assignments/media-types/image/png" xlink:actuate="onRequest">PNG</gmx:Anchor>
-              </gmd:name>
-              <gmd:version>
-                <gco:CharacterString>1</gco:CharacterString>
-              </gmd:version>
-            </gmd:MD_Format>
-          </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
             <gmd:MD_DigitalTransferOptions id="6505a72622f18b9486ef088beee5ce57f3acb4af-tfo">
               <gmd:unitsOfDistribution>
@@ -952,15 +952,15 @@
                   <gmd:linkage>
                     <gmd:URL>https://data.bas.ac.uk/download/e6db2605-f9bd-422a-b864-caa6d69cdcaf</gmd:URL>
                   </gmd:linkage>
+                  <gmd:protocol>
+                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                  </gmd:protocol>
                   <gmd:name>
                     <gco:CharacterString>PNG</gco:CharacterString>
                   </gmd:name>
                   <gmd:description>
                     <gco:CharacterString>Download information as a PNG image.</gco:CharacterString>
                   </gmd:description>
-                  <gmd:protocol>
-                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-                  </gmd:protocol>
                   <gmd:function>
                     <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</gmd:CI_OnLineFunctionCode>
                   </gmd:function>
