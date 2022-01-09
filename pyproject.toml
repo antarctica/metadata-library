@@ -21,10 +21,6 @@ classifiers = [
     "Topic :: Software Development :: Libraries"
 ]
 
-packages = [
-    {include = "bas_metadata_library"},
-]
-
 [tool.poetry.dependencies]
 python = "^3.6"
 jsonschema = "3.2.0" # locked to maintain Python 3.6 compatibility

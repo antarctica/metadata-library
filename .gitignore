@@ -1,4 +1,5 @@
 __pycache__
-/provisioning/terraform/.terraform
+/support/provisioning/terraform/.terraform
 /htmlcov
 /.coverage
+/.venv
