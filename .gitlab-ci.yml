@@ -109,11 +109,11 @@ publish-schemas-stage:
     entrypoint: [""]
   before_script: []
   script:
-    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_1_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
-    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_2_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json"
-    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_1_v2.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json"
-    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_2_v2.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json"
-    - "aws s3 cp bas_metadata_library/schemas/dist/iec_pas_61174_0_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iec_pas_61174_0_v1.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_1_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_2_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_1_v2.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_2_v2.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/iec_pas_61174_0_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iec_pas_61174_0_v1.json"
   only:
     - master
 
@@ -125,10 +125,10 @@ publish-schemas-prod:
     entrypoint: [""]
   before_script: []
   script:
-    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_1_v1.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
-    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_2_v1.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json"
-    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_1_v2.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json"
-    - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_2_v2.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json"
-    - "aws s3 cp bas_metadata_library/schemas/dist/iec_pas_61174_0_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iec_pas_61174_0_v1.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_1_v1.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_2_v1.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_1_v2.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_2_v2.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/iec_pas_61174_0_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iec_pas_61174_0_v1.json"
   only:
     - tags
