@@ -6,12 +6,12 @@ Python library for generating metadata and data records.
 
 ### Purpose
 
-This library is designed to assist in generating metadata and data records, primarily for the discovery of datasets, 
-services, features and related resources. This project is intended to be used as a dependnecy, to avoid the need to 
+This library is designed to assist in generating metadata and data records, primarily for the discovery of datasets,
+services, features and related resources. This project is intended to be used as a dependency, to avoid the need to
 duplicate the implementation of complex and verbose metadata and data standards.
 
-At a high level, this library allows a configuration object, representing the fields/structure of a standard, to be 
-encoded into its formal representation set out by that standard (typically using XML). It also allows such a formal 
+At a high level, this library allows a configuration object, representing the fields/structure of a standard, to be
+encoded into its formal representation set out by that standard (typically using XML). It also allows such a formal
 representation to be decoded back into a configuration object, which can be more easily used or manipulated.
 
 ### Supported standards
@@ -49,7 +49,7 @@ wait until a stable profile for UK PDC Discovery metadata has been developed and
 
 ### Supported standards coverage
 
-This library is built around the needs of the British Antarctic Survey and the NERC (UK) Polar Data Centre. This means 
+This library is built around the needs of the British Antarctic Survey and the NERC (UK) Polar Data Centre. This means
 only standards, and elements of these standards, used by BAS or the UK PDC are supported. However, additions that would
 enable this library to be useful to other organisations and use-case are welcome as contributions providing they do not
 add significant complexity or maintenance.
@@ -69,25 +69,25 @@ As required by the IEC 61174 standard, this library supports the following prope
 
 | Element                                        | Reference | Obligation |
 | ---------------------------------------------- | --------- | ---------- |
-| `route`                                        | *4.5.2*   | Mandatory  | 
-| `route.routeInfo.routeAuthor`                  | *4.5.3*   | Optional   | 
-| `route.routeInfo.routeName`                    | *4.5.3*   | Mandatory  | 
-| `route.routeInfo.routeStatus`                  | *4.5.3*   | Optional   | 
-| `route.waypoints`                              | *4.5.4*   | Mandatory  | 
-| `route.waypoints.*.waypoint.id`                | *4.5.6*   | Mandatory  | 
-| `route.waypoints.*.waypoint.revision`          | *4.5.6*   | Mandatory  | 
-| `route.waypoints.*.waypoint.position.lat`      | *4.5.6*   | Mandatory  | 
-| `route.waypoints.*.waypoint.position.lon`      | *4.5.6*   | Mandatory  | 
-| `route.waypoints.*.waypoint.position.geometry` | *4.5.6*   | Optional   | 
+| `route`                                        | *4.5.2*   | Mandatory  |
+| `route.routeInfo.routeAuthor`                  | *4.5.3*   | Optional   |
+| `route.routeInfo.routeName`                    | *4.5.3*   | Mandatory  |
+| `route.routeInfo.routeStatus`                  | *4.5.3*   | Optional   |
+| `route.waypoints`                              | *4.5.4*   | Mandatory  |
+| `route.waypoints.*.waypoint.id`                | *4.5.6*   | Mandatory  |
+| `route.waypoints.*.waypoint.revision`          | *4.5.6*   | Mandatory  |
+| `route.waypoints.*.waypoint.position.lat`      | *4.5.6*   | Mandatory  |
+| `route.waypoints.*.waypoint.position.lon`      | *4.5.6*   | Mandatory  |
+| `route.waypoints.*.waypoint.position.geometry` | *4.5.6*   | Optional   |
 
 This list is exhaustive. No extensions are supported.
 
-References in the above table relate to the IEC PAS 61174:2021 standards document: 
-https://webstore.iec.ch/publication/67774. 
+References in the above table relate to the IEC PAS 61174:2021 standards document:
+https://webstore.iec.ch/publication/67774.
 
 Full citation:
 
-> IEC 61174:2015, Maritime navigation and radiocommunication equipment and systems – Electronic chart display and 
+> IEC 61174:2015, Maritime navigation and radiocommunication equipment and systems – Electronic chart display and
 > information system (ECDIS) – Operational and performance requirements, methods of testing and required test results
 
 ## Installation
@@ -107,7 +107,7 @@ This package depends on native binaries for XML validation:
 
 * `xmllint`
 
-Most Operating Systems include these libraries and packages by default. However, others, particularly minimal OSes 
+Most Operating Systems include these libraries and packages by default. However, others, particularly minimal OSes
 require these packages to be installed separately. Required packages for supported Operating Systems are:
 
 | Operating System      | Required Packages              | Notes                |
@@ -191,6 +191,8 @@ from pathlib import Path
 
 from bas_metadata_library.standards.iec_pas_61174_0_v1 import MetadataRecordConfigV1, MetadataRecord
 
+output_path = str('/path/to/file.rtzp')
+
 minimal_record_config = {"route_name": "minimal-test-route",
     "waypoints": [
         {"id": 1001, "revision": 0, "position": {"lat": 5, "lon": 50}},
@@ -200,7 +202,7 @@ minimal_record_config = {"route_name": "minimal-test-route",
 }
 configuration = MetadataRecordConfigV1(**minimal_record_config)
 record = MetadataRecord(configuration=configuration)
-record.generate_rtzp_archive(file=Path('/path/to/file.rtzp'))
+record.generate_rtzp_archive(file=Path(output_path))
 ```
 
 ### Decode an ISO 19115 metadata record
@@ -244,8 +246,10 @@ from pathlib import Path
 
 from bas_metadata_library.standards.iec_pas_61174_0_v1 import MetadataRecord
 
+input_path = str('/path/to/file.rtzp')
+
 record = MetadataRecord()
-record.load_from_rtzp_archive(file=Path('/path/to/file.rtzp'))
+record.load_from_rtzp_archive(file=Path(input_path))
 configuration = record.make_config()
 minimal_record_config = configuration.config
 
@@ -265,15 +269,17 @@ from pathlib import Path
 
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
 
+input_path = str('/path/to/file.json')
+
 configuration = MetadataRecordConfigV2()
-configuration.load(file=Path("/path/to/file.json"))
+configuration.load(file=Path(input_path))
 ```
 
 ### Dumping a record configuration to JSON
 
 **The example below is for the ISO 19115 standard but this applies to all standards.**
 
-The `dump()` and `dumps()` methods on the configuration class can be used to dump a record configuration to a JSON 
+The `dump()` and `dumps()` methods on the configuration class can be used to dump a record configuration to a JSON
 encoded file or string respectively:
 
 ```python
@@ -281,6 +287,8 @@ from datetime import date
 from pathlib import Path
 
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+
+output_path = str('/path/to/file.json')
 
 minimal_record_config = {
     "hierarchy_level": "dataset",
@@ -310,14 +318,14 @@ minimal_record_config = {
     },
 }
 configuration = MetadataRecordConfigV2(**minimal_record_config)
-configuration.dump(file=Path('/path/to/file.json'))
+configuration.dump(file=Path(output_path))
 ```
 
 ### Validating a record
 
 **The example below is for the ISO 19115 standard but this applies to all standards.**
 
-The formal encoding of a record can be validated against one or more XML schemas relevant to each metadata or data 
+The formal encoding of a record can be validated against one or more XML schemas relevant to each metadata or data
 standard. Records are not validated automatically, and so must be validated explicitly:
 
 ```python
@@ -363,10 +371,10 @@ except RecordValidationError as e:
     print(e)
 ```
 
-Where the contents of the record is invalid, a `RecordValidationError` exception will be raised. Printing this 
-exception will return validation errors. 
+Where the contents of the record is invalid, a `RecordValidationError` exception will be raised. Printing this
+exception will return validation errors.
 
-These errors should not happen, and if they do are considered internal bugs. Please report any in the 
+These errors should not happen, and if they do are considered internal bugs. Please report any in the
 [Project Issue Tracker](#issue-tracking) if you are internal to BAS, or as [Feedback](#feedback) if you are not.
 
 See the [Record Schemas](#record-schemas) section for more information on how validation works.
@@ -421,9 +429,9 @@ except ValidationError as e:
     print(e)
 ```
 
-Where the contents of the record is invalid, a 
-[`ValidationError`](https://python-jsonschema.readthedocs.io/en/stable/errors/#jsonschema.exceptions.ValidationError) 
-exception will be raised by the underlying JSON Schema library. Printing this exception will return validation errors. 
+Where the contents of the record is invalid, a
+[`ValidationError`](https://python-jsonschema.readthedocs.io/en/stable/errors/#jsonschema.exceptions.ValidationError)
+exception will be raised by the underlying JSON Schema library. Printing this exception will return validation errors.
 
 See the [Record Configuration Schemas](#configuration-schemas) section for more information.
 
@@ -439,17 +447,17 @@ which will not be valid output.
 
 ### ISO 19115 - linkages between transfer options and formats
 
-In ISO 19115, there is no formal mechanism to associate file distribution formats and transfer options. As this library 
+In ISO 19115, there is no formal mechanism to associate file distribution formats and transfer options. As this library
 seeks to be fully reversible between a configuration object and formal XML encoding, associations between these elements
 would be lost when records are encoded as XML. These associations are used to produce download tables such as [1].
 
-In [Record Configurations](#configuration-classes), these associations are encoded using a 'distribution option' 
-concept. In formal XML records, these associations are encoded using `xsd:ID` attributes in `gmd:MD_Format` and 
+In [Record Configurations](#configuration-classes), these associations are encoded using a 'distribution option'
+concept. In formal XML records, these associations are encoded using `xsd:ID` attributes in `gmd:MD_Format` and
 `gmd:DigitalTransferOptions` elements, with values that allow these associations to be reconstructed when decoding XML.
 
 **Note:** Do not modify automatically assigned IDs, as this will break this functionality.
 
-See the [Automatic transfer option / format IDs](#iso-19115-automatic-transfer-option-format-ids) section for more 
+See the [Automatic transfer option / format IDs](#iso-19115-automatic-transfer-option-format-ids) section for more
 information.
 
 [1]
@@ -583,10 +591,10 @@ print(configurationV1.config)
 
 ## Implementation
 
-This library is implemented in Python and consists of a set of classes used to generate XML metadata and data records 
+This library is implemented in Python and consists of a set of classes used to generate XML metadata and data records
 from a configuration object, or to generate a configuration object from an XML record.
 
-Each [supported Standard](#supported-standards) is implemented as a module under `bas_metadata_library.standards`. Each 
+Each [supported Standard](#supported-standards) is implemented as a module under `bas_metadata_library.standards`. Each
 [Supported Profile](#supported-profiles) is implemented as modules under their respective standard.
 
 ### Base classes
@@ -599,8 +607,8 @@ For each standard and profile, instances of these base classes are defined:
 
 The `namespaces` class is a set of mappings between XML namespaces, their shorthand aliases and their definitions XSDs.
 
-The `MetadataRecord` class represents a metadata record and defines the Root [Element](#element-classes). This class
-provides methods to generate an XML document for example.
+The `MetadataRecord` class represents a metadata record and defines the Root [Element](#record-element-classes). This 
+class provides methods to generate an XML document for example.
 
 The `MetadataRecordConfig` class represents the [Configuration](#configuration-classes) used to define values within a
 `MetadataRecord`, either for new records, or derived from existing records. This class provides methods to validate the
@@ -625,33 +633,33 @@ sub-elements (which themselves may contain sub-elements as needed).
 ### Record schemas
 
 Allowed elements, attributes and values for each [supported Standard](#supported-standards) and
-[Supported Profile](#supported-profiles) are defined using one or more [XML Schemas](https://www.w3.org/XML/Schema). 
-These schemas define any required entities, and any entities with enumerated values. Schemas are usually published by 
+[Supported Profile](#supported-profiles) are defined using one or more [XML Schemas](https://www.w3.org/XML/Schema).
+These schemas define any required entities, and any entities with enumerated values. Schemas are usually published by
 standards organisations to facilitate record validation.
 
 For performance reasons, and to ensure required schemas are not unavailable (due to remote locations being reorganised,
-or during server maintenance etc.), these schema files are stored within this package. Schemas are stored as XML Schema 
+or during server maintenance etc.), these schema files are stored within this package. Schemas are stored as XML Schema
 Definition (XSD) files in the `bas_metadata_library.schemas.xsd` module, and loaded as resource files for use in record
 validation.
 
-**Note:** For technical reasons, XSDs included locally in this project are contained in a Zip archive 
-`bas_metadata_library.schemas.xsd/xsd-archive.zip`. This archive will be automatically unzipped to a temporary 
+**Note:** For technical reasons, XSDs included locally in this project are contained in a Zip archive
+`bas_metadata_library.schemas.xsd/xsd-archive.zip`. This archive will be automatically unzipped to a temporary
 location during validation.
 
-**Note:** To support local validation, imported or included schema locations in local versions of XML schemas, have 
+**Note:** To support local validation, imported or included schema locations in local versions of XML schemas, have
 been modified. These changes do not materially change the contents of any schema.
 
-**Note:** In some cases, material changes *have* been made to local versions of schemas, in order to workaround 
-specific issues. These changes will be documented and explained, to allow users to understand the effect they will 
+**Note:** In some cases, material changes *have* been made to local versions of schemas, in order to workaround
+specific issues. These changes will be documented and explained, to allow users to understand the effect they will
 have, and why they have been made.
 
 #### Altered Metadata Schema - Geographic Metadata (GMD)
 
-The ISO *Geographic Metadata (GMD)* schema (used directly for the ISO 19115-0 standard, and indirectly in the ISO 
+The ISO *Geographic Metadata (GMD)* schema (used directly for the ISO 19115-0 standard, and indirectly in the ISO
 19115-2 standard) has been modified to:
 
 1. include the ISO *Geographic Metadata XML (GMX)* schema:
-    * in order to allow Anchor elements to substitute primitive/simple values (such as character strings and integers), 
+    * in order to allow Anchor elements to substitute primitive/simple values (such as character strings and integers),
     * as defined in the ISO 19139:2007 and ISO 19139:2012 standards
 
 ### Configuration classes
@@ -660,7 +668,7 @@ The configuration of each metadata record is held in a Python dictionary, within
 class includes methods to validate its configuration against a relevant [Configuration Schema](#configuration-schemas).
 
 Configuration classes are defined at the root of each standard or profile, alongside its root
-[Metadata Element](#element-classes) and XML namespaces.
+[Metadata Element](#record-element-classes) and XML namespaces.
 
 A configuration class will exist for each supported configuration schema with methods to convert from one version to
 another, see the [Record configuration schema migration](#migrating-to-new-configuration-versions) section for more
@@ -669,19 +677,19 @@ information.
 ### Configuration schemas
 
 Allowed properties and values for record configurations for each [supported Standard](#supported-standards) and
-[Supported Profile](#supported-profiles) are defined using a [JSON Schema](https://json-schema.org). These schemas 
+[Supported Profile](#supported-profiles) are defined using a [JSON Schema](https://json-schema.org). These schemas
 define any required properties, and any properties with enumerated values.
 
 Configuration schemas are stored as JSON files in the `bas_metadata_library.schemas` module, and loaded as
-resource files from within this package to validate record configurations. Schemas are also made available externally 
-through the BAS Metadata Standards website, 
+resource files from within this package to validate record configurations. Schemas are also made available externally
+through the BAS Metadata Standards website,
 [metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk), to allow:
 
 1. other applications to ensure their output will be compatible with this library - where they can't, or don't want to,
    use this library directly
 2. schema inheritance/extension - for standards that inherit from other standards (such as extensions or profiles)
 
-Configuration schemas are versioned (e.g. `v1`, `v2`) to allow for backwards incompatible changes to be made. 
+Configuration schemas are versioned (e.g. `v1`, `v2`) to allow for backwards incompatible changes to be made.
 Upgrade/Downgrade methods will be provided for a limited time to assist migrating record configurations between schema
 versions.
 
@@ -704,8 +712,7 @@ dependencies on remote sources. Distribution schemas are used by [Configuration 
 published to the BAS Metadata Standards website, they are located in the `bas_metadata_library.schemas.dist` module.
 
 When editing configuration schemas, you should edit the source schemas, located in the
-`bas_metadata_library.schemas.src` module, then run the
-[regenerate distribution schemas](#generating-configuration-schemas) using an internal command line utility.
+`bas_metadata_library.schemas.src` module, then [generate distribution schemas](#generating-configuration-schemas).
 
 JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsonschemavalidator.net).
 
@@ -717,13 +724,13 @@ To add a new standard:
 2. in this module, overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed
 3. create a suitable metadata configuration JSON schema in `bas_metadata_library.schemas.src`
    e.g. `bas_metadata_library.schemas.src.foo_v1.json`
-4. update the `generate_schemas` method in `manage.py` to generate distribution schemas
+4. update the `generate_schemas` method in `app.py` to generate distribution schemas
 5. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
    the distribution schema within the BAS Metadata Standards website
 6. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
    `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
-7. update the inbuilt Flask application in `app.py` with a route for generating test records for the new standard
-8. use the inbuilt Flask application to generate the test records and save to `tests/resources/records/`
+7. add a route `app.py` for generating test records for the new standard
+8. update the `capture_test_records` method in `app.py` to generate and save test records
 9. add relevant [tests](#testing) with methods to test each metadata element class and test records
 
 ### Adding a new element to an existing standard
@@ -749,7 +756,7 @@ To add a new standard:
    * values used for identifiers and other external references should use the correct form/structure but do not need
      to exist or relate to the resource described by each configuration (i.e. DOIs should be valid URLs but could be
      a DOI for another resource for example)
-4. add relevant [element class](#element-classes):
+4. add relevant [element class](#record-element-classes):
    * new or changed elements should be added to the configuration for the relevant package for each standard
    * for the ISO 19115 family of standards, element classes should be added to the `iso_19115_common` package
    * the exact module to use within this package will depend on the nature of the element being added, but in general,
@@ -793,9 +800,6 @@ To add a new standard:
         * within the `convert_from_v1_to_v2_configuration` and `convert_from_v2_to_v1_configuration` utility methods
     * where exceptions are added, they should be documented as an issue with information on how they will be
       addressed in the longer term
-    * issue
-      [#111](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/111))
-      will document existing exceptions and conventions, and look at how these can be removed in the future
 9. update `README.md` examples if common element:
     * this is probably best done before releasing a new version
 10. update `CHANGELOG.md`
@@ -805,7 +809,8 @@ To add a new standard:
 
 ID attributes are automatically added to `gmd:MD_Format` and `gmd:MD_DigitalTransferOptions` elements in order to
 reconstruct related formats and transfer options (see the
-[Linking transfer options and formats](#linking-transfer-options-and-formats) section for more information).
+[Linking transfer options and formats](#ISO-19115-linkages-between-transfer-options-and-formats) section for more 
+information).
 
 When a record is encoded, ID values are generated by hashing a JSON encoded string of the distribution object. This
 ID is used as a shared base between the format and transfer option, with `-fmt` appended for the format and `-tfo`
@@ -851,8 +856,8 @@ And for the `gmd:MD_DigitalTransferOptions` element:
 <gmd:MD_DigitalTransferOptions id="bml-16b7b5df78a664b15d69feda7ccc7caed501f341-tfo">
 ```
 
-The `bml-` prefix is added to ensure all IDs begin with a letter (as required by XML), and to allow IDs generated by 
-this library to be detected. The `-fmt`/`-tfo` prefixes are used to allow the same ID value to uniquely identify two 
+The `bml-` prefix is added to ensure all IDs begin with a letter (as required by XML), and to allow IDs generated by
+this library to be detected. The `-fmt`/`-tfo` prefixes are used to allow the same ID value to uniquely identify two
 elements uniquely.
 
 ## Setup
@@ -863,7 +868,7 @@ Terraform is used to provision resources required to operate this application in
 
 These resources allow [Configuration schemas](#configuration-schemas) for each standard to be accessed externally.
 
-Access to the [BAS AWS account](https://gitlab.data.bas.ac.uk/WSF/bas-aws) is needed to provisioning these resources.
+Access to the [BAS AWS account](https://gitlab.data.bas.ac.uk/WSF/bas-aws) is needed to provision these resources.
 
 **Note:** This provisioning should have already been performed (and applies globally). If changes are made to this
 provisioning it only needs to be applied once.
@@ -909,65 +914,47 @@ framework for running tests etc., and provide utility methods for generating sch
 
 ### Development environment
 
-Git, Docker and Docker Compose are required to set up a local development environment of this application.
+Git and [Poetry](https://python-poetry.org) are required to set up a local development environment of this application.
 
-If you have access to the [BAS GitLab instance](https://gitlab.data.bas.ac.uk), you can clone the project and pull
-Docker images from the BAS GitLab instance and BAS Docker Registry.
+**Note:** If you use [Pyenv](https://github.com/pyenv/pyenv), this project sets a local Python version for consistency.
 
-```shell
-$ git clone https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator.git
-$ cd metadata-generator
-$ docker login docker-registry.data.bas.ac.uk
-$ docker compose pull
-```
-
-Otherwise, you will need to build the Docker image locally.
+If you have access to the [BAS GitLab instance](https://gitlab.data.bas.ac.uk):
 
 ```shell
+# clone from the BAS GitLab instance if possible
+$ git clone https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library.git
+
+# alternatively, clone from the GitHub mirror
 $ git clone https://github.com/antarctica/metadata-library.git
+
+# setup virtual environment
 $ cd metadata-library
-$ docker compose build
-```
-
-To run the application using the Flask development server (which reloads automatically if source files are changed):
-
-```shell
-$ docker compose up
-```
-
-To run other commands against the Flask application (such as [Tests](#testing)):
-
-```shell
-# in a separate terminal to `docker compose up`
-$ docker compose run app flask [command]
-# E.g.
-$ docker compose run app flask test
-# List all available commands
-$ docker compose run app flask
+$ poetry install
 ```
 
 ### Code Style
 
-PEP-8 style and formatting guidelines must be used for this project, with the exception of the 80 character line limit.
+PEP-8 style and formatting guidelines must be used for this project, except the 80 character line limit.
 
 [Black](https://github.com/psf/black) is used to ensure compliance, configured in `pyproject.toml`.
 
-Black can be [integrated](https://black.readthedocs.io/en/stable/editor_integration.html#pycharm-intellij-idea) with a
-range of editors, such as PyCharm, to perform formatting automatically.
+Black can be integrated with a range of editors, such as 
+[PyCharm](https://black.readthedocs.io/en/stable/integrations/editors.html#pycharm-intellij-idea), to perform 
+formatting automatically.
 
 To apply formatting manually:
 
 ```shell
-$ docker compose run app black bas_metadata_library/
+$ poetry run black src/ tests/
 ```
 
 To check compliance manually:
 
 ```shell
-$ docker compose run app black --check bas_metadata_library/
+$ poetry run black --check src/ tests/
 ```
 
-Checks are ran automatically in [Continuous Integration](#continuous-integration).
+Checks are run automatically in [Continuous Integration](#continuous-integration).
 
 ### Dependencies
 
@@ -981,32 +968,24 @@ Non-code files, such as static files, can also be included in the [Python packag
 To add a new (development) dependency:
 
 ```shell
-$ docker compose run app ash
 $ poetry add [dependency] (--dev)
 ```
 
-Then rebuild the development container, and if you can, push to GitLab:
+If new dependencies depend on OS packages, update the `gitlab-ci.Dockerfile` Dockerfile used for CI/CD builds and push
+the image to the BAS Docker Registry (which is provided by GitLab):
 
 ```shell
-$ docker compose build app
-$ docker compose push app
+$ docker build -f gitlab-ci.Dockerfile -t docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator:latest .
+$ docker push docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator:latest
 ```
 
 #### Updating dependencies
 
 ```shell
-$ docker compose run app ash
-$ apk update
-$ apk add build-base cargo
 $ poetry update
 ```
 
-Then rebuild the development container, and if you can, push to GitLab:
-
-```shell
-$ docker compose build app
-$ docker compose push app
-```
+If updated dependencies depend on new OS packages, see the instructions above to update the Docker image used in CI/CD.
 
 #### `jsonschema` package
 
@@ -1015,10 +994,9 @@ library cannot require newer Python versions to ensure it can be used in project
 
 #### `lxml` package
 
-The `lxml` dependency takes a long time to install/update inside the container image because it needs to be installed
-from source each time the container is built. This is because Alpine Linux, used by the official Python Docker base
-images, is not supported by the Python [manylinux](https://github.com/pypa/manylinux) system, and therefore cannot use
-pre-built, binary, wheels.
+The `lxml` dependency takes a long time to install/update inside Alpine container images because it needs to be built 
+from source. This is because Alpine Linux, used by the official Python Docker base images, is not supported by the 
+Python [manylinux](https://github.com/pypa/manylinux) system, and therefore cannot use pre-built, binary, wheels.
 
 ### Static security scanning
 
@@ -1033,14 +1011,8 @@ Through [Continuous Integration](#continuous-integration), each commit is tested
 To check locally:
 
 ```shell
-$ docker compose run app bandit -r . -x './tests'
+$ poetry run bandit -r src/
 ```
-
-### Editor support
-
-#### PyCharm
-
-A run/debug configuration, *App*, is included in the project.
 
 ### Generating configuration schemas
 
@@ -1049,12 +1021,11 @@ To generate [distribution schemas from source schemas](#source-and-distribution-
 any references in source schemas and write the output as distribution schemas, replacing any existing output.
 
 ```shell
-# then in a separate terminal:
-$ docker compose run app flask generate-schemas
+$ poetry run flask generate-schemas
 ```
 
 To configure this command, (e.g. to add a new schema for a new standard/profile), adjust the `schemas` list in the
-`generate_schemas` method in `manage.py`. This list should contain dictionaries with keys for the common name of the
+`generate_schemas` method in `app.py`. This list should contain dictionaries with keys for the common name of the
 schema (based on the common file name of the schema JSON file), and whether the source schema should be resolved or
 simply copied. This should be true by default, and is only relevant to schemas that do not contain any references, as
 this will cause an error if resolved.
@@ -1062,7 +1033,7 @@ this will cause an error if resolved.
 ## Testing
 
 All code in the `bas_metadata_library` module must be covered by tests, defined in `tests/`. This project uses
-[PyTest](https://docs.pytest.org/en/latest/) which should be ran in a random order using
+[PyTest](https://docs.pytest.org/en/latest/) which should be run in a random order using
 [pytest-random-order](https://pypi.org/project/pytest-random-order/).
 
 Tests are written to create metadata records based on a series of configurations defined in `tests/resources/configs/`.
@@ -1079,39 +1050,38 @@ test the structure of whole records.
 To run tests manually from the command line:
 
 ```shell
-$ docker compose run app pytest --random-order
+$ poetry run pytest --random-order
 ```
 
 To run tests manually using PyCharm, use the included *App (Tests)* run/debug configuration.
 
-Tests are ran automatically in [Continuous Integration](#continuous-integration).
+Tests are run automatically in [Continuous Integration](#continuous-integration).
 
 ### Capturing static test records
 
 To capture static test records, which verify complete records are assembled correctly, a custom Flask CLI command,
-`capture-test-records` is available. This requires the Flask application to first be running. The Requests library is
-used to make requests against the Flask app save responses to a relevant directory in `tests/resources/records`.
+`capture-test-records` is available. This requires the Flask application to be running and uses the *Requests* 
+library to make requests against the Flask app, saving responses to a relevant directory in `tests/resources/records`.
 
 ```shell
 # start Flask application:
-$ docker compose up
+$ poetry run flask run
+
 # then in a separate terminal:
-$ docker compose run app flask capture-test-records
+$ poetry run flask capture-test-records
 ```
 
 It is intended that this command will update pre-existing static records, with differences captured in version control
-and reviewed manually to ensure they are correct.
+for manual review to ensure they are correct.
 
 ### Test coverage
 
 [pytest-cov](https://pypi.org/project/pytest-cov/) is used to measure test coverage.
 
-To prevent noise, `.coveragerc` is used to omit empty `__init__.py` files from reports.
-
 To measure coverage manually:
 
 ```shell
-$ docker compose run app pytest --random-order --cov=bas_metadata_library --cov-fail-under=100 --cov-report=html .
+$ poetry run pytest --random-order --cov=bas_metadata_library --cov-fail-under=100 --cov-report=html .
 ```
 
 [Continuous Integration](#continuous-integration) will check coverage automatically and fail if less than 100%.
@@ -1127,7 +1097,7 @@ All commits will trigger a Continuous Integration process using GitLab's CI/CD p
 This project is distributed as a Python package, hosted in [PyPi](https://pypi.org/project/bas-metadata-library).
 
 Source and binary packages are built and published automatically using
-[Poetry](https://python-poetry.org/docs/cli/#publish) in [Continuous Delivery](#continuous-deployment).
+[Poetry](https://python-poetry.org) in [Continuous Deployment](#continuous-deployment).
 
 ### Continuous Deployment
 
@@ -1139,7 +1109,7 @@ For all releases:
 
 1. create a release branch
 2. close release in `CHANGELOG.md`
-3. bump package version using `docker compose run app poetry version`
+3. bump package version using `poetry version`
 4. push changes, merge the release branch into `master` and tag with version
 
 ## Feedback
