@@ -467,24 +467,6 @@ information.
 | CSV        | 68 kB  | [Link](https://example.com/) |
 | GeoPackage | 1.2 MB | [Link](https://example.com/) |
 
-### Disabling XML declaration
-
-**WARNING:** This feature is deprecated.
-
-**The example below is for the ISO 19115 standard but this applies to all standards.**
-
-To disable the XML declaration (i.e. `<?xml version='1.0' encoding='utf-8'?>`), you can set the `xml_declaration`
-parameter to false. This is sometimes needed when the generated XML documented needs to be embedded into a larger
-document, such as a CSW transaction.
-
-```python
-# disable XML declaration
-document = record.generate_xml_document(xml_declaration=False)
-
-# output document
-print(document)
-```
-
 ### Migrating to new configuration versions
 
 #### ISO 19115 Version 1 to version 2
