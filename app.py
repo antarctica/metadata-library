@@ -60,7 +60,7 @@ def create_app():
     @app.route("/standards/test-standard/<configuration>")
     def standard_test_standard_v1(configuration: str):
         if configuration not in test_metadata_standard_configs.keys():
-            return KeyError(
+            return (
                 f"Invalid configuration, valid options: " f"[{', '.join(list(test_metadata_standard_configs.keys()))}]"
             )
 
@@ -86,9 +86,7 @@ def create_app():
             record = ISO19115_1_MetadataRecord(configuration)
             return Response(record.generate_xml_document(), mimetype="text/xml")
 
-        return KeyError(
-            f"Invalid configuration, valid options: " f"[{', '.join(list(iso19115_1_standard_configs_all.keys()))}]"
-        )
+        return f"Invalid configuration, valid options: " f"[{', '.join(list(iso19115_1_standard_configs_all.keys()))}]"
 
     @app.route("/standards/iso-19115-2/<configuration>")
     def standard_iso_19115_2(configuration: str):
@@ -105,9 +103,7 @@ def create_app():
             record = ISO19115_2_MetadataRecord(configuration)
             return Response(record.generate_xml_document(), mimetype="text/xml")
 
-        return KeyError(
-            f"Invalid configuration, valid options: " f"[{', '.join(list(iso19115_2_standard_configs_all.keys()))}]"
-        )
+        return f"Invalid configuration, valid options: " f"[{', '.join(list(iso19115_2_standard_configs_all.keys()))}]"
 
     @app.route("/standards/iec-pas-61174-0/<configuration>")
     def standard_ice_pas_61174_0(configuration: str):
@@ -117,7 +113,7 @@ def create_app():
             record = IECPAS61174_0_MetadataRecord(configuration)
             return Response(record.generate_xml_document(), mimetype="text/xml")
 
-        return KeyError(
+        return (
             f"Invalid configuration, valid options: " f"[{', '.join(list(iec_pas_61174_0_standard_configs_v1.keys()))}]"
         )
 
@@ -129,7 +125,7 @@ def create_app():
             record = IECPAS61174_1_MetadataRecord(configuration)
             return Response(record.generate_xml_document(), mimetype="text/xml")
 
-        return KeyError(
+        return (
             f"Invalid configuration, valid options: " f"[{', '.join(list(iec_pas_61174_1_standard_configs_v1.keys()))}]"
         )
 
