@@ -1006,7 +1006,7 @@ such as not sanitising user inputs or using weak cryptography.
 **Warning:** Bandit is a static analysis tool and can't check for issues that are only be detectable when running the
 application. As with all security tools, Bandit is an aid for spotting common mistakes, not a guarantee of secure code.
 
-Through [Continuous Integration](#continuous-integration), each commit is tested.
+Checks are run automatically in [Continuous Integration](#continuous-integration).
 
 To check locally:
 
