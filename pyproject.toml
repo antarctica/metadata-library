@@ -39,6 +39,7 @@ pytest-cov = "^3.0.0"
 pytest-flask = "^1.2.0"
 pytest-random-order = "^1.0.4"
 requests = "^2.23.0"
+safety = "^1.10.3"
 tomlkit = "^0.8.0"
 jsonref = "^0.2"
 
