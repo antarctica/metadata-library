@@ -23,6 +23,7 @@
 
 stages:
   - 🧪 test
+  - 📋 lint
   - 🏗 build
   - 🚚 publish
 
@@ -35,64 +36,61 @@ image:
   name: docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator:latest
   entrypoint: [""]
 
+default:
+  before_script:
+    - "ln -s /.venv .venv"
+    - "poetry install --no-interaction --no-ansi"
+
 # == Jobs ==
 
-test-app:
+test:
   stage: 🧪 test
+  needs: []
   variables:
     FLASK_ENV: testing
-    FLASK_APP: ./manage.py
   script:
-    - "pytest -o junit_family=xunit2 --junitxml=test-results.xml --random-order"
+    - "poetry run pytest -o junit_family=xunit2 --junitxml=test-results.xml --random-order --cov=bas_metadata_library --cov-fail-under=100"
+    - "poetry run coverage html"
+  coverage: '/Total coverage: \d+\.\d+/'
   artifacts:
     reports:
       junit: test-results.xml
-
-coverage-app:
-  stage: 🧪 test
-  variables:
-    FLASK_ENV: testing
-    FLASK_APP: ./manage.py
-  script:
-    - "pytest --random-order --cov=bas_metadata_library --cov-fail-under=100 ."
-    - "coverage html"
-  artifacts:
-    name: "$CI_BUILD_TOKEN-coverage"
     paths:
       - htmlcov
     expire_in: 1 month
 
-pep8-app:
-  stage: 🧪 test
+lint:
+  stage: 📋 lint
+  needs: []
   script:
-    - "black --check bas_metadata_library/"
+    - "poetry check"
+    - "poetry run black --check src/ tests/"
+    - "poetry run bandit -r src/"
 
-bandit-app:
-  stage: 🧪 test
-  script:
-    - "bandit -r . -x './tests'"
-
-build-dev:
+build:
   stage: 🏗 build
+  needs: []
   script:
-    - 'poetry build'
+    - "poetry build"
   artifacts:
-    name: "$CI_BUILD_TOKEN-build"
     paths:
       - dist
     expire_in: 1 week
   except:
-    - master
     - tags
 
-publish-app-prod:
+publish:
   stage: 🚚 publish
+  needs:
+    - test
+    - lint
   before_script:
+    - "ln -s /.venv .venv"
+    - "poetry install --no-interaction --no-ansi"
     - "poetry config pypi-token.pypi $PYPI_TOKEN --local"
   script:
-    - "poetry publish --build --repository pypi --no-interaction"
+    - "poetry publish --build --no-interaction"
   artifacts:
-    name: "$CI_BUILD_TOKEN-build"
     paths:
       - dist
     expire_in: 1 month
@@ -104,9 +102,11 @@ publish-app-prod:
 
 publish-schemas-stage:
   stage: 🚚 publish
+  needs: []
   image:
     name: governmentpaas/awscli:latest
     entrypoint: [""]
+  before_script: []
   script:
     - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_1_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
     - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_2_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json"
@@ -118,9 +118,11 @@ publish-schemas-stage:
 
 publish-schemas-prod:
   stage: 🚚 publish
+  needs: []
   image:
     name: governmentpaas/awscli:latest
     entrypoint: [""]
+  before_script: []
   script:
     - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_1_v1.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
     - "aws s3 cp bas_metadata_library/schemas/dist/iso_19115_2_v1.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json"
