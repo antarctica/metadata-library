@@ -42,6 +42,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Missing JSON dump method for 19115-2 standard
   [#163](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/163)
 
+### Changed
+
+* Relocating Terraform provisioning to support directory
+  [#164](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/164)
+
 ## 0.7.1 - 2021-12-12
 
 ### Fixed
