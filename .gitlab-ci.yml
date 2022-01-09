@@ -66,6 +66,7 @@ lint:
     - "poetry check"
     - "poetry run black --check src/ tests/"
     - "poetry run bandit -r src/"
+    - "poetry export --without-hashes -f requirements.txt | poetry run safety check --full-report --stdin"
 
 build:
   stage: 🏗 build

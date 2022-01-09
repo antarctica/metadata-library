@@ -968,6 +968,25 @@ $ poetry update
 
 See the instructions above to update the Docker image used in CI/CD.
 
+#### Dependency vulnerability checks
+
+The [Safety](https://pypi.org/project/safety/) package is used to check dependencies against known vulnerabilities.
+
+**IMPORTANT!** As with all security tools, Safety is an aid for spotting common mistakes, not a guarantee of secure 
+code. In particular this is using the free vulnerability database, which is updated less frequently than paid options.
+
+This is a good tool for spotting low-hanging fruit in terms of vulnerabilities. It isn't a substitute for proper 
+vetting of dependencies, or a proper audit of potential issues by security professionals. If in any doubt you MUST seek
+proper advice.
+
+Checks are run automatically in [Continuous Integration](#continuous-integration).
+
+To check locally:
+
+```shell
+$ poetry export --without-hashes -f requirements.txt | poetry run safety check --full-report --stdin
+```
+
 #### `jsonschema` package
 
 The `jsonschema` dependency is locked to version 3.2.0 because version 4.0 > dropped Python 3.6 support. This
@@ -987,7 +1006,7 @@ such as not sanitising user inputs or using weak cryptography.
 **Warning:** Bandit is a static analysis tool and can't check for issues that are only be detectable when running the
 application. As with all security tools, Bandit is an aid for spotting common mistakes, not a guarantee of secure code.
 
-Through [Continuous Integration](#continuous-integration), each commit is tested.
+Checks are run automatically in [Continuous Integration](#continuous-integration).
 
 To check locally:
 
