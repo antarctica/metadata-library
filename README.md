@@ -953,8 +953,7 @@ To add a new (development) dependency:
 $ poetry add [dependency] (--dev)
 ```
 
-If new dependencies depend on OS packages, update the `gitlab-ci.Dockerfile` Dockerfile used for CI/CD builds and push
-the image to the BAS Docker Registry (which is provided by GitLab):
+Then update the Docker image used for CI/CD builds and push to the BAS Docker Registry (which is provided by GitLab):
 
 ```shell
 $ docker build -f gitlab-ci.Dockerfile -t docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator:latest .
@@ -967,7 +966,7 @@ $ docker push docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/meta
 $ poetry update
 ```
 
-If updated dependencies depend on new OS packages, see the instructions above to update the Docker image used in CI/CD.
+See the instructions above to update the Docker image used in CI/CD.
 
 #### `jsonschema` package
 

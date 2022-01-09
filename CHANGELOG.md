@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed [BREAKING!]
 
+* Project dependencies updated - now requires 3.6.2 as a minimum runtime
+  [#122](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/122)
 * Switching from Docker to Poetry managed virtual environments for local development
   [#148](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/-/issues/148)
 * Removed option to disable XML declaration when encoding a record into XML
