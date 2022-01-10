@@ -26,7 +26,7 @@ def test_cli_help(app_runner):
 
 @pytest.mark.usefixtures("app_client")
 def test_app_root(app_client: FlaskClient):
-    expected_response = {"meta": "Root endpoint for Metadata Generator internal API"}
+    expected_response = {"meta": "Root endpoint for Metadata Library internal API"}
     response = app_client.get("/")
 
     assert response.status_code == HTTPStatus.OK

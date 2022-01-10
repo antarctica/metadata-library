@@ -55,7 +55,7 @@ def create_app():
 
     @app.route("/")
     def index():
-        return jsonify({"meta": "Root endpoint for Metadata Generator internal API"})
+        return jsonify({"meta": "Root endpoint for Metadata Library internal API"})
 
     @app.route("/standards/test-standard/<configuration>")
     def standard_test_standard_v1(configuration: str):

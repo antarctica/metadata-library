@@ -3,7 +3,7 @@
 # == Notes ==
 
 # - GitLab automatically passes artifacts from previous stages by default
-# - Set required secret variables at: https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/settings/ci_cd
+# - Set required secret variables at: https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/settings/ci_cd
 
 # = Secret variables
 # - Variables are grouped by section in KEY: "value" format (e.g. FOO: "bar")
@@ -33,7 +33,7 @@ variables:
   S3_SCHEMA_BUCKET_PROD: metadata-standards.data.bas.ac.uk
 
 image:
-  name: docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator:latest
+  name: docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library:latest
   entrypoint: [""]
 
 default:
