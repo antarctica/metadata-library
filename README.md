@@ -18,10 +18,10 @@ representation to be decoded back into a configuration object, which can be more
 
 | Standard                                                        | Implementation                                                  | Library Namespace                                   | Introduced In                                                                                      |
 | --------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| [ISO 19115:2003](https://www.iso.org/standard/26020.html)       | [ISO 19139:2007](https://www.iso.org/standard/32557.html)       | `bas_metadata_library.standards.iso_19115_1_v1`     | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/46)   |
-| [ISO 19115-2:2009](https://www.iso.org/standard/39229.html)     | [ISO 19139-2:2012](https://www.iso.org/standard/57104.html)     | `bas_metadata_library.standards.iso_19115_2_v1`     | [#50](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/50)   |
-| [IEC 61174:2015](https://webstore.iec.ch/publication/23128)     | [IEC 61174:2015](https://webstore.iec.ch/publication/23128)     | `bas_metadata_library.standards.iec_pas_61174_0_v1` | [#139](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/139) |
-| [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | `bas_metadata_library.standards.iec_pas_61174_1_v1` | [#139](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues/144) |
+| [ISO 19115:2003](https://www.iso.org/standard/26020.html)       | [ISO 19139:2007](https://www.iso.org/standard/32557.html)       | `bas_metadata_library.standards.iso_19115_1_v1`     | [#46](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/46)   |
+| [ISO 19115-2:2009](https://www.iso.org/standard/39229.html)     | [ISO 19139-2:2012](https://www.iso.org/standard/57104.html)     | `bas_metadata_library.standards.iso_19115_2_v1`     | [#50](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/50)   |
+| [IEC 61174:2015](https://webstore.iec.ch/publication/23128)     | [IEC 61174:2015](https://webstore.iec.ch/publication/23128)     | `bas_metadata_library.standards.iec_pas_61174_0_v1` | [#139](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/139) |
+| [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | `bas_metadata_library.standards.iec_pas_61174_1_v1` | [#139](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/144) |
 
 **Note:** In this library, the *ISO 19115:2003* standard is referred to as *ISO-19115-1* (`iso_19115_1_v1`) for
 consistency with *ISO 19115-2:2009* (referred to as *ISO-19115-2*, `iso_19115_2_v1`). In the future, the
@@ -437,7 +437,7 @@ See the [Record Configuration Schemas](#configuration-schemas) section for more 
 
 ### HTML entities
 
-Do not include HTML entities in input to this generator, as they will be double escaped by [Lxml](https://lxml.de), the
+Do not include HTML entities in input to this library, as they will be double escaped by [Lxml](https://lxml.de), the
 underlying XML processing library used by this project. Instead, literal characters should be used (e.g. `>`), which
 will be escaped as needed automatically. This applies to any unicode character, such as accents (e.g. `å`) and
 symbols (e.g. `µ`).
@@ -956,8 +956,8 @@ $ poetry add [dependency] (--dev)
 Then update the Docker image used for CI/CD builds and push to the BAS Docker Registry (which is provided by GitLab):
 
 ```shell
-$ docker build -f gitlab-ci.Dockerfile -t docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator:latest .
-$ docker push docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator:latest
+$ docker build -f gitlab-ci.Dockerfile -t docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library:latest .
+$ docker push docker-registry.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library:latest
 ```
 
 #### Updating dependencies
@@ -1110,7 +1110,7 @@ For all releases:
 1. create a release branch
 2. close release in `CHANGELOG.md`
 3. bump package version using `poetry version`
-4. push changes, merge the release branch into `master` and tag with version
+4. push changes, merge the release branch into `main` and tag with version
 
 ## Feedback
 
@@ -1120,7 +1120,7 @@ The maintainer of this project is the BAS Web & Applications Team, they can be c
 ## Issue tracking
 
 This project uses issue tracking, see the
-[Issue tracker](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-generator/issues) for more
+[Issue tracker](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues) for more
 information.
 
 **Note:** Read & write access to this issue tracker is restricted. Contact the project maintainer to request access.
