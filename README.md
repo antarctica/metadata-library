@@ -938,6 +938,17 @@ $ poetry run black --check src/ tests/
 
 Checks are run automatically in [Continuous Integration](#continuous-integration).
 
+### Code Linting (JSON)
+
+JSON files (specifically JSON Schemas used for [Record Configurations](#configuration-schemas)) must be valid JSON 
+documents. Minimal linting is used to enforce this as part of [Continuous Integration](#continuous-integration).
+
+To check manually:
+
+```shell
+$ for file in $(find ./src/bas_metadata_library/schemas/src -name "*.json"); do echo ${file}; poetry run python -m json.tool < ${file} 1>/dev/null; done
+```
+
 ### Dependencies
 
 Python dependencies for this project are managed with [Poetry](https://python-poetry.org) in `pyproject.toml`.
