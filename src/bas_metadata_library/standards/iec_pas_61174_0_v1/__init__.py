@@ -2,7 +2,7 @@ import json
 
 from pathlib import Path
 
-from importlib_resources import path as resource_path
+from importlib_resources import files as resource_file
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
@@ -83,12 +83,10 @@ class MetadataRecordConfigV1(_MetadataRecordConfig):
 
         self.config = kwargs
 
-        with resource_path(
-            "bas_metadata_library.schemas.dist", "iec_pas_61174_0_v1.json"
-        ) as configuration_schema_file_path:
-            with open(configuration_schema_file_path) as configuration_schema_file:
-                configuration_schema_data = json.load(configuration_schema_file)
-        self.schema = configuration_schema_data
+        schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath("iec_pas_61174_0_v1.json")
+        with open(schema_path, mode="r") as schema_file:
+            schema_data = json.load(schema_file)
+        self.schema = schema_data
 
 
 class MetadataRecord(_MetadataRecord):
@@ -135,6 +133,7 @@ class MetadataRecord(_MetadataRecord):
         :type file: Path
         :param file: path at which to create RTZP data container
         """
+        # noinspection PyTypeChecker
         _generate_rtzp_archive(
             file=file, rtz_name=self.attributes["route_name"], rtz_document=self.generate_xml_document().decode()
         )

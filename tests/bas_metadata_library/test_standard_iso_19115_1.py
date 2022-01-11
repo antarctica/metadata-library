@@ -1429,7 +1429,7 @@ def test_edge_case_temporal_extent_begin_missing_date():
 
 
 def test_edge_case_distribution_option_format_no_properties():
-    config = deepcopy(configs_safe_v2["complete_v2"])
+    config = deepcopy(configs_safe_v2["minimal_v2"])
     config["distribution"] = [
         {
             "distributor": {
@@ -1485,7 +1485,7 @@ def test_edge_case_distribution_option_format_no_properties():
 
 
 def test_edge_case_distribution_option_transfer_options_no_properties():
-    config = deepcopy(configs_safe_v2["complete_v2"])
+    config = deepcopy(configs_safe_v2["minimal_v2"])
     config["distribution"] = [
         {
             "distributor": {
@@ -1530,7 +1530,7 @@ def test_edge_case_distribution_option_transfer_options_no_properties():
 
 
 def test_edge_case_distribution_option_no_id():
-    config = deepcopy(configs_safe_v2["complete_v2"])
+    config = deepcopy(configs_safe_v2["minimal_v2"])
     config["distribution"] = [
         {
             "distributor": {
@@ -1588,7 +1588,7 @@ def test_edge_case_distribution_option_no_id():
 
 
 def test_edge_case_distribution_option_more_formats_than_transfer_options():
-    config = deepcopy(configs_safe_v2["complete_v2"])
+    config = deepcopy(configs_safe_v2["minimal_v2"])
     config["distribution"] = [
         {
             "distributor": {
@@ -1678,7 +1678,7 @@ def test_edge_case_distribution_option_more_transfer_options_than_formats():
 
 
 def test_edge_case_distribution_option_transfer_option_size_no_unit():
-    config = deepcopy(configs_safe_v2["complete_v2"])
+    config = deepcopy(configs_safe_v2["minimal_v2"])
     config["distribution"] = [
         {
             "distributor": {

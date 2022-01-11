@@ -1,15 +1,14 @@
 import json
 
-from copy import deepcopy
 from pathlib import Path
 from typing import Dict, Any
 
-from importlib_resources import path as resource_path
+from importlib_resources import files as resource_file
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import Element, SubElement, XMLSchema, fromstring  # nosec
+from lxml.etree import Element, SubElement, fromstring  # nosec
 
 from bas_metadata_library import (
     Namespaces as _Namespaces,
@@ -85,12 +84,10 @@ class MetadataRecordConfigV1(_MetadataRecordConfig):
 
         self.config = kwargs
 
-        with resource_path(
-            "bas_metadata_library.schemas.dist", "iec_pas_61174_1_v1.json"
-        ) as configuration_schema_file_path:
-            with open(configuration_schema_file_path) as configuration_schema_file:
-                configuration_schema_data = json.load(configuration_schema_file)
-        self.schema = configuration_schema_data
+        schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath("iec_pas_61174_1_v1.json")
+        with open(schema_path, mode="r") as schema_file:
+            schema_data = json.load(schema_file)
+        self.schema = schema_data
 
 
 class MetadataRecord(_MetadataRecord):

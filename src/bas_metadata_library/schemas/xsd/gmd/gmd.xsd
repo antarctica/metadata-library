@@ -1,0 +1,14 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmd="http://www.isotc211.org/2005/gmd" targetNamespace="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="2012-07-13">
+  <!-- ================================= Annotation ================================ -->
+  <xs:annotation>
+    <xs:documentation>This file was generated programmatically for validating files produced by the BAS Metadata Library. Schema locations have been modified to use local versions.</xs:documentation>
+    <xs:documentation>This file was amended to include the GMX schema to allow using Anchor elements to substitute basic types (character strings etc.) </xs:documentation>
+    <xs:documentation>Geographic MetaData (GMD) extensible markup language is a component of the XML Schema Implementation of Geographic Information Metadata documented in ISO/TS 19139:2007. GMD includes all the definitions of http://www.isotc211.org/2005/gmd namespace. The root document of this namespace is the file gmd.xsd.</xs:documentation>
+  </xs:annotation>
+  <!-- ================================== Imports ================================== -->
+  <xs:import namespace="http://www.isotc211.org/2005/gmx" schemaLocation="../gmx/gmx.xsd"/>
+  <xs:include schemaLocation="metadataApplication.xsd"/>
+  <!-- ########################################################################### -->
+  <!-- ########################################################################### -->
+  <!-- ================================== Classes ================================= -->
+</xs:schema>
