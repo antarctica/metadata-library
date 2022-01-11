@@ -161,7 +161,7 @@ class MetadataRecordConfig(object):
         :param file: path at which to create a JSON encoded file
         """
         with open(str(file), mode="w") as file:
-            json.dump(self.config, file)
+            json.dump(self.config, file, indent=2)
 
     def dumps(self) -> str:
         """
