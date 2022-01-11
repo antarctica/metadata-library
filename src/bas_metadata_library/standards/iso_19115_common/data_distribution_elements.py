@@ -202,7 +202,7 @@ class Distribution(MetadataRecordElement):
         if len(_distribution_formats) >= len(_transfer_options):
             for fmt_id, distribution_format in _distribution_formats.items():
                 if fmt_id not in _transfer_options.keys():
-                    _unmatched_transfer_options.append(distribution_format)
+                    _unmatched_distribution_formats.append(distribution_format)
                     continue
 
                 distribution_options.append(

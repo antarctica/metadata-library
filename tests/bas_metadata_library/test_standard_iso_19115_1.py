@@ -1526,9 +1526,7 @@ def test_edge_case_distribution_option_transfer_options_no_properties():
     )
     _record = MetadataRecord(record=record)
     _config = _record.make_config()
-    assert _record.make_config().config["distribution"][0]["distribution_options"] == [
-        {"transfer_option": {"format": "netCDF"}}
-    ]
+    assert _record.make_config().config["distribution"][0]["distribution_options"] == [{"format": {"format": "netCDF"}}]
 
 
 def test_edge_case_distribution_option_no_id():
@@ -1608,17 +1606,13 @@ def test_edge_case_distribution_option_more_formats_than_transfer_options():
             },
             "distribution_options": [
                 {
-                    "format": {"format": "netCDF"},
-                    "transfer_option": {
-                        "online_resource": {
-                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                            "title": "Get Data",
-                            "description": "Download measurement data",
-                            "function": "download",
-                        }
-                    },
+                    "format": {"format": "blue"},
+                    "transfer_option": {"online_resource": {"href": "https://example.com/blue"}},
                 },
-                {"format": {"format": "netCDF-x"}, "transfer_option": {"online_resource": {"href": ""}}},
+                {
+                    "format": {"format": "red"},
+                    "transfer_option": {"online_resource": {"href": "https://example.com/red"}},
+                },
             ],
         }
     ]
@@ -1630,17 +1624,56 @@ def test_edge_case_distribution_option_more_formats_than_transfer_options():
     _config = _record.make_config()
     assert _config.config["distribution"][0]["distribution_options"] == [
         {
-            "format": {"format": "netCDF"},
-            "transfer_option": {
-                "online_resource": {
-                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                    "title": "Get Data",
-                    "description": "Download measurement data",
-                    "function": "download",
-                }
-            },
+            "format": {"format": "blue"},
+            "transfer_option": {"online_resource": {"href": "https://example.com/blue"}},
         },
-        {"transfer_option": {"format": "netCDF-x"}},
+        {
+            "format": {"format": "red"},
+        },
+    ]
+
+
+def test_edge_case_distribution_option_more_transfer_options_than_formats():
+    config = deepcopy(configs_safe_v2["minimal_v2"])
+    config["distribution"] = [
+        {
+            "distributor": {
+                "organisation": {"name": "UK Polar Data Centre"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
+                },
+                "email": "polardatacentre@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "distribution_options": [
+                {
+                    "format": {"format": "blue"},
+                    "transfer_option": {"online_resource": {"href": "https://example.com/blue"}},
+                },
+                {
+                    "format": {"format": "red"},
+                    "transfer_option": {"online_resource": {"href": "https://example.com/red"}},
+                },
+            ],
+        }
+    ]
+    config = MetadataRecordConfigV2(**config)
+    record = MetadataRecord(configuration=config)
+    del record.attributes["distribution"][0]["distribution_options"][1]["format"]
+    record = record.generate_xml_document().decode()
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["distribution"][0]["distribution_options"] == [
+        {
+            "format": {"format": "blue"},
+            "transfer_option": {"online_resource": {"href": "https://example.com/blue"}},
+        },
+        {"transfer_option": {"online_resource": {"href": "https://example.com/red"}}},
     ]
 
 
