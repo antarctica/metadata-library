@@ -21,7 +21,7 @@ def _sort_dict_by_keys(dictionary: dict) -> dict:
     return {k: _sort_dict_by_keys(v) if isinstance(v, dict) else v for k, v in sorted(dictionary.items())}
 
 
-def _parse_date_properties(dictionary: dict) -> dict:
+def _decode_date_properties(dictionary: dict) -> dict:
     """
     Utility method to recursively convert any values with a key of 'date' or 'date_stamp' into a Python date or
     datetime object using the `decode_date_string()` utility method.
@@ -36,9 +36,9 @@ def _parse_date_properties(dictionary: dict) -> dict:
         if isinstance(v, list):
             for iv in v:
                 if isinstance(iv, dict):
-                    _parse_date_properties(dictionary=iv)
+                    _decode_date_properties(dictionary=iv)
         elif isinstance(v, dict):
-            _parse_date_properties(dictionary=v)
+            _decode_date_properties(dictionary=v)
         elif isinstance(v, str) and k == "date_stamp":
             dictionary[k] = date.fromisoformat(v)
         elif isinstance(v, str) and k == "date":
@@ -256,7 +256,7 @@ def format_distribution_option_consistently(distribution_option: dict) -> dict:
     return _distribution_option
 
 
-def parse_config_from_json(config: dict) -> dict:
+def decode_config_from_json(config: dict) -> dict:
     """
     Parse a record configuration loaded from a JSON encoded document
 
@@ -271,7 +271,7 @@ def parse_config_from_json(config: dict) -> dict:
     :rtype dict
     :return parsed record configuration
     """
-    return _parse_date_properties(dictionary=config)
+    return _decode_date_properties(dictionary=config)
 
 
 def encode_config_for_json(config: dict) -> dict:
@@ -281,7 +281,7 @@ def encode_config_for_json(config: dict) -> dict:
     Specifically this method looks for any date or datetime values and converts them to their string equivalents.
     E.g. date(2012, 2, 20) becomes '2012-02-20'.
 
-    This method is the reverse of `parse_config_from_json()`.
+    This method is the reverse of `decode_config_from_json()`.
 
     :type config: dict
     :param config: record configuration

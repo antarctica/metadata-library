@@ -16,7 +16,7 @@ from bas_metadata_library import (
 )
 from bas_metadata_library.standards.iso_19115_common.root_element import ISOMetadataRecord
 from bas_metadata_library.standards.iso_19115_common.utils import (
-    parse_config_from_json,
+    decode_config_from_json,
     encode_config_for_json,
 )
 
@@ -75,10 +75,10 @@ class MetadataRecordConfigV2(_MetadataRecordConfig):
 
     def load(self, file: Path) -> None:
         with open(str(file), mode="r") as file:
-            self.config = parse_config_from_json(config=json.load(fp=file))
+            self.config = decode_config_from_json(config=json.load(fp=file))
 
     def loads(self, string: str) -> None:
-        self.config = parse_config_from_json(config=json.loads(s=string))
+        self.config = decode_config_from_json(config=json.loads(s=string))
 
     def dump(self, file: Path) -> None:
         with open(str(file), mode="w") as file:
