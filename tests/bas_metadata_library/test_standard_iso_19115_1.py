@@ -1817,7 +1817,13 @@ def test_edge_case_parse_config_year_only_date_no_precision():
     _config = json.dumps(_config)
     config = MetadataRecordConfigV2()
     config.loads(string=_config)
-    assert config.config["identification"]["dates"]["creation"] == {"date": date(2018, 1, 1), "date_precision": "year"}
+    assert config.config["identification"]["dates"]["creation"] == {
+        "date": date(2018, 1, 1),
+        "date_precision": "year",
+    } or {
+        "date_precision": "year",
+        "date": date(2018, 1, 1),
+    }
 
 
 class MockResponse:

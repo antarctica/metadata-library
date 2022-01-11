@@ -3,7 +3,7 @@ import json
 from copy import deepcopy
 from datetime import date, datetime
 from itertools import groupby
-from typing import Union, List
+from typing import Union, List, Optional
 
 
 def _sort_dict_by_keys(dictionary: dict) -> dict:
@@ -21,31 +21,57 @@ def _sort_dict_by_keys(dictionary: dict) -> dict:
     return {k: _sort_dict_by_keys(v) if isinstance(v, dict) else v for k, v in sorted(dictionary.items())}
 
 
-def _decode_date_properties(dictionary: dict) -> dict:
+def _decode_date_properties(dictionary: dict, parent_keys: Optional[List[str]] = None) -> dict:
     """
-    Utility method to recursively convert any values with a key of 'date' or 'date_stamp' into a Python date or
-    datetime object using the `decode_date_string()` utility method.
+    Utility method to convert any date(time) values in a record configuration into a Python date(time) object using the
+    `decode_date_string()` method (to handle partial dates).
+
+    Date properties that are searched for:
+    - metadata.date_stamp
+    - *.dates.*
+    - identification.extent.temporal.period.*
+
+    E.g.
+    - '2012-02-20' becomes `{'date': date(2012, 2, 20)}`
+    - '2012-02' becomes `{'date': date(2012, 1, 1), 'date_precision': 'year'}`
 
     :type dictionary: dict
     :param dictionary: input dictionary
+    :type parent_keys: list
+    :param parent_keys: list of parent keys when current key/value has been accessed through recursion
 
     :rtype dict
     :return dictionary with parsed property values
     """
-    for k, v in list(dictionary.items()):
-        if isinstance(v, list):
-            for iv in v:
-                if isinstance(iv, dict):
-                    _decode_date_properties(dictionary=iv)
-        elif isinstance(v, dict):
-            _decode_date_properties(dictionary=v)
-        elif isinstance(v, str) and k == "date_stamp":
-            dictionary[k] = date.fromisoformat(v)
-        elif isinstance(v, str) and k == "date":
-            _date = decode_date_string(date_datetime=v)
-            dictionary[k] = _date["date"]
-            if "date_precision" in _date.keys() and "date_precision" not in dictionary.keys():
-                dictionary["date_precision"] = _date["date_precision"]
+    if parent_keys is None:
+        parent_keys = []
+
+    for key, value in list(dictionary.items()):
+        # check if value in dict is itself a dictionary, or a list of dictionaries, and recurse into if so
+        if isinstance(value, list):
+            for list_value in value:
+                if isinstance(list_value, dict):
+                    parent_keys.append(key)
+                    _decode_date_properties(dictionary=list_value, parent_keys=parent_keys)
+                    parent_keys.remove(key)
+        elif isinstance(value, dict):
+            parent_keys.append(key)
+            _decode_date_properties(dictionary=value, parent_keys=parent_keys)
+            parent_keys.remove(key)
+
+        # check if key is a property that will contain a date(time) value
+        elif isinstance(value, str) and "metadata" in parent_keys and key == "date_stamp":
+            dictionary[key] = date.fromisoformat(value)
+        elif isinstance(value, str) and "dates" in parent_keys:
+            dictionary[key] = decode_date_string(date_datetime=value)
+        elif (
+            isinstance(value, str)
+            and "identification" in parent_keys
+            and "extent" in parent_keys
+            and "temporal" in parent_keys
+            and "period" in parent_keys
+        ):
+            dictionary[key] = decode_date_string(date_datetime=value)
 
     return dictionary
 
@@ -65,21 +91,24 @@ def _encode_date_properties(dictionary: dict) -> dict:
     :rtype dict
     :return dictionary with encoded property values
     """
-    for k, v in list(dictionary.items()):
-        if isinstance(v, list):
-            for iv in v:
-                if isinstance(iv, dict):
-                    _encode_date_properties(dictionary=iv)
-        elif isinstance(v, dict) and list(v.keys()) == ["date"]:
-            # date or datetime export
-            dictionary[k] = encode_date_string(date_datetime=v["date"])
-        elif isinstance(v, dict) and list(v.keys()) == ["date", "date_precision"]:
-            # date or datetime export with precision
-            dictionary[k] = encode_date_string(date_datetime=v["date"], date_precision=v["date_precision"])
-        elif isinstance(v, dict):
-            _encode_date_properties(dictionary=v)
-        elif isinstance(v, date) and k == "date_stamp":
-            dictionary[k] = v.isoformat()
+    for key, value in list(dictionary.items()):
+        if isinstance(value, list):
+            # list of dictionaries, loop and recurse into
+            for list_value in value:
+                if isinstance(list_value, dict):
+                    _encode_date_properties(dictionary=list_value)
+        elif isinstance(value, dict) and list(value.keys()) == ["date"]:
+            # date or datetime
+            dictionary[key] = encode_date_string(date_datetime=value["date"])
+        elif isinstance(value, dict) and {"date", "date_precision"}.issubset(set(value.keys())):
+            # date or datetime with precision
+            dictionary[key] = encode_date_string(date_datetime=value["date"], date_precision=value["date_precision"])
+        elif isinstance(value, dict):
+            # value is dictionary itself, recurse into
+            _encode_date_properties(dictionary=value)
+        elif isinstance(value, date) and key == "date_stamp":
+            # metadata.date_stamp is always a date
+            dictionary[key] = value.isoformat()
 
     return dictionary
 
@@ -261,9 +290,10 @@ def decode_config_from_json(config: dict) -> dict:
     Parse a record configuration loaded from a JSON encoded document
 
     Specifically this method looks for any string encoded date or datetime values and converts them to their Python
-    equivalents. E.g. '2012-02-20' becomes date(2012, 2, 20).
+    equivalents, including workarounds for partial dates if applicable. E.g. '2012-02' becomes
+    `{'date': date(2012, 2, 1), 'date_precision': 'year'}`.
 
-    This method is the reverse of `encode_config_from_json()`.
+    This method is the reverse of `encode_config_for_json()`.
 
     :type config: dict
     :param config: record configuration
@@ -279,7 +309,7 @@ def encode_config_for_json(config: dict) -> dict:
     Prepare a record configuration for use in a JSON encoded document
 
     Specifically this method looks for any date or datetime values and converts them to their string equivalents.
-    E.g. date(2012, 2, 20) becomes '2012-02-20'.
+    E.g. `{'date': date(2012, 2, 1), 'date_precision': 'year'}` becomes '2012-02'.
 
     This method is the reverse of `decode_config_from_json()`.
 

@@ -162,6 +162,11 @@ document = record.generate_xml_document()
 print(document.decode())
 ```
 
+See the [HTML Entities](#html-entities) section for guidance on using accents and symbols in descriptions.
+
+You will need to use a `date_precision` property for partial dates. See the [Date Precision](#date-precision) section 
+for more information.
+
 ### Encode an IEC 61174 route information record
 
 To encode to a RTZ file:
@@ -444,6 +449,37 @@ symbols (e.g. `µ`).
 
 E.g. If `&gt;`, the HTML entity for `>` (greater than), were used as input, it would be escaped again to `&amp;gt;`
 which will not be valid output.
+
+### Date Precision
+
+When using Python for record configurations, date or date times must be structured as dictionaries with a `date` 
+value (which can be a Python date or date time object), and optional `date_precision` property for indicating elements 
+in the date or date time object should be ignored when encoding records. This property can be set to either:
+
+* `year` (month and day are unknown)
+* `month` (day is unknown)
+
+When decoding a record, partial dates or date times will be detected and a `date_precision` property added 
+automatically. Unknown elements of a date or date time should, or will, use '1' as a conventional value, which can 
+effectively be ignored. This is necessary as Python does not allow unknown date elements to be omitted.
+
+When using JSON for record configurations, date or date times must be written as strings. Partial dates or date 
+times can be expressed naturally (e.g. `2012-04`), without the need for a `date_precision` property. This library will 
+automatically convert strings to or from dictionaries, with a `date_precision` property if needed, when loading from, 
+or saving to, JSON.
+
+Summary table:
+
+| Date Precision | Python Encoding                                                                | JSON Encoding           | XML Encoding            |
+|----------------|--------------------------------------------------------------------------------|-------------------------|-------------------------|
+| Year           | `{'date': date(year=2012, month=1, day=1), 'date_precision': 'year'}`          | `"2012"`                | `"2012"`                |
+| Month          | `{'date': date(year=2012, month=4, day=1), 'date_precision': 'month'}`         | `"2012-04"`             | `"2012-04"`             |
+| Day            | `{'date': date(year=2012, month=4, day=14)}`                                   | `"2012-04-14"`          | `"2012-04-14"`          |
+| Hour           | `{'date': datetime(year=2012, month=4, day=14, hour=6)}`                       | `"2012-04-14T06"`       | `"2012-04-14T06"`       |
+| Minute         | `{'date': datetime(year=2012, month=4, day=14, hour=6, minute=30)}`            | `"2012-04-14T06:30"`    | `"2012-04-14T06:30"`    |
+| Second         | `{'date': datetime(year=2012, month=4, day=14, hour=6, minute=30, second=42)}` | `"2012-04-14T06:30:42"` | `"2012-04-14T06:30:42"` |
+
+**Note:** For date times, the UTC timezone is assumed unless set.
 
 ### ISO 19115 - linkages between transfer options and formats
 

@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#148](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/148)
 * Removed option to disable XML declaration when encoding a record into XML
   [#140](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/140)
+* Partial dates should be expressed directly in JSON encodings of configuration files, not using `date_precision`
+  [#137](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/137)
 
 ### Removed [BREAKING!]
 

@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 
 from pathlib import Path
 
@@ -7,6 +8,7 @@ from importlib_resources import files as resource_file
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
+from jsonschema.validators import validate
 from lxml.etree import Element, fromstring  # nosec
 
 from bas_metadata_library import MetadataRecordConfig as _MetadataRecordConfig, MetadataRecord as _MetadataRecord
@@ -34,6 +36,11 @@ class MetadataRecordConfigV2(_MetadataRecordConfig):
         with open(schema_path, mode="r") as schema_file:
             schema_data = json.load(schema_file)
         self.schema = schema_data
+
+    def validate(self) -> None:
+        if self.schema is not None:
+            _config = encode_config_for_json(config=deepcopy(self.config))
+            return validate(instance=_config, schema=self.schema)
 
     def load(self, file: Path) -> None:
         with open(str(file), mode="r") as file:

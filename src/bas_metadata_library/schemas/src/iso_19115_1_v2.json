@@ -478,10 +478,12 @@
     },
     "date": {
       "title": "Date",
-      "description": "A literal date or date time, including time zone which should be UTC.",
+      "description": "A literal (partial) date or date time, including time zone which should be UTC.",
       "type": "string",
       "format": "date-time",
       "examples": [
+        "2010",
+        "2010-04",
         "2010-04-20",
         "2010-04-20T14:39:45+00:00"
       ]
@@ -513,26 +515,9 @@
       },
       "patternProperties": {
         ".*": {
-          "date": {
-            "$ref": "#/definitions/date"
-          },
-          "date_precision": {
-            "$ref": "#/definitions/date_precision"
-          }
+          "$ref": "#/definitions/date"
         }
       }
-    },
-    "date_precision": {
-      "title": "Date precision",
-      "description": "An internal, optional, property stating whether a date is specific to a year or month. This is needed where dates are required as YYYY-MM-DD values but are only accurate to YYYY-MM or YYYY. Typically users use the first day/month for unknown values, meaning a date '2010-01-01' could mean '2020-01-01', '2020-01-??' or '2020-??-??'. This is typically needed for resources who's lineage is now unknown and ambiguity is required.",
-      "type": "string",
-      "enum": [
-        "month",
-        "year"
-      ],
-      "examples": [
-        "year"
-      ]
     },
     "date_stamp": {
       "title": "The date when the record describing the resource was last updated.",
@@ -1234,34 +1219,10 @@
           "additionalProperties": false,
           "properties": {
             "start": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "date"
-              ],
-              "properties": {
-                "date": {
-                  "$ref": "#/definitions/date"
-                },
-                "date_precision": {
-                  "$ref": "#/definitions/date_precision"
-                }
-              }
+              "$ref": "#/definitions/date"
             },
             "end": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "date"
-              ],
-              "properties": {
-                "date": {
-                  "$ref": "#/definitions/date"
-                },
-                "date_precision": {
-                  "$ref": "#/definitions/date_precision"
-                }
-              }
+              "$ref": "#/definitions/date"
             }
           }
         }
