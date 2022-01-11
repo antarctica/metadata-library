@@ -20,13 +20,8 @@
       "value": "Test Record"
     },
     "dates": {
-      "creation": {
-        "date": "2018-01-01",
-        "date_precision": "year"
-      },
-      "revision": {
-        "date": "2018-01-01T10:00:00+00:00"
-      }
+      "creation": "2018",
+      "revision": "2018-01-01T10:00:00+00:00"
     },
     "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
     "character_set": "utf-8",
