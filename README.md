@@ -520,10 +520,6 @@ or during server maintenance etc.), these schema files are stored within this pa
 Definition (XSD) files in the `bas_metadata_library.schemas.xsd` module, and loaded as resource files for use in record
 validation.
 
-**Note:** For technical reasons, XSDs included locally in this project are contained in a Zip archive
-`bas_metadata_library.schemas.xsd/xsd-archive.zip`. This archive will be automatically unzipped to a temporary
-location during validation.
-
 **Note:** To support local validation, imported or included schema locations in local versions of XML schemas, have
 been modified. These changes do not materially change the contents of any schema.
 

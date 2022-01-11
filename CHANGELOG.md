@@ -63,6 +63,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+* Adopting new `limportlib.files` method
+  [#173](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/173)
 * Refactoring commands from `manage.py` to `app.py`
   [#146](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/146)
 * Relocating library under a source (`src/`) directory
