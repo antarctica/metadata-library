@@ -1,6 +1,5 @@
 import json
 
-from copy import deepcopy
 from pathlib import Path
 
 from importlib_resources import path as resource_path
@@ -14,48 +13,9 @@ from bas_metadata_library import MetadataRecordConfig as _MetadataRecordConfig, 
 from bas_metadata_library.standards.iso_19115_common import Namespaces
 from bas_metadata_library.standards.iso_19115_common.root_element import ISOMetadataRecord
 from bas_metadata_library.standards.iso_19115_common.utils import (
-    convert_from_v1_to_v2_configuration,
-    convert_from_v2_to_v1_configuration,
     parse_config_from_json,
     encode_config_for_json,
 )
-
-
-class MetadataRecordConfigV1(_MetadataRecordConfig):
-    """
-    Overloaded base MetadataRecordConfig class
-
-    Defines version 1 of the JSON Schema used for this metadata standard (deprecated)
-    """
-
-    def __init__(self, **kwargs: dict):
-        super().__init__(**kwargs)
-
-        self.config = kwargs
-
-        with resource_path(
-            "bas_metadata_library.schemas.dist", "iso_19115_2_v1.json"
-        ) as configuration_schema_file_path:
-            with open(configuration_schema_file_path) as configuration_schema_file:
-                configuration_schema_data = json.load(configuration_schema_file)
-        self.schema = configuration_schema_data
-
-    def load(self, file: Path) -> None:
-        with open(str(file), mode="r") as file:
-            self.config = parse_config_from_json(config=json.load(fp=file))
-
-    def loads(self, string: str) -> None:
-        self.config = parse_config_from_json(config=json.loads(s=string))
-
-    def convert_to_v2_configuration(self) -> "MetadataRecordConfigV2":
-        config = deepcopy(self.config)
-        config = convert_from_v1_to_v2_configuration(config=config)
-        return MetadataRecordConfigV2(**config)
-
-    def convert_from_v2_configuration(self, configuration: "MetadataRecordConfigV2"):
-        config = deepcopy(configuration.config)
-        config = convert_from_v2_to_v1_configuration(config=config)
-        self.config = config
 
 
 class MetadataRecordConfigV2(_MetadataRecordConfig):

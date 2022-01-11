@@ -38,14 +38,14 @@ wait until a stable profile for UK PDC Discovery metadata has been developed and
 
 ### Supported configuration versions
 
-| Standard           | Profile | Configuration Version                                                                                                     | Status     | Notes                               |
-| ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------- |
-| ISO 19115:2003     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Deprecated | Deprecated version replaced by `v2` |
-| ISO 19115:2003     | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Live       | Stable version                      |
-| ISO 19115-2:2009   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Deprecated | Deprecated version replaced by `v2` |
-| ISO 19115-2:2009   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Live       | Stable version                      |
-| IEC 61174:2015     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Alpha      | Experimental                        |
-| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Alpha      | Experimental                        |
+| Standard           | Profile | Configuration Version                                                                                                     | Status  | Notes            |
+| ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------- |---------|------------------|
+| ISO 19115:2003     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired | Replaced by `v2` |
+| ISO 19115:2003     | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Live    | Stable version   |
+| ISO 19115-2:2009   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Retired | Replaced by `v2` |
+| ISO 19115-2:2009   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Live    | Stable version   |
+| IEC 61174:2015     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Alpha   | Experimental     |
+| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Alpha   | Experimental     |
 
 ### Supported standards coverage
 
@@ -467,110 +467,6 @@ information.
 | CSV        | 68 kB  | [Link](https://example.com/) |
 | GeoPackage | 1.2 MB | [Link](https://example.com/) |
 
-### Migrating to new configuration versions
-
-#### ISO 19115 Version 1 to version 2
-
-**WARNING:** This feature is deprecated.
-
-Utility methods are provided within the V1 and V2 [Record configuration](#configuration-classes) classes to convert to
-and from the V2/V1 [Record Configuration Schema](#configuration-schemas).
-
-**Note:** The version 1 and version 2 schemas are largely, but not fully, backwards compatible. Additional elements
-added to the version 2 schema (i.e. for elements the version 1 schema didn't support) will be dropped to prevent
-validation errors. For some elements (access/usage constraints), hard coded conversions are used for known use cases.
-
-To convert a record configuration from version 1 to version 2 (lossless for known use cases):
-
-```python
-from datetime import date
-
-from bas_metadata_library.standards.iso_19115_1 import (
-    MetadataRecordConfigV1 as ISO19115_1_MetadataRecordConfigV1,
-    MetadataRecord as ISO19115_1_MetadataRecord,
-)
-
-configuration_object = {
-    "language": "eng",
-    "character_set": "utf-8",
-    "hierarchy_level": "dataset",
-    "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
-    "date_stamp": date(2018, 10, 18),
-    "resource": {
-        "title": {"value": "Test Record"},
-        "dates": [{"date": date(2018, 1, 1), "date_precision": "year", "date_type": "creation"}],
-        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf-8",
-        "language": "eng",
-        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
-            }
-        },
-    },
-}
-configurationV1 = ISO19115_1_MetadataRecordConfigV1(**configuration_object)
-configurationV2 = configurationV1.convert_to_v2_configuration()
-
-# encode converted configuration into an XML document
-record = ISO19115_1_MetadataRecord(configurationV2)
-document = record.generate_xml_document()
-
-# output document
-print(document)
-```
-
-To convert a record configuration from version 2 to version 1 (lossy):
-
-```python
-from datetime import date
-
-from bas_metadata_library.standards.iso_19115_1 import (
-    MetadataRecordConfigV2 as ISO19115_1_MetadataRecordConfigV2,
-    MetadataRecordConfigV1 as ISO19115_1_MetadataRecordConfigV1
-)
-
-configuration_object = {
-    "hierarchy_level": "dataset",
-    "metadata": {
-        "language": "eng",
-        "character_set": "utf-8",
-        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
-        "date_stamp": date(2018, 10, 18),
-    },
-    "identification": {
-        "title": {"value": "Test Record"},
-        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
-        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf-8",
-        "language": "eng",
-        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
-            }
-        },
-    },
-}
-configurationV2 = ISO19115_1_MetadataRecordConfigV2(**configuration_object)
-configurationV1 = ISO19115_1_MetadataRecordConfigV1()
-configurationV1.convert_from_v2_configuration(configuration=configurationV2)
-
-# print V1 configuration
-print(configurationV1.config)
-```
-
 ## Implementation
 
 This library is implemented in Python and consists of a set of classes used to generate XML metadata and data records
@@ -653,8 +549,7 @@ Configuration classes are defined at the root of each standard or profile, along
 [Metadata Element](#record-element-classes) and XML namespaces.
 
 A configuration class will exist for each supported configuration schema with methods to convert from one version to
-another, see the [Record configuration schema migration](#migrating-to-new-configuration-versions) section for more
-information.
+another.
 
 ### Configuration schemas
 
@@ -747,23 +642,12 @@ To add a new standard:
      added to the `common_elements.py` module
    * remember to include references to new element class in the parent element class (in both the `make_element` and
      `make_config` methods)
-5. until support for Version 1 configuration schemas is removed, add logic to the
-   `bas_metadata_library.standards.iso_19115_common.utils.convert_from_v1_to_v2_configuration` and/or
-   `bas_metadata_library.standards.iso_19115_common.utils.convert_from_v2_to_v1_configuration` methods as needed
-   * for new elements, this usually consists of deleting configuration properties that don't exist in the V1 schema
-     (as additional/unexpected keys are not allowed and will therefore fail validation)
-   * for existing elements, logic may be needed to both upgrade and downgrade configurations, especially where
-     refactoring has occurred between V1 and V2 configurations
-   * where possible, such logic should be generic and agnostic to values used for configuration options, however
-     there may be cases where this is unavoidable in order to produce a more complete translation between versions
-   * if such logic would prove very unwieldy, and not confined to a limited set of known circumstances, it is ok to
-     not implement such logic, on the basis that supporting multiple versions is temporary
-6. [capture test records](#capturing-static-test-records)
+5. [capture test records](#capturing-static-test-records)
     * initially this acts as a good way to check new or changed element classes encode configuration properties
       correctly
     * check the git status of these test records to check existing records have changed how you expect (and haven't
       changed things you didn't intend to for example)
-7. add tests:
+6. add tests:
     * new test cases should be added, or existing test cases updated, in the relevant module within
       `tests/bas_metadata_library/`
     * for the ISO 19115 family of standards, this should be `test_standard_iso_19115_1.py`, unless the element is only
@@ -773,19 +657,15 @@ To add a new standard:
       sufficient test coverage
     * where this isn't the case, it's suggested to add one or more 'edge case' test cases to test remaining code paths
       explicitly
-8. check [test coverage](#test-coverage):
+7. check [test coverage](#test-coverage):
     * for missing coverage, consider adding edge case test cases where applicable
-    * wherever possible, the coverage exemptions should be minimised
-    * there are a number of general types of code that can be exempted as part of an existing convention (but that
-      will be reviewed in the future):
-        * within `make_config` methods to check whether child elements are empty
-        * within the `convert_from_v1_to_v2_configuration` and `convert_from_v2_to_v1_configuration` utility methods
-    * where exceptions are added, they should be documented as an issue with information on how they will be
-      addressed in the longer term
-9. update `README.md` examples if common element:
+    * coverage exemptions should be avoided wherever feasible and all exemptions must be discussed before they are added
+    * where exceptions are added, they should be documented as an issue with information on how they will be addressed
+      in the longer term
+8. update `README.md` examples if common element:
     * this is probably best done before releasing a new version
-10. update `CHANGELOG.md`
-11. if needed, add name to `authors` property in `pyproject.toml`
+9. update `CHANGELOG.md`
+10. if needed, add name to `authors` property in `pyproject.toml`
 
 ### ISO 19115 - Automatic transfer option / format IDs
 

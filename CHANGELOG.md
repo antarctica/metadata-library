@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Removed option to disable XML declaration when encoding a record into XML
   [#140](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/140)
 
+### Removed [BREAKING!]
+
+* Removing support for deprecated ISO 19115 V1 record configuration
+  [#116](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/116)
+
 ### Added
 
 * Basic linting for JSON Schema source files
