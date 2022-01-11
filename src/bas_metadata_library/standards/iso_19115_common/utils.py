@@ -70,7 +70,7 @@ def _decode_date_properties(dictionary: dict, parent_keys: Optional[List[str]] =
             and "extent" in parent_keys
             and "temporal" in parent_keys
             and "period" in parent_keys
-        ):
+        ):  # pragma: no cover - until uk-pdc/metadata-infrastructure/metadata-library#169 is resolved
             dictionary[key] = decode_date_string(date_datetime=value)
 
     return dictionary
