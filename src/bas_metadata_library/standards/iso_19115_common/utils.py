@@ -46,9 +46,6 @@ def _parse_date_properties(dictionary: dict) -> dict:
             dictionary[k] = _date["date"]
             if "date_precision" in _date.keys() and "date_precision" not in dictionary.keys():
                 dictionary["date_precision"] = _date["date_precision"]
-        # required for V1 configurations - remove when support is dropped
-        elif isinstance(v, str) and (k == "start" or k == "end"):  # pragma: no cover
-            dictionary[k] = decode_date_string(date_datetime=v)["date"]
 
     return dictionary
 
