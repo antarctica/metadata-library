@@ -1,12 +1,9 @@
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import Element, SubElement  # nosec
+from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library import (
-    Namespaces as _Namespaces,
-    MetadataRecordElement as _MetadataRecordElement,
     MetadataRecord as _MetadataRecord,
+    MetadataRecordElement as _MetadataRecordElement,
+    Namespaces as _Namespaces,
 )
 
 

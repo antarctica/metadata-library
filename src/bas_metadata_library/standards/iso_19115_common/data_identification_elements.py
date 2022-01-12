@@ -1,28 +1,27 @@
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import Element, SubElement  # nosec
+from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library import MetadataRecord
-from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement, CodeListElement
+from bas_metadata_library.standards.iso_19115_common import CodeListElement, MetadataRecordElement
 from bas_metadata_library.standards.iso_19115_common.common_elements import (
-    Citation,
-    ResponsibleParty,
-    MaintenanceInformation,
     AnchorElement,
-    Language,
     CharacterSet,
+    Citation,
     Identifier,
+    Language,
+    MaintenanceInformation,
+    ResponsibleParty,
 )
 from bas_metadata_library.standards.iso_19115_common.utils import (
-    encode_date_string,
     decode_date_string,
+    encode_date_string,
     format_numbers_consistently,
 )
 
 
 class DataIdentification(MetadataRecordElement):
-    def make_config(self) -> dict:
+    def make_config(  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
+        self,
+    ) -> dict:
         _ = {}
 
         citation = Citation(
@@ -108,7 +107,8 @@ class DataIdentification(MetadataRecordElement):
             graphic_overview = GraphicOverview(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview)[{graphic_index}]",
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/"
+                f"gmd:graphicOverview)[{graphic_index}]",
             )
             _graphic_overview = graphic_overview.make_config()
             if bool(_graphic_overview):
@@ -248,7 +248,7 @@ class DataIdentification(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self):  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
         data_identification_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}identificationInfo")
         data_identification_element = SubElement(data_identification_wrapper, f"{{{self.ns.gmd}}}MD_DataIdentification")
 
@@ -876,7 +876,8 @@ class OtherConstraints(MetadataRecordElement):
         _ = {}
 
         other_constraint_value = self.record.xpath(
-            f"{self.xpath}/gmd:otherConstraints/gco:CharacterString/text() | {self.xpath}/gmd:otherConstraints/gmx:Anchor/text()",
+            f"{self.xpath}/gmd:otherConstraints/gco:CharacterString/text() | "
+            f"{self.xpath}/gmd:otherConstraints/gmx:Anchor/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(other_constraint_value) == 1:
@@ -1108,7 +1109,8 @@ class SpatialResolution(MetadataRecordElement):
         _ = ""
 
         spatial_resolution_value = self.record.xpath(
-            f"{self.xpath}/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer/text()",
+            f"{self.xpath}/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/"
+            f"gco:Integer/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(spatial_resolution_value) == 1:
@@ -1490,7 +1492,7 @@ class TemporalExtent(MetadataRecordElement):
             try:
                 _["period"]["start"] = decode_date_string(date_datetime=begin_value[0])
             except ValueError:
-                raise RuntimeError("Date/datetime could not be parsed as an ISO date value")
+                raise RuntimeError("Date/datetime could not be parsed as an ISO date value") from None
 
         end_value = self.record.xpath(
             f"{self.xpath}/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition/text()",
@@ -1502,7 +1504,7 @@ class TemporalExtent(MetadataRecordElement):
             try:
                 _["period"]["end"] = decode_date_string(date_datetime=end_value[0])
             except ValueError:
-                raise RuntimeError("Date/datetime could not be parsed as an ISO date value")
+                raise RuntimeError("Date/datetime could not be parsed as an ISO date value") from None
 
         return _
 

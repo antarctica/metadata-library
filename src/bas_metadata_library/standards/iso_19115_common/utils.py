@@ -1,9 +1,8 @@
 import json
-
 from copy import deepcopy
 from datetime import date, datetime
 from itertools import groupby
-from typing import Union, List, Optional
+from typing import List, Optional, Union
 
 
 def _sort_dict_by_keys(dictionary: dict) -> dict:
@@ -202,6 +201,9 @@ def contacts_condense_roles(contacts: List[dict]):
     E.g. a set of contacts: {'name': 'foo', role: ['a']}, {'name': 'foo', role: ['b']}, {'name': 'bar', role: ['a']}
                with become: {'name': 'foo', role: ['a', 'b']}, {'name': 'bar', role: ['a']}
 
+    Note: this method triggers a bug-bear error in flake8 for an unused loop control variable. In this case the error
+    is invalid as the 'key' control variable is used in the groupby lambda function, rather than the body of the loop.
+
     :type contacts: list
     :param contacts: list of contacts to be grouped/reduced
 
@@ -218,7 +220,7 @@ def contacts_condense_roles(contacts: List[dict]):
             {"key": json.dumps(_contact), "key_data": _contact, "role_data": contact["role"][0]}
         )
 
-    for key, contact in groupby(_contacts_without_roles, key=lambda x: x["key"]):
+    for key, contact in groupby(_contacts_without_roles, key=lambda x: x["key"]):  # noqa: B007 - see docblock
         contact = list(contact)
         _merged_contact = contact[0]["key_data"]
         _merged_contact["role"] = []

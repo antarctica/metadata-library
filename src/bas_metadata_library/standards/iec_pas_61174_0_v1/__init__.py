@@ -1,19 +1,14 @@
 import json
-
 from pathlib import Path
 
 from importlib_resources import files as resource_file
-
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import Element, SubElement, fromstring  # nosec
+from lxml.etree import Element, fromstring, SubElement  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library import (
-    Namespaces as _Namespaces,
-    MetadataRecordConfig as _MetadataRecordConfig,
     MetadataRecord as _MetadataRecord,
+    MetadataRecordConfig as _MetadataRecordConfig,
     MetadataRecordElement as _MetadataRecordElement,
+    Namespaces as _Namespaces,
 )
 from bas_metadata_library.standards.iec_pas_61174_common.utils import (
     generate_rtzp_archive as _generate_rtzp_archive,

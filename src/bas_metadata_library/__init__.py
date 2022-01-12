@@ -1,22 +1,18 @@
 import json
-
-# Exempting Bandit security issue (using subprocess)
-# see notes in `MetadataRecord.validate` method.
-import subprocess  # nosec
-
-from typing import Optional
+import subprocess  # noqa: S404 - see notes in `MetadataRecord.validate` method - nosec
+from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from zipfile import ZipFile
-from copy import deepcopy
+from typing import Optional
 
 from importlib_resources import files as resource_file
 from jsonschema import validate
-
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import Element, ElementTree, tostring as element_string, fromstring  # nosec
+from lxml.etree import (
+    Element,
+    ElementTree,
+    fromstring,
+    tostring as element_string,
+)  # nosec - see 'lxml` package (bandit)' section in README
 
 
 class RecordValidationError(Exception):
@@ -270,19 +266,19 @@ class MetadataRecord(object):
                 document_file.write(document_data)
 
             try:
-                # Exempting Bandit security issue (using subprocess)
+                # Exempting Bandit/flake8 security issue (using subprocess)
                 # Checking for untrusted input is not a concern for this library, rather those implementing
                 # this library should ensure it is used in a way that is secure (i.e. it is context dependent).
                 #
                 # Use `capture_output=True` in future when we can use Python 3.7+
-                subprocess.run(  # nosec
+                subprocess.run(  # noqa: S274,S603 - nosec
                     args=["xmllint", "--noout", "--schema", str(schema_path), str(document_path)],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     check=True,
                 )
             except subprocess.CalledProcessError as e:
-                raise RecordValidationError(f"Record validation failed: {e.stderr.decode()}")
+                raise RecordValidationError(f"Record validation failed: {e.stderr.decode()}") from e
 
 
 class MetadataRecordElement(object):

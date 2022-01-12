@@ -831,12 +831,12 @@ $ poetry install
 ### Code Style
 
 PEP-8 style and formatting guidelines must be used for this project, except the 80 character line limit.
-
-[Black](https://github.com/psf/black) is used to ensure compliance, configured in `pyproject.toml`.
+[Black](https://github.com/psf/black) is used for formatting, configured in `pyproject.toml` and enforced as part of
+[Python code linting](#code-linting-python).
 
 Black can be integrated with a range of editors, such as 
-[PyCharm](https://black.readthedocs.io/en/stable/integrations/editors.html#pycharm-intellij-idea), to perform 
-formatting automatically.
+[PyCharm](https://black.readthedocs.io/en/stable/integrations/editors.html#pycharm-intellij-idea), to apply formatting 
+automatically when saving files.
 
 To apply formatting manually:
 
@@ -844,10 +844,15 @@ To apply formatting manually:
 $ poetry run black src/ tests/
 ```
 
-To check compliance manually:
+### Code Linting (Python)
+
+[Flake8](https://flake8.pycqa.org) and various extensions are used to lint Python files in the `bas_metadata_library` 
+module. Specific checks, and any configuration options, are documented in the `./.flake8` config file.
+
+To check files manually:
 
 ```shell
-$ poetry run black --check src/ tests/
+$ poetry run flake8 src/
 ```
 
 Checks are run automatically in [Continuous Integration](#continuous-integration).
@@ -857,7 +862,7 @@ Checks are run automatically in [Continuous Integration](#continuous-integration
 JSON files (specifically JSON Schemas used for [Record Configurations](#configuration-schemas)) must be valid JSON 
 documents. Minimal linting is used to enforce this as part of [Continuous Integration](#continuous-integration).
 
-To check manually:
+To check files manually:
 
 ```shell
 $ for file in $(find ./src/bas_metadata_library/schemas/src -name "*.json"); do echo ${file}; poetry run python -m json.tool < ${file} 1>/dev/null; done
@@ -925,19 +930,30 @@ Python [manylinux](https://github.com/pypa/manylinux) system, and therefore cann
 
 ### Static security scanning
 
-To ensure the security of this API, source code is checked against [Bandit](https://github.com/PyCQA/bandit) for issues
-such as not sanitising user inputs or using weak cryptography.
+To ensure the security of this API, source code is checked against [Bandit](https://github.com/PyCQA/bandit)
+and enforced as part of [Python code linting](#code-linting-python).
 
 **Warning:** Bandit is a static analysis tool and can't check for issues that are only be detectable when running the
 application. As with all security tools, Bandit is an aid for spotting common mistakes, not a guarantee of secure code.
 
 Checks are run automatically in [Continuous Integration](#continuous-integration).
 
-To check locally:
+#### `lxml` package (bandit)
 
-```shell
-$ poetry run bandit -r src/
-```
+Bandit identifies the use of `lxml` classes and methods as a security issue, specifically:
+
+> Element to parse untrusted XML data is known to be vulnerable to XML attacks
+
+The recommendation is to use a *safe* implementation of an XML processor (`defusedxml`) that can avoid entity bombs and 
+other XML processing attacks. However, `defusedxml` does not offer all of the methods we need and there does not appear
+to be such another processor that does provide them.
+
+The main vulnerability this security issue relates to is processing user input that can't be trusted. This isn't really
+applicable to this library directly, but rather to where it's used in implementing projects. I.e. if this library is 
+used in a service that accepts user input, an assessment must be made whether the input needs to be sanitised.
+
+Within this library itself, the only input that is processed is test records, all of which are assumed to be safe to 
+process.
 
 ### Generating configuration schemas
 

@@ -1,14 +1,14 @@
 from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement
 from bas_metadata_library.standards.iso_19115_common.base_elements import (
-    FileIdentifier,
-    HierarchyLevel,
     Contact,
     DateStamp,
+    FileIdentifier,
+    HierarchyLevel,
+    MetadataMaintenance,
     MetadataStandard,
     ReferenceSystemInfo,
-    MetadataMaintenance,
 )
-from bas_metadata_library.standards.iso_19115_common.common_elements import Language, CharacterSet
+from bas_metadata_library.standards.iso_19115_common.common_elements import CharacterSet, Language
 from bas_metadata_library.standards.iso_19115_common.data_distribution_elements import DataDistribution
 from bas_metadata_library.standards.iso_19115_common.data_identification_elements import DataIdentification
 from bas_metadata_library.standards.iso_19115_common.data_quality_elements import DataQuality
@@ -16,7 +16,9 @@ from bas_metadata_library.standards.iso_19115_common.utils import contacts_conde
 
 
 class ISOMetadataRecord(MetadataRecordElement):
-    def make_config(self) -> dict:
+    def make_config(  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
+        self,
+    ) -> dict:
         _ = {"metadata": {}, "identification": {}, "distribution": []}
 
         file_identifier = FileIdentifier(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
@@ -115,7 +117,7 @@ class ISOMetadataRecord(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self):  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
         if "file_identifier" in self.attributes:
             identifier = FileIdentifier(record=self.record, attributes=self.attributes, parent_element=self.record)
             identifier.make_element()

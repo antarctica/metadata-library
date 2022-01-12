@@ -1,21 +1,18 @@
 from datetime import date
 from typing import Optional
 
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import SubElement, Element  # nosec
 from backports.datetime_fromisoformat import MonkeyPatch
+from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library import MetadataRecord
-from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement, CodeListElement
+from bas_metadata_library.standards.iso_19115_common import CodeListElement, MetadataRecordElement
 from bas_metadata_library.standards.iso_19115_common.common_elements import (
-    MaintenanceInformation,
-    Citation,
     AnchorElement,
+    Citation,
+    MaintenanceInformation,
     ResponsibleParty,
 )
-from bas_metadata_library.standards.iso_19115_common.utils import encode_date_string, decode_date_string
+from bas_metadata_library.standards.iso_19115_common.utils import decode_date_string, encode_date_string
 
 # Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
 MonkeyPatch.patch_fromisoformat()
@@ -144,7 +141,7 @@ class DateStamp(MetadataRecordElement):
             try:
                 _ = decode_date_string(date_datetime=value[0])["date"]
             except ValueError:
-                raise RuntimeError("Datestamp could not be parsed as an ISO date value")
+                raise RuntimeError("Datestamp could not be parsed as an ISO date value") from None
 
         return _
 
