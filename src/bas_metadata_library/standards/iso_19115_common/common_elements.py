@@ -820,7 +820,7 @@ class Date(MetadataRecordElement):
             try:
                 _ = decode_date_string(date_datetime=date_value[0])
             except ValueError:
-                raise RuntimeError("Date/datetime could not be parsed as an ISO date value")
+                raise RuntimeError("Date/datetime could not be parsed as an ISO date value") from None
 
         date_type = DateType(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:dateType")
         _date_type = date_type.make_config()

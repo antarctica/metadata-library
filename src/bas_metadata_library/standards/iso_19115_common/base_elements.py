@@ -141,7 +141,7 @@ class DateStamp(MetadataRecordElement):
             try:
                 _ = decode_date_string(date_datetime=value[0])["date"]
             except ValueError:
-                raise RuntimeError("Datestamp could not be parsed as an ISO date value")
+                raise RuntimeError("Datestamp could not be parsed as an ISO date value") from None
 
         return _
 

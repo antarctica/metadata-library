@@ -278,7 +278,7 @@ class MetadataRecord(object):
                     check=True,
                 )
             except subprocess.CalledProcessError as e:
-                raise RecordValidationError(f"Record validation failed: {e.stderr.decode()}")
+                raise RecordValidationError(f"Record validation failed: {e.stderr.decode()}") from e
 
 
 class MetadataRecordElement(object):

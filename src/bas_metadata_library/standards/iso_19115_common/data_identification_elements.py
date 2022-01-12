@@ -1492,7 +1492,7 @@ class TemporalExtent(MetadataRecordElement):
             try:
                 _["period"]["start"] = decode_date_string(date_datetime=begin_value[0])
             except ValueError:
-                raise RuntimeError("Date/datetime could not be parsed as an ISO date value")
+                raise RuntimeError("Date/datetime could not be parsed as an ISO date value") from None
 
         end_value = self.record.xpath(
             f"{self.xpath}/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition/text()",
@@ -1504,7 +1504,7 @@ class TemporalExtent(MetadataRecordElement):
             try:
                 _["period"]["end"] = decode_date_string(date_datetime=end_value[0])
             except ValueError:
-                raise RuntimeError("Date/datetime could not be parsed as an ISO date value")
+                raise RuntimeError("Date/datetime could not be parsed as an ISO date value") from None
 
         return _
 
