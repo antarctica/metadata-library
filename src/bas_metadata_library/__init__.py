@@ -1,5 +1,5 @@
 import json
-import subprocess  # nosec - see notes in `MetadataRecord.validate` method
+import subprocess  # noqa: S404 - see notes in `MetadataRecord.validate` method - nosec
 from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -266,12 +266,12 @@ class MetadataRecord(object):
                 document_file.write(document_data)
 
             try:
-                # Exempting Bandit security issue (using subprocess)
+                # Exempting Bandit/flake8 security issue (using subprocess)
                 # Checking for untrusted input is not a concern for this library, rather those implementing
                 # this library should ensure it is used in a way that is secure (i.e. it is context dependent).
                 #
                 # Use `capture_output=True` in future when we can use Python 3.7+
-                subprocess.run(  # nosec
+                subprocess.run(  # noqa: S274,S603 - nosec
                     args=["xmllint", "--noout", "--schema", str(schema_path), str(document_path)],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,

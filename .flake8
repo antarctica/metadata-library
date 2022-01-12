@@ -12,8 +12,10 @@ select = B,B9,BLK,C,E,F,I,S,W
 
 # E203: for Black compatibility (whitespace before ‘:')
 # E501: for bug-bear compatibility (as B905 overrides line length checks)
+# S320: for using fromstring to process XML (see 'lxml package (bandit)' section in README for details)
+# S410: for using Element to process XML (see 'lxml package (bandit)' section in README for details)
 # W503: for Black compatibility (line break before binary operator)
-ignore = E203,E501,W503
+ignore = E203,E501,S320,S410,W503
 
 # general
 max-line-length = 120
