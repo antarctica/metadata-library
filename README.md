@@ -674,12 +674,14 @@ To add a new standard:
      added to the `common_elements.py` module
    * remember to include references to new element class in the parent element class (in both the `make_element` and
      `make_config` methods)
-5. [capture test records](#capturing-static-test-records)
+5. [capture test records](#capturing-test-records)
     * initially this acts as a good way to check new or changed element classes encode configuration properties
       correctly
     * check the git status of these test records to check existing records have changed how you expect (and haven't
       changed things you didn't intend to for example)
-6. add tests:
+6. [capture test JSON configurations](#capturing-test-configurations-as-json)
+    * check the git status of these test configs to check they are encoded correctly from Python (i.e. dates)
+7. add tests:
     * new test cases should be added, or existing test cases updated, in the relevant module within
       `tests/bas_metadata_library/`
     * for the ISO 19115 family of standards, this should be `test_standard_iso_19115_1.py`, unless the element is only
@@ -689,15 +691,15 @@ To add a new standard:
       sufficient test coverage
     * where this isn't the case, it's suggested to add one or more 'edge case' test cases to test remaining code paths
       explicitly
-7. check [test coverage](#test-coverage):
+8. check [test coverage](#test-coverage):
     * for missing coverage, consider adding edge case test cases where applicable
     * coverage exemptions should be avoided wherever feasible and all exemptions must be discussed before they are added
     * where exceptions are added, they should be documented as an issue with information on how they will be addressed
       in the longer term
-8. update `README.md` examples if common element:
+9. update `README.md` examples if common element:
     * this is probably best done before releasing a new version
-9. update `CHANGELOG.md`
-10. if needed, add name to `authors` property in `pyproject.toml`
+10. update `CHANGELOG.md`
+11. if needed, add name to `authors` property in `pyproject.toml`
 
 ### ISO 19115 - Automatic transfer option / format IDs
 
@@ -980,9 +982,9 @@ To run tests manually using PyCharm, use the included *App (Tests)* run/debug co
 
 Tests are run automatically in [Continuous Integration](#continuous-integration).
 
-### Capturing static test records
+### Capturing test records
 
-To capture static test records, which verify complete records are assembled correctly, a custom Flask CLI command,
+To capture test records, which verify complete records are assembled correctly, a custom Flask CLI command,
 `capture-test-records` is available. This requires the Flask application to be running and uses the *Requests* 
 library to make requests against the Flask app, saving responses to a relevant directory in `tests/resources/records`.
 
@@ -994,8 +996,24 @@ $ poetry run flask run
 $ poetry run flask capture-test-records
 ```
 
-It is intended that this command will update pre-existing static records, with differences captured in version control
-for manual review to ensure they are correct.
+It is intended that this command will update pre-existing records, with differences captured in version control to aid 
+manual review to ensure they are correct.
+
+### Capturing test configurations as JSON
+
+To capture test configurations as JSON, which verify the dump/load methods of configuration classes work encode and 
+decode information correctly, a custom Flask CLI command, `capture-json-test-configs` is available. This will dump all 
+test configurations for each standard to set of JSON files in `tests/resources/configs/`. 
+
+```shell
+$ poetry run flask capture-json-test-configs
+```
+
+These files MUST then be manually verified to ensure they have encoded each configuration correctly. Once they have, 
+they can be used in tests to automatically verify this remains the case.
+
+It is intended that this command will update pre-existing configurations, with differences captured in version control
+to aid in manual review to ensure they are correct.
 
 ### Test coverage
 

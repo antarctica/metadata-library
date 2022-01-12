@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+* Internal Flask command to capture all test configurations as JSON files for testing load/dump methods
+  [#169](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/169)
 * Basic linting for JSON Schema source files
   [#170](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/170)
 * Basic package vulnerability checks

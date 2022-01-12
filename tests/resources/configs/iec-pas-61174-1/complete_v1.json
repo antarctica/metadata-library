@@ -1,5 +1,7 @@
 {
-  "route_name": "minimal-test-route",
+  "route_author": "Constance Watson",
+  "route_name": "complete-test-route",
+  "route_status": "complete",
   "waypoints": [
     {
       "id": 1001,
@@ -7,6 +9,9 @@
       "position": {
         "lat": 5.5,
         "lon": 50.55
+      },
+      "leg": {
+        "geometry_type": "Orthodrome"
       }
     },
     {
@@ -15,6 +20,9 @@
       "position": {
         "lat": 5.5,
         "lon": 50.55
+      },
+      "leg": {
+        "geometry_type": "Orthodrome"
       }
     },
     {
@@ -23,6 +31,9 @@
       "position": {
         "lat": 5.5,
         "lon": 50.55
+      },
+      "leg": {
+        "geometry_type": "Orthodrome"
       }
     }
   ]
