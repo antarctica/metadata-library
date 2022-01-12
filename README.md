@@ -944,6 +944,23 @@ To check locally:
 $ poetry run bandit -r src/
 ```
 
+#### `lxml` package (bandit)
+
+Bandit identifies the use of `lxml` classes and methods as a security issue, specifically:
+
+> Element to parse untrusted XML data is known to be vulnerable to XML attacks
+
+The recommendation is to use a *safe* implementation of an XML processor that can avoid entity bombs and other XML 
+processing attacks. In (non-exhaustive) research, there does not appear to be such a processor that is recommended and
+easy to integrate.
+
+The main vulnerability this security issue relates to is processing user input that can't be trusted. This isn't really
+applicable to this library directly, but rather to where it's used in implementing projects. I.e. if this library is 
+used in a service that accepts user input, an assessment must be made whether the input needs to be sanitised.
+
+Within this library itself, the only input that is processed is test records, all of which are assumed to be safe to 
+process.
+
 ### Generating configuration schemas
 
 To generate [distribution schemas from source schemas](#source-and-distribution-schemas), a custom Flask CLI command,

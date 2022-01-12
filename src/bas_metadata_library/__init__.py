@@ -1,21 +1,18 @@
 import json
-
-# Exempting Bandit security issue (using subprocess)
-# see notes in `MetadataRecord.validate` method.
-import subprocess  # nosec
-
-from typing import Optional
+import subprocess  # nosec - see notes in `MetadataRecord.validate` method
+from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from copy import deepcopy
+from typing import Optional
 
 from importlib_resources import files as resource_file
 from jsonschema import validate
-
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import Element, ElementTree, tostring as element_string, fromstring  # nosec
+from lxml.etree import (
+    Element,
+    ElementTree,
+    fromstring,
+    tostring as element_string,
+)  # nosec - see 'lxml` package (bandit)' section in README
 
 
 class RecordValidationError(Exception):

@@ -1,17 +1,12 @@
 import json
 from copy import deepcopy
-
 from pathlib import Path
 
 from importlib_resources import files as resource_file
-
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# We don't currently allow untrusted/user-provided XML so this is not a risk
 from jsonschema.validators import validate
-from lxml.etree import Element, fromstring  # nosec
+from lxml.etree import Element, fromstring  # nosec - see 'lxml` package (bandit)' section in README
 
-from bas_metadata_library import MetadataRecordConfig as _MetadataRecordConfig, MetadataRecord as _MetadataRecord
+from bas_metadata_library import MetadataRecord as _MetadataRecord, MetadataRecordConfig as _MetadataRecordConfig
 from bas_metadata_library.standards.iso_19115_common import Namespaces
 from bas_metadata_library.standards.iso_19115_common.root_element import ISOMetadataRecord
 from bas_metadata_library.standards.iso_19115_common.utils import (

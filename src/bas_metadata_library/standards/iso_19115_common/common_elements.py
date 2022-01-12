@@ -1,16 +1,12 @@
 from copy import deepcopy
 from datetime import datetime
-
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# We don't currently allow untrusted/user-provided XML so this is not a risk
 from typing import Optional
 
-from lxml.etree import SubElement, Element  # nosec
+from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library import MetadataRecord as _MetadataRecord, MetadataRecord
-from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement, CodeListElement
-from bas_metadata_library.standards.iso_19115_common.utils import encode_date_string, decode_date_string
+from bas_metadata_library.standards.iso_19115_common import CodeListElement, MetadataRecordElement
+from bas_metadata_library.standards.iso_19115_common.utils import decode_date_string, encode_date_string
 
 
 class Language(CodeListElement):

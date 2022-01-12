@@ -1,23 +1,19 @@
 import json
-
 from copy import deepcopy
 from hashlib import sha1
 from typing import List
 
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import SubElement  # nosec
+from lxml.etree import SubElement  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement
 from bas_metadata_library.standards.iso_19115_common.common_elements import (
     AnchorElement,
-    ResponsibleParty,
     OnlineResource,
+    ResponsibleParty,
 )
 from bas_metadata_library.standards.iso_19115_common.utils import (
-    format_numbers_consistently,
     format_distribution_option_consistently,
+    format_numbers_consistently,
 )
 
 

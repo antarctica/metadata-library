@@ -1,22 +1,19 @@
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# We don't currently allow untrusted/user-provided XML so this is not a risk
-from lxml.etree import Element, SubElement  # nosec
+from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library import MetadataRecord
-from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement, CodeListElement
+from bas_metadata_library.standards.iso_19115_common import CodeListElement, MetadataRecordElement
 from bas_metadata_library.standards.iso_19115_common.common_elements import (
-    Citation,
-    ResponsibleParty,
-    MaintenanceInformation,
     AnchorElement,
-    Language,
     CharacterSet,
+    Citation,
     Identifier,
+    Language,
+    MaintenanceInformation,
+    ResponsibleParty,
 )
 from bas_metadata_library.standards.iso_19115_common.utils import (
-    encode_date_string,
     decode_date_string,
+    encode_date_string,
     format_numbers_consistently,
 )
 

@@ -1,9 +1,8 @@
 import json
-
 from copy import deepcopy
 from datetime import date, datetime
 from itertools import groupby
-from typing import Union, List, Optional
+from typing import List, Optional, Union
 
 
 def _sort_dict_by_keys(dictionary: dict) -> dict:
