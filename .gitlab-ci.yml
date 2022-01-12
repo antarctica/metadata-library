@@ -66,6 +66,7 @@ lint:
     - "poetry check"
     - "poetry run black --check src/ tests/"
     - "poetry run bandit -r src/"
+    - "poetry run flake8 src/"
     - "poetry export --without-hashes -f requirements.txt | poetry run safety check --full-report --stdin"
     - "for file in $(find ./src/bas_metadata_library/schemas/src -name '*.json'); do echo ${file}; poetry run python -m json.tool < ${file} 1>/dev/null || exit 1; done"
 

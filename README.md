@@ -845,9 +845,16 @@ $ poetry run black src/ tests/
 ```
 
 To check compliance manually:
+### Code Linting (Python)
+
+[Flake8](https://flake8.pycqa.org) and various extensions are used to lint Python files in the `bas_metadata_library` 
+module. Specific checks, and any configuration options, are documented in the `./.flake8` config file.
+
+To check files manually:
 
 ```shell
 $ poetry run black --check src/ tests/
+$ poetry run flake8 src/
 ```
 
 Checks are run automatically in [Continuous Integration](#continuous-integration).
@@ -857,7 +864,7 @@ Checks are run automatically in [Continuous Integration](#continuous-integration
 JSON files (specifically JSON Schemas used for [Record Configurations](#configuration-schemas)) must be valid JSON 
 documents. Minimal linting is used to enforce this as part of [Continuous Integration](#continuous-integration).
 
-To check manually:
+To check files manually:
 
 ```shell
 $ for file in $(find ./src/bas_metadata_library/schemas/src -name "*.json"); do echo ${file}; poetry run python -m json.tool < ${file} 1>/dev/null; done
