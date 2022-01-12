@@ -1,15 +1,18 @@
 [flake8]
+# B:   bug-bear (additional bad code checks)
+# B9:  bug-bear opinionated (additional, additional bad code checks)
 # BLK: black (code formatting)
 # C:   mccabe (code complexity)
 # E:   pycodestyle errors (PEP8 checks)
-# F:   pyflakes (invalid code)
+# F:   pyflakes (invalid/bad code checks)
 # I:   import order (python import ordering)
 # W:   pycodestyle warnings (PEP8 checks)
-select = BLK,C,E,F,I,W
+select = B,B9,BLK,C,E,F,I,W
 
 # E203: for Black compatibility (whitespace before ‘:')
+# E501: for bug-bear compatibility (as B905 overrides line length checks)
 # W503: for Black compatibility (line break before binary operator)
-ignore = E203,W503
+ignore = E203,E501,W503
 
 # general
 max-line-length = 120
