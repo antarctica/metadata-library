@@ -930,19 +930,13 @@ Python [manylinux](https://github.com/pypa/manylinux) system, and therefore cann
 
 ### Static security scanning
 
-To ensure the security of this API, source code is checked against [Bandit](https://github.com/PyCQA/bandit) for issues
-such as not sanitising user inputs or using weak cryptography.
+To ensure the security of this API, source code is checked against [Bandit](https://github.com/PyCQA/bandit)
+and enforced as part of [Python code linting](#code-linting-python).
 
 **Warning:** Bandit is a static analysis tool and can't check for issues that are only be detectable when running the
 application. As with all security tools, Bandit is an aid for spotting common mistakes, not a guarantee of secure code.
 
 Checks are run automatically in [Continuous Integration](#continuous-integration).
-
-To check locally:
-
-```shell
-$ poetry run bandit -r src/
-```
 
 #### `lxml` package (bandit)
 
@@ -950,9 +944,9 @@ Bandit identifies the use of `lxml` classes and methods as a security issue, spe
 
 > Element to parse untrusted XML data is known to be vulnerable to XML attacks
 
-The recommendation is to use a *safe* implementation of an XML processor that can avoid entity bombs and other XML 
-processing attacks. In (non-exhaustive) research, there does not appear to be such a processor that is recommended and
-easy to integrate.
+The recommendation is to use a *safe* implementation of an XML processor (`defusedxml`) that can avoid entity bombs and 
+other XML processing attacks. However, `defusedxml` does not offer all of the methods we need and there does not appear
+to be such another processor that does provide them.
 
 The main vulnerability this security issue relates to is processing user input that can't be trusted. This isn't really
 applicable to this library directly, but rather to where it's used in implementing projects. I.e. if this library is 
