@@ -11,6 +11,11 @@ from lxml.etree import ElementTree, fromstring  # nosec
 from app import create_app
 
 
+@pytest.fixture(autouse=True)
+def change_test_dir(request, monkeypatch):
+    monkeypatch.chdir(request.fspath.dirname)
+
+
 @pytest.fixture
 def app():
     app = create_app()

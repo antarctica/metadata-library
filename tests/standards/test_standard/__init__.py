@@ -1,5 +1,7 @@
 import json
 
+from pathlib import Path
+
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
 # We don't currently allow untrusted/user-provided XML so this is not a risk
@@ -42,7 +44,9 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
         self.config = kwargs
 
-        with open(f"tests/schemas/test_standard_v1.json") as configuration_schema_file:
+        with open(
+            Path().resolve().parent.joinpath("schemas/test_standard_v1.json"), mode="r"
+        ) as configuration_schema_file:
             configuration_schema_data = json.load(configuration_schema_file)
         self.schema = configuration_schema_data
 
