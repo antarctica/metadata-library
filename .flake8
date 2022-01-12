@@ -1,9 +1,10 @@
 [flake8]
-# C: mccabe (code complexity)
-# E: pycodestyle errors (PEP8 checks)
-# F: pyflakes (invalid code)
-# W: pycodestyle warnings (PEP8 checks)
-select = C,E,F,W
+# BLK: black (code formatting)
+# C:   mccabe (code complexity)
+# E:   pycodestyle errors (PEP8 checks)
+# F:   pyflakes (invalid code)
+# W:   pycodestyle warnings (PEP8 checks)
+select = BLK,C,E,F,W
 
 # E203: for Black compatibility (whitespace before ‘:')
 # W503: for Black compatibility (line break before binary operator)

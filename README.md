@@ -831,12 +831,12 @@ $ poetry install
 ### Code Style
 
 PEP-8 style and formatting guidelines must be used for this project, except the 80 character line limit.
-
-[Black](https://github.com/psf/black) is used to ensure compliance, configured in `pyproject.toml`.
+[Black](https://github.com/psf/black) is used for formatting, configured in `pyproject.toml` and enforced as part of
+[Python code linting](#code-linting-python).
 
 Black can be integrated with a range of editors, such as 
-[PyCharm](https://black.readthedocs.io/en/stable/integrations/editors.html#pycharm-intellij-idea), to perform 
-formatting automatically.
+[PyCharm](https://black.readthedocs.io/en/stable/integrations/editors.html#pycharm-intellij-idea), to apply formatting 
+automatically when saving files.
 
 To apply formatting manually:
 
@@ -844,7 +844,6 @@ To apply formatting manually:
 $ poetry run black src/ tests/
 ```
 
-To check compliance manually:
 ### Code Linting (Python)
 
 [Flake8](https://flake8.pycqa.org) and various extensions are used to lint Python files in the `bas_metadata_library` 
@@ -853,7 +852,6 @@ module. Specific checks, and any configuration options, are documented in the `.
 To check files manually:
 
 ```shell
-$ poetry run black --check src/ tests/
 $ poetry run flake8 src/
 ```
 

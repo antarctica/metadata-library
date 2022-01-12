@@ -31,9 +31,9 @@ backports-datetime-fromisoformat = "^1.0.0"  # backport
 importlib-resources = "^5.4.0"  # backport
 
 [tool.poetry.dev-dependencies]
-black = "^21.12b0"
 bandit = "^1.7.1"
 flake8 = "^4.0.1"
+flake8-black = "^0.2.3"
 Flask = "^2.0.2"
 jsonref = "^0.2"
 pytest = "^6.2.5"
