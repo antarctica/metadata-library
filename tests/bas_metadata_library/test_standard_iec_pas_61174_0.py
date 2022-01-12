@@ -55,20 +55,22 @@ def test_edge_case_invalid_configuration_v1_geometry_type():
     assert "'invalid' is not one of ['Loxodrome', 'Orthodrome']" in str(e.value)
 
 
-def test_configuration_v1_from_json_file():
+@pytest.mark.parametrize("config_name", list(configs_v1.keys()))
+def test_configuration_v1_from_json_file(config_name):
     configuration = MetadataRecordConfigV1()
-    configuration.load(file=Path("tests/resources/configs/iec_pas_61174_0_standard_minimal_record_v1.json"))
+    configuration.load(file=Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"))
     configuration.validate()
-    assert configuration.config == configs_v1["minimal_v1"]
+    assert configuration.config == configs_v1[config_name]
 
 
-def test_configuration_v1_from_json_string():
-    with open(str(Path("tests/resources/configs/iec_pas_61174_0_standard_minimal_record_v1.json")), mode="r") as file:
+@pytest.mark.parametrize("config_name", list(configs_v1.keys()))
+def test_configuration_v1_from_json_string(config_name):
+    with open(Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r") as file:
         config_str = file.read()
         configuration = MetadataRecordConfigV1()
         configuration.loads(string=config_str)
         configuration.validate()
-        assert configuration.config == configs_v1["minimal_v1"]
+        assert configuration.config == configs_v1[config_name]
 
 
 @pytest.mark.usefixtures("app_client")
@@ -82,7 +84,9 @@ def test_response(client, config_name):
 @pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
 def test_complete_record(client, config_name):
-    with open(f"tests/resources/records/iec-pas-61174-0/{config_name}-record.xml") as expected_contents_file:
+    with open(
+        Path().resolve().parent.joinpath(f"resources/records/iec-pas-61174-0/{config_name}-record.xml")
+    ) as expected_contents_file:
         expected_contents = expected_contents_file.read()
 
     response = client.get(f"/standards/{standard}/{config_name}")
@@ -133,7 +137,9 @@ def test_standard_version():
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
 def test_parse_existing_record_v1(config_name):
-    with open(f"tests/resources/records/iec-pas-61174-0/{config_name}-record.xml") as record_file:
+    with open(
+        Path().resolve().parent.joinpath(f"resources/records/iec-pas-61174-0/{config_name}-record.xml")
+    ) as record_file:
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)
@@ -182,6 +188,8 @@ def test_rtzp_encode():
 
 def test_rtzp_decode():
     record = MetadataRecord()
-    record.load_from_rtzp_archive(file=Path(f"./tests/resources/records/iec-pas-61174-0/minimal-v1-record.rtzp"))
+    record.load_from_rtzp_archive(
+        file=Path().resolve().parent.joinpath(f"resources/records/iec-pas-61174-0/minimal-v1-record.rtzp")
+    )
     config = record.make_config().config
     assert config == configs_v1["minimal_v1"]

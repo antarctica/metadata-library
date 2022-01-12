@@ -1,0 +1,7 @@
+{
+  "resource": {
+    "title": {
+      "value": "Test Record with entities: '>' (greater than), '\u00e5' (accent [a-ring]) and '\u00b5' (micro)"
+    }
+  }
+}

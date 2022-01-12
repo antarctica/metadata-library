@@ -12,6 +12,7 @@ import requests
 from flask import Flask, Response, jsonify
 from jsonref import JsonRef
 
+from bas_metadata_library import MetadataRecordConfig
 from bas_metadata_library.standards.iso_19115_1 import (
     MetadataRecordConfigV2 as ISO19115_1_MetadataRecordConfigV2,
     MetadataRecord as ISO19115_1_MetadataRecord,
@@ -133,6 +134,39 @@ def create_app():
                         src_schema_data, base_uri=f"file://{str(src_schema_path.absolute())}"
                     )
                 json.dump(dist_schema_data, dist_schema_file, indent=4)
+
+    @app.cli.command()
+    def capture_json_test_configs():
+        """Capture JSON encodings of test configurations for use in tests."""
+        standards = {
+            "test-standard": {
+                "configs": test_metadata_standard_configs,
+                "config_class": TestStandardMetadataRecordConfig,
+            },
+            "iso-19115-1": {
+                "configs": iso19115_1_standard_configs_v2,
+                "config_class": ISO19115_1_MetadataRecordConfigV2,
+            },
+            "iso-19115-2": {
+                "configs": iso19115_2_standard_configs_v2,
+                "config_class": ISO19115_2_MetadataRecordConfigV2,
+            },
+            "iec-pas-61174-0": {
+                "configs": iec_pas_61174_0_standard_configs_v1,
+                "config_class": IECPAS61174_0_MetadataRecordConfigV1,
+            },
+            "iec-pas-61174-1": {
+                "configs": iec_pas_61174_1_standard_configs_v1,
+                "config_class": IECPAS61174_1_MetadataRecordConfigV1,
+            },
+        }
+        for standard, parameters in standards.items():
+            for config_name, config in parameters["configs"].items():
+                print(f"Saving JSON encoding of '{standard}/{config_name}' test configuration")
+                configuration: MetadataRecordConfig = parameters["config_class"](**config)
+                json_config_path = Path(f"./tests/resources/configs/{standard}/{config_name}.json")
+                json_config_path.parent.mkdir(exist_ok=True, parents=True)
+                configuration.dump(file=json_config_path)
 
     @app.cli.command()
     def capture_test_records():

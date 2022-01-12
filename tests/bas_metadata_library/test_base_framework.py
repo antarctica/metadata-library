@@ -1,4 +1,6 @@
 # noinspection PyUnresolvedReferences
+from pathlib import Path
+
 import pytest
 
 from bas_metadata_library import MetadataRecordConfig, MetadataRecord, MetadataRecordElement
@@ -19,7 +21,9 @@ def test_record_class_configuration():
 
 
 def test_record_class_record():
-    with open(f"tests/resources/records/test-standard/minimal-record.xml") as record_file:
+    with open(
+        Path().resolve().parent.joinpath(f"resources/records/test-standard/minimal-record.xml"), mode="r"
+    ) as record_file:
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)
@@ -35,7 +39,9 @@ def test_element_class_config():
 
 
 def test_element_class_record():
-    with open(f"tests/resources/records/test-standard/minimal-record.xml") as record_file:
+    with open(
+        Path().resolve().parent.joinpath(f"resources/records/test-standard/minimal-record.xml"), mode="r"
+    ) as record_file:
         record_data = record_file.read()
     record = MetadataRecord(record=record_data)
     element = MetadataRecordElement(record=record, attributes={})
