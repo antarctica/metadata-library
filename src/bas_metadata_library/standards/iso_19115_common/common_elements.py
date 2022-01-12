@@ -73,7 +73,9 @@ class ResponsibleParty(MetadataRecordElement):
     ):
         super().__init__(record, attributes, parent_element, element_attributes, xpath)
 
-    def make_config(self) -> dict:
+    def make_config(  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
+        self,
+    ) -> dict:
         _ = {}
 
         individual_name = self.record.xpath(
@@ -219,7 +221,7 @@ class ResponsibleParty(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self):  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
         responsible_party_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}CI_ResponsibleParty")
 
         if "individual" in self.element_attributes and "name" in self.element_attributes["individual"]:
@@ -658,7 +660,9 @@ class Citation(MetadataRecordElement):
             xpath=f"{xpath}/gmd:CI_Citation",
         )
 
-    def make_config(self) -> dict:
+    def make_config(  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
+        self,
+    ) -> dict:
         _ = {}
 
         title_value = self.record.xpath(
@@ -727,7 +731,7 @@ class Citation(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self):  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
         citation_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}CI_Citation")
 
         if "title" in self.element_attributes:

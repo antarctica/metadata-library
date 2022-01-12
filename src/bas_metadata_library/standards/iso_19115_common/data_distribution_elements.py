@@ -156,7 +156,7 @@ class Distribution(MetadataRecordElement):
         for _transfer_option in _transfer_options:
             _transfer_option.make_element()
 
-    @staticmethod
+    @staticmethod  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
     def _match_distribution_options(distribution_formats: List[dict], transfer_options: List[dict]) -> List[dict]:
         """
         Utility method to match distribution formats and transfer options into complete or partial distribution objects.

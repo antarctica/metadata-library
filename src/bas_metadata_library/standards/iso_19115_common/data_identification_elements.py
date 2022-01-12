@@ -22,7 +22,9 @@ from bas_metadata_library.standards.iso_19115_common.utils import (
 
 
 class DataIdentification(MetadataRecordElement):
-    def make_config(self) -> dict:
+    def make_config(  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
+        self,
+    ) -> dict:
         _ = {}
 
         citation = Citation(
@@ -249,7 +251,7 @@ class DataIdentification(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self):  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
         data_identification_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}identificationInfo")
         data_identification_element = SubElement(data_identification_wrapper, f"{{{self.ns.gmd}}}MD_DataIdentification")
 
