@@ -1,4 +1,5 @@
 [flake8]
+# A:   builtins (variables named after builtin names)
 # B:   bug-bear (additional bad code checks)
 # B9:  bug-bear opinionated (additional, additional bad code checks)
 # BLK: black (code formatting)
