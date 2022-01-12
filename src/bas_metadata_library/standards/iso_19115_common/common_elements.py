@@ -903,7 +903,7 @@ class Identifier(MetadataRecordElement):
         parent_element: Element = None,
         element_attributes: dict = None,
         xpath: str = None,
-        identifier_container: Optional[str] = f"{{http://www.isotc211.org/2005/gmd}}identifier",
+        identifier_container: Optional[str] = "{{http://www.isotc211.org/2005/gmd}}identifier",
     ):
         super().__init__(
             record=record,

@@ -35,7 +35,8 @@ class DataDistribution(MetadataRecordElement):
             distribution = Distribution(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"{self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor[{distribution_index}]/gmd:MD_Distributor",
+                xpath=f"{self.xpath}/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor[{distribution_index}]/"
+                f"gmd:MD_Distributor",
             )
             _distribution = distribution.make_config()
             if bool(_distribution):

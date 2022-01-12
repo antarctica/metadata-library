@@ -108,7 +108,8 @@ class DataIdentification(MetadataRecordElement):
             graphic_overview = GraphicOverview(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview)[{graphic_index}]",
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/"
+                f"gmd:graphicOverview)[{graphic_index}]",
             )
             _graphic_overview = graphic_overview.make_config()
             if bool(_graphic_overview):
@@ -876,7 +877,8 @@ class OtherConstraints(MetadataRecordElement):
         _ = {}
 
         other_constraint_value = self.record.xpath(
-            f"{self.xpath}/gmd:otherConstraints/gco:CharacterString/text() | {self.xpath}/gmd:otherConstraints/gmx:Anchor/text()",
+            f"{self.xpath}/gmd:otherConstraints/gco:CharacterString/text() | "
+            f"{self.xpath}/gmd:otherConstraints/gmx:Anchor/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(other_constraint_value) == 1:
@@ -1108,7 +1110,8 @@ class SpatialResolution(MetadataRecordElement):
         _ = ""
 
         spatial_resolution_value = self.record.xpath(
-            f"{self.xpath}/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer/text()",
+            f"{self.xpath}/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/"
+            f"gco:Integer/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(spatial_resolution_value) == 1:

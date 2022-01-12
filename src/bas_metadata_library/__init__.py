@@ -7,7 +7,6 @@ import subprocess  # nosec
 from typing import Optional
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from zipfile import ZipFile
 from copy import deepcopy
 
 from importlib_resources import files as resource_file
