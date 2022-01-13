@@ -1056,6 +1056,9 @@ This project is distributed as a Python package, hosted in [PyPi](https://pypi.o
 Source and binary packages are built and published automatically using
 [Poetry](https://python-poetry.org) in [Continuous Deployment](#continuous-deployment).
 
+**Note:** Except for tagged releases, Python packages built in CD will use `0.0.0` as a version to indicate they are 
+not formal releases.
+
 ### Continuous Deployment
 
 A Continuous Deployment process using GitLab's CI/CD platform is configured in `.gitlab-ci.yml`.
