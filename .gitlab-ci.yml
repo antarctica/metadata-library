@@ -72,6 +72,7 @@ build:
   stage: 🏗 build
   needs: []
   script:
+    - "poetry version 0.0.0"
     - "poetry build"
   artifacts:
     paths:
