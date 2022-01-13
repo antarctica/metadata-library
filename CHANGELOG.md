@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+* GitLab issue template
+  [#177](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/177)
 * Flake8 Python linting, with various extensions
   [#168](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/168)
 * Internal Flask command to capture all test configurations as JSON files for testing load/dump methods

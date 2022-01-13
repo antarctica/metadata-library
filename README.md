@@ -1065,12 +1065,8 @@ A Continuous Deployment process using GitLab's CI/CD platform is configured in `
 
 ## Release procedure
 
-For all releases:
-
-1. create a release branch
-2. close release in `CHANGELOG.md`
-3. bump package version using `poetry version`
-4. push changes, merge the release branch into `main` and tag with version
+For all releases, create a release issue by creating a new [issue](#issue-tracking), with the 'release' issue template,
+and follow its instructions.
 
 ## Feedback
 
