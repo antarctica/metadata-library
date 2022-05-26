@@ -725,6 +725,12 @@ class Citation(MetadataRecordElement):
         if bool(_cited_responsible_party):
             _["contact"] = _cited_responsible_party
 
+        other_citation_details_value = self.record.xpath(
+            f"{self.xpath}/gmd:otherCitationDetails/gco:CharacterString/text()", namespaces=self.ns.nsmap()
+        )
+        if len(other_citation_details_value) == 1:
+            _["other_citation_details"] = other_citation_details_value[0]
+
         return _
 
     def make_element(self):  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
@@ -790,6 +796,13 @@ class Citation(MetadataRecordElement):
                 element_attributes=_contact_element_attributes,
             )
             responsible_party.make_element()
+
+        if "other_citation_details" in self.element_attributes:
+            other_citation_details_element = SubElement(citation_element, f"{{{self.ns.gmd}}}otherCitationDetails")
+            other_citation_details_value = SubElement(
+                other_citation_details_element, f"{{{self.ns.gco}}}CharacterString"
+            )
+            other_citation_details_value.text = str(self.element_attributes["other_citation_details"])
 
 
 class Date(MetadataRecordElement):

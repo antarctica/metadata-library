@@ -1066,6 +1066,14 @@
                 }
             }
         },
+        "other_citation_details": {
+            "title": "Other Citation Details",
+            "description": "Other Citation Details of the resource, or element related to the resource.",
+            "type": "string",
+            "examples": [
+                "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi"
+            ]
+        },
         "purpose": {
             "title": "Purpose",
             "description": "Resource summary.",
@@ -1569,6 +1577,9 @@
                 },
                 "edition": {
                     "$ref": "#/definitions/edition"
+                },
+                "other_citation_details": {
+                    "$ref": "#/definitions/other_citation_details"
                 },
                 "identifiers": {
                     "$ref": "#/definitions/identifiers"
