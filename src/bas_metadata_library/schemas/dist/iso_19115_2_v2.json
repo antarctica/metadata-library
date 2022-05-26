@@ -2905,6 +2905,14 @@
                         }
                     }
                 },
+                "other_citation_details": {
+                    "title": "Other Citation Details",
+                    "description": "Other Citation Details of the resource, or element related to the resource.",
+                    "type": "string",
+                    "examples": [
+                        "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi"
+                    ]
+                },
                 "purpose": {
                     "title": "Purpose",
                     "description": "Resource summary.",
@@ -5013,6 +5021,14 @@
                                 "1",
                                 "1.1",
                                 "2010-04-01"
+                            ]
+                        },
+                        "other_citation_details": {
+                            "title": "Other Citation Details",
+                            "description": "Other Citation Details of the resource, or element related to the resource.",
+                            "type": "string",
+                            "examples": [
+                                "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi"
                             ]
                         },
                         "identifiers": {

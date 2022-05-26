@@ -209,6 +209,9 @@
               </gmd:codeSpace>
             </gmd:RS_Identifier>
           </gmd:identifier>
+          <gmd:otherCitationDetails>
+            <gco:CharacterString>Author, A., Author, B., &amp; Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi</gco:CharacterString>
+          </gmd:otherCitationDetails>
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract>

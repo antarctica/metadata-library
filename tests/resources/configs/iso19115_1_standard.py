@@ -584,6 +584,7 @@ complete_record_v2 = {
         "spatial_resolution": 1000000,
         "lineage": "Example lineage statement",
         "edition": "2",
+        "other_citation_details": "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi",
         "identifiers": [
             {
                 "identifier": "https://doi.org/10.5072/r3qz22k64",
