@@ -106,6 +106,9 @@ base_simple_record_v2 = {
             },
         ],
         "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"},
+        "resource_formats": [
+            {"format": "GeoTIFF"},
+        ],
         "keywords": [{"terms": [{"term": "Atmospheric conditions"}], "type": "theme"}],
         "constraints": [
             {
@@ -260,6 +263,12 @@ base_complex_record_v2 = {
             },
         ],
         "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"},
+        "resource_formats": [
+            {
+                "format": "GeoTIFF",
+                "version": "2",
+            },
+        ],
         "keywords": [
             {
                 "terms": [
@@ -511,6 +520,22 @@ complete_record_v2 = {
                 "mime_type": "image/jpeg",
             },
         ],
+        "resource_formats": [
+            {
+                "format": "GeoTIFF",
+                "version": "2",
+                "amendment_number": "1.4",
+                "specification": "Final",
+                "file_decompression_technique": "ZIP",
+            },
+            {
+                "format": "NetCDF",
+                "version": "4",
+                "amendment_number": "1.1",
+                "specification": "NCEI NetCDF Templates v2.0",
+                "file_decompression_technique": "ZIP",
+            },
+        ],
         "keywords": [
             {
                 "terms": [
@@ -623,6 +648,9 @@ complete_record_v2 = {
                         "format": "netCDF",
                         "version": "4",
                         "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
+                        "amendment_number": "1.2",
+                        "specification": "Final",
+                        "file_decompression_technique": "ZIP",
                     },
                     "transfer_option": {
                         "online_resource": {

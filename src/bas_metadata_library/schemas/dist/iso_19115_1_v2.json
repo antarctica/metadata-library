@@ -643,6 +643,30 @@
                     "examples": [
                         "1.2"
                     ]
+                },
+                "amendment_number": {
+                    "title": "Amendment Number",
+                    "description": "Format version amendment number",
+                    "type": "string",
+                    "examples": [
+                        "1.0"
+                    ]
+                },
+                "specification": {
+                    "title": "Specification",
+                    "description": "The subset name, profile, or product specification of the format",
+                    "type": "string",
+                    "examples": [
+                        "Final"
+                    ]
+                },
+                "file_decompression_technique": {
+                    "title": "File decompression technique",
+                    "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                    "type": "string",
+                    "examples": [
+                        "ZIP"
+                    ]
                 }
             }
         },
@@ -1098,6 +1122,14 @@
             "examples": [
                 "completed"
             ]
+        },
+        "resource_formats": {
+            "title": "Resource formats",
+            "description": "Provides a description of the formats of the resource(s)",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/format"
+            }
         },
         "reference_system_info": {
             "title": "Reference system information",
@@ -1592,6 +1624,9 @@
                 },
                 "graphic_overviews": {
                     "$ref": "#/definitions/graphic_overviews"
+                },
+                "resource_formats": {
+                    "$ref": "#/definitions/resource_formats"
                 },
                 "keywords": {
                     "$ref": "#/definitions/keywords"

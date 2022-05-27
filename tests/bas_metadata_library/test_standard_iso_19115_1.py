@@ -597,6 +597,57 @@ def test_graphic_overviews(get_record_response, config_name):
             assert mime_type_element is True
 
 
+@pytest.mark.usefixtures("get_record_response")
+@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
+def test_resource_formats(get_record_response, config_name):
+    record = get_record_response(standard=standard, config=config_name)
+    config = configs_safe_v2[config_name]
+
+    if "identification" not in config or "resource_formats" not in config["identification"]:
+        pytest.skip("record does not contain resource formats")
+
+    for resource_format in config["identification"]["resource_formats"]:
+        resource_format_elements = record.xpath(
+            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceFormat/gmd:MD_Format[gmd:name[gco:CharacterString[text()='{resource_format['format']}']]]",
+            namespaces=namespaces.nsmap(),
+        )
+        assert len(resource_format_elements) == 1
+
+        format_name_element = resource_format_elements[0].xpath(
+            f"./gmd:name/gco:CharacterString/text() = '{resource_format['format']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert format_name_element is True
+
+        if "version" in resource_format:
+            version_element = resource_format_elements[0].xpath(
+                f"./gmd:version/gco:CharacterString/text() = '{resource_format['version']}'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert version_element is True
+
+        if "amendment_number" in resource_format:
+            amendment_number_element = resource_format_elements[0].xpath(
+                f"./gmd:amendmentNumber/gco:CharacterString/text() = '{resource_format['amendment_number']}'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert amendment_number_element is True
+
+        if "specification" in resource_format:
+            specification_element = resource_format_elements[0].xpath(
+                f"./gmd:specification/gco:CharacterString/text() = '{resource_format['specification']}'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert specification_element is True
+
+        if "file_decompression_technique" in resource_format:
+            file_decompression_technique_element = resource_format_elements[0].xpath(
+                f"./gmd:fileDecompressionTechnique/gco:CharacterString/text() = '{resource_format['file_decompression_technique']}'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert file_decompression_technique_element is True
+
+
 def _resolve_descriptive_keywords_xpaths(config) -> List[dict]:
     keywords = []
     for keyword in config:

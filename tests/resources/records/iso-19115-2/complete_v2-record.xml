@@ -520,6 +520,44 @@
           </gmd:fileType>
         </gmd:MD_BrowseGraphic>
       </gmd:graphicOverview>
+      <gmd:resourceFormat>
+        <gmd:MD_Format>
+          <gmd:name>
+            <gco:CharacterString>GeoTIFF</gco:CharacterString>
+          </gmd:name>
+          <gmd:version>
+            <gco:CharacterString>2</gco:CharacterString>
+          </gmd:version>
+          <gmd:amendmentNumber>
+            <gco:CharacterString>1.4</gco:CharacterString>
+          </gmd:amendmentNumber>
+          <gmd:specification>
+            <gco:CharacterString>Final</gco:CharacterString>
+          </gmd:specification>
+          <gmd:fileDecompressionTechnique>
+            <gco:CharacterString>ZIP</gco:CharacterString>
+          </gmd:fileDecompressionTechnique>
+        </gmd:MD_Format>
+      </gmd:resourceFormat>
+      <gmd:resourceFormat>
+        <gmd:MD_Format>
+          <gmd:name>
+            <gco:CharacterString>NetCDF</gco:CharacterString>
+          </gmd:name>
+          <gmd:version>
+            <gco:CharacterString>4</gco:CharacterString>
+          </gmd:version>
+          <gmd:amendmentNumber>
+            <gco:CharacterString>1.1</gco:CharacterString>
+          </gmd:amendmentNumber>
+          <gmd:specification>
+            <gco:CharacterString>NCEI NetCDF Templates v2.0</gco:CharacterString>
+          </gmd:specification>
+          <gmd:fileDecompressionTechnique>
+            <gco:CharacterString>ZIP</gco:CharacterString>
+          </gmd:fileDecompressionTechnique>
+        </gmd:MD_Format>
+      </gmd:resourceFormat>
       <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
           <gmd:keyword>
@@ -808,17 +846,26 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format id="bml-8a4e1a367baa41f18011c36f014fa96cfa66e36b-fmt">
+            <gmd:MD_Format id="bml-ada6a5488782b34631289314f66df8637769bc9f-fmt">
               <gmd:name>
                 <gmx:Anchor xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca" xlink:actuate="onRequest">netCDF</gmx:Anchor>
               </gmd:name>
               <gmd:version>
                 <gco:CharacterString>4</gco:CharacterString>
               </gmd:version>
+              <gmd:amendmentNumber>
+                <gco:CharacterString>1.2</gco:CharacterString>
+              </gmd:amendmentNumber>
+              <gmd:specification>
+                <gco:CharacterString>Final</gco:CharacterString>
+              </gmd:specification>
+              <gmd:fileDecompressionTechnique>
+                <gco:CharacterString>ZIP</gco:CharacterString>
+              </gmd:fileDecompressionTechnique>
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="bml-8a4e1a367baa41f18011c36f014fa96cfa66e36b-tfo">
+            <gmd:MD_DigitalTransferOptions id="bml-ada6a5488782b34631289314f66df8637769bc9f-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>MB</gco:CharacterString>
               </gmd:unitsOfDistribution>
