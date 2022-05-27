@@ -1446,6 +1446,30 @@
                                     "examples": [
                                         "1.2"
                                     ]
+                                },
+                                "amendment_number": {
+                                    "title": "Amendment Number",
+                                    "description": "Format version amendment number",
+                                    "type": "string",
+                                    "examples": [
+                                        "1.0"
+                                    ]
+                                },
+                                "specification": {
+                                    "title": "Specification",
+                                    "description": "The subset name, profile, or product specification of the format",
+                                    "type": "string",
+                                    "examples": [
+                                        "Final"
+                                    ]
+                                },
+                                "file_decompression_technique": {
+                                    "title": "File decompression technique",
+                                    "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                                    "type": "string",
+                                    "examples": [
+                                        "ZIP"
+                                    ]
                                 }
                             }
                         },
@@ -1591,6 +1615,30 @@
                                         "type": "string",
                                         "examples": [
                                             "1.2"
+                                        ]
+                                    },
+                                    "amendment_number": {
+                                        "title": "Amendment Number",
+                                        "description": "Format version amendment number",
+                                        "type": "string",
+                                        "examples": [
+                                            "1.0"
+                                        ]
+                                    },
+                                    "specification": {
+                                        "title": "Specification",
+                                        "description": "The subset name, profile, or product specification of the format",
+                                        "type": "string",
+                                        "examples": [
+                                            "Final"
+                                        ]
+                                    },
+                                    "file_decompression_technique": {
+                                        "title": "File decompression technique",
+                                        "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                                        "type": "string",
+                                        "examples": [
+                                            "ZIP"
                                         ]
                                     }
                                 }
@@ -2037,6 +2085,30 @@
                             "type": "string",
                             "examples": [
                                 "1.2"
+                            ]
+                        },
+                        "amendment_number": {
+                            "title": "Amendment Number",
+                            "description": "Format version amendment number",
+                            "type": "string",
+                            "examples": [
+                                "1.0"
+                            ]
+                        },
+                        "specification": {
+                            "title": "Specification",
+                            "description": "The subset name, profile, or product specification of the format",
+                            "type": "string",
+                            "examples": [
+                                "Final"
+                            ]
+                        },
+                        "file_decompression_technique": {
+                            "title": "File decompression technique",
+                            "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                            "type": "string",
+                            "examples": [
+                                "ZIP"
                             ]
                         }
                     }
@@ -2937,6 +3009,71 @@
                     "examples": [
                         "completed"
                     ]
+                },
+                "resource_formats": {
+                    "title": "Resource formats",
+                    "description": "Provides a description of the formats of the resource(s)",
+                    "type": "array",
+                    "items": {
+                        "title": "Format",
+                        "description": "Data format the resource is available in.",
+                        "type": "object",
+                        "required": [
+                            "format"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "format": {
+                                "title": "Format",
+                                "description": "Name of the data format.",
+                                "type": "string",
+                                "examples": [
+                                    "GeoPackage"
+                                ]
+                            },
+                            "href": {
+                                "title": "URL",
+                                "description": "URL identifying the data format.",
+                                "type": "string",
+                                "format": "uri",
+                                "examples": [
+                                    "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
+                                ]
+                            },
+                            "version": {
+                                "title": "Version",
+                                "description": "Version/Edition of the data format.",
+                                "type": "string",
+                                "examples": [
+                                    "1.2"
+                                ]
+                            },
+                            "amendment_number": {
+                                "title": "Amendment Number",
+                                "description": "Format version amendment number",
+                                "type": "string",
+                                "examples": [
+                                    "1.0"
+                                ]
+                            },
+                            "specification": {
+                                "title": "Specification",
+                                "description": "The subset name, profile, or product specification of the format",
+                                "type": "string",
+                                "examples": [
+                                    "Final"
+                                ]
+                            },
+                            "file_decompression_technique": {
+                                "title": "File decompression technique",
+                                "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                                "type": "string",
+                                "examples": [
+                                    "ZIP"
+                                ]
+                            }
+                        }
+                    }
                 },
                 "reference_system_info": {
                     "title": "Reference system information",
@@ -5453,6 +5590,71 @@
                                 }
                             }
                         },
+                        "resource_formats": {
+                            "title": "Resource formats",
+                            "description": "Provides a description of the formats of the resource(s)",
+                            "type": "array",
+                            "items": {
+                                "title": "Format",
+                                "description": "Data format the resource is available in.",
+                                "type": "object",
+                                "required": [
+                                    "format"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "format": {
+                                        "title": "Format",
+                                        "description": "Name of the data format.",
+                                        "type": "string",
+                                        "examples": [
+                                            "GeoPackage"
+                                        ]
+                                    },
+                                    "href": {
+                                        "title": "URL",
+                                        "description": "URL identifying the data format.",
+                                        "type": "string",
+                                        "format": "uri",
+                                        "examples": [
+                                            "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
+                                        ]
+                                    },
+                                    "version": {
+                                        "title": "Version",
+                                        "description": "Version/Edition of the data format.",
+                                        "type": "string",
+                                        "examples": [
+                                            "1.2"
+                                        ]
+                                    },
+                                    "amendment_number": {
+                                        "title": "Amendment Number",
+                                        "description": "Format version amendment number",
+                                        "type": "string",
+                                        "examples": [
+                                            "1.0"
+                                        ]
+                                    },
+                                    "specification": {
+                                        "title": "Specification",
+                                        "description": "The subset name, profile, or product specification of the format",
+                                        "type": "string",
+                                        "examples": [
+                                            "Final"
+                                        ]
+                                    },
+                                    "file_decompression_technique": {
+                                        "title": "File decompression technique",
+                                        "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                                        "type": "string",
+                                        "examples": [
+                                            "ZIP"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
                         "keywords": {
                             "title": "Keywords",
                             "description": "Sets of keywords describing characteristics or aspects of the resource, or that relate the resource to or within other resources. Different keyword sets should be used for different sources and types (e.g. theme, location, sensor).",
@@ -6781,6 +6983,30 @@
                                                     "type": "string",
                                                     "examples": [
                                                         "1.2"
+                                                    ]
+                                                },
+                                                "amendment_number": {
+                                                    "title": "Amendment Number",
+                                                    "description": "Format version amendment number",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "1.0"
+                                                    ]
+                                                },
+                                                "specification": {
+                                                    "title": "Specification",
+                                                    "description": "The subset name, profile, or product specification of the format",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "Final"
+                                                    ]
+                                                },
+                                                "file_decompression_technique": {
+                                                    "title": "File decompression technique",
+                                                    "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "ZIP"
                                                     ]
                                                 }
                                             }

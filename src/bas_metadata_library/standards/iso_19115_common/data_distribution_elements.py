@@ -7,7 +7,7 @@ from lxml.etree import SubElement  # nosec - see 'lxml` package (bandit)' sectio
 
 from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement
 from bas_metadata_library.standards.iso_19115_common.common_elements import (
-    AnchorElement,
+    Format,
     OnlineResource,
     ResponsibleParty,
 )
@@ -253,72 +253,21 @@ class Distributor(MetadataRecordElement):
 
 class DistributorFormat(MetadataRecordElement):
     def make_config(self) -> dict:
-        _ = {}
+        distributor_format = Format(record=self.record, attributes=self.attributes, xpath=self.xpath)
+        _distributor_format = distributor_format.make_config()
 
-        format_id = self.record.xpath(f"{self.xpath}/gmd:MD_Format/@id", namespaces=self.ns.nsmap())
-        if len(format_id) == 1:
-            _id: str = format_id[0].replace("bml-", "")
-            _id = _id.replace("-fmt", "")
-            _["_id"] = _id
-
-        format_name = self.record.xpath(
-            f"{self.xpath}/gmd:MD_Format/gmd:name/gco:CharacterString/text() | "
-            f"{self.xpath}/gmd:MD_Format/gmd:name/gmx:Anchor/text()",
-            namespaces=self.ns.nsmap(),
-        )
-        if len(format_name) == 1:
-            _["format"] = format_name[0]
-
-        format_href = self.record.xpath(
-            f"{self.xpath}/gmd:MD_Format/gmd:name/gmx:Anchor/@xlink:href",
-            namespaces=self.ns.nsmap(),
-        )
-        if len(format_href) == 1:
-            _["href"] = format_href[0]
-
-        version_value = self.record.xpath(
-            f"{self.xpath}/gmd:MD_Format/gmd:version/gco:CharacterString/text()",
-            namespaces=self.ns.nsmap(),
-        )
-        if len(version_value) == 1:
-            _["version"] = version_value[0]
-
-        if list(_.keys()) == ["_id"]:
-            _ = {}
-        return _
+        return _distributor_format
 
     def make_element(self):
-        distribution_format_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}distributorFormat")
-        distribution_format_element = SubElement(
-            distribution_format_wrapper,
-            f"{{{self.ns.gmd}}}MD_Format",
-            attrib={"id": f"bml-{self.element_attributes['_id']}-fmt"},
+        distributor_format_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}distributorFormat")
+
+        distributor_format = Format(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=distributor_format_element,
+            element_attributes=self.element_attributes,
         )
-
-        format_name_element = SubElement(distribution_format_element, f"{{{self.ns.gmd}}}name")
-        if "href" in self.element_attributes:
-            anchor = AnchorElement(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=format_name_element,
-                element_attributes=self.element_attributes,
-                element_value=self.element_attributes["format"],
-            )
-            anchor.make_element()
-        else:
-            format_name_value = SubElement(format_name_element, f"{{{self.ns.gco}}}CharacterString")
-            format_name_value.text = self.element_attributes["format"]
-
-        if "version" in self.element_attributes:
-            format_version_element = SubElement(distribution_format_element, f"{{{self.ns.gmd}}}version")
-            format_version_value = SubElement(format_version_element, f"{{{self.ns.gco}}}CharacterString")
-            format_version_value.text = self.element_attributes["version"]
-        else:
-            SubElement(
-                distribution_format_element,
-                f"{{{self.ns.gmd}}}version",
-                attrib={f"{{{self.ns.gco}}}nilReason": "missing"},
-            )
+        distributor_format.make_element()
 
 
 class DistributorTransferOption(MetadataRecordElement):

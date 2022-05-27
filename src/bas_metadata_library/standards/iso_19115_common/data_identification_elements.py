@@ -6,6 +6,7 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import (
     AnchorElement,
     CharacterSet,
     Citation,
+    Format,
     Identifier,
     Language,
     MaintenanceInformation,
@@ -115,6 +116,26 @@ class DataIdentification(MetadataRecordElement):
                 _graphic_overviews.append(_graphic_overview)
         if len(_graphic_overviews) > 0:
             _["graphic_overviews"] = _graphic_overviews
+
+        _resource_formats = []
+        resources_formats_length = int(
+            self.record.xpath(
+                f"count({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceFormat)",
+                namespaces=self.ns.nsmap(),
+            )
+        )
+        for resource_format_index in range(1, resources_formats_length + 1):
+            resource_option_format = ResourceFormat(
+                record=self.record,
+                attributes=self.attributes,
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceFormat)"
+                f"[{resource_format_index}]",
+            )
+            _resource_option_format = resource_option_format.make_config()
+            if bool(_resource_option_format):
+                _resource_formats.append(_resource_option_format)
+        if len(_resource_formats) > 0:
+            _["resource_formats"] = _resource_formats
 
         _descriptive_keywords = []
         keywords_length = int(
@@ -329,6 +350,16 @@ class DataIdentification(MetadataRecordElement):
                     element_attributes=graphic_overview_attributes,
                 )
                 graphic_overview.make_element()
+
+        if "resource_formats" in self.attributes["identification"]:
+            for resource_format_attributes in self.attributes["identification"]["resource_formats"]:
+                resource_format = ResourceFormat(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_identification_element,
+                    element_attributes=resource_format_attributes,
+                )
+                resource_format.make_element()
 
         if "keywords" in self.attributes["identification"]:
             for keyword_attributes in self.attributes["identification"]["keywords"]:
@@ -1537,3 +1568,22 @@ class TemporalExtent(MetadataRecordElement):
                 date_datetime=self.element_attributes["period"]["end"]["date"],
                 date_precision=_date_precision,
             )
+
+
+class ResourceFormat(MetadataRecordElement):
+    def make_config(self) -> dict:
+        resource_format = Format(record=self.record, attributes=self.attributes, xpath=self.xpath)
+        _resource_format = resource_format.make_config()
+
+        return _resource_format
+
+    def make_element(self):
+        resource_format_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceFormat")
+
+        resource_format = Format(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=resource_format_element,
+            element_attributes=self.element_attributes,
+        )
+        resource_format.make_element()

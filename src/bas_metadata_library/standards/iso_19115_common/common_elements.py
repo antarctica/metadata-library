@@ -999,3 +999,131 @@ class AnchorElement(MetadataRecordElement):
         anchor = SubElement(self.parent_element, f"{{{self.ns.gmx}}}Anchor", attrib=attributes)
         if self.text is not None:
             anchor.text = self.text
+
+
+class Format(MetadataRecordElement):
+    def __init__(
+        self,
+        record: MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict = None,
+        xpath: str = None,
+    ):
+        super().__init__(
+            record=record,
+            attributes=attributes,
+            parent_element=parent_element,
+            element_attributes=element_attributes,
+            xpath=f"{xpath}/gmd:MD_Format",
+        )
+
+    def make_config(self) -> dict:
+        _ = {}
+
+        format_id = self.record.xpath(f"{self.xpath}/@id", namespaces=self.ns.nsmap())
+        if len(format_id) == 1:
+            _id: str = format_id[0].replace("bml-", "")
+            _id = _id.replace("-fmt", "")
+            _["_id"] = _id
+
+        format_name = self.record.xpath(
+            f"{self.xpath}/gmd:name/gco:CharacterString/text() | " f"{self.xpath}/gmd:name/gmx:Anchor/text()",
+            namespaces=self.ns.nsmap(),
+        )
+        if len(format_name) == 1:
+            _["format"] = format_name[0]
+
+        format_href = self.record.xpath(
+            f"{self.xpath}/gmd:name/gmx:Anchor/@xlink:href",
+            namespaces=self.ns.nsmap(),
+        )
+        if len(format_href) == 1:
+            _["href"] = format_href[0]
+
+        version_value = self.record.xpath(
+            f"{self.xpath}/gmd:version/gco:CharacterString/text()",
+            namespaces=self.ns.nsmap(),
+        )
+        if len(version_value) == 1:
+            _["version"] = version_value[0]
+
+        amendment_number = self.record.xpath(
+            f"{self.xpath}/gmd:amendmentNumber/gco:CharacterString/text()",
+            namespaces=self.ns.nsmap(),
+        )
+        if len(amendment_number) == 1:
+            _["amendment_number"] = amendment_number[0]
+
+        specification = self.record.xpath(
+            f"{self.xpath}/gmd:specification/gco:CharacterString/text()",
+            namespaces=self.ns.nsmap(),
+        )
+        if len(specification) == 1:
+            _["specification"] = specification[0]
+
+        file_decompression_technique = self.record.xpath(
+            f"{self.xpath}/gmd:fileDecompressionTechnique/gco:CharacterString/text()",
+            namespaces=self.ns.nsmap(),
+        )
+        if len(file_decompression_technique) == 1:
+            _["file_decompression_technique"] = file_decompression_technique[0]
+
+        if list(_.keys()) == ["_id"]:
+            _ = {}
+        return _
+
+    def make_element(self):
+
+        if "_id" in self.element_attributes:
+            format_element = SubElement(
+                self.parent_element,
+                f"{{{self.ns.gmd}}}MD_Format",
+                attrib={"id": f"bml-{self.element_attributes['_id']}-fmt"},
+            )
+        else:
+            format_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}MD_Format")
+
+        format_name_element = SubElement(format_element, f"{{{self.ns.gmd}}}name")
+        if "href" in self.element_attributes:
+            anchor = AnchorElement(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=format_name_element,
+                element_attributes=self.element_attributes,
+                element_value=self.element_attributes["format"],
+            )
+            anchor.make_element()
+        else:
+            format_name_value = SubElement(format_name_element, f"{{{self.ns.gco}}}CharacterString")
+            format_name_value.text = self.element_attributes["format"]
+
+        if "version" in self.element_attributes:
+            version_element = SubElement(format_element, f"{{{self.ns.gmd}}}version")
+            version_value = SubElement(version_element, f"{{{self.ns.gco}}}CharacterString")
+            version_value.text = self.element_attributes["version"]
+        else:
+            SubElement(
+                format_element,
+                f"{{{self.ns.gmd}}}version",
+                attrib={f"{{{self.ns.gco}}}nilReason": "missing"},
+            )
+
+        if "amendment_number" in self.element_attributes:
+            amendment_number_element = SubElement(format_element, f"{{{self.ns.gmd}}}amendmentNumber")
+            amendment_number_value = SubElement(amendment_number_element, f"{{{self.ns.gco}}}CharacterString")
+            amendment_number_value.text = self.element_attributes["amendment_number"]
+
+        if "specification" in self.element_attributes:
+            specification_element = SubElement(format_element, f"{{{self.ns.gmd}}}specification")
+            specification_element_value = SubElement(specification_element, f"{{{self.ns.gco}}}CharacterString")
+            specification_element_value.text = self.element_attributes["specification"]
+
+        if "file_decompression_technique" in self.element_attributes:
+            file_decompression_technique_element = SubElement(
+                format_element, f"{{{self.ns.gmd}}}fileDecompressionTechnique"
+            )
+            file_decompression_technique_value = SubElement(
+                file_decompression_technique_element, f"{{{self.ns.gco}}}CharacterString"
+            )
+            file_decompression_technique_value.text = self.element_attributes["file_decompression_technique"]
