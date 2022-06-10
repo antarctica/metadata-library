@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Version 2 configurations for ISO 19115-1 and ISO 19115-2 to support backwards incompatible schema changes
   [#182](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/182)
+* Documentation on how to add a new configuration version for an existing standard
+  [#196](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/196)
 
 ### Changed
 
