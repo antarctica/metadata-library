@@ -90,16 +90,71 @@ class MetadataRecordConfigV2(_MetadataRecordConfig):
         return json.dumps(encode_config_for_json(config=deepcopy(self.config)))
 
 
+class MetadataRecordConfigV3(_MetadataRecordConfig):
+    """
+    Overloaded base MetadataRecordConfig class
+
+    Defines version 3 of the JSON Schema used for this metadata standard
+    """
+
+    def __init__(self, **kwargs: dict):
+        super().__init__(**kwargs)
+
+        self.config = kwargs
+
+        schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath("iso_19115_1_v3.json")
+        with open(schema_path, mode="r") as schema_file:
+            schema_data = json.load(schema_file)
+        self.schema = schema_data
+
+    def validate(self) -> None:
+        if self.schema is not None:
+            _config = encode_config_for_json(config=deepcopy(self.config))
+            return validate(instance=_config, schema=self.schema)
+
+    def load(self, file: Path) -> None:
+        with open(str(file), mode="r") as file:
+            self.config = decode_config_from_json(config=json.load(fp=file))
+
+    def loads(self, string: str) -> None:
+        self.config = decode_config_from_json(config=json.loads(s=string))
+
+    def dump(self, file: Path) -> None:
+        with open(str(file), mode="w") as file:
+            json.dump(encode_config_for_json(config=deepcopy(self.config)), file)
+
+    def dumps(self) -> str:
+        return json.dumps(encode_config_for_json(config=deepcopy(self.config)))
+
+    def upgrade_from_v2_config(self, v2_config: MetadataRecordConfigV2) -> None:
+        """
+        Converts a v3 Metadata Configuration instance into a v2 Metadata Configuration instance.
+
+        :type v2_config MetadataRecordConfigV2
+        :param v2_config record configuration as a MetadataRecordConfigV2 instance
+        """
+        self.config = v2_config.config
+
+    def downgrade_to_v2_config(self) -> MetadataRecordConfigV2:
+        """
+        Converts a v3 Metadata Configuration instance into a v2 Metadata Configuration instance.
+
+        :rtype MetadataRecordConfigV2
+        :returns record configuration as a MetadataRecordConfigV2 instance
+        """
+        return MetadataRecordConfigV2(**self.config)
+
+
 class MetadataRecord(_MetadataRecord):
     """
     Overloaded base MetadataRecordConfig class
 
     Defines the root element, and it's sub-elements, for this metadata standard
 
-    Expects/requires record configurations to use version 2 of the configuration schema for this standard
+    Expects/requires record configurations to use version 3 of the configuration schema for this standard
     """
 
-    def __init__(self, configuration: MetadataRecordConfigV2 = None, record: str = None):
+    def __init__(self, configuration: MetadataRecordConfigV3 = None, record: str = None):
         self.ns = Namespaces()
         self.attributes = {}
         self.record = Element(
@@ -118,8 +173,8 @@ class MetadataRecord(_MetadataRecord):
 
         self.metadata_record = ISOMetadataRecord(record=self.record, attributes=self.attributes, xpath=self.xpath)
 
-    def make_config(self) -> MetadataRecordConfigV2:
-        return MetadataRecordConfigV2(**self.metadata_record.make_config())
+    def make_config(self) -> MetadataRecordConfigV3:
+        return MetadataRecordConfigV3(**self.metadata_record.make_config())
 
     def make_element(self) -> Element:
         return self.metadata_record.make_element()
