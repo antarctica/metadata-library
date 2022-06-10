@@ -717,14 +717,15 @@ To add a new standard:
 
 1. create a new module under `bas_metadata_library.standards`, e.g. `bas_metadata_library.standards.foo_v1/__init__.py`
 2. in this module, overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed
-3. create a suitable metadata configuration JSON schema in `bas_metadata_library.schemas.src`
+    * version the `MetadataRecordConfig` class, e.g. `MetadataRecordConfigV1` 
+3. create a suitable metadata configuration JSON schema in `bas_metadata_library.schemas.src`, 
    e.g. `bas_metadata_library.schemas.src.foo_v1.json`
 4. update the `generate_schemas` method in `app.py` to generate distribution schemas
 5. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
    the distribution schema within the BAS Metadata Standards website
 6. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
    `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
-7. add a route `app.py` for generating test records for the new standard
+7. add a route in `app.py` for generating test records for the new standard
 8. update the `capture_test_records` method in `app.py` to generate and save test records
 9. add relevant [tests](#testing) with methods to test each metadata element class and test records
 
