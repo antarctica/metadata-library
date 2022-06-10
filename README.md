@@ -312,22 +312,6 @@ record = MetadataRecord(configuration=configuration)
 record.generate_rtzp_archive(file=Path(output_path))
 ```
 
-### Decode an ISO 19115 metadata record
-
-```python
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecord
-
-with open(f"minimal-record.xml") as record_file:
-    record_data = record_file.read()
-
-record = MetadataRecord(record=record_data)
-configuration = record.make_config()
-minimal_record_config = configuration.config
-
-# output configuration
-print(minimal_record_config)
-```
-
 ### Decode an IEC 61174 route information record
 
 To decode from a RTZ file:
@@ -374,11 +358,11 @@ JSON file or JSON string respectively:
 ```python
 from pathlib import Path
 
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3
 
 input_path = str('/path/to/file.json')
 
-configuration = MetadataRecordConfigV2()
+configuration = MetadataRecordConfigV3()
 configuration.load(file=Path(input_path))
 ```
 
@@ -393,7 +377,7 @@ encoded file or string respectively:
 from datetime import date
 from pathlib import Path
 
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3
 
 output_path = str('/path/to/file.json')
 
@@ -424,7 +408,7 @@ minimal_record_config = {
         },
     },
 }
-configuration = MetadataRecordConfigV2(**minimal_record_config)
+configuration = MetadataRecordConfigV3(**minimal_record_config)
 configuration.dump(file=Path(output_path))
 ```
 
@@ -439,7 +423,7 @@ standard. Records are not validated automatically, and so must be validated expl
 from datetime import date
 
 from bas_metadata_library import RecordValidationError
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecord
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3, MetadataRecord
 
 minimal_record_config = {
     "hierarchy_level": "dataset",
@@ -733,14 +717,15 @@ To add a new standard:
 
 1. create a new module under `bas_metadata_library.standards`, e.g. `bas_metadata_library.standards.foo_v1/__init__.py`
 2. in this module, overload the `Namespaces`, `MetadataRecordConfig` and `MetadataRecord` classes as needed
-3. create a suitable metadata configuration JSON schema in `bas_metadata_library.schemas.src`
+    * version the `MetadataRecordConfig` class, e.g. `MetadataRecordConfigV1` 
+3. create a suitable metadata configuration JSON schema in `bas_metadata_library.schemas.src`, 
    e.g. `bas_metadata_library.schemas.src.foo_v1.json`
 4. update the `generate_schemas` method in `app.py` to generate distribution schemas
 5. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
    the distribution schema within the BAS Metadata Standards website
 6. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
    `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
-7. add a route `app.py` for generating test records for the new standard
+7. add a route in `app.py` for generating test records for the new standard
 8. update the `capture_test_records` method in `app.py` to generate and save test records
 9. add relevant [tests](#testing) with methods to test each metadata element class and test records
 

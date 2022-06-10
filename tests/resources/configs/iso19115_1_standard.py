@@ -28,7 +28,6 @@ minimal_record_v2 = {
     },
 }
 
-# noinspection DuplicatedCode
 base_simple_record_v2 = {
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
     "hierarchy_level": "dataset",
@@ -154,7 +153,6 @@ base_simple_record_v2 = {
     ],
 }
 
-# noinspection DuplicatedCode
 base_complex_record_v2 = {
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
     "hierarchy_level": "dataset",
@@ -359,7 +357,7 @@ base_complex_record_v2 = {
     ],
 }
 
-# noinspection DuplicatedCode,HttpUrlsUsage
+# noinspection HttpUrlsUsage
 complete_record_v2 = {
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
     "hierarchy_level": "dataset",
