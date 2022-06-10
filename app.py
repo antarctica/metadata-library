@@ -15,10 +15,12 @@ from jsonref import JsonRef
 from bas_metadata_library import MetadataRecordConfig
 from bas_metadata_library.standards.iso_19115_1 import (
     MetadataRecordConfigV2 as ISO19115_1_MetadataRecordConfigV2,
+    MetadataRecordConfigV3 as ISO19115_1_MetadataRecordConfigV3,
     MetadataRecord as ISO19115_1_MetadataRecord,
 )
 from bas_metadata_library.standards.iso_19115_2 import (
     MetadataRecordConfigV2 as ISO19115_2_MetadataRecordConfigV2,
+    MetadataRecordConfigV3 as ISO19115_2_MetadataRecordConfigV3,
     MetadataRecord as ISO19115_2_MetadataRecord,
 )
 from bas_metadata_library.standards.iec_pas_61174_0_v1 import (
@@ -32,9 +34,11 @@ from bas_metadata_library.standards.iec_pas_61174_1_v1 import (
 
 from tests.resources.configs.iso19115_1_standard import (
     configs_v2_all as iso19115_1_standard_configs_v2,
+    configs_v3_all as iso19115_1_standard_configs_v3,
 )
 from tests.resources.configs.iso19115_2_standard import (
     configs_v2_all as iso19115_2_standard_configs_v2,
+    configs_v3_all as iso19115_2_standard_configs_v3,
 )
 from tests.resources.configs.iec_pas_61174_0_standard import configs_v1 as iec_pas_61174_0_standard_configs_v1
 from tests.resources.configs.iec_pas_61174_1_standard import configs_v1 as iec_pas_61174_1_standard_configs_v1
@@ -70,21 +74,43 @@ def create_app():
     def standard_iso_19115_1(configuration: str):
         if configuration in iso19115_1_standard_configs_v2:
             configuration_object = iso19115_1_standard_configs_v2[configuration]
-            configuration = ISO19115_1_MetadataRecordConfigV2(**configuration_object)
+            configuration_v2 = ISO19115_1_MetadataRecordConfigV2(**configuration_object)
+            configuration = ISO19115_1_MetadataRecordConfigV3()
+            configuration.upgrade_from_v2_config(v2_config=configuration_v2)
             record = ISO19115_1_MetadataRecord(configuration)
             return Response(record.generate_xml_document(), mimetype="text/xml")
 
-        return f"Invalid configuration, valid options: " f"[{', '.join(list(iso19115_1_standard_configs_v2.keys()))}]"
+        if configuration in iso19115_1_standard_configs_v3:
+            configuration_object = iso19115_1_standard_configs_v3[configuration]
+            configuration = ISO19115_1_MetadataRecordConfigV3(**configuration_object)
+            record = ISO19115_1_MetadataRecord(configuration)
+            return Response(record.generate_xml_document(), mimetype="text/xml")
+
+        return (
+            f"Invalid configuration, valid options: "
+            f"[{', '.join(list(iso19115_1_standard_configs_v2.keys()) + list(iso19115_1_standard_configs_v3.keys()))}]"
+        )
 
     @app.route("/standards/iso-19115-2/<configuration>")
     def standard_iso_19115_2(configuration: str):
         if configuration in iso19115_2_standard_configs_v2:
             configuration_object = iso19115_2_standard_configs_v2[configuration]
-            configuration = ISO19115_2_MetadataRecordConfigV2(**configuration_object)
+            configuration_v2 = ISO19115_2_MetadataRecordConfigV2(**configuration_object)
+            configuration = ISO19115_2_MetadataRecordConfigV3()
+            configuration.upgrade_from_v2_config(v2_config=configuration_v2)
             record = ISO19115_2_MetadataRecord(configuration)
             return Response(record.generate_xml_document(), mimetype="text/xml")
 
-        return f"Invalid configuration, valid options: " f"[{', '.join(list(iso19115_2_standard_configs_v2.keys()))}]"
+        if configuration in iso19115_2_standard_configs_v3:
+            configuration_object = iso19115_2_standard_configs_v3[configuration]
+            configuration = ISO19115_2_MetadataRecordConfigV3(**configuration_object)
+            record = ISO19115_2_MetadataRecord(configuration)
+            return Response(record.generate_xml_document(), mimetype="text/xml")
+
+        return (
+            f"Invalid configuration, valid options: "
+            f"[{', '.join(list(iso19115_2_standard_configs_v2.keys()) + list(iso19115_2_standard_configs_v2.keys()))}]"
+        )
 
     @app.route("/standards/iec-pas-61174-0/<configuration>")
     def standard_ice_pas_61174_0(configuration: str):
@@ -139,42 +165,67 @@ def create_app():
     def capture_json_test_configs():
         """Capture JSON encodings of test configurations for use in tests."""
         standards = {
-            "test-standard": {
-                "configs": test_metadata_standard_configs,
-                "config_class": TestStandardMetadataRecordConfig,
-            },
-            "iso-19115-1": {
-                "configs": iso19115_1_standard_configs_v2,
-                "config_class": ISO19115_1_MetadataRecordConfigV2,
-            },
-            "iso-19115-2": {
-                "configs": iso19115_2_standard_configs_v2,
-                "config_class": ISO19115_2_MetadataRecordConfigV2,
-            },
-            "iec-pas-61174-0": {
-                "configs": iec_pas_61174_0_standard_configs_v1,
-                "config_class": IECPAS61174_0_MetadataRecordConfigV1,
-            },
-            "iec-pas-61174-1": {
-                "configs": iec_pas_61174_1_standard_configs_v1,
-                "config_class": IECPAS61174_1_MetadataRecordConfigV1,
-            },
+            "test-standard": [
+                {
+                    "configs": test_metadata_standard_configs,
+                    "config_class": TestStandardMetadataRecordConfig,
+                }
+            ],
+            "iso-19115-1": [
+                {
+                    "configs": iso19115_1_standard_configs_v2,
+                    "config_class": ISO19115_1_MetadataRecordConfigV2,
+                },
+                {
+                    "configs": iso19115_1_standard_configs_v3,
+                    "config_class": ISO19115_1_MetadataRecordConfigV3,
+                },
+            ],
+            "iso-19115-2": [
+                {
+                    "configs": iso19115_2_standard_configs_v2,
+                    "config_class": ISO19115_2_MetadataRecordConfigV2,
+                },
+                {
+                    "configs": iso19115_2_standard_configs_v3,
+                    "config_class": ISO19115_2_MetadataRecordConfigV3,
+                },
+            ],
+            "iec-pas-61174-0": [
+                {
+                    "configs": iec_pas_61174_0_standard_configs_v1,
+                    "config_class": IECPAS61174_0_MetadataRecordConfigV1,
+                }
+            ],
+            "iec-pas-61174-1": [
+                {
+                    "configs": iec_pas_61174_1_standard_configs_v1,
+                    "config_class": IECPAS61174_1_MetadataRecordConfigV1,
+                }
+            ],
         }
-        for standard, parameters in standards.items():
-            for config_name, config in parameters["configs"].items():
-                print(f"Saving JSON encoding of '{standard}/{config_name}' test configuration")
-                configuration: MetadataRecordConfig = parameters["config_class"](**config)
-                json_config_path = Path(f"./tests/resources/configs/{standard}/{config_name}.json")
-                json_config_path.parent.mkdir(exist_ok=True, parents=True)
-                configuration.dump(file=json_config_path)
+        for standard, parameter_sets in standards.items():
+            for parameters in parameter_sets:
+                for config_name, config in parameters["configs"].items():
+                    print(f"Saving JSON encoding of '{standard}/{config_name}' test configuration")
+                    configuration: MetadataRecordConfig = parameters["config_class"](**config)
+                    json_config_path = Path(f"./tests/resources/configs/{standard}/{config_name}.json")
+                    json_config_path.parent.mkdir(exist_ok=True, parents=True)
+                    configuration.dump(file=json_config_path)
 
     @app.cli.command()
     def capture_test_records():
         """Capture records for use in tests."""
         standards = {
             "test-standard": {"configurations": list(test_metadata_standard_configs.keys())},
-            "iso-19115-1": {"configurations": list(iso19115_1_standard_configs_v2.keys())},
-            "iso-19115-2": {"configurations": list(iso19115_2_standard_configs_v2.keys())},
+            "iso-19115-1": {
+                "configurations": list(iso19115_1_standard_configs_v2.keys())
+                + list(iso19115_1_standard_configs_v3.keys())
+            },
+            "iso-19115-2": {
+                "configurations": list(iso19115_2_standard_configs_v2.keys())
+                + list(iso19115_1_standard_configs_v3.keys())
+            },
             "iec-pas-61174-0": {"configurations": list(iec_pas_61174_0_standard_configs_v1.keys())},
             "iec-pas-61174-1": {"configurations": list(iec_pas_61174_1_standard_configs_v1.keys())},
         }

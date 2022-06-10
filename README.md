@@ -39,11 +39,13 @@ wait until a stable profile for UK PDC Discovery metadata has been developed and
 ### Supported configuration versions
 
 | Standard           | Profile | Configuration Version                                                                                                     | Status  | Notes            |
-| ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------- |---------|------------------|
+| ------------------ | ------- |---------------------------------------------------------------------------------------------------------------------------|---------|------------------|
 | ISO 19115:2003     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired | Replaced by `v2` |
 | ISO 19115:2003     | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Live    | Stable version   |
+| ISO 19115:2003     | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-1-v2.json)     | Alpha   | Experimental     |
 | ISO 19115-2:2009   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Retired | Replaced by `v2` |
 | ISO 19115-2:2009   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Live    | Stable version   |
+| ISO 19115-2:2009   | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json)     | Alpha   | Experimental     |
 | IEC 61174:2015     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Alpha   | Experimental     |
 | IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Alpha   | Experimental     |
 
@@ -125,7 +127,7 @@ To generate an ISO 19115 metadata record from a Python record configuration and 
 ```python
 from datetime import date
 
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecord
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3, MetadataRecord
 
 minimal_record_config = {
     "hierarchy_level": "dataset",
@@ -154,7 +156,7 @@ minimal_record_config = {
         },
     },
 }
-configuration = MetadataRecordConfigV2(**minimal_record_config)
+configuration = MetadataRecordConfigV3(**minimal_record_config)
 record = MetadataRecord(configuration=configuration)
 document = record.generate_xml_document()
 
@@ -166,6 +168,106 @@ See the [HTML Entities](#html-entities) section for guidance on using accents an
 
 You will need to use a `date_precision` property for partial dates. See the [Date Precision](#date-precision) section 
 for more information.
+
+### Decode an ISO 19115 metadata record
+
+```python
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecord
+
+with open(f"minimal-record.xml") as record_file:
+    record_data = record_file.read()
+
+record = MetadataRecord(record=record_data)
+configuration = record.make_config()
+minimal_record_config = configuration.config
+
+# output configuration
+print(minimal_record_config)
+```
+
+### Upgrade a version 2 ISO 19115 metadata record configuration to version 3
+
+The version 3 record configuration object includes an upgrade method. This method accepts a version 2 record and returns
+a version 3 object. This method will change the record configuration structure to account for changes introduced in the 
+version configuration schema.
+
+```python
+from datetime import date
+
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecordConfigV3
+
+minimal_record_config_v2 = {
+    "hierarchy_level": "dataset",
+    "metadata": {
+        "language": "eng",
+        "character_set": "utf-8",
+        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "date_stamp": date(2018, 10, 18),
+    },
+    "identification": {
+        "title": {"value": "Test Record"},
+        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "character_set": "utf-8",
+        "language": "eng",
+        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+        "extent": {
+            "geographic": {
+                "bounding_box": {
+                    "west_longitude": -45.61521,
+                    "east_longitude": -27.04976,
+                    "south_latitude": -68.1511,
+                    "north_latitude": -54.30761,
+                }
+            }
+        },
+    },
+}
+configuration_v2 = MetadataRecordConfigV2(**minimal_record_config_v2)
+configuration_v3 = MetadataRecordConfigV3()
+configuration_v3.upgrade_from_v2_config(v2_config=configuration_v2)
+```
+
+### Downgrade a version 3 ISO 19115 metadata record configuration to version 2
+
+The version 3 record configuration object includes a downgrade method. This method accepts returns a version 2 
+equivalent of the record configuration.
+
+```python
+from datetime import date
+
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecordConfigV3
+
+minimal_record_config_v3 = {
+    "hierarchy_level": "dataset",
+    "metadata": {
+        "language": "eng",
+        "character_set": "utf-8",
+        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "date_stamp": date(2018, 10, 18),
+    },
+    "identification": {
+        "title": {"value": "Test Record"},
+        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "character_set": "utf-8",
+        "language": "eng",
+        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+        "extent": {
+            "geographic": {
+                "bounding_box": {
+                    "west_longitude": -45.61521,
+                    "east_longitude": -27.04976,
+                    "south_latitude": -68.1511,
+                    "north_latitude": -54.30761,
+                }
+            }
+        },
+    },
+}
+configuration_v3 = MetadataRecordConfigV3(**minimal_record_config_v3)
+configuration_v2 = configuration_v3.downgrade_to_v2_config()
+```
 
 ### Encode an IEC 61174 route information record
 
@@ -366,7 +468,7 @@ minimal_record_config = {
         },
     },
 }
-configuration = MetadataRecordConfigV2(**minimal_record_config)
+configuration = MetadataRecordConfigV3(**minimal_record_config)
 record = MetadataRecord(configuration=configuration)
 
 try:
@@ -396,7 +498,7 @@ To explicitly validate a record configuration:
 from datetime import date
 
 from jsonschema import ValidationError
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3
 
 minimal_record_config = {
     "hierarchy_level": "dataset",
@@ -425,7 +527,7 @@ minimal_record_config = {
         },
     },
 }
-configuration = MetadataRecordConfigV2(**minimal_record_config)
+configuration = MetadataRecordConfigV3(**minimal_record_config)
 
 try:
     configuration.validate()
