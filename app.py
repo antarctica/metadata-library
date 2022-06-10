@@ -142,6 +142,8 @@ def create_app():
         schemas = [
             {"id": "iso_19115_1_v2", "resolve": False},
             {"id": "iso_19115_2_v2", "resolve": True},
+            {"id": "iso_19115_1_v3", "resolve": False},
+            {"id": "iso_19115_2_v3", "resolve": True},
             {"id": "iec_pas_61174_0_v1", "resolve": False},
             {"id": "iec_pas_61174_1_v1", "resolve": True},
         ]
