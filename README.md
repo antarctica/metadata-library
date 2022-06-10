@@ -788,6 +788,78 @@ To add a new standard:
 10. update `CHANGELOG.md`
 11. if needed, add name to `authors` property in `pyproject.toml`
 
+### Adding a new config version for an existing standard [WIP]
+
+**Note:** This is typically only needed if breaking changes need to be made to the schema for a configuration, as the 
+work involved is quite involved.
+
+**Note:** This section is a work in progress whilst developing the ISO 19115 v3 configuration in
+[#182](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/182).
+
+**Note:** In these instructions, `v1` refers to the current/previous configuration version. `v2` refers to the new 
+configuration version.
+
+First create a new configuration version that is identical to the current/previous version, but that sets up the 
+schema, objects, methods, tests and documentation needed for the new configuration, and to convert between the old 
+and new configurations.
+
+1. create an issue summarising, and referencing specific issues for, changes to be made in the new schema version
+2. copy the current/previous metadata configuration JSON schema from `bas_metadata_library.schemas.src`
+   e.g. `bas_metadata_library.schemas.src.foo_v1.json` to `bas_metadata_library.schemas.src.foo_v2.json`
+   1. change the version in:
+       * the `$id` property
+       * the `title` property
+       * the `description` property
+3. duplicate the configuration classes for the standard in `bas_metadata_library.standards`
+    * i.e. in `bas_metadata_library.standards.foo_v1/__init__.py`, copy:
+        * `MetadataRecordConfigV1` to `MetadataRecordConfigV2`
+4. in the new configuration class, add `upgrade_to_v1_config()` and `downgrade_to_v2_config()` methods
+    * the `upgrade_from_v2_config()` method should accept a current/previous configuration class
+    * the `downgrade_to_v1_config()` method should return a current/previous configuration class
+5. change the signature of the `MetadataRecord` class to use the new configuration class
+6. change the `make_config()` method of the `MetadataRecord` class to return the new configuration class
+7. update the `generate_schemas()` method in `app.py` to generate distribution schemas for the new schema version
+8. [Generate configuration schemas](#generating-configuration-schemas)
+9. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
+   the distribution schema for the new schema version within the BAS Metadata Standards website
+10. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
+    `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
+     * note that the version in these file names is for the version of the standard, not the configuration
+     * new config objects will be made within this file that relate to the new configuration version
+     * initially these new config objects can inherit from test configurations for the current/previous version
+11. update the `generate_json_test_configs()` method in `app.py` to generate JSON versions of each test configuration
+12. [Capture test JSON record configurations](#capturing-test-configurations-as-json)
+13. update the route for the standard in `app.py` (e.g. `standard_foo_v1`) to:
+     1. upgrade configs for the old/current version of the standard (as the old/current MetadataRecordConfig class will 
+        now be incompatible with the updated MetadataRecord class)  
+     2. include configs for the new config version of the standard
+14. update the `capture_test_records()` method in `app.py` to capture test records for the new test configurations
+15. [Capture test XML records](#capturing-test-records)
+16. add test cases for the new `MetadataRecordConfig` class in the relevant module in `tests.bas_metadata_library`:
+    * `test_invalid_configuration_v2`
+    * `test_configuration_v2_from_json_file`
+    * `test_configuration_v2_from_json_string`
+    * `test_configuration_v2_to_json_file`
+    * `test_configuration_v2_to_json_string`
+    * `test_configuration_v2_json_round_trip`
+    * `test_parse_existing_record_v2`
+    * `test_lossless_conversion_v2`
+17. change all test cases to target record configurations for the new version
+18. update the `test_record_schema_validation_valid` and `test_record_schema_validation_valid` test cases, which test 
+    the XML/XSD schema for the standard, not the configuration JSON schema
+19. update the existing `test_lossless_conversion_v1` test case to upgrade v1 configurations to v2, as the 
+    `MetadataRecord` class will no longer be compatible with the `MetadataRecordConfigV1` class
+20. update the [Supported configuration versions](#supported-configuration-versions) section of the README 
+     * add the new schema version, with a status of 'alpha'
+21. update the encode/decode subsections in the [Usage](#usage) section of the README to use the new RecordConfig class
+22. if the lead standard (ISO 19115) is being updated also update these [Usage](#usage) subsections:
+    * [Loading a record configuration from JSON](#loading-a-record-configuration-from-json)
+    * [Dumping a record configuration to JSON](#dumping-a-record-configuration-to-json)
+    * [Validating a record](#validating-a-record)
+    * [Validating a record configuration](#validating-a-record-configuration)
+23. add a subsection to the [Usage](#usage) section of the README explaining how to upgrade and downgrade a 
+    configuration between the old and new versions
+24. Update the change log to reference the creation of the new schema version, referencing the summary issue
 ### ISO 19115 - Automatic transfer option / format IDs
 
 ID attributes are automatically added to `gmd:MD_Format` and `gmd:MD_DigitalTransferOptions` elements in order to
