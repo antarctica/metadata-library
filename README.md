@@ -312,22 +312,6 @@ record = MetadataRecord(configuration=configuration)
 record.generate_rtzp_archive(file=Path(output_path))
 ```
 
-### Decode an ISO 19115 metadata record
-
-```python
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecord
-
-with open(f"minimal-record.xml") as record_file:
-    record_data = record_file.read()
-
-record = MetadataRecord(record=record_data)
-configuration = record.make_config()
-minimal_record_config = configuration.config
-
-# output configuration
-print(minimal_record_config)
-```
-
 ### Decode an IEC 61174 route information record
 
 To decode from a RTZ file:
@@ -374,11 +358,11 @@ JSON file or JSON string respectively:
 ```python
 from pathlib import Path
 
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3
 
 input_path = str('/path/to/file.json')
 
-configuration = MetadataRecordConfigV2()
+configuration = MetadataRecordConfigV3()
 configuration.load(file=Path(input_path))
 ```
 
@@ -393,7 +377,7 @@ encoded file or string respectively:
 from datetime import date
 from pathlib import Path
 
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3
 
 output_path = str('/path/to/file.json')
 
@@ -424,7 +408,7 @@ minimal_record_config = {
         },
     },
 }
-configuration = MetadataRecordConfigV2(**minimal_record_config)
+configuration = MetadataRecordConfigV3(**minimal_record_config)
 configuration.dump(file=Path(output_path))
 ```
 
@@ -439,7 +423,7 @@ standard. Records are not validated automatically, and so must be validated expl
 from datetime import date
 
 from bas_metadata_library import RecordValidationError
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecord
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3, MetadataRecord
 
 minimal_record_config = {
     "hierarchy_level": "dataset",
