@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#194](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/194)
 * Refactoring distribution format to use a new common format element alongside #66
   [#180](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/180)
+* Retiring 'safe' test record configurations (all configurations are now safe)
+  [#193](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/193)
 
 ## 0.8.0 - 2022-01-13
 
