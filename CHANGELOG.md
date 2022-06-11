@@ -1,4 +1,4 @@
-# UK Polar Data Centre (UK PDC) Metadata Record Generator
+# BAS Metadata Library - Change log
 
 All notable changes to this project will be documented in this file.
 
@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#184](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/184)
 * XML ID attribute (bounding extent) added to geographic extent for consistency with temporal extent
   [#189](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/189)
+* Adopting extended ISO 19115-3 keyword type list in ISO 19115 V3 configuration schema
+  [#71](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/71)
 
 ### Fixed
 
