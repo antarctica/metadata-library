@@ -244,7 +244,7 @@ Information that will be lost when downgrading:
 ```python
 from datetime import date
 
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecordConfigV3
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3
 
 minimal_record_config_v3 = {
     "hierarchy_level": "dataset",

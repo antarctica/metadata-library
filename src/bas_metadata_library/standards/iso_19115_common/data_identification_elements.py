@@ -1,7 +1,6 @@
 import json
 from hashlib import sha1
 from json import JSONDecodeError
-from typing import Dict
 
 from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
 

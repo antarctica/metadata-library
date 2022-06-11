@@ -37,7 +37,7 @@ from tests.bas_metadata_library.standard_iso_19115_1_common import (
     assert_online_resource,
     assert_identifier,
 )
-from tests.resources.configs.iso19115_1_standard import configs_safe_v2, configs_v2_all, configs_safe_v3
+from tests.resources.configs.iso19115_1_standard import configs_safe_v2, configs_v3_all, configs_safe_v3
 
 
 MonkeyPatch.patch_fromisoformat()
@@ -790,11 +790,11 @@ def test_identification_descriptive_keywords(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("app_client")
-@pytest.mark.parametrize("config_name", list(configs_v2_all.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_resource_constraints(client, config_name):
     response = client.get(f"/standards/{standard}/{config_name}")
     record = fromstring(response.data)
-    config = configs_v2_all[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "constraints" not in config["identification"]:
         pytest.skip("record does not contain identification resource constraints")
