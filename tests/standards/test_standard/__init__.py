@@ -44,12 +44,12 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
         self.config = kwargs
 
-        with open(
-            Path()
-            .resolve()
-            .parent.joinpath("schemas/test_standard_v1.json"),
-            mode="r",
-        ) as configuration_schema_file:
+        # workaround for #179
+        schema_path = Path().resolve().joinpath("tests/schemas/test_standard_v1.json")
+        if not schema_path.exists():
+            schema_path = Path().resolve().parent.joinpath("schemas/test_standard_v1.json")
+
+        with open(schema_path, mode="r") as configuration_schema_file:
             configuration_schema_data = json.load(configuration_schema_file)
         self.schema = configuration_schema_data
 
