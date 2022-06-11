@@ -1,4 +1,4 @@
-# UK Polar Data Centre (UK PDC) Metadata Record Generator
+# BAS Metadata Library - Change log
 
 All notable changes to this project will be documented in this file.
 
