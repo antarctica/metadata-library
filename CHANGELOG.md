@@ -37,6 +37,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#180](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/180)
 * Retiring 'safe' test record configurations (all configurations are now safe)
   [#193](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/193)
+* Improving consistency of ISO 19115 schema properties using definitions
+  [#192](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/192)
 
 ## 0.8.0 - 2022-01-13
 

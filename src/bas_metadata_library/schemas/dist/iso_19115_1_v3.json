@@ -461,6 +461,26 @@
                 "2020-04-16"
             ]
         },
+        "distribution": {
+            "title": "Distribution",
+            "description": "Information about to acquire, enquire about or retrieve the resource",
+            "type": "array",
+            "items": {
+                "required": [
+                    "distributor",
+                    "distribution_options"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "distributor": {
+                        "$ref": "#/definitions/distributor"
+                    },
+                    "distribution_options": {
+                        "$ref": "#/definitions/distribution_options"
+                    }
+                }
+            }
+        },
         "distributor": {
             "title": "Distributor",
             "description": "A contact limited to the role of distributor.",
@@ -780,6 +800,95 @@
                 "dataset"
             ]
         },
+        "identification": {
+            "title": "Identification",
+            "description": "Information about how to reference, categorise, or describe the resource.",
+            "type": "object",
+            "required": [
+                "title",
+                "dates",
+                "abstract",
+                "language",
+                "character_set",
+                "topics",
+                "extent"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "title": {
+                    "$ref": "#/definitions/title"
+                },
+                "abstract": {
+                    "$ref": "#/definitions/abstract"
+                },
+                "purpose": {
+                    "$ref": "#/definitions/purpose"
+                },
+                "credit": {
+                    "$ref": "#/definitions/credit"
+                },
+                "status": {
+                    "$ref": "#/definitions/status"
+                },
+                "dates": {
+                    "$ref": "#/definitions/dates"
+                },
+                "edition": {
+                    "$ref": "#/definitions/edition"
+                },
+                "other_citation_details": {
+                    "$ref": "#/definitions/other_citation_details"
+                },
+                "identifiers": {
+                    "$ref": "#/definitions/identifiers"
+                },
+                "contacts": {
+                    "$ref": "#/definitions/contacts"
+                },
+                "maintenance": {
+                    "$ref": "#/definitions/maintenance"
+                },
+                "graphic_overviews": {
+                    "$ref": "#/definitions/graphic_overviews"
+                },
+                "resource_formats": {
+                    "$ref": "#/definitions/resource_formats"
+                },
+                "keywords": {
+                    "$ref": "#/definitions/keywords"
+                },
+                "constraints": {
+                    "$ref": "#/definitions/constraints"
+                },
+                "aggregations": {
+                    "$ref": "#/definitions/aggregations"
+                },
+                "supplemental_information": {
+                    "$ref": "#/definitions/supplemental_information"
+                },
+                "spatial_representation_type": {
+                    "$ref": "#/definitions/spatial_representation_type"
+                },
+                "spatial_resolution": {
+                    "$ref": "#/definitions/spatial_resolution"
+                },
+                "character_set": {
+                    "$ref": "#/definitions/character_set"
+                },
+                "language": {
+                    "$ref": "#/definitions/language"
+                },
+                "topics": {
+                    "$ref": "#/definitions/topics"
+                },
+                "extent": {
+                    "$ref": "#/definitions/extent"
+                },
+                "lineage": {
+                    "$ref": "#/definitions/lineage"
+                }
+            }
+        },
         "identifier": {
             "title": "Identifier",
             "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
@@ -937,6 +1046,38 @@
                 },
                 "progress": {
                     "$ref": "#/definitions/progress"
+                }
+            }
+        },
+        "metadata": {
+            "title": "Metadata",
+            "description": "Information about the metadata record describing the resource.",
+            "type": "object",
+            "required": [
+                "character_set",
+                "contacts",
+                "date_stamp",
+                "language"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "language": {
+                    "$ref": "#/definitions/language"
+                },
+                "character_set": {
+                    "$ref": "#/definitions/character_set"
+                },
+                "contacts": {
+                    "$ref": "#/definitions/contacts"
+                },
+                "date_stamp": {
+                    "$ref": "#/definitions/date_stamp"
+                },
+                "maintenance": {
+                    "$ref": "#/definitions/maintenance"
+                },
+                "metadata_standard": {
+                    "$ref": "#/definitions/metadata_standard"
                 }
             }
         },
@@ -1151,6 +1292,40 @@
                 }
             }
         },
+        "resource": {
+            "title": "Resource",
+            "description": "The item/entity/thing being described by this metadata record.",
+            "type": "object",
+            "required": [
+                "hierarchy_level",
+                "metadata",
+                "identification"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "$schema": {
+                    "$ref": "#/definitions/_schema"
+                },
+                "file_identifier": {
+                    "$ref": "#/definitions/file_identifier"
+                },
+                "hierarchy_level": {
+                    "$ref": "#/definitions/hierarchy_level"
+                },
+                "metadata": {
+                    "$ref": "#/definitions/metadata"
+                },
+                "reference_system_info": {
+                    "$ref": "#/definitions/reference_system_info"
+                },
+                "identification": {
+                    "$ref": "#/definitions/identification"
+                },
+                "distribution": {
+                    "$ref": "#/definitions/distribution"
+                }
+            }
+        },
         "restriction_code": {
             "title": "Restriction code",
             "description": "The domain the constraint pertains to.",
@@ -1173,6 +1348,15 @@
                 "statutory",
                 "trademark",
                 "unrestricted"
+            ]
+        },
+        "_schema": {
+            "title": "JSON Schema",
+            "description": "JSON Schema keyword indicating the schema a document complies with.",
+            "type": "string",
+            "format": "uri",
+            "examples": [
+                "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json"
             ]
         },
         "spatial_representation_type": {
@@ -1504,13 +1688,7 @@
     "additionalProperties": false,
     "properties": {
         "$schema": {
-            "title": "JSON Schema",
-            "description": "JSON Schema keyword indicating the schema a document complies with.",
-            "type": "string",
-            "format": "uri",
-            "examples": [
-                "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json"
-            ]
+            "$ref": "#/definitions/_schema"
         },
         "file_identifier": {
             "$ref": "#/definitions/file_identifier"
@@ -1519,148 +1697,16 @@
             "$ref": "#/definitions/hierarchy_level"
         },
         "metadata": {
-            "title": "Metadata",
-            "description": "Information about the metadata record describing the resource.",
-            "type": "object",
-            "required": [
-                "character_set",
-                "contacts",
-                "date_stamp",
-                "language"
-            ],
-            "additionalProperties": false,
-            "properties": {
-                "language": {
-                    "$ref": "#/definitions/language"
-                },
-                "character_set": {
-                    "$ref": "#/definitions/character_set"
-                },
-                "contacts": {
-                    "$ref": "#/definitions/contacts"
-                },
-                "date_stamp": {
-                    "$ref": "#/definitions/date_stamp"
-                },
-                "maintenance": {
-                    "$ref": "#/definitions/maintenance"
-                },
-                "metadata_standard": {
-                    "$ref": "#/definitions/metadata_standard"
-                }
-            }
+            "$ref": "#/definitions/metadata"
         },
         "reference_system_info": {
             "$ref": "#/definitions/reference_system_info"
         },
         "identification": {
-            "title": "Identification",
-            "description": "Information about how to reference, categorise, or describe the resource.",
-            "type": "object",
-            "required": [
-                "title",
-                "dates",
-                "abstract",
-                "language",
-                "character_set",
-                "topics",
-                "extent"
-            ],
-            "additionalProperties": false,
-            "properties": {
-                "title": {
-                    "$ref": "#/definitions/title"
-                },
-                "abstract": {
-                    "$ref": "#/definitions/abstract"
-                },
-                "purpose": {
-                    "$ref": "#/definitions/purpose"
-                },
-                "credit": {
-                    "$ref": "#/definitions/credit"
-                },
-                "status": {
-                    "$ref": "#/definitions/status"
-                },
-                "dates": {
-                    "$ref": "#/definitions/dates"
-                },
-                "edition": {
-                    "$ref": "#/definitions/edition"
-                },
-                "other_citation_details": {
-                    "$ref": "#/definitions/other_citation_details"
-                },
-                "identifiers": {
-                    "$ref": "#/definitions/identifiers"
-                },
-                "contacts": {
-                    "$ref": "#/definitions/contacts"
-                },
-                "maintenance": {
-                    "$ref": "#/definitions/maintenance"
-                },
-                "graphic_overviews": {
-                    "$ref": "#/definitions/graphic_overviews"
-                },
-                "resource_formats": {
-                    "$ref": "#/definitions/resource_formats"
-                },
-                "keywords": {
-                    "$ref": "#/definitions/keywords"
-                },
-                "constraints": {
-                    "$ref": "#/definitions/constraints"
-                },
-                "aggregations": {
-                    "$ref": "#/definitions/aggregations"
-                },
-                "supplemental_information": {
-                    "$ref": "#/definitions/supplemental_information"
-                },
-                "spatial_representation_type": {
-                    "$ref": "#/definitions/spatial_representation_type"
-                },
-                "spatial_resolution": {
-                    "$ref": "#/definitions/spatial_resolution"
-                },
-                "character_set": {
-                    "$ref": "#/definitions/character_set"
-                },
-                "language": {
-                    "$ref": "#/definitions/language"
-                },
-                "topics": {
-                    "$ref": "#/definitions/topics"
-                },
-                "extent": {
-                    "$ref": "#/definitions/extent"
-                },
-                "lineage": {
-                    "$ref": "#/definitions/lineage"
-                }
-            }
+            "$ref": "#/definitions/identification"
         },
         "distribution": {
-            "title": "Distribution",
-            "description": "Information about to acquire, enquire about or retrieve the resource",
-            "type": "array",
-            "items": {
-                "required": [
-                    "distributor",
-                    "distribution_options"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "distributor": {
-                        "$ref": "#/definitions/distributor"
-                    },
-                    "distribution_options": {
-                        "$ref": "#/definitions/distribution_options"
-                    }
-                }
-            }
+            "$ref": "#/definitions/distribution"
         }
     }
 }
