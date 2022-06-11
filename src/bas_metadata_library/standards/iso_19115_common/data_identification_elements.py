@@ -1367,7 +1367,11 @@ class BoundingBox(MetadataRecordElement):
         return _
 
     def make_element(self):
-        bounding_box_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}EX_GeographicBoundingBox")
+        bounding_box_element = SubElement(
+            self.parent_element,
+            f"{{{self.ns.gmd}}}EX_GeographicBoundingBox",
+            attrib={"id": "boundingGeographicExtent"},
+        )
 
         west_element = SubElement(bounding_box_element, f"{{{self.ns.gmd}}}westBoundLongitude")
         west_value = SubElement(west_element, f"{{{self.ns.gco}}}Decimal")
@@ -1579,7 +1583,7 @@ class TemporalExtent(MetadataRecordElement):
             time_period_element = SubElement(
                 temporal_extent_element,
                 f"{{{self.ns.gml}}}TimePeriod",
-                attrib={f"{{{self.ns.gml}}}id": "boundingExtent"},
+                attrib={f"{{{self.ns.gml}}}id": "boundingTemporalExtent"},
             )
 
             _date_precision = None
