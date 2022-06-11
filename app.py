@@ -231,16 +231,21 @@ def create_app():
             "iec-pas-61174-0": {"configurations": list(iec_pas_61174_0_standard_configs_v1.keys())},
             "iec-pas-61174-1": {"configurations": list(iec_pas_61174_1_standard_configs_v1.keys())},
         }
+
+        internal_client = app.test_client()
+
         for standard, options in standards.items():
             for config in options["configurations"]:
                 print(f"saving record for 'standards/{standard}/{config}'")
-                response = requests.get(f"http://localhost:5000/standards/{standard}/{config}")
-                response.raise_for_status()
+
+                response = internal_client.get(f"http://localhost:5000/standards/{standard}/{config}")
+                if response.status_code != 200:
+                    raise RuntimeError(f"Failed to generate response for 'standards/{standard}/{config}'")
 
                 response_file_path = Path(f"./tests/resources/records/{standard}/{config}-record.xml")
                 response_file_path.parent.mkdir(parents=True, exist_ok=True)
                 with open(response_file_path, mode="w") as response_file:
-                    response_file.write(response.text)
+                    response_file.write(response.data.decode())
 
         # Capture RTZP files separately for IEC PAS 61174 standard
         rtz_0_config = IECPAS61174_0_MetadataRecordConfigV1(**iec_pas_61174_0_standard_configs_v1["minimal_v1"])
