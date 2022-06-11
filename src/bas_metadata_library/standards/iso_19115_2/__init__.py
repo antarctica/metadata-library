@@ -11,7 +11,9 @@ from bas_metadata_library.standards.iso_19115_common import Namespaces
 from bas_metadata_library.standards.iso_19115_common.root_element import ISOMetadataRecord
 from bas_metadata_library.standards.iso_19115_common.utils import (
     decode_config_from_json,
+    downgrade_to_v2_config as _downgrade_to_v2_config,
     encode_config_for_json,
+    upgrade_from_v2_config as _upgrade_from_v2_config,
 )
 
 
@@ -90,12 +92,12 @@ class MetadataRecordConfigV3(_MetadataRecordConfig):
 
     def upgrade_from_v2_config(self, v2_config: MetadataRecordConfigV2) -> None:
         """
-        Converts a v3 Metadata Configuration instance into a v2 Metadata Configuration instance.
+        Converts a v2 Metadata Configuration instance into a v2 Metadata Configuration instance.
 
         :type v2_config MetadataRecordConfigV2
         :param v2_config record configuration as a MetadataRecordConfigV2 instance
         """
-        self.config = v2_config.config
+        self.config = _upgrade_from_v2_config(v2_config=v2_config.config)
 
     def downgrade_to_v2_config(self) -> MetadataRecordConfigV2:
         """
@@ -104,7 +106,7 @@ class MetadataRecordConfigV3(_MetadataRecordConfig):
         :rtype MetadataRecordConfigV2
         :returns record configuration as a MetadataRecordConfigV2 instance
         """
-        return MetadataRecordConfigV2(**self.config)
+        return MetadataRecordConfigV2(**_downgrade_to_v2_config(v3_config=self.config))
 
 
 class MetadataRecord(_MetadataRecord):

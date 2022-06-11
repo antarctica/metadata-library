@@ -1,3 +1,7 @@
+import json
+from hashlib import sha1
+from json import JSONDecodeError
+
 from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library import MetadataRecord
@@ -786,6 +790,16 @@ class ResourceConstraint(MetadataRecordElement):
         if len(_other_constraint) > 0:
             _ = {**_, **_other_constraint}
 
+        # detect permissions statements
+        constraint_id = self.record.xpath(f"{self.xpath}/gmd:MD_LegalConstraints/@id", namespaces=self.ns.nsmap())
+        if len(constraint_id) == 1 and "permissions" in constraint_id[0] and "statement" in _:
+            _["permissions"] = _["statement"]
+            del _["statement"]
+            try:
+                _["permissions"] = json.loads(_["permissions"])
+            except JSONDecodeError:
+                pass
+
         return _
 
     def make_element(self):
@@ -816,6 +830,23 @@ class ResourceConstraint(MetadataRecordElement):
                 attributes=self.attributes,
                 parent_element=constraints_element,
                 element_attributes=self.element_attributes,
+            )
+            other_constraint.make_element()
+
+        if "permissions" in self.element_attributes:
+            # Bandit B303/S303 warning is exempted as these hashes are not used for any security related purposes
+            _id = sha1(json.dumps(self.element_attributes["permissions"]).encode()).hexdigest()  # noqa: S303 - nosec
+            constraints_element.attrib["id"] = f"bml-permissions-{_id}"
+
+            _statement = self.element_attributes["permissions"]
+            if not isinstance(_statement, str):
+                _statement = json.dumps(_statement)
+
+            other_constraint = OtherConstraints(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=constraints_element,
+                element_attributes={"statement": _statement},
             )
             other_constraint.make_element()
 

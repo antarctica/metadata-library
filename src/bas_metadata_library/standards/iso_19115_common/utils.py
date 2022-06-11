@@ -322,3 +322,40 @@ def encode_config_for_json(config: dict) -> dict:
     :return encoded record configuration
     """
     return _encode_date_properties(dictionary=config)
+
+
+def upgrade_from_v2_config(v2_config: dict) -> dict:
+    """
+    Converts a v2 Metadata Configuration instance into a v3 Metadata Configuration instance.
+
+    :type v2_config dict
+    :param v2_config v2 Record Metadata Configuration instance
+    """
+    return v2_config
+
+
+def downgrade_to_v2_config(v3_config: dict) -> dict:
+    """
+    Converts a v3 Metadata Configuration instance into a v2 Metadata Configuration instance.
+
+    Note: This is a lossy process.
+
+    :rtype dict
+    :returns record configuration as a v2 Record Metadata Configuration instance
+    """
+    v2_config = deepcopy(v3_config)
+
+    # resource constraints can't contain a 'permissions' property in v2 so drop (lossy)
+    try:
+        _constraints = []
+        for constraint in v2_config["identification"]["constraints"]:
+            try:
+                del constraint["permission"]
+            except KeyError:
+                pass
+            _constraints.append(constraint)
+        v2_config["identification"]["constraints"] = _constraints
+    except KeyError:
+        pass
+
+    return v2_config

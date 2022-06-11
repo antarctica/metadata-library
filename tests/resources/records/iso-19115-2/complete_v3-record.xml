@@ -624,13 +624,6 @@
       </gmd:descriptiveKeywords>
       <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints>
-          <gmd:accessConstraints>
-            <gmd:MD_RestrictionCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="unrestricted">unrestricted</gmd:MD_RestrictionCode>
-          </gmd:accessConstraints>
-        </gmd:MD_LegalConstraints>
-      </gmd:resourceConstraints>
-      <gmd:resourceConstraints>
-        <gmd:MD_LegalConstraints>
           <gmd:useConstraints>
             <gmd:MD_RestrictionCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="license">license</gmd:MD_RestrictionCode>
           </gmd:useConstraints>
@@ -666,6 +659,26 @@
           </gmd:accessConstraints>
           <gmd:otherConstraints>
             <gmx:Anchor xlink:href="http://example.com/#constraint-without-statement" xlink:actuate="onRequest">http://example.com/#constraint-without-statement</gmx:Anchor>
+          </gmd:otherConstraints>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+      <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints id="bml-permissions-47ddd27bebe28c6c15381f8abd8ecdb31acbd590">
+          <gmd:accessConstraints>
+            <gmd:MD_RestrictionCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="restricted">restricted</gmd:MD_RestrictionCode>
+          </gmd:accessConstraints>
+          <gmd:otherConstraints>
+            <gco:CharacterString>[{"foo": "bar"}]</gco:CharacterString>
+          </gmd:otherConstraints>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+      <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints id="bml-permissions-d465e627f9946f2fa0d2dc0fc04e5385bc6cd46d">
+          <gmd:accessConstraints>
+            <gmd:MD_RestrictionCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="restricted">restricted</gmd:MD_RestrictionCode>
+          </gmd:accessConstraints>
+          <gmd:otherConstraints>
+            <gco:CharacterString>foo</gco:CharacterString>
           </gmd:otherConstraints>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
