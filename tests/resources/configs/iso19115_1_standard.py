@@ -927,7 +927,7 @@ base_complex_record_v3 = {
             "geographic": {
                 "identifier": {
                     "identifier": "ANTARCTICA",
-                    "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/70fb5a3b-35b1-4048-a8be-56a0d865281c",
+                    "href": "https://gcmd.earthdata.nasa.gov/kms/concept/70fb5a3b-35b1-4048-a8be-56a0d865281c",
                     "namespace": "gcmd-keywords-location",
                 },
             },
@@ -1056,7 +1056,7 @@ base_complex_record_v3 = {
                 {
                     "format": {
                         "format": "netCDF",
-                        "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
+                        "href": "https://gcmd.earthdata.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
                     },
                     "transfer_option": {
                         "online_resource": {
@@ -1355,7 +1355,7 @@ complete_record_v3 = {
                     "format": {
                         "format": "netCDF",
                         "version": "4",
-                        "href": "https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
+                        "href": "https://gcmd.earthdata.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
                         "amendment_number": "1.2",
                         "specification": "Final",
                         "file_decompression_technique": "ZIP",

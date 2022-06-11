@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+* Switching to new GCMD keywords URL
+  [#186](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/186)
 * Metadata (title, description) updated in existing schemas made clearer
   [#194](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/194)
 * Refactoring distribution format to use a new common format element alongside #66

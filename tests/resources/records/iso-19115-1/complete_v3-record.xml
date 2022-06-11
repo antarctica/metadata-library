@@ -849,9 +849,9 @@
             </gmd:CI_ResponsibleParty>
           </gmd:distributorContact>
           <gmd:distributorFormat>
-            <gmd:MD_Format id="bml-ada6a5488782b34631289314f66df8637769bc9f-fmt">
+            <gmd:MD_Format id="bml-d14fa00211ad266d814a548d41c61e4bad224854-fmt">
               <gmd:name>
-                <gmx:Anchor xlink:href="https://gcmdservices.gsfc.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca" xlink:actuate="onRequest">netCDF</gmx:Anchor>
+                <gmx:Anchor xlink:href="https://gcmd.earthdata.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca" xlink:actuate="onRequest">netCDF</gmx:Anchor>
               </gmd:name>
               <gmd:version>
                 <gco:CharacterString>4</gco:CharacterString>
@@ -868,7 +868,7 @@
             </gmd:MD_Format>
           </gmd:distributorFormat>
           <gmd:distributorTransferOptions>
-            <gmd:MD_DigitalTransferOptions id="bml-ada6a5488782b34631289314f66df8637769bc9f-tfo">
+            <gmd:MD_DigitalTransferOptions id="bml-d14fa00211ad266d814a548d41c61e4bad224854-tfo">
               <gmd:unitsOfDistribution>
                 <gco:CharacterString>MB</gco:CharacterString>
               </gmd:unitsOfDistribution>

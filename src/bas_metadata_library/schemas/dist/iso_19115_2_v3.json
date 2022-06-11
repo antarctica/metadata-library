@@ -3736,7 +3736,7 @@
                                                     "type": "string",
                                                     "format": "uri",
                                                     "examples": [
-                                                        "https://gcmdservices.gsfc.nasa.gov/kms/concept/c58320e6-3f1d-4c36-9bee-6bad73404c21"
+                                                        "https://gcmd.earthdata.nasa.gov/kms/concept/c58320e6-3f1d-4c36-9bee-6bad73404c21"
                                                     ]
                                                 }
                                             }
@@ -4962,7 +4962,7 @@
                                             "type": "string",
                                             "format": "uri",
                                             "examples": [
-                                                "https://gcmdservices.gsfc.nasa.gov/kms/concept/c58320e6-3f1d-4c36-9bee-6bad73404c21"
+                                                "https://gcmd.earthdata.nasa.gov/kms/concept/c58320e6-3f1d-4c36-9bee-6bad73404c21"
                                             ]
                                         }
                                     }
@@ -7897,7 +7897,7 @@
                                                             "type": "string",
                                                             "format": "uri",
                                                             "examples": [
-                                                                "https://gcmdservices.gsfc.nasa.gov/kms/concept/c58320e6-3f1d-4c36-9bee-6bad73404c21"
+                                                                "https://gcmd.earthdata.nasa.gov/kms/concept/c58320e6-3f1d-4c36-9bee-6bad73404c21"
                                                             ]
                                                         }
                                                     }
@@ -11749,7 +11749,7 @@
                                                     "type": "string",
                                                     "format": "uri",
                                                     "examples": [
-                                                        "https://gcmdservices.gsfc.nasa.gov/kms/concept/c58320e6-3f1d-4c36-9bee-6bad73404c21"
+                                                        "https://gcmd.earthdata.nasa.gov/kms/concept/c58320e6-3f1d-4c36-9bee-6bad73404c21"
                                                     ]
                                                 }
                                             }
