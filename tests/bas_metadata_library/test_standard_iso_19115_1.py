@@ -37,7 +37,7 @@ from tests.bas_metadata_library.standard_iso_19115_1_common import (
     assert_online_resource,
     assert_identifier,
 )
-from tests.resources.configs.iso19115_1_standard import configs_safe_v2, configs_v3_all, configs_safe_v3
+from tests.resources.configs.iso19115_1_standard import configs_safe_v2, configs_v3_all
 
 
 MonkeyPatch.patch_fromisoformat()
@@ -122,28 +122,28 @@ def test_configuration_v2_json_round_trip(config_name):
     assert configuration.config == _config.config
 
 
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_configuration_v3_from_json_file(config_name):
     configuration = MetadataRecordConfigV3()
     config_path = Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json")
     configuration.load(file=config_path)
     configuration.validate()
-    assert configuration.config == configs_safe_v3[config_name]
+    assert configuration.config == configs_v3_all[config_name]
 
 
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_configuration_v3_from_json_string(config_name):
     with open(Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r") as file:
         config_str = file.read()
         configuration = MetadataRecordConfigV3()
         configuration.loads(string=config_str)
         configuration.validate()
-        assert configuration.config == configs_safe_v3[config_name]
+        assert configuration.config == configs_v3_all[config_name]
 
 
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_configuration_v3_to_json_file(config_name):
-    configuration = MetadataRecordConfigV3(**configs_safe_v3[config_name])
+    configuration = MetadataRecordConfigV3(**configs_v3_all[config_name])
 
     with TemporaryDirectory() as tmp_dir_name:
         config_path = Path(tmp_dir_name).joinpath("config.json")
@@ -159,9 +159,9 @@ def test_configuration_v3_to_json_file(config_name):
         assert config == _config
 
 
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_configuration_v3_to_json_string(config_name):
-    configuration = MetadataRecordConfigV3(**configs_safe_v3[config_name])
+    configuration = MetadataRecordConfigV3(**configs_v3_all[config_name])
 
     config = configuration.dumps()
 
@@ -173,9 +173,9 @@ def test_configuration_v3_to_json_string(config_name):
     assert config == _config
 
 
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_configuration_v3_json_round_trip(config_name):
-    configuration = MetadataRecordConfigV3(**configs_safe_v3[config_name])
+    configuration = MetadataRecordConfigV3(**configs_v3_all[config_name])
     config = configuration.dumps()
     _config = MetadataRecordConfigV3()
     _config.loads(config)
@@ -183,7 +183,7 @@ def test_configuration_v3_json_round_trip(config_name):
 
 
 @pytest.mark.usefixtures("app_client")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_response(client, config_name):
     response = client.get(f"/standards/{standard}/{config_name}")
     assert response.status_code == HTTPStatus.OK
@@ -191,7 +191,7 @@ def test_response(client, config_name):
 
 
 @pytest.mark.usefixtures("app_client")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_complete_record(client, config_name):
     with open(
         Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
@@ -202,7 +202,7 @@ def test_complete_record(client, config_name):
 
 
 @pytest.mark.usefixtures("app_client")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_xml_declaration(client, config_name):
     response = client.get(f"/standards/{standard}/{config_name}")
     record = ElementTree(XML(response.data))
@@ -211,7 +211,7 @@ def test_xml_declaration(client, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_xml_namespaces(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
@@ -219,7 +219,7 @@ def test_xml_namespaces(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_root_element(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
 
@@ -228,10 +228,10 @@ def test_root_element(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_file_identifier(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "file_identifier" not in config:
         pytest.skip("record does not contain a file identifier")
@@ -244,10 +244,10 @@ def test_file_identifier(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_language(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "metadata" not in config or "language" not in config["metadata"]:
         pytest.skip("record does not contain a metadata language")
@@ -263,10 +263,10 @@ def test_language(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_character_set(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "metadata" not in config or "character_set" not in config["metadata"]:
         pytest.skip("record does not contain a metadata character set")
@@ -283,10 +283,10 @@ def test_character_set(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_hierarchy_level(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "hierarchy_level" not in config:
         pytest.skip("record does not contain a hierarchy level")
@@ -301,10 +301,10 @@ def test_hierarchy_level(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_hierarchy_level_name(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "hierarchy_level" not in config:
         pytest.skip("record does not contain a hierarchy level name")
@@ -317,10 +317,10 @@ def test_hierarchy_level_name(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_contact(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "metadata" not in config or "contacts" not in config["metadata"]:
         pytest.skip("record does not contain any metadata contacts")
@@ -340,10 +340,10 @@ def test_contact(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_datestamp(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "metadata" not in config or "date_stamp" not in config["metadata"]:
         pytest.skip("record does not contain a metadata datestamp")
@@ -354,10 +354,10 @@ def test_datestamp(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_metadata_standard(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if (
         "metadata" not in config
@@ -375,10 +375,10 @@ def test_metadata_standard(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_metadata_standard_version(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if (
         "metadata" not in config
@@ -396,10 +396,10 @@ def test_metadata_standard_version(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_reference_system_info(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "reference_system_info" not in config:
         pytest.skip("record does not contain coordinate reference system information")
@@ -453,10 +453,10 @@ def test_reference_system_info(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_citation(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config:
         pytest.skip("record does not contain an identification citation")
@@ -470,10 +470,10 @@ def test_identification_citation(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_abstract(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "abstract" not in config["identification"]:
         pytest.skip("record does not contain an identification abstract")
@@ -487,10 +487,10 @@ def test_identification_abstract(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_purpose(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "purpose" not in config["identification"]:
         pytest.skip("record does not contain an identification purpose")
@@ -504,10 +504,10 @@ def test_identification_purpose(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_credit(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "credit" not in config["identification"]:
         pytest.skip("record does not contain an identification credit")
@@ -521,10 +521,10 @@ def test_identification_credit(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_status(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "status" not in config["identification"]:
         pytest.skip("record does not contain an identification status")
@@ -581,10 +581,10 @@ def _resolve_points_of_contact_xpaths(point_of_contact_type, config):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_points_of_contact(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "contacts" not in config["identification"]:
         pytest.skip("record does not contain any identification points of contact")
@@ -609,10 +609,10 @@ def test_identification_points_of_contact(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_maintenance(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "maintenance" not in config["identification"]:
         pytest.skip("record does not contain identification maintenance")
@@ -627,10 +627,10 @@ def test_identification_maintenance(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_graphic_overviews(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "graphic_overviews" not in config["identification"]:
         pytest.skip("record does not contain graphic overviews")
@@ -743,10 +743,10 @@ def _resolve_descriptive_keywords_xpaths(config) -> List[dict]:
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_descriptive_keywords(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "keywords" not in config["identification"]:
         pytest.skip("record does not contain identification keywords")
@@ -911,10 +911,10 @@ def test_identification_aggregations(client, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_spatial_representation_type(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "spatial_representation_type" not in config["identification"]:
         pytest.skip("record does not contain an identification spatial representation type")
@@ -952,18 +952,18 @@ def _test_identification_spatial_resolution(record, config):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_spatial_resolution(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
     _test_identification_spatial_resolution(record=record, config=config)
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_character_set(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "character_set" not in config["identification"]:
         pytest.skip("record does not contain an identification character set")
@@ -977,10 +977,10 @@ def test_identification_character_set(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_language(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "language" not in config["identification"]:
         pytest.skip("record does not contain an identification language")
@@ -996,10 +996,10 @@ def test_identification_language(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_topics(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "topics" not in config["identification"]:
         pytest.skip("record does not contain any ISO topics")
@@ -1014,10 +1014,10 @@ def test_identification_topics(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_geographic_extent_bounding_box(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if (
         "identification" not in config
@@ -1061,10 +1061,10 @@ def test_identification_geographic_extent_bounding_box(get_record_response, conf
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_geographic_extent_identifier(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if (
         "identification" not in config
@@ -1087,10 +1087,10 @@ def test_identification_geographic_extent_identifier(get_record_response, config
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_temporal_extent(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if (
         "identification" not in config
@@ -1132,10 +1132,10 @@ def test_identification_temporal_extent(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_vertical_extent(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if (
         "identification" not in config
@@ -1177,10 +1177,10 @@ def test_identification_vertical_extent(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_identification_supplemental_info(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "supplemental_information" not in config["identification"]:
         pytest.skip("record does not contain supplemental information")
@@ -1222,10 +1222,10 @@ def _check_distributors_are_unique(distributions: list, record: MetadataRecord) 
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_distributions(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
     xpath_base = "/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor"
 
     if "distribution" not in config:
@@ -1302,10 +1302,10 @@ def test_distributions(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_data_quality_scope(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "hierarchy_level" not in config:
         pytest.skip("record does not contain a hierarchy level / scope code")
@@ -1320,10 +1320,10 @@ def test_data_quality_scope(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_data_quality_lineage(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "lineage" not in config["identification"]:
         pytest.skip("record does not contain a lineage")
@@ -1337,10 +1337,10 @@ def test_data_quality_lineage(get_record_response, config_name):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_metadata_maintenance(get_record_response, config_name):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v3[config_name]
+    config = configs_v3_all[config_name]
 
     if "metadata" not in config or "maintenance" not in config["metadata"]:
         pytest.skip("record does not contain metadata maintenance")
@@ -1353,7 +1353,7 @@ def test_metadata_maintenance(get_record_response, config_name):
 
 
 def test_edge_case_contact_without_email_address():
-    config = deepcopy(configs_safe_v3["minimal_v3"])
+    config = deepcopy(configs_v3_all["minimal_v3"])
     config["metadata"]["contacts"][0]["address"] = {}
     config["metadata"]["contacts"][0]["address"][
         "delivery_point"
@@ -1370,7 +1370,7 @@ def test_edge_case_contact_without_email_address():
 
 
 def test_edge_case_citation_with_multiple_roles():
-    config = deepcopy(configs_safe_v3["minimal_v3"])
+    config = deepcopy(configs_v3_all["minimal_v3"])
     config["reference_system_info"] = {
         "code": {"value": "urn:ogc:def:crs:EPSG::4326"},
         "authority": {"contact": {"individual": {"name": "foo"}, "role": ["publisher", "author"]}},
@@ -1384,7 +1384,7 @@ def test_edge_case_citation_with_multiple_roles():
 
 
 def test_edge_case_identifier_without_href():
-    config = deepcopy(configs_safe_v3["minimal_v3"])
+    config = deepcopy(configs_v3_all["minimal_v3"])
     config["identification"]["identifiers"] = [
         {"identifier": "NE/E007895/1", "namespace": "award"},
     ]
@@ -1418,7 +1418,7 @@ def test_edge_case_datestamp_invalid_date():
 
 
 def test_edge_case_spatial_resolution_null():
-    config = deepcopy(configs_safe_v3["complete_v3"])
+    config = deepcopy(configs_v3_all["complete_v3"])
     config["identification"]["spatial_resolution"] = None
     config_ = MetadataRecordConfigV3(**config)
     record = MetadataRecord(configuration=config_).generate_xml_document()
@@ -1495,7 +1495,7 @@ def test_edge_case_temporal_extent_begin_missing_date():
 
 
 def test_edge_case_distribution_option_format_no_properties():
-    config = deepcopy(configs_safe_v3["minimal_v3"])
+    config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
             "distributor": {
@@ -1551,7 +1551,7 @@ def test_edge_case_distribution_option_format_no_properties():
 
 
 def test_edge_case_distribution_option_transfer_options_no_properties():
-    config = deepcopy(configs_safe_v3["minimal_v3"])
+    config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
             "distributor": {
@@ -1596,7 +1596,7 @@ def test_edge_case_distribution_option_transfer_options_no_properties():
 
 
 def test_edge_case_distribution_option_no_id():
-    config = deepcopy(configs_safe_v3["minimal_v3"])
+    config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
             "distributor": {
@@ -1654,7 +1654,7 @@ def test_edge_case_distribution_option_no_id():
 
 
 def test_edge_case_distribution_option_more_formats_than_transfer_options():
-    config = deepcopy(configs_safe_v3["minimal_v3"])
+    config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
             "distributor": {
@@ -1700,7 +1700,7 @@ def test_edge_case_distribution_option_more_formats_than_transfer_options():
 
 
 def test_edge_case_distribution_option_more_transfer_options_than_formats():
-    config = deepcopy(configs_safe_v3["minimal_v3"])
+    config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
             "distributor": {
@@ -1744,7 +1744,7 @@ def test_edge_case_distribution_option_more_transfer_options_than_formats():
 
 
 def test_edge_case_distribution_option_transfer_option_size_no_unit():
-    config = deepcopy(configs_safe_v3["minimal_v3"])
+    config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
             "distributor": {
@@ -1785,7 +1785,7 @@ def test_edge_case_distribution_option_transfer_option_size_no_unit():
 
 
 def test_edge_case_citation_title_anchor_no_value_with_href():
-    config = deepcopy(configs_safe_v3["complete_v3"])
+    config = deepcopy(configs_v3_all["complete_v3"])
     config["identification"]["keywords"] = [
         {
             "terms": [
@@ -1829,7 +1829,7 @@ def test_edge_case_citation_title_anchor_no_value_with_href():
 
 @pytest.mark.parametrize("contact_type", ["individual", "organisation"])
 def test_edge_case_responsible_party_anchor_no_value_with_href(contact_type):
-    config = deepcopy(configs_safe_v3["complete_v3"])
+    config = deepcopy(configs_v3_all["complete_v3"])
     config["metadata"]["contacts"][0][contact_type] = {"name": "*Name to be removed*", "href": "*Test value*"}
     config = MetadataRecordConfigV3(**config)
     record = MetadataRecord(configuration=config)
@@ -1866,7 +1866,7 @@ def test_edge_case_responsible_party_anchor_no_value_with_href(contact_type):
     ],
 )
 def test_edge_case_responsible_party_incomplete_address(address_config):
-    config = deepcopy(configs_safe_v3["complete_v3"])
+    config = deepcopy(configs_v3_all["complete_v3"])
     config["metadata"]["contacts"][0]["address"] = address_config
     config = MetadataRecordConfigV3(**config)
     record = MetadataRecord(configuration=config)
@@ -1877,7 +1877,7 @@ def test_edge_case_responsible_party_incomplete_address(address_config):
 
 
 def test_edge_case_parse_config_year_only_date_no_precision():
-    _config = deepcopy(configs_safe_v3["minimal_v3"])
+    _config = deepcopy(configs_v3_all["minimal_v3"])
     _config["metadata"]["date_stamp"] = "2018-10-18"
     _config["identification"]["dates"]["creation"] = {"date": "2018"}
     _config = json.dumps(_config)
@@ -1939,7 +1939,7 @@ def test_lossless_conversion_v2(get_record_response, config_name):
     assert _config == config_
 
 
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_parse_existing_record_v3(config_name):
     with open(
         Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
@@ -1949,11 +1949,11 @@ def test_parse_existing_record_v3(config_name):
     record = MetadataRecord(record=record_data)
     configuration = record.make_config()
     config = configuration.config
-    assert config == configs_safe_v3[config_name]
+    assert config == configs_v3_all[config_name]
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_lossless_conversion_v3(get_record_response, config_name):
     _record = tostring(
         get_record_response(standard=standard, config=config_name),
@@ -1961,7 +1961,7 @@ def test_lossless_conversion_v3(get_record_response, config_name):
         xml_declaration=True,
         encoding="utf-8",
     ).decode()
-    _config = configs_safe_v3[config_name]
+    _config = configs_v3_all[config_name]
 
     record = MetadataRecord(record=_record)
     config_ = record.make_config().config
@@ -1972,16 +1972,16 @@ def test_lossless_conversion_v3(get_record_response, config_name):
     assert _config == config_
 
 
-@pytest.mark.parametrize("config_name", list(configs_safe_v3.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_record_schema_validation_valid(config_name):
-    config = MetadataRecordConfigV3(**configs_safe_v3[config_name])
+    config = MetadataRecordConfigV3(**configs_v3_all[config_name])
     record = MetadataRecord(configuration=config)
     record.validate()
     assert True is True
 
 
 def test_record_schema_validation_invalid():
-    config = deepcopy(MetadataRecordConfigV3(**configs_safe_v3["minimal_v3"]))
+    config = deepcopy(MetadataRecordConfigV3(**configs_v3_all["minimal_v3"]))
     record = MetadataRecord(configuration=config)
     with pytest.raises(RecordValidationError) as e:
         record.attributes["identification"]["spatial_resolution"] = "invalid"

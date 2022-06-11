@@ -35,13 +35,11 @@ configs_safe_v2 = {
 }
 configs_v2_all = {**configs_safe_v2}
 
-configs_safe_v3 = {
+configs_v3_all = {
     "minimal_v3": minimal_record_v3,
     "base-simple_v3": base_simple_record_v3,
     "base-complex_v3": base_complex_record_v3,
     "complete_v3": complete_record_v3,
 }
-configs_v3_all = {**configs_safe_v3}
 
-configs_safe_all = {**configs_safe_v2, **configs_safe_v3}
 configs_all = {**configs_v2_all, **configs_v3_all}
