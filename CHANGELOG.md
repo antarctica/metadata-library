@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Removing required citation usage constraint in test record configurations
   [#187](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/187)
+* Removing the need to run Flask app separately when capturing test records
+  [#197](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/197)
 
 ### Changed
 

@@ -1176,19 +1176,12 @@ Tests are run automatically in [Continuous Integration](#continuous-integration)
 ### Capturing test records
 
 To capture test records, which verify complete records are assembled correctly, a custom Flask CLI command,
-`capture-test-records` is available. This requires the Flask application to be running and uses the *Requests* 
-library to make requests against the Flask app, saving responses to a relevant directory in `tests/resources/records`.
+`capture-test-records` is available. This command will update pre-existing records in `tests/resources/records`, with 
+differences captured in version control to aid in manual review to ensure changes are expected/correct.
 
 ```shell
-# start Flask application:
-$ poetry run flask run
-
-# then in a separate terminal:
 $ poetry run flask capture-test-records
 ```
-
-It is intended that this command will update pre-existing records, with differences captured in version control to aid 
-manual review to ensure they are correct.
 
 ### Capturing test configurations as JSON
 
