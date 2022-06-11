@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Other Citation Details element
   [#184](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/184)
 
+### Fixed
+
+* Removing required citation usage constraint in test record configurations
+  [#187](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/187)
+
 ### Changed
 
 * Metadata (title, description) updated in existing schemas made clearer
