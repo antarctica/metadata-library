@@ -233,6 +233,14 @@ configuration_v3.upgrade_from_v2_config(v2_config=configuration_v2)
 The version 3 record configuration object includes a downgrade method. This method accepts returns a version 2 
 equivalent of the record configuration.
 
+**Note**: This will result in data loss, in that the V3 configuration allows information that the V2 configuration 
+does not. This additional information will be lost when downgrading to V2, even if the resulting V2 configuration is 
+upgraded to V3 again. 
+
+Information that will be lost when downgrading:
+
+* any resource constraints with a `permissions` property - the entire constraint will be lost
+
 ```python
 from datetime import date
 
@@ -860,6 +868,14 @@ and new configurations.
 23. add a subsection to the [Usage](#usage) section of the README explaining how to upgrade and downgrade a 
     configuration between the old and new versions
 24. Update the change log to reference the creation of the new schema version, referencing the summary issue
+
+Second, iteratively introduce changes to the new configuration, adding logic to convert between the old and new 
+configurations as needed. This logic will likely be messy and may target specific known use-cases. This is acceptable on 
+the basis these methods will be relatively short lived.
+
+1. as changes are made, add notes and caveats to the upgrade/downgrade methods in code, and summarise any 
+   significant points in the [Usage](#usage) instructions as needed (e.g. that the process is lossy)
+
 ### ISO 19115 - Automatic transfer option / format IDs
 
 ID attributes are automatically added to `gmd:MD_Format` and `gmd:MD_DigitalTransferOptions` elements in order to
