@@ -15,11 +15,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#196](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/196)
 * Permissions configuration property within resource constraints element
   [#191](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/191)
+* Resource format element
+  [#66](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/66)
+* Other Citation Details element
+  [#184](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/184)
 
 ### Changed
 
 * Metadata (title, description) updated in existing schemas made clearer
   [#194](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/194)
+* Refactoring distribution format to use a new common format element alongside #66
+  [#180](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/180)
 
 ## 0.8.0 - 2022-01-13
 
