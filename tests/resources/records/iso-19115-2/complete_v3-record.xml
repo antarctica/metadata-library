@@ -738,7 +738,7 @@
       <gmd:extent>
         <gmd:EX_Extent>
           <gmd:geographicElement>
-            <gmd:EX_GeographicBoundingBox>
+            <gmd:EX_GeographicBoundingBox id="boundingGeographicExtent">
               <gmd:westBoundLongitude>
                 <gco:Decimal>-45.61521</gco:Decimal>
               </gmd:westBoundLongitude>
@@ -756,7 +756,7 @@
           <gmd:temporalElement>
             <gmd:EX_TemporalExtent>
               <gmd:extent>
-                <gml:TimePeriod gml:id="boundingExtent">
+                <gml:TimePeriod gml:id="boundingTemporalExtent">
                   <gml:beginPosition>2018-03-15T00:00:00</gml:beginPosition>
                   <gml:endPosition>2018-03</gml:endPosition>
                 </gml:TimePeriod>

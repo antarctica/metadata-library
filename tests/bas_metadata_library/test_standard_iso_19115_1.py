@@ -1027,33 +1027,34 @@ def test_identification_geographic_extent_bounding_box(get_record_response, conf
     ):
         pytest.skip("record does not contain a geographic extent bounding box")
 
+    bounding_box_xpath = (
+        "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
+        "gmd:geographicElement/gmd:EX_GeographicBoundingBox[@id = 'boundingGeographicExtent']"
+    )
+
     west_bounding_box_value = record.xpath(
-        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
-        f"gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text() = "
+        f"{bounding_box_xpath}/gmd:westBoundLongitude/gco:Decimal/text() = "
         f"'{config['identification']['extent']['geographic']['bounding_box']['west_longitude']}'",
         namespaces=namespaces.nsmap(),
     )
     assert west_bounding_box_value is True
 
     east_bounding_box_value = record.xpath(
-        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
-        f"gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text() = "
+        f"{bounding_box_xpath}/gmd:eastBoundLongitude/gco:Decimal/text() = "
         f"'{config['identification']['extent']['geographic']['bounding_box']['east_longitude']}'",
         namespaces=namespaces.nsmap(),
     )
     assert east_bounding_box_value is True
 
     south_bounding_box_value = record.xpath(
-        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
-        f"gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text() = "
+        f"{bounding_box_xpath}/gmd:southBoundLatitude/gco:Decimal/text() = "
         f"'{config['identification']['extent']['geographic']['bounding_box']['south_latitude']}'",
         namespaces=namespaces.nsmap(),
     )
     assert south_bounding_box_value is True
 
     north_bounding_box_value = record.xpath(
-        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
-        f"gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text() = "
+        f"{bounding_box_xpath}/gmd:northBoundLatitude/gco:Decimal/text() = "
         f"'{config['identification']['extent']['geographic']['bounding_box']['north_latitude']}'",
         namespaces=namespaces.nsmap(),
     )
@@ -1109,7 +1110,7 @@ def test_identification_temporal_extent(get_record_response, config_name):
     )
     temporal_period_start_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
-        f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[@gml:id = 'boundingExtent']/"
+        f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[@gml:id = 'boundingTemporalExtent']/"
         f"gml:beginPosition/text() = '{_start_value}'",
         namespaces=namespaces.nsmap(),
     )
@@ -1124,7 +1125,7 @@ def test_identification_temporal_extent(get_record_response, config_name):
     )
     temporal_period_end_value = record.xpath(
         f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
-        f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[@gml:id = 'boundingExtent']/"
+        f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[@gml:id = 'boundingTemporalExtent']/"
         f"gml:endPosition/text() = '{_end_value}'",
         namespaces=namespaces.nsmap(),
     )
