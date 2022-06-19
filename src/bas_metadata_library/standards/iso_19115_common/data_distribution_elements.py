@@ -12,6 +12,8 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import (
     ResponsibleParty,
 )
 from bas_metadata_library.standards.iso_19115_common.utils import (
+    condense_distribution_distributors,
+    flatten_distribution_distributors,
     format_distribution_option_consistently,
     format_numbers_consistently,
 )
@@ -38,13 +40,20 @@ class DataDistribution(MetadataRecordElement):
             if bool(_distribution):
                 _.append(_distribution)
 
+        # distributions are grouped by distributor in ISO but should not be in configs
+        _ = flatten_distribution_distributors(distributions=_)
+
         return _
 
     def make_element(self):
         data_distribution_wrapper = SubElement(self.record, f"{{{self.ns.gmd}}}distributionInfo")
         data_distribution_element = SubElement(data_distribution_wrapper, f"{{{self.ns.gmd}}}MD_Distribution")
 
-        for distribution_config in self.element_attributes:
+        # distributions are grouped by distributor in ISO but aren't in configs
+        # noinspection PyTypeChecker
+        distributions = condense_distribution_distributors(distributions=self.element_attributes)
+
+        for distribution_config in distributions:
             distribution_element = Distribution(
                 record=self.record,
                 attributes=self.attributes,

@@ -853,20 +853,16 @@ base_simple_record_v3 = {
                 "email": "polardatacentre@bas.ac.uk",
                 "role": ["distributor"],
             },
-            "distribution_options": [
-                {
-                    "format": {"format": "netCDF"},
-                    "transfer_option": {
-                        "online_resource": {
-                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                            "title": "Get Data",
-                            "description": "Download measurement data",
-                            "protocol": "WWW:LINK-1.0-http--link",
-                            "function": "download",
-                        }
-                    },
+            "format": {"format": "netCDF"},
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "protocol": "WWW:LINK-1.0-http--link",
+                    "function": "download",
                 }
-            ],
+            },
         }
     ],
 }
@@ -1055,23 +1051,19 @@ base_complex_record_v3 = {
                     "function": "information",
                 },
             },
-            "distribution_options": [
-                {
-                    "format": {
-                        "format": "netCDF",
-                        "href": "https://gcmd.earthdata.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
-                    },
-                    "transfer_option": {
-                        "online_resource": {
-                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                            "title": "Get Data",
-                            "description": "Download measurement data",
-                            "protocol": "WWW:LINK-1.0-http--link",
-                            "function": "download",
-                        }
-                    },
+            "format": {
+                "format": "netCDF",
+                "href": "https://gcmd.earthdata.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
+            },
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "protocol": "WWW:LINK-1.0-http--link",
+                    "function": "download",
                 }
-            ],
+            },
         }
     ],
 }
@@ -1354,28 +1346,24 @@ complete_record_v3 = {
                     "function": "information",
                 },
             },
-            "distribution_options": [
-                {
-                    "format": {
-                        "format": "netCDF",
-                        "version": "4",
-                        "href": "https://gcmd.earthdata.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
-                        "amendment_number": "1.2",
-                        "specification": "Final",
-                        "file_decompression_technique": "ZIP",
-                    },
-                    "transfer_option": {
-                        "online_resource": {
-                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                            "title": "Get Data",
-                            "description": "Download measurement data",
-                            "protocol": "WWW:LINK-1.0-http--link",
-                            "function": "download",
-                        },
-                        "size": {"unit": "MB", "magnitude": 40.0},
-                    },
-                }
-            ],
+            "format": {
+                "format": "netCDF",
+                "version": "4",
+                "href": "https://gcmd.earthdata.nasa.gov/kms/concept/2b192915-32a8-4b68-a720-8ca8a84f04ca",
+                "amendment_number": "1.2",
+                "specification": "Final",
+                "file_decompression_technique": "ZIP",
+            },
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "protocol": "WWW:LINK-1.0-http--link",
+                    "function": "download",
+                },
+                "size": {"unit": "MB", "magnitude": 40.0},
+            },
         },
         {
             "distributor": {
@@ -1391,42 +1379,51 @@ complete_record_v3 = {
                 "email": "magic@bas.ac.uk",
                 "role": ["distributor"],
             },
-            "distribution_options": [
-                {
-                    "format": {
-                        "format": "PDF",
-                        "version": "1.6",
-                        "href": "https://www.iana.org/assignments/media-types/application/pdf",
-                    },
-                    "transfer_option": {
-                        "size": {"unit": "KB", "magnitude": 371},
-                        "online_resource": {
-                            "href": "https://data.bas.ac.uk/download/1a13e804-ceca-4f7b-9001-6e976872eec0",
-                            "title": "PDF",
-                            "description": "Download information as an Adobe PDF.",
-                            "protocol": "WWW:LINK-1.0-http--link",
-                            "function": "download",
-                        },
-                    },
+            "format": {
+                "format": "PDF",
+                "version": "1.6",
+                "href": "https://www.iana.org/assignments/media-types/application/pdf",
+            },
+            "transfer_option": {
+                "size": {"unit": "KB", "magnitude": 371},
+                "online_resource": {
+                    "href": "https://data.bas.ac.uk/download/1a13e804-ceca-4f7b-9001-6e976872eec0",
+                    "title": "PDF",
+                    "description": "Download information as an Adobe PDF.",
+                    "protocol": "WWW:LINK-1.0-http--link",
+                    "function": "download",
                 },
-                {
-                    "format": {
-                        "format": "PNG",
-                        "version": "1",
-                        "href": "https://www.iana.org/assignments/media-types/image/png",
-                    },
-                    "transfer_option": {
-                        "size": {"unit": "MB", "magnitude": 2.74},
-                        "online_resource": {
-                            "href": "https://data.bas.ac.uk/download/e6db2605-f9bd-422a-b864-caa6d69cdcaf",
-                            "title": "PNG",
-                            "description": "Download information as a PNG image.",
-                            "protocol": "WWW:LINK-1.0-http--link",
-                            "function": "download",
-                        },
-                    },
+            },
+        },
+        {
+            "distributor": {
+                "organisation": {"name": "Mapping and Geographic Information Centre, British Antarctic Survey"},
+                "phone": "+44 (0)1223 221400",
+                "address": {
+                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                    "city": "Cambridge",
+                    "administrative_area": "Cambridgeshire",
+                    "postal_code": "CB3 0ET",
+                    "country": "United Kingdom",
                 },
-            ],
+                "email": "magic@bas.ac.uk",
+                "role": ["distributor"],
+            },
+            "format": {
+                "format": "PNG",
+                "version": "1",
+                "href": "https://www.iana.org/assignments/media-types/image/png",
+            },
+            "transfer_option": {
+                "size": {"unit": "MB", "magnitude": 2.74},
+                "online_resource": {
+                    "href": "https://data.bas.ac.uk/download/e6db2605-f9bd-422a-b864-caa6d69cdcaf",
+                    "title": "PNG",
+                    "description": "Download information as a PNG image.",
+                    "protocol": "WWW:LINK-1.0-http--link",
+                    "function": "download",
+                },
+            },
         },
     ],
 }

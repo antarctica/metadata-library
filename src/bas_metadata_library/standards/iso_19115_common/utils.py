@@ -2,7 +2,7 @@ import json
 from copy import deepcopy
 from datetime import date, datetime
 from itertools import groupby
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 
 def _sort_dict_by_keys(dictionary: dict) -> dict:
@@ -191,15 +191,15 @@ def decode_date_string(date_datetime: str) -> dict:
     return _
 
 
-def contacts_condense_roles(contacts: List[dict]):
+def condense_contacts_roles(contacts: List[dict]) -> List[dict]:
     """
     Groups separate contacts with multiple roles into a single contact with multiple roles
 
-    I.e. if two contacts are identical but with different, singular, roles, this method will return a single contact
+    I.e. If two contacts are identical but with different, singular, roles, this method will return a single contact
     with multiple roles.
 
-    E.g. a set of contacts: {'name': 'foo', role: ['a']}, {'name': 'foo', role: ['b']}, {'name': 'bar', role: ['a']}
-               with become: {'name': 'foo', role: ['a', 'b']}, {'name': 'bar', role: ['a']}
+    E.g. A set of contacts: {'name': 'foo', role: ['a']}, {'name': 'foo', role: ['b']}, {'name': 'bar', role: ['a']}
+               will become: {'name': 'foo', role: ['a', 'b']}, {'name': 'bar', role: ['a']}
 
     Note: this method triggers a bug-bear error in flake8 for an unused loop control variable. In this case the error
     is invalid as the 'key' control variable is used in the groupby lambda function, rather than the body of the loop.
@@ -211,7 +211,6 @@ def contacts_condense_roles(contacts: List[dict]):
     :return list of contacts with merged roles
     """
     _merged_contacts = []
-
     _contacts_without_roles = []
     for contact in contacts:
         _contact = deepcopy(contact)
@@ -229,6 +228,124 @@ def contacts_condense_roles(contacts: List[dict]):
         _merged_contacts.append(_merged_contact)
 
     return _merged_contacts
+
+
+def condense_distribution_distributors(distributions: List[dict]) -> List[dict]:
+    """
+    Groups distribution options based on their distributor
+
+    Needed to encode distribution information in an ISO compatible structure.
+
+    Inverse of the `flatten_distribution_distributors()` method.
+
+    I.e. If two distribution options have the same distributor, this method will return a set of distributions with a
+    single distributor containing two distribution options.
+
+    In abstract terms it translates from this structure:
+
+        distribution:
+            |- distribution option [distributor, transfer_option, ...]
+
+
+    ... to this structure:
+
+        distribution:
+            |- distributor:
+                |- distribution option [transfer_option, ... (!distributor)]
+
+    E.g. A set of (simplified) distribution options:
+        - {'distributor': 'foo', 'transfer_option': {'href': 'https://example.com/a'}}
+        - {'distributor': 'foo', 'transfer_option': {'href': 'https://example.com/b'}}
+        - {'distributor': 'bar', 'transfer_option': {'href': 'https://example.com/c'}}
+    ...will become:
+        - {'distributor': 'foo', 'distribution_options': [
+            {'transfer_option': {'href': 'https://example.com/a'}},
+            {'transfer_option': {'href': 'https://example.com/b'}}
+          ]}
+        - {'distributor': 'bar', 'distribution_options': [{'transfer_option': {'href': 'https://example.com/c'}}]
+
+    To clarify some terms used above:
+
+    - distribution: the ISO `gmd:distributionInfo` element, which can contain a number of distribution elements
+    - distributor, transfer_option, format: ISO distribution elements
+    - distribution options: a non-ISO concept for a grouping of related distribution elements (can be incomplete)
+
+    Note: distributors need to match exactly (i.e. '==' not 'like' or 'contains')
+
+    E.g. a structure like this:
+        - {'distributor': {'name: 'foo', 'address': '...'}, 'transfer_option': {'href': 'https://example.com/a'}}
+        - {'distributor': {'name: 'foo'}, 'transfer_option': {'href': 'https://example.com/b'}}
+    ... will become:
+        - {'distributor': {'name: 'foo', 'address': '...'}, 'distribution_options': [
+            {'transfer_option': {'href': 'https://example.com/a'}}
+          ]}
+        - {'distributor': {'name: 'foo'}, 'distributor': 'distribution_options': [
+            {'transfer_option': {'href': 'https://example.com/b'}}
+          ]}
+    ... not:
+        - {'distributor': {'name: 'foo', 'address': '...'}, 'distribution_options': [
+            {'transfer_option': {'href': 'https://example.com/a'}},
+            {'transfer_option': {'href': 'https://example.com/b'}}
+          ]}
+
+    :type distributions: list
+    :param distributions: list of distributions (distribution options)
+
+    :rtype list
+    :return list of distributions (distribution options) grouped by distributor
+    """
+    _merged_distributor_distributions: Dict[str, Dict[str, List[dict]]] = {}
+
+    for distribution_option in distributions:
+        _distribution_option = deepcopy(distribution_option)
+        del _distribution_option["distributor"]
+        _distributor_key = json.dumps(distribution_option["distributor"])
+
+        if _distributor_key not in _merged_distributor_distributions:
+            _merged_distributor_distributions[_distributor_key] = {
+                "distributor": distribution_option["distributor"],
+                "distribution_options": [],
+            }
+        _merged_distributor_distributions[_distributor_key]["distribution_options"].append(_distribution_option)
+
+    return list(_merged_distributor_distributions.values())
+
+
+def flatten_distribution_distributors(distributions: List[dict]) -> List[dict]:
+    """
+    Flattens distribution options that are grouped by their distributor
+
+    In order to make it easy to update specific distribution elements in configs (by avoiding nesting).
+
+    Inverse of the `condense_distribution_distributors()` method.
+
+    In abstract terms this method translates from this structure:
+
+        distribution:
+            |- distributor:
+                |- distribution option [transfer_option, ...]
+
+    ... to this structure:
+        distribution:
+            |- distribution option [distributor, transfer_option, ...]
+
+    See the `condense_distribution_distributors()` method for more examples (which will have the reverse effect).
+
+    :type distributions: list
+    :param distributions: list of distributions (distribution options) grouped by distributor
+
+    :rtype list
+    :return list of distributions (distribution options)
+    """
+    _flattened_distribution_options: List[dict] = []
+
+    for distribution in distributions:
+        for distribution_option in distribution["distribution_options"]:
+            _distribution_option = deepcopy(distribution_option)
+            _distribution_option["distributor"] = distribution["distributor"]
+            _flattened_distribution_options.append(_distribution_option)
+
+    return _flattened_distribution_options
 
 
 def format_numbers_consistently(number: Union[int, float]) -> Union[int, float]:
@@ -259,9 +376,9 @@ def format_distribution_option_consistently(distribution_option: dict) -> dict:
 
     For example these serialised (simplified) objects are the same but have different hash values:
 
-    1. '{'format', 'csv', 'transfer_option': {'size': '40.0', 'url': 'https://example.com/foo.csv'}}' ->
-        SHA1: e1342bc7fd5736aaf2cf7e6fd465c71d975b9747
-    2. '{'transfer_option': {'size': '40', 'url': 'https://example.com/foo.csv'}, 'format', 'csv'}}' ->
+    1. '{'distributor': 'foo', 'format': 'csv', 'transfer_option': {'size': '40.0', 'url': 'https://example.com/foo.csv'}}'
+        -> SHA1: e1342bc7fd5736aaf2cf7e6fd465c71d975b9747
+    2. '{'transfer_option': {'size': '40', 'url': 'https://example.com/foo.csv'}, 'distributor': 'foo', 'format': 'csv'}}' ->
         SHA1: e4554470d7712aadf5f5467d6bd1427a689dea74
 
     By sorting the keys (so 'format' always comes before 'transfer_option' for example) and formatting '40.0' as '40',
@@ -335,8 +452,14 @@ def upgrade_from_v2_config(v2_config: dict, schema_uri: str) -> dict:
     """
     v3_config = deepcopy(v2_config)
 
-    # $schema property is now required
+    # $schema property is now required (it was allowed but not required in v2 so lossless)
     v3_config["$schema"] = schema_uri
+
+    # distribution options are now flattened so reorganise (lossless)
+    try:
+        v3_config["distribution"] = flatten_distribution_distributors(distributions=v3_config["distribution"])
+    except KeyError:
+        pass
 
     return v3_config
 
@@ -354,7 +477,7 @@ def downgrade_to_v2_config(v3_config: dict) -> dict:
 
     # $schema property is not required but is allowed so not removed
 
-    # resource constraints can't contain a 'permissions' property in v2 so drop (lossy)
+    # resource constraints couldn't contain a 'permissions' property in v2 so drop (lossy)
     try:
         _constraints = []
         for constraint in v2_config["identification"]["constraints"]:
@@ -364,6 +487,12 @@ def downgrade_to_v2_config(v3_config: dict) -> dict:
                 pass
             _constraints.append(constraint)
         v2_config["identification"]["constraints"] = _constraints
+    except KeyError:
+        pass
+
+    # distribution options were grouped by distributors in v2 so reorganise (lossless)
+    try:
+        v2_config["distribution"] = condense_distribution_distributors(distributions=v2_config["distribution"])
     except KeyError:
         pass
 
