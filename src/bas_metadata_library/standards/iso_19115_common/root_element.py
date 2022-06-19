@@ -12,7 +12,7 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import Char
 from bas_metadata_library.standards.iso_19115_common.data_distribution_elements import DataDistribution
 from bas_metadata_library.standards.iso_19115_common.data_identification_elements import DataIdentification
 from bas_metadata_library.standards.iso_19115_common.data_quality_elements import DataQuality
-from bas_metadata_library.standards.iso_19115_common.utils import contacts_condense_roles
+from bas_metadata_library.standards.iso_19115_common.utils import condense_contacts_roles
 
 
 class ISOMetadataRecord(MetadataRecordElement):
@@ -110,7 +110,7 @@ class ISOMetadataRecord(MetadataRecordElement):
             _["metadata"]["maintenance"] = _metadata_maintenance
 
         if "identification" in _.keys() and "contacts" in _["identification"].keys():
-            _["identification"]["contacts"] = contacts_condense_roles(contacts=_["identification"]["contacts"])
+            _["identification"]["contacts"] = condense_contacts_roles(contacts=_["identification"]["contacts"])
 
         if not _["distribution"]:
             del _["distribution"]

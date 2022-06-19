@@ -1391,12 +1391,15 @@
                 },
                 "distribution": {
                     "title": "Distribution",
-                    "description": "Information about to acquire, enquire about or retrieve the resource",
+                    "description": "Information about how to acquire, enquire about, or retrieve the resource.",
                     "type": "array",
                     "items": {
+                        "title": "Distribution Option",
+                        "description": "Combination of a format, transfer option and distributor defining one way the resource is distributed.",
+                        "type": "object",
                         "required": [
                             "distributor",
-                            "distribution_options"
+                            "transfer_option"
                         ],
                         "additionalProperties": false,
                         "properties": {
@@ -1690,172 +1693,156 @@
                                     }
                                 ]
                             },
-                            "distribution_options": {
-                                "title": "Distribution Options",
-                                "description": "Set of formats and transfer options defining the forms the resource is distributed in.",
-                                "type": "array",
-                                "items": {
-                                    "title": "Distribution Option",
-                                    "description": "Combination of a format and transfer option defining one form the resource is distributed in.",
-                                    "type": "object",
-                                    "required": [
-                                        "transfer_option"
-                                    ],
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "format": {
-                                            "title": "Format",
-                                            "description": "Data format the resource is available in.",
-                                            "type": "object",
-                                            "required": [
-                                                "format"
-                                            ],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "format": {
-                                                    "title": "Format",
-                                                    "description": "Name of the data format.",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "GeoPackage"
-                                                    ]
-                                                },
-                                                "href": {
-                                                    "title": "URL",
-                                                    "description": "URL identifying the data format.",
-                                                    "type": "string",
-                                                    "format": "uri",
-                                                    "examples": [
-                                                        "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
-                                                    ]
-                                                },
-                                                "version": {
-                                                    "title": "Version",
-                                                    "description": "Version/Edition of the data format.",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "1.2"
-                                                    ]
-                                                },
-                                                "amendment_number": {
-                                                    "title": "Amendment Number",
-                                                    "description": "Format version amendment number",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "1.0"
-                                                    ]
-                                                },
-                                                "specification": {
-                                                    "title": "Specification",
-                                                    "description": "The subset name, profile, or product specification of the format",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "Final"
-                                                    ]
-                                                },
-                                                "file_decompression_technique": {
-                                                    "title": "File decompression technique",
-                                                    "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "ZIP"
-                                                    ]
-                                                }
+                            "format": {
+                                "title": "Format",
+                                "description": "Data format the resource is available in.",
+                                "type": "object",
+                                "required": [
+                                    "format"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "format": {
+                                        "title": "Format",
+                                        "description": "Name of the data format.",
+                                        "type": "string",
+                                        "examples": [
+                                            "GeoPackage"
+                                        ]
+                                    },
+                                    "href": {
+                                        "title": "URL",
+                                        "description": "URL identifying the data format.",
+                                        "type": "string",
+                                        "format": "uri",
+                                        "examples": [
+                                            "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
+                                        ]
+                                    },
+                                    "version": {
+                                        "title": "Version",
+                                        "description": "Version/Edition of the data format.",
+                                        "type": "string",
+                                        "examples": [
+                                            "1.2"
+                                        ]
+                                    },
+                                    "amendment_number": {
+                                        "title": "Amendment Number",
+                                        "description": "Format version amendment number",
+                                        "type": "string",
+                                        "examples": [
+                                            "1.0"
+                                        ]
+                                    },
+                                    "specification": {
+                                        "title": "Specification",
+                                        "description": "The subset name, profile, or product specification of the format",
+                                        "type": "string",
+                                        "examples": [
+                                            "Final"
+                                        ]
+                                    },
+                                    "file_decompression_technique": {
+                                        "title": "File decompression technique",
+                                        "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                                        "type": "string",
+                                        "examples": [
+                                            "ZIP"
+                                        ]
+                                    }
+                                }
+                            },
+                            "transfer_option": {
+                                "title": "Transfer option",
+                                "description": "Data transfer option, describing where and how the resource can be accessed.",
+                                "type": "object",
+                                "required": [
+                                    "online_resource"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "size": {
+                                        "title": "Size",
+                                        "description": "Size of the transfer option if it uses files for example.",
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "required": [],
+                                        "properties": {
+                                            "unit": {
+                                                "title": "unit",
+                                                "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
+                                                "type": "string",
+                                                "examples": [
+                                                    "MB"
+                                                ]
+                                            },
+                                            "magnitude": {
+                                                "title": "unit",
+                                                "description": "Size of the transfer option in a given unit.",
+                                                "type": "number",
+                                                "examples": [
+                                                    20.0
+                                                ]
                                             }
-                                        },
-                                        "transfer_option": {
-                                            "title": "Transfer option",
-                                            "description": "Data transfer option, describing where and how the resource can be accessed.",
-                                            "type": "object",
-                                            "required": [
-                                                "online_resource"
-                                            ],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "size": {
-                                                    "title": "Size",
-                                                    "description": "Size of the transfer option if it uses files for example.",
-                                                    "type": "object",
-                                                    "additionalProperties": false,
-                                                    "required": [],
-                                                    "properties": {
-                                                        "unit": {
-                                                            "title": "unit",
-                                                            "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "MB"
-                                                            ]
-                                                        },
-                                                        "magnitude": {
-                                                            "title": "unit",
-                                                            "description": "Size of the transfer option in a given unit.",
-                                                            "type": "number",
-                                                            "examples": [
-                                                                20.0
-                                                            ]
-                                                        }
-                                                    }
-                                                },
-                                                "online_resource": {
-                                                    "title": "Online resource",
-                                                    "description": "An external website or page related to an element related to the resource, such as a website for a contact (e.g. a BAS staff profile).",
-                                                    "type": "object",
-                                                    "required": [
-                                                        "href"
-                                                    ],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "href": {
-                                                            "title": "URL",
-                                                            "description": "URL to the external website or page.",
-                                                            "type": "string",
-                                                            "format": "uri",
-                                                            "examples": [
-                                                                "https://www.epsg-registry.org/"
-                                                            ]
-                                                        },
-                                                        "title": {
-                                                            "title": "Title",
-                                                            "description": "Title of the external website or page.",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "EPSG Geodetic Parameter Dataset"
-                                                            ]
-                                                        },
-                                                        "description": {
-                                                            "title": "Description",
-                                                            "description": "Description of the external website or page.",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry."
-                                                            ]
-                                                        },
-                                                        "protocol": {
-                                                            "title": "Protocol",
-                                                            "description": "Description of the Protocol",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "WWW:LINK-1.0-http--link"
-                                                            ]
-                                                        },
-                                                        "function": {
-                                                            "title": "Function",
-                                                            "description": "The kind of action or service the external website or page provides.",
-                                                            "type": "string",
-                                                            "enum": [
-                                                                "download",
-                                                                "information",
-                                                                "offlineAccess",
-                                                                "order",
-                                                                "search"
-                                                            ],
-                                                            "examples": [
-                                                                "information"
-                                                            ]
-                                                        }
-                                                    }
-                                                }
+                                        }
+                                    },
+                                    "online_resource": {
+                                        "title": "Online resource",
+                                        "description": "An external website or page related to an element related to the resource, such as a website for a contact (e.g. a BAS staff profile).",
+                                        "type": "object",
+                                        "required": [
+                                            "href"
+                                        ],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "href": {
+                                                "title": "URL",
+                                                "description": "URL to the external website or page.",
+                                                "type": "string",
+                                                "format": "uri",
+                                                "examples": [
+                                                    "https://www.epsg-registry.org/"
+                                                ]
+                                            },
+                                            "title": {
+                                                "title": "Title",
+                                                "description": "Title of the external website or page.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "EPSG Geodetic Parameter Dataset"
+                                                ]
+                                            },
+                                            "description": {
+                                                "title": "Description",
+                                                "description": "Description of the external website or page.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry."
+                                                ]
+                                            },
+                                            "protocol": {
+                                                "title": "Protocol",
+                                                "description": "Description of the Protocol",
+                                                "type": "string",
+                                                "examples": [
+                                                    "WWW:LINK-1.0-http--link"
+                                                ]
+                                            },
+                                            "function": {
+                                                "title": "Function",
+                                                "description": "The kind of action or service the external website or page provides.",
+                                                "type": "string",
+                                                "enum": [
+                                                    "download",
+                                                    "information",
+                                                    "offlineAccess",
+                                                    "order",
+                                                    "search"
+                                                ],
+                                                "examples": [
+                                                    "information"
+                                                ]
                                             }
                                         }
                                     }
@@ -2156,13 +2143,304 @@
                 },
                 "distribution_option": {
                     "title": "Distribution Option",
-                    "description": "Combination of a format and transfer option defining one form the resource is distributed in.",
+                    "description": "Combination of a format, transfer option and distributor defining one way the resource is distributed.",
                     "type": "object",
                     "required": [
+                        "distributor",
                         "transfer_option"
                     ],
                     "additionalProperties": false,
                     "properties": {
+                        "distributor": {
+                            "title": "Distributor",
+                            "description": "A contact limited to the role of distributor.",
+                            "allOf": [
+                                {
+                                    "title": "Contact",
+                                    "description": "An individual or organisation related to the resource, or related to an element related to the resource.",
+                                    "type": "object",
+                                    "allOf": [
+                                        {
+                                            "required": [
+                                                "role"
+                                            ]
+                                        },
+                                        {
+                                            "anyOf": [
+                                                {
+                                                    "required": [
+                                                        "individual"
+                                                    ]
+                                                },
+                                                {
+                                                    "required": [
+                                                        "organisation"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "individual": {
+                                            "title": "Contact identity",
+                                            "description": "Name, and optionally identifier, for an individual or organisation.",
+                                            "type": "object",
+                                            "required": [
+                                                "name"
+                                            ],
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "name": {
+                                                    "title": "Name",
+                                                    "description": "Name of an individual or organisation. Individuals should use the form '[family name], [given name(s)]'. Organisations can include departments and divisions as a prefix to provide clarity.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "Mapping and Geographic Information Centre, British Antarctic Survey",
+                                                        "Watson, Constance"
+                                                    ]
+                                                },
+                                                "href": {
+                                                    "title": "URL",
+                                                    "description": "URL identifying, or relating to, the individual or organisation. Identifiers are restricted to ORCID iDs (for individuals) and Research Organisation Registry (ROR) or International Standard Name Identifier (ISNI) identifiers (for organisations).",
+                                                    "type": "string",
+                                                    "format": "uri",
+                                                    "examples": [
+                                                        "https://ror.org/01rhff309",
+                                                        "https://sandbox.orcid.org/0000-0001-8373-6934"
+                                                    ]
+                                                },
+                                                "title": {
+                                                    "title": "URL Tile (code)",
+                                                    "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "ror",
+                                                        "orcid"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "organisation": {
+                                            "title": "Contact identity",
+                                            "description": "Name, and optionally identifier, for an individual or organisation.",
+                                            "type": "object",
+                                            "required": [
+                                                "name"
+                                            ],
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "name": {
+                                                    "title": "Name",
+                                                    "description": "Name of an individual or organisation. Individuals should use the form '[family name], [given name(s)]'. Organisations can include departments and divisions as a prefix to provide clarity.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "Mapping and Geographic Information Centre, British Antarctic Survey",
+                                                        "Watson, Constance"
+                                                    ]
+                                                },
+                                                "href": {
+                                                    "title": "URL",
+                                                    "description": "URL identifying, or relating to, the individual or organisation. Identifiers are restricted to ORCID iDs (for individuals) and Research Organisation Registry (ROR) or International Standard Name Identifier (ISNI) identifiers (for organisations).",
+                                                    "type": "string",
+                                                    "format": "uri",
+                                                    "examples": [
+                                                        "https://ror.org/01rhff309",
+                                                        "https://sandbox.orcid.org/0000-0001-8373-6934"
+                                                    ]
+                                                },
+                                                "title": {
+                                                    "title": "URL Tile (code)",
+                                                    "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "ror",
+                                                        "orcid"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "position": {
+                                            "title": "Position",
+                                            "description": "Position or role held.",
+                                            "type": "string",
+                                            "examples": [
+                                                "Atmospheric Chemist"
+                                            ]
+                                        },
+                                        "email": {
+                                            "title": "Email",
+                                            "description": "Email address.",
+                                            "type": "string",
+                                            "format": "email",
+                                            "examples": [
+                                                "magic@bas.ac.uk"
+                                            ]
+                                        },
+                                        "phone": {
+                                            "title": "Phone",
+                                            "description": "Telephone number, including international dialing code.",
+                                            "type": "string",
+                                            "examples": [
+                                                "+44 (0)1223 221400"
+                                            ]
+                                        },
+                                        "address": {
+                                            "title": "Physical address",
+                                            "description": "Address for a physical location/building, for sending post/mail or visiting in-person.",
+                                            "type": "object",
+                                            "required": [],
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "delivery_point": {
+                                                    "title": "Delivery point",
+                                                    "description": "Name and street address to location/building.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "British Antarctic Survey, High Cross, Madingley Road"
+                                                    ]
+                                                },
+                                                "city": {
+                                                    "title": "City",
+                                                    "description": "Nearest (postal) city to location/building.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "Cambridge"
+                                                    ]
+                                                },
+                                                "administrative_area": {
+                                                    "title": "Administrative area",
+                                                    "description": "County, state or other region containing location/building.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "Cambridgeshire"
+                                                    ]
+                                                },
+                                                "postal_code": {
+                                                    "title": "Postal code",
+                                                    "description": "Post code, zip code or other reference for location/building.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "CB3 0ET"
+                                                    ]
+                                                },
+                                                "country": {
+                                                    "title": "Country",
+                                                    "description": "Country or territory containing location/building.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "United Kingdom"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "online_resource": {
+                                            "title": "Online resource",
+                                            "description": "An external website or page related to an element related to the resource, such as a website for a contact (e.g. a BAS staff profile).",
+                                            "type": "object",
+                                            "required": [
+                                                "href"
+                                            ],
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "href": {
+                                                    "title": "URL",
+                                                    "description": "URL to the external website or page.",
+                                                    "type": "string",
+                                                    "format": "uri",
+                                                    "examples": [
+                                                        "https://www.epsg-registry.org/"
+                                                    ]
+                                                },
+                                                "title": {
+                                                    "title": "Title",
+                                                    "description": "Title of the external website or page.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "EPSG Geodetic Parameter Dataset"
+                                                    ]
+                                                },
+                                                "description": {
+                                                    "title": "Description",
+                                                    "description": "Description of the external website or page.",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry."
+                                                    ]
+                                                },
+                                                "protocol": {
+                                                    "title": "Protocol",
+                                                    "description": "Description of the Protocol",
+                                                    "type": "string",
+                                                    "examples": [
+                                                        "WWW:LINK-1.0-http--link"
+                                                    ]
+                                                },
+                                                "function": {
+                                                    "title": "Function",
+                                                    "description": "The kind of action or service the external website or page provides.",
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "download",
+                                                        "information",
+                                                        "offlineAccess",
+                                                        "order",
+                                                        "search"
+                                                    ],
+                                                    "examples": [
+                                                        "information"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "role": {
+                                            "title": "Role",
+                                            "description": "Role describing how the contact relates to the resource, or how the contact relates to an element related to the resource.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "author",
+                                                    "custodian",
+                                                    "distributor",
+                                                    "originator",
+                                                    "owner",
+                                                    "pointOfContact",
+                                                    "principalInvestigator",
+                                                    "processor",
+                                                    "publisher",
+                                                    "resourceProvider",
+                                                    "sponsor",
+                                                    "user",
+                                                    "coAuthor",
+                                                    "collaborator",
+                                                    "contributor",
+                                                    "editor",
+                                                    "funder",
+                                                    "mediator",
+                                                    "rightsHolder",
+                                                    "stakeholder"
+                                                ]
+                                            },
+                                            "examples": [
+                                                "pointOfContact"
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "role": {
+                                            "items": {
+                                                "enum": [
+                                                    "distributor"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
                         "format": {
                             "title": "Format",
                             "description": "Data format the resource is available in.",
@@ -2313,177 +2591,6 @@
                                             "examples": [
                                                 "information"
                                             ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "distribution_options": {
-                    "title": "Distribution Options",
-                    "description": "Set of formats and transfer options defining the forms the resource is distributed in.",
-                    "type": "array",
-                    "items": {
-                        "title": "Distribution Option",
-                        "description": "Combination of a format and transfer option defining one form the resource is distributed in.",
-                        "type": "object",
-                        "required": [
-                            "transfer_option"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                            "format": {
-                                "title": "Format",
-                                "description": "Data format the resource is available in.",
-                                "type": "object",
-                                "required": [
-                                    "format"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
-                                    "format": {
-                                        "title": "Format",
-                                        "description": "Name of the data format.",
-                                        "type": "string",
-                                        "examples": [
-                                            "GeoPackage"
-                                        ]
-                                    },
-                                    "href": {
-                                        "title": "URL",
-                                        "description": "URL identifying the data format.",
-                                        "type": "string",
-                                        "format": "uri",
-                                        "examples": [
-                                            "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
-                                        ]
-                                    },
-                                    "version": {
-                                        "title": "Version",
-                                        "description": "Version/Edition of the data format.",
-                                        "type": "string",
-                                        "examples": [
-                                            "1.2"
-                                        ]
-                                    },
-                                    "amendment_number": {
-                                        "title": "Amendment Number",
-                                        "description": "Format version amendment number",
-                                        "type": "string",
-                                        "examples": [
-                                            "1.0"
-                                        ]
-                                    },
-                                    "specification": {
-                                        "title": "Specification",
-                                        "description": "The subset name, profile, or product specification of the format",
-                                        "type": "string",
-                                        "examples": [
-                                            "Final"
-                                        ]
-                                    },
-                                    "file_decompression_technique": {
-                                        "title": "File decompression technique",
-                                        "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
-                                        "type": "string",
-                                        "examples": [
-                                            "ZIP"
-                                        ]
-                                    }
-                                }
-                            },
-                            "transfer_option": {
-                                "title": "Transfer option",
-                                "description": "Data transfer option, describing where and how the resource can be accessed.",
-                                "type": "object",
-                                "required": [
-                                    "online_resource"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
-                                    "size": {
-                                        "title": "Size",
-                                        "description": "Size of the transfer option if it uses files for example.",
-                                        "type": "object",
-                                        "additionalProperties": false,
-                                        "required": [],
-                                        "properties": {
-                                            "unit": {
-                                                "title": "unit",
-                                                "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
-                                                "type": "string",
-                                                "examples": [
-                                                    "MB"
-                                                ]
-                                            },
-                                            "magnitude": {
-                                                "title": "unit",
-                                                "description": "Size of the transfer option in a given unit.",
-                                                "type": "number",
-                                                "examples": [
-                                                    20.0
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "online_resource": {
-                                        "title": "Online resource",
-                                        "description": "An external website or page related to an element related to the resource, such as a website for a contact (e.g. a BAS staff profile).",
-                                        "type": "object",
-                                        "required": [
-                                            "href"
-                                        ],
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "href": {
-                                                "title": "URL",
-                                                "description": "URL to the external website or page.",
-                                                "type": "string",
-                                                "format": "uri",
-                                                "examples": [
-                                                    "https://www.epsg-registry.org/"
-                                                ]
-                                            },
-                                            "title": {
-                                                "title": "Title",
-                                                "description": "Title of the external website or page.",
-                                                "type": "string",
-                                                "examples": [
-                                                    "EPSG Geodetic Parameter Dataset"
-                                                ]
-                                            },
-                                            "description": {
-                                                "title": "Description",
-                                                "description": "Description of the external website or page.",
-                                                "type": "string",
-                                                "examples": [
-                                                    "The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry."
-                                                ]
-                                            },
-                                            "protocol": {
-                                                "title": "Protocol",
-                                                "description": "Description of the Protocol",
-                                                "type": "string",
-                                                "examples": [
-                                                    "WWW:LINK-1.0-http--link"
-                                                ]
-                                            },
-                                            "function": {
-                                                "title": "Function",
-                                                "description": "The kind of action or service the external website or page provides.",
-                                                "type": "string",
-                                                "enum": [
-                                                    "download",
-                                                    "information",
-                                                    "offlineAccess",
-                                                    "order",
-                                                    "search"
-                                                ],
-                                                "examples": [
-                                                    "information"
-                                                ]
-                                            }
                                         }
                                     }
                                 }
@@ -9038,12 +9145,15 @@
                         },
                         "distribution": {
                             "title": "Distribution",
-                            "description": "Information about to acquire, enquire about or retrieve the resource",
+                            "description": "Information about how to acquire, enquire about, or retrieve the resource.",
                             "type": "array",
                             "items": {
+                                "title": "Distribution Option",
+                                "description": "Combination of a format, transfer option and distributor defining one way the resource is distributed.",
+                                "type": "object",
                                 "required": [
                                     "distributor",
-                                    "distribution_options"
+                                    "transfer_option"
                                 ],
                                 "additionalProperties": false,
                                 "properties": {
@@ -9337,172 +9447,156 @@
                                             }
                                         ]
                                     },
-                                    "distribution_options": {
-                                        "title": "Distribution Options",
-                                        "description": "Set of formats and transfer options defining the forms the resource is distributed in.",
-                                        "type": "array",
-                                        "items": {
-                                            "title": "Distribution Option",
-                                            "description": "Combination of a format and transfer option defining one form the resource is distributed in.",
-                                            "type": "object",
-                                            "required": [
-                                                "transfer_option"
-                                            ],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "format": {
-                                                    "title": "Format",
-                                                    "description": "Data format the resource is available in.",
-                                                    "type": "object",
-                                                    "required": [
-                                                        "format"
-                                                    ],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "format": {
-                                                            "title": "Format",
-                                                            "description": "Name of the data format.",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "GeoPackage"
-                                                            ]
-                                                        },
-                                                        "href": {
-                                                            "title": "URL",
-                                                            "description": "URL identifying the data format.",
-                                                            "type": "string",
-                                                            "format": "uri",
-                                                            "examples": [
-                                                                "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
-                                                            ]
-                                                        },
-                                                        "version": {
-                                                            "title": "Version",
-                                                            "description": "Version/Edition of the data format.",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "1.2"
-                                                            ]
-                                                        },
-                                                        "amendment_number": {
-                                                            "title": "Amendment Number",
-                                                            "description": "Format version amendment number",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "1.0"
-                                                            ]
-                                                        },
-                                                        "specification": {
-                                                            "title": "Specification",
-                                                            "description": "The subset name, profile, or product specification of the format",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "Final"
-                                                            ]
-                                                        },
-                                                        "file_decompression_technique": {
-                                                            "title": "File decompression technique",
-                                                            "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "ZIP"
-                                                            ]
-                                                        }
+                                    "format": {
+                                        "title": "Format",
+                                        "description": "Data format the resource is available in.",
+                                        "type": "object",
+                                        "required": [
+                                            "format"
+                                        ],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "format": {
+                                                "title": "Format",
+                                                "description": "Name of the data format.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "GeoPackage"
+                                                ]
+                                            },
+                                            "href": {
+                                                "title": "URL",
+                                                "description": "URL identifying the data format.",
+                                                "type": "string",
+                                                "format": "uri",
+                                                "examples": [
+                                                    "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
+                                                ]
+                                            },
+                                            "version": {
+                                                "title": "Version",
+                                                "description": "Version/Edition of the data format.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "1.2"
+                                                ]
+                                            },
+                                            "amendment_number": {
+                                                "title": "Amendment Number",
+                                                "description": "Format version amendment number",
+                                                "type": "string",
+                                                "examples": [
+                                                    "1.0"
+                                                ]
+                                            },
+                                            "specification": {
+                                                "title": "Specification",
+                                                "description": "The subset name, profile, or product specification of the format",
+                                                "type": "string",
+                                                "examples": [
+                                                    "Final"
+                                                ]
+                                            },
+                                            "file_decompression_technique": {
+                                                "title": "File decompression technique",
+                                                "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "ZIP"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "transfer_option": {
+                                        "title": "Transfer option",
+                                        "description": "Data transfer option, describing where and how the resource can be accessed.",
+                                        "type": "object",
+                                        "required": [
+                                            "online_resource"
+                                        ],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "size": {
+                                                "title": "Size",
+                                                "description": "Size of the transfer option if it uses files for example.",
+                                                "type": "object",
+                                                "additionalProperties": false,
+                                                "required": [],
+                                                "properties": {
+                                                    "unit": {
+                                                        "title": "unit",
+                                                        "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "MB"
+                                                        ]
+                                                    },
+                                                    "magnitude": {
+                                                        "title": "unit",
+                                                        "description": "Size of the transfer option in a given unit.",
+                                                        "type": "number",
+                                                        "examples": [
+                                                            20.0
+                                                        ]
                                                     }
-                                                },
-                                                "transfer_option": {
-                                                    "title": "Transfer option",
-                                                    "description": "Data transfer option, describing where and how the resource can be accessed.",
-                                                    "type": "object",
-                                                    "required": [
-                                                        "online_resource"
-                                                    ],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "size": {
-                                                            "title": "Size",
-                                                            "description": "Size of the transfer option if it uses files for example.",
-                                                            "type": "object",
-                                                            "additionalProperties": false,
-                                                            "required": [],
-                                                            "properties": {
-                                                                "unit": {
-                                                                    "title": "unit",
-                                                                    "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
-                                                                    "type": "string",
-                                                                    "examples": [
-                                                                        "MB"
-                                                                    ]
-                                                                },
-                                                                "magnitude": {
-                                                                    "title": "unit",
-                                                                    "description": "Size of the transfer option in a given unit.",
-                                                                    "type": "number",
-                                                                    "examples": [
-                                                                        20.0
-                                                                    ]
-                                                                }
-                                                            }
-                                                        },
-                                                        "online_resource": {
-                                                            "title": "Online resource",
-                                                            "description": "An external website or page related to an element related to the resource, such as a website for a contact (e.g. a BAS staff profile).",
-                                                            "type": "object",
-                                                            "required": [
-                                                                "href"
-                                                            ],
-                                                            "additionalProperties": false,
-                                                            "properties": {
-                                                                "href": {
-                                                                    "title": "URL",
-                                                                    "description": "URL to the external website or page.",
-                                                                    "type": "string",
-                                                                    "format": "uri",
-                                                                    "examples": [
-                                                                        "https://www.epsg-registry.org/"
-                                                                    ]
-                                                                },
-                                                                "title": {
-                                                                    "title": "Title",
-                                                                    "description": "Title of the external website or page.",
-                                                                    "type": "string",
-                                                                    "examples": [
-                                                                        "EPSG Geodetic Parameter Dataset"
-                                                                    ]
-                                                                },
-                                                                "description": {
-                                                                    "title": "Description",
-                                                                    "description": "Description of the external website or page.",
-                                                                    "type": "string",
-                                                                    "examples": [
-                                                                        "The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry."
-                                                                    ]
-                                                                },
-                                                                "protocol": {
-                                                                    "title": "Protocol",
-                                                                    "description": "Description of the Protocol",
-                                                                    "type": "string",
-                                                                    "examples": [
-                                                                        "WWW:LINK-1.0-http--link"
-                                                                    ]
-                                                                },
-                                                                "function": {
-                                                                    "title": "Function",
-                                                                    "description": "The kind of action or service the external website or page provides.",
-                                                                    "type": "string",
-                                                                    "enum": [
-                                                                        "download",
-                                                                        "information",
-                                                                        "offlineAccess",
-                                                                        "order",
-                                                                        "search"
-                                                                    ],
-                                                                    "examples": [
-                                                                        "information"
-                                                                    ]
-                                                                }
-                                                            }
-                                                        }
+                                                }
+                                            },
+                                            "online_resource": {
+                                                "title": "Online resource",
+                                                "description": "An external website or page related to an element related to the resource, such as a website for a contact (e.g. a BAS staff profile).",
+                                                "type": "object",
+                                                "required": [
+                                                    "href"
+                                                ],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "href": {
+                                                        "title": "URL",
+                                                        "description": "URL to the external website or page.",
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "examples": [
+                                                            "https://www.epsg-registry.org/"
+                                                        ]
+                                                    },
+                                                    "title": {
+                                                        "title": "Title",
+                                                        "description": "Title of the external website or page.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "EPSG Geodetic Parameter Dataset"
+                                                        ]
+                                                    },
+                                                    "description": {
+                                                        "title": "Description",
+                                                        "description": "Description of the external website or page.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry."
+                                                        ]
+                                                    },
+                                                    "protocol": {
+                                                        "title": "Protocol",
+                                                        "description": "Description of the Protocol",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "WWW:LINK-1.0-http--link"
+                                                        ]
+                                                    },
+                                                    "function": {
+                                                        "title": "Function",
+                                                        "description": "The kind of action or service the external website or page provides.",
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "download",
+                                                            "information",
+                                                            "offlineAccess",
+                                                            "order",
+                                                            "search"
+                                                        ],
+                                                        "examples": [
+                                                            "information"
+                                                        ]
                                                     }
                                                 }
                                             }
@@ -12901,12 +12995,15 @@
                 },
                 "distribution": {
                     "title": "Distribution",
-                    "description": "Information about to acquire, enquire about or retrieve the resource",
+                    "description": "Information about how to acquire, enquire about, or retrieve the resource.",
                     "type": "array",
                     "items": {
+                        "title": "Distribution Option",
+                        "description": "Combination of a format, transfer option and distributor defining one way the resource is distributed.",
+                        "type": "object",
                         "required": [
                             "distributor",
-                            "distribution_options"
+                            "transfer_option"
                         ],
                         "additionalProperties": false,
                         "properties": {
@@ -13200,172 +13297,156 @@
                                     }
                                 ]
                             },
-                            "distribution_options": {
-                                "title": "Distribution Options",
-                                "description": "Set of formats and transfer options defining the forms the resource is distributed in.",
-                                "type": "array",
-                                "items": {
-                                    "title": "Distribution Option",
-                                    "description": "Combination of a format and transfer option defining one form the resource is distributed in.",
-                                    "type": "object",
-                                    "required": [
-                                        "transfer_option"
-                                    ],
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "format": {
-                                            "title": "Format",
-                                            "description": "Data format the resource is available in.",
-                                            "type": "object",
-                                            "required": [
-                                                "format"
-                                            ],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "format": {
-                                                    "title": "Format",
-                                                    "description": "Name of the data format.",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "GeoPackage"
-                                                    ]
-                                                },
-                                                "href": {
-                                                    "title": "URL",
-                                                    "description": "URL identifying the data format.",
-                                                    "type": "string",
-                                                    "format": "uri",
-                                                    "examples": [
-                                                        "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
-                                                    ]
-                                                },
-                                                "version": {
-                                                    "title": "Version",
-                                                    "description": "Version/Edition of the data format.",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "1.2"
-                                                    ]
-                                                },
-                                                "amendment_number": {
-                                                    "title": "Amendment Number",
-                                                    "description": "Format version amendment number",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "1.0"
-                                                    ]
-                                                },
-                                                "specification": {
-                                                    "title": "Specification",
-                                                    "description": "The subset name, profile, or product specification of the format",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "Final"
-                                                    ]
-                                                },
-                                                "file_decompression_technique": {
-                                                    "title": "File decompression technique",
-                                                    "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "ZIP"
-                                                    ]
-                                                }
+                            "format": {
+                                "title": "Format",
+                                "description": "Data format the resource is available in.",
+                                "type": "object",
+                                "required": [
+                                    "format"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "format": {
+                                        "title": "Format",
+                                        "description": "Name of the data format.",
+                                        "type": "string",
+                                        "examples": [
+                                            "GeoPackage"
+                                        ]
+                                    },
+                                    "href": {
+                                        "title": "URL",
+                                        "description": "URL identifying the data format.",
+                                        "type": "string",
+                                        "format": "uri",
+                                        "examples": [
+                                            "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
+                                        ]
+                                    },
+                                    "version": {
+                                        "title": "Version",
+                                        "description": "Version/Edition of the data format.",
+                                        "type": "string",
+                                        "examples": [
+                                            "1.2"
+                                        ]
+                                    },
+                                    "amendment_number": {
+                                        "title": "Amendment Number",
+                                        "description": "Format version amendment number",
+                                        "type": "string",
+                                        "examples": [
+                                            "1.0"
+                                        ]
+                                    },
+                                    "specification": {
+                                        "title": "Specification",
+                                        "description": "The subset name, profile, or product specification of the format",
+                                        "type": "string",
+                                        "examples": [
+                                            "Final"
+                                        ]
+                                    },
+                                    "file_decompression_technique": {
+                                        "title": "File decompression technique",
+                                        "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                                        "type": "string",
+                                        "examples": [
+                                            "ZIP"
+                                        ]
+                                    }
+                                }
+                            },
+                            "transfer_option": {
+                                "title": "Transfer option",
+                                "description": "Data transfer option, describing where and how the resource can be accessed.",
+                                "type": "object",
+                                "required": [
+                                    "online_resource"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "size": {
+                                        "title": "Size",
+                                        "description": "Size of the transfer option if it uses files for example.",
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "required": [],
+                                        "properties": {
+                                            "unit": {
+                                                "title": "unit",
+                                                "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
+                                                "type": "string",
+                                                "examples": [
+                                                    "MB"
+                                                ]
+                                            },
+                                            "magnitude": {
+                                                "title": "unit",
+                                                "description": "Size of the transfer option in a given unit.",
+                                                "type": "number",
+                                                "examples": [
+                                                    20.0
+                                                ]
                                             }
-                                        },
-                                        "transfer_option": {
-                                            "title": "Transfer option",
-                                            "description": "Data transfer option, describing where and how the resource can be accessed.",
-                                            "type": "object",
-                                            "required": [
-                                                "online_resource"
-                                            ],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "size": {
-                                                    "title": "Size",
-                                                    "description": "Size of the transfer option if it uses files for example.",
-                                                    "type": "object",
-                                                    "additionalProperties": false,
-                                                    "required": [],
-                                                    "properties": {
-                                                        "unit": {
-                                                            "title": "unit",
-                                                            "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "MB"
-                                                            ]
-                                                        },
-                                                        "magnitude": {
-                                                            "title": "unit",
-                                                            "description": "Size of the transfer option in a given unit.",
-                                                            "type": "number",
-                                                            "examples": [
-                                                                20.0
-                                                            ]
-                                                        }
-                                                    }
-                                                },
-                                                "online_resource": {
-                                                    "title": "Online resource",
-                                                    "description": "An external website or page related to an element related to the resource, such as a website for a contact (e.g. a BAS staff profile).",
-                                                    "type": "object",
-                                                    "required": [
-                                                        "href"
-                                                    ],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "href": {
-                                                            "title": "URL",
-                                                            "description": "URL to the external website or page.",
-                                                            "type": "string",
-                                                            "format": "uri",
-                                                            "examples": [
-                                                                "https://www.epsg-registry.org/"
-                                                            ]
-                                                        },
-                                                        "title": {
-                                                            "title": "Title",
-                                                            "description": "Title of the external website or page.",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "EPSG Geodetic Parameter Dataset"
-                                                            ]
-                                                        },
-                                                        "description": {
-                                                            "title": "Description",
-                                                            "description": "Description of the external website or page.",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry."
-                                                            ]
-                                                        },
-                                                        "protocol": {
-                                                            "title": "Protocol",
-                                                            "description": "Description of the Protocol",
-                                                            "type": "string",
-                                                            "examples": [
-                                                                "WWW:LINK-1.0-http--link"
-                                                            ]
-                                                        },
-                                                        "function": {
-                                                            "title": "Function",
-                                                            "description": "The kind of action or service the external website or page provides.",
-                                                            "type": "string",
-                                                            "enum": [
-                                                                "download",
-                                                                "information",
-                                                                "offlineAccess",
-                                                                "order",
-                                                                "search"
-                                                            ],
-                                                            "examples": [
-                                                                "information"
-                                                            ]
-                                                        }
-                                                    }
-                                                }
+                                        }
+                                    },
+                                    "online_resource": {
+                                        "title": "Online resource",
+                                        "description": "An external website or page related to an element related to the resource, such as a website for a contact (e.g. a BAS staff profile).",
+                                        "type": "object",
+                                        "required": [
+                                            "href"
+                                        ],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "href": {
+                                                "title": "URL",
+                                                "description": "URL to the external website or page.",
+                                                "type": "string",
+                                                "format": "uri",
+                                                "examples": [
+                                                    "https://www.epsg-registry.org/"
+                                                ]
+                                            },
+                                            "title": {
+                                                "title": "Title",
+                                                "description": "Title of the external website or page.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "EPSG Geodetic Parameter Dataset"
+                                                ]
+                                            },
+                                            "description": {
+                                                "title": "Description",
+                                                "description": "Description of the external website or page.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry."
+                                                ]
+                                            },
+                                            "protocol": {
+                                                "title": "Protocol",
+                                                "description": "Description of the Protocol",
+                                                "type": "string",
+                                                "examples": [
+                                                    "WWW:LINK-1.0-http--link"
+                                                ]
+                                            },
+                                            "function": {
+                                                "title": "Function",
+                                                "description": "The kind of action or service the external website or page provides.",
+                                                "type": "string",
+                                                "enum": [
+                                                    "download",
+                                                    "information",
+                                                    "offlineAccess",
+                                                    "order",
+                                                    "search"
+                                                ],
+                                                "examples": [
+                                                    "information"
+                                                ]
                                             }
                                         }
                                     }

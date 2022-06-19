@@ -463,22 +463,10 @@
         },
         "distribution": {
             "title": "Distribution",
-            "description": "Information about to acquire, enquire about or retrieve the resource",
+            "description": "Information about how to acquire, enquire about, or retrieve the resource.",
             "type": "array",
             "items": {
-                "required": [
-                    "distributor",
-                    "distribution_options"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "distributor": {
-                        "$ref": "#/definitions/distributor"
-                    },
-                    "distribution_options": {
-                        "$ref": "#/definitions/distribution_options"
-                    }
-                }
+                "$ref": "#/definitions/distribution_option"
             }
         },
         "distributor": {
@@ -503,27 +491,23 @@
         },
         "distribution_option": {
             "title": "Distribution Option",
-            "description": "Combination of a format and transfer option defining one form the resource is distributed in.",
+            "description": "Combination of a format, transfer option and distributor defining one way the resource is distributed.",
             "type": "object",
             "required": [
+                "distributor",
                 "transfer_option"
             ],
             "additionalProperties": false,
             "properties": {
+                "distributor": {
+                    "$ref": "#/definitions/distributor"
+                },
                 "format": {
                     "$ref": "#/definitions/format"
                 },
                 "transfer_option": {
                     "$ref": "#/definitions/transfer_option"
                 }
-            }
-        },
-        "distribution_options": {
-            "title": "Distribution Options",
-            "description": "Set of formats and transfer options defining the forms the resource is distributed in.",
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/distribution_option"
             }
         },
         "edition": {

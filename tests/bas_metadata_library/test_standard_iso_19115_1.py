@@ -1194,34 +1194,6 @@ def test_identification_supplemental_info(get_record_response, config_name):
     assert supplemental_info_value is True
 
 
-def _check_distributors_are_unique(distributions: list, record: MetadataRecord) -> bool:
-    unique = True
-
-    distributors = []
-    org_names_config = []
-
-    for distribution in distributions:
-        distributors.append(distribution["distributor"])
-
-    for distributor in distributors:
-        org_names_config.append(distributor["organisation"]["name"])
-    if len(org_names_config) > len(set(org_names_config)):
-        unique = False
-
-    if not unique:
-        return unique
-
-    distributor_base = "/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact/gmd:CI_ResponsibleParty/gmd:organisationName"
-    distributor_elements = record.xpath(
-        f"{distributor_base}/gco:CharacterString/text() | {distributor_base}/gmx:Anchor/text()",
-        namespaces=namespaces.nsmap(),
-    )
-    if len(distributor_elements) > len(set(distributor_elements)):
-        unique = False
-
-    return unique
-
-
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_distributions(get_record_response, config_name):
@@ -1232,37 +1204,34 @@ def test_distributions(get_record_response, config_name):
     if "distribution" not in config:
         pytest.skip("record does not contain any distributions")
 
-    # the distributor is used as a key as distribution options are distributor specific, so they need to be unique
-    if not _check_distributors_are_unique(distributions=config["distribution"], record=record):
-        raise RuntimeError("Distributors must be unique in tests")
-
-    for distribution in config["distribution"]:
+    for distribution_option in config["distribution"]:
         distribution_elements = record.xpath(
-            f"{xpath_base}[gmd:distributorContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString/text() = '{distribution['distributor']['organisation']['name']}'] | "
-            f"{xpath_base}[gmd:distributorContact/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor/text() = '{distribution['distributor']['organisation']['name']}' ]",
+            f"{xpath_base}[gmd:distributorContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString/text() = '{distribution_option['distributor']['organisation']['name']}'] | "
+            f"{xpath_base}[gmd:distributorContact/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor/text() = '{distribution_option['distributor']['organisation']['name']}' ]",
             namespaces=namespaces.nsmap(),
         )
         assert len(distribution_elements) == 1
         distribution_element = distribution_elements[0]
 
-        # Other roles are checked for in test_identification_points_of_contact()
+        # distributor
+        # (other roles are checked for in `test_identification_points_of_contact()`)
         distributor_elements = distribution_element.xpath(
-            f"{xpath_base}/gmd:distributorContact/gmd:CI_ResponsibleParty[gmd:organisationName/gco:CharacterString/text() = '{distribution['distributor']['organisation']['name']}'] | "
-            f"{xpath_base}/gmd:distributorContact/gmd:CI_ResponsibleParty[gmd:organisationName/gmx:Anchor/text() = '{distribution['distributor']['organisation']['name']}']",
+            f"{xpath_base}/gmd:distributorContact/gmd:CI_ResponsibleParty[gmd:organisationName/gco:CharacterString/text() = '{distribution_option['distributor']['organisation']['name']}'] | "
+            f"{xpath_base}/gmd:distributorContact/gmd:CI_ResponsibleParty[gmd:organisationName/gmx:Anchor/text() = '{distribution_option['distributor']['organisation']['name']}']",
             namespaces=namespaces.nsmap(),
         )
         assert len(distributor_elements) == 1
-        assert_responsible_party(element=distributor_elements[0], config=distribution["distributor"])
+        assert_responsible_party(element=distributor_elements[0], config=distribution_option["distributor"])
 
-        for distribution_option in distribution["distribution_options"]:
-            # format
-            if "format" in distribution_option["format"]:
-                format_values = distribution_element.xpath(
-                    f"./gmd:distributorFormat/gmd:MD_Format/gmd:name[gco:CharacterString/text() = '{distribution_option['format']['format']}'] | "
-                    f"./gmd:distributorFormat/gmd:MD_Format/gmd:name[gmx:Anchor/text() = '{distribution_option['format']['format']}']",
-                    namespaces=namespaces.nsmap(),
-                )
-                assert len(format_values) == 1
+        # format
+        if "format" in distribution_option["format"]:
+            format_values = distribution_element.xpath(
+                f"./gmd:distributorFormat/gmd:MD_Format/gmd:name[gco:CharacterString/text() = '{distribution_option['format']['format']}'] | "
+                f"./gmd:distributorFormat/gmd:MD_Format/gmd:name[gmx:Anchor/text() = '{distribution_option['format']['format']}']",
+                namespaces=namespaces.nsmap(),
+            )
+            assert len(format_values) == 1
+
             if "href" in distribution_option["format"]:
                 format_hrefs = distribution_element.xpath(
                     f"./gmd:distributorFormat/gmd:MD_Format/gmd:name/gmx:Anchor/@xlink:href = '{distribution_option['format']['href']}'",
@@ -1282,17 +1251,18 @@ def test_distributions(get_record_response, config_name):
                 )
                 assert format_version is True
 
-            # transfer options
-            if "online_resource" in distribution_option["transfer_option"]:
-                option_online_resource_elements = distribution_element.xpath(
-                    f"./gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:linkage[gmd:URL[text() = '{distribution_option['transfer_option']['online_resource']['href']}']]]",
-                    namespaces=namespaces.nsmap(),
-                )
-                assert len(option_online_resource_elements) == 1
-                assert_online_resource(
-                    element=option_online_resource_elements[0],
-                    config=distribution_option["transfer_option"]["online_resource"],
-                )
+        # transfer options
+        if "online_resource" in distribution_option["transfer_option"]:
+            option_online_resource_elements = distribution_element.xpath(
+                f"./gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:linkage[gmd:URL[text() = '{distribution_option['transfer_option']['online_resource']['href']}']]]",
+                namespaces=namespaces.nsmap(),
+            )
+            assert len(option_online_resource_elements) == 1
+            assert_online_resource(
+                element=option_online_resource_elements[0],
+                config=distribution_option["transfer_option"]["online_resource"],
+            )
+
             if "size" in distribution_option["transfer_option"]:
                 _magnitude = format_numbers_consistently(distribution_option["transfer_option"]["size"]["magnitude"])
                 option_size = distribution_element.xpath(
@@ -1495,36 +1465,35 @@ def test_edge_case_temporal_extent_begin_missing_date():
     assert "end" in config["identification"]["extent"]["temporal"]["period"]
 
 
+_distributor = {
+    "organisation": {"name": "UK Polar Data Centre"},
+    "phone": "+44 (0)1223 221400",
+    "address": {
+        "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+        "city": "Cambridge",
+        "administrative_area": "Cambridgeshire",
+        "postal_code": "CB3 0ET",
+        "country": "United Kingdom",
+    },
+    "email": "polardatacentre@bas.ac.uk",
+    "role": ["distributor"],
+}
+
+
 def test_edge_case_distribution_option_format_no_properties():
     config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
-            "distributor": {
-                "organisation": {"name": "UK Polar Data Centre"},
-                "phone": "+44 (0)1223 221400",
-                "address": {
-                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
-                    "city": "Cambridge",
-                    "administrative_area": "Cambridgeshire",
-                    "postal_code": "CB3 0ET",
-                    "country": "United Kingdom",
-                },
-                "email": "polardatacentre@bas.ac.uk",
-                "role": ["distributor"],
-            },
-            "distribution_options": [
-                {
-                    "format": {"format": "netCDF"},
-                    "transfer_option": {
-                        "online_resource": {
-                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                            "title": "Get Data",
-                            "description": "Download measurement data",
-                            "function": "download",
-                        }
-                    },
+            "distributor": _distributor,
+            "format": {"format": "netCDF"},
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "function": "download",
                 }
-            ],
+            },
         }
     ]
     config = MetadataRecordConfigV3(**config)
@@ -1537,8 +1506,25 @@ def test_edge_case_distribution_option_format_no_properties():
     )
     _record = MetadataRecord(record=record)
     _config = _record.make_config()
-    assert _record.make_config().config["distribution"][0]["distribution_options"] == [
+    assert _record.make_config().config["distribution"][0] == {
+        "distributor": _distributor,
+        "transfer_option": {
+            "online_resource": {
+                "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                "title": "Get Data",
+                "description": "Download measurement data",
+                "function": "download",
+            }
+        },
+    }
+
+
+def test_edge_case_distribution_option_transfer_options_no_properties():
+    config = deepcopy(configs_v3_all["minimal_v3"])
+    config["distribution"] = [
         {
+            "distributor": _distributor,
+            "format": {"format": "netCDF"},
             "transfer_option": {
                 "online_resource": {
                     "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
@@ -1546,41 +1532,7 @@ def test_edge_case_distribution_option_format_no_properties():
                     "description": "Download measurement data",
                     "function": "download",
                 }
-            }
-        }
-    ]
-
-
-def test_edge_case_distribution_option_transfer_options_no_properties():
-    config = deepcopy(configs_v3_all["minimal_v3"])
-    config["distribution"] = [
-        {
-            "distributor": {
-                "organisation": {"name": "UK Polar Data Centre"},
-                "phone": "+44 (0)1223 221400",
-                "address": {
-                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
-                    "city": "Cambridge",
-                    "administrative_area": "Cambridgeshire",
-                    "postal_code": "CB3 0ET",
-                    "country": "United Kingdom",
-                },
-                "email": "polardatacentre@bas.ac.uk",
-                "role": ["distributor"],
             },
-            "distribution_options": [
-                {
-                    "format": {"format": "netCDF"},
-                    "transfer_option": {
-                        "online_resource": {
-                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                            "title": "Get Data",
-                            "description": "Download measurement data",
-                            "function": "download",
-                        }
-                    },
-                }
-            ],
         }
     ]
     config = MetadataRecordConfigV3(**config)
@@ -1593,39 +1545,26 @@ def test_edge_case_distribution_option_transfer_options_no_properties():
     )
     _record = MetadataRecord(record=record)
     _config = _record.make_config()
-    assert _record.make_config().config["distribution"][0]["distribution_options"] == [{"format": {"format": "netCDF"}}]
+    assert _record.make_config().config["distribution"][0] == {
+        "distributor": _distributor,
+        "format": {"format": "netCDF"},
+    }
 
 
 def test_edge_case_distribution_option_no_id():
     config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
-            "distributor": {
-                "organisation": {"name": "UK Polar Data Centre"},
-                "phone": "+44 (0)1223 221400",
-                "address": {
-                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
-                    "city": "Cambridge",
-                    "administrative_area": "Cambridgeshire",
-                    "postal_code": "CB3 0ET",
-                    "country": "United Kingdom",
-                },
-                "email": "polardatacentre@bas.ac.uk",
-                "role": ["distributor"],
-            },
-            "distribution_options": [
-                {
-                    "format": {"format": "netCDF"},
-                    "transfer_option": {
-                        "online_resource": {
-                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                            "title": "Get Data",
-                            "description": "Download measurement data",
-                            "function": "download",
-                        }
-                    },
+            "distributor": _distributor,
+            "format": {"format": "netCDF"},
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "function": "download",
                 }
-            ],
+            },
         }
     ]
     config = MetadataRecordConfigV3(**config)
@@ -1639,9 +1578,10 @@ def test_edge_case_distribution_option_no_id():
     )
     _record = MetadataRecord(record=record)
     _config = _record.make_config()
-    assert _config.config["distribution"][0]["distribution_options"] == [
-        {"format": {"format": "netCDF"}},
+    assert _config.config["distribution"] == [
+        {"distributor": _distributor, "format": {"format": "netCDF"}},
         {
+            "distributor": _distributor,
             "transfer_option": {
                 "online_resource": {
                     "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
@@ -1649,7 +1589,7 @@ def test_edge_case_distribution_option_no_id():
                     "description": "Download measurement data",
                     "function": "download",
                 }
-            }
+            },
         },
     ]
 
@@ -1658,43 +1598,30 @@ def test_edge_case_distribution_option_more_formats_than_transfer_options():
     config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
-            "distributor": {
-                "organisation": {"name": "UK Polar Data Centre"},
-                "phone": "+44 (0)1223 221400",
-                "address": {
-                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
-                    "city": "Cambridge",
-                    "administrative_area": "Cambridgeshire",
-                    "postal_code": "CB3 0ET",
-                    "country": "United Kingdom",
-                },
-                "email": "polardatacentre@bas.ac.uk",
-                "role": ["distributor"],
-            },
-            "distribution_options": [
-                {
-                    "format": {"format": "blue"},
-                    "transfer_option": {"online_resource": {"href": "https://example.com/blue"}},
-                },
-                {
-                    "format": {"format": "red"},
-                    "transfer_option": {"online_resource": {"href": "https://example.com/red"}},
-                },
-            ],
-        }
-    ]
-    config = MetadataRecordConfigV3(**config)
-    record = MetadataRecord(configuration=config)
-    del record.attributes["distribution"][0]["distribution_options"][1]["transfer_option"]
-    record = record.generate_xml_document().decode()
-    _record = MetadataRecord(record=record)
-    _config = _record.make_config()
-    assert _config.config["distribution"][0]["distribution_options"] == [
-        {
+            "distributor": _distributor,
             "format": {"format": "blue"},
             "transfer_option": {"online_resource": {"href": "https://example.com/blue"}},
         },
         {
+            "distributor": _distributor,
+            "format": {"format": "red"},
+            "transfer_option": {"online_resource": {"href": "https://example.com/red"}},
+        },
+    ]
+    config = MetadataRecordConfigV3(**config)
+    record = MetadataRecord(configuration=config)
+    del record.attributes["distribution"][1]["transfer_option"]
+    record = record.generate_xml_document().decode()
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["distribution"] == [
+        {
+            "distributor": _distributor,
+            "format": {"format": "blue"},
+            "transfer_option": {"online_resource": {"href": "https://example.com/blue"}},
+        },
+        {
+            "distributor": _distributor,
             "format": {"format": "red"},
         },
     ]
@@ -1704,43 +1631,29 @@ def test_edge_case_distribution_option_more_transfer_options_than_formats():
     config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
-            "distributor": {
-                "organisation": {"name": "UK Polar Data Centre"},
-                "phone": "+44 (0)1223 221400",
-                "address": {
-                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
-                    "city": "Cambridge",
-                    "administrative_area": "Cambridgeshire",
-                    "postal_code": "CB3 0ET",
-                    "country": "United Kingdom",
-                },
-                "email": "polardatacentre@bas.ac.uk",
-                "role": ["distributor"],
-            },
-            "distribution_options": [
-                {
-                    "format": {"format": "blue"},
-                    "transfer_option": {"online_resource": {"href": "https://example.com/blue"}},
-                },
-                {
-                    "format": {"format": "red"},
-                    "transfer_option": {"online_resource": {"href": "https://example.com/red"}},
-                },
-            ],
-        }
-    ]
-    config = MetadataRecordConfigV3(**config)
-    record = MetadataRecord(configuration=config)
-    del record.attributes["distribution"][0]["distribution_options"][1]["format"]
-    record = record.generate_xml_document().decode()
-    _record = MetadataRecord(record=record)
-    _config = _record.make_config()
-    assert _config.config["distribution"][0]["distribution_options"] == [
-        {
+            "distributor": _distributor,
             "format": {"format": "blue"},
             "transfer_option": {"online_resource": {"href": "https://example.com/blue"}},
         },
-        {"transfer_option": {"online_resource": {"href": "https://example.com/red"}}},
+        {
+            "distributor": _distributor,
+            "format": {"format": "red"},
+            "transfer_option": {"online_resource": {"href": "https://example.com/red"}},
+        },
+    ]
+    config = MetadataRecordConfigV3(**config)
+    record = MetadataRecord(configuration=config)
+    del record.attributes["distribution"][1]["format"]
+    record = record.generate_xml_document().decode()
+    _record = MetadataRecord(record=record)
+    _config = _record.make_config()
+    assert _config.config["distribution"] == [
+        {
+            "distributor": _distributor,
+            "format": {"format": "blue"},
+            "transfer_option": {"online_resource": {"href": "https://example.com/blue"}},
+        },
+        {"distributor": _distributor, "transfer_option": {"online_resource": {"href": "https://example.com/red"}}},
     ]
 
 
@@ -1748,33 +1661,17 @@ def test_edge_case_distribution_option_transfer_option_size_no_unit():
     config = deepcopy(configs_v3_all["minimal_v3"])
     config["distribution"] = [
         {
-            "distributor": {
-                "organisation": {"name": "UK Polar Data Centre"},
-                "phone": "+44 (0)1223 221400",
-                "address": {
-                    "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
-                    "city": "Cambridge",
-                    "administrative_area": "Cambridgeshire",
-                    "postal_code": "CB3 0ET",
-                    "country": "United Kingdom",
+            "distributor": _distributor,
+            "format": {"format": "netCDF"},
+            "transfer_option": {
+                "online_resource": {
+                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+                    "title": "Get Data",
+                    "description": "Download measurement data",
+                    "function": "download",
                 },
-                "email": "polardatacentre@bas.ac.uk",
-                "role": ["distributor"],
+                "size": {"magnitude": 40.0},
             },
-            "distribution_options": [
-                {
-                    "format": {"format": "netCDF"},
-                    "transfer_option": {
-                        "online_resource": {
-                            "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                            "title": "Get Data",
-                            "description": "Download measurement data",
-                            "function": "download",
-                        },
-                        "size": {"magnitude": 40.0},
-                    },
-                },
-            ],
         }
     ]
     config = MetadataRecordConfigV3(**config)
@@ -1782,7 +1679,7 @@ def test_edge_case_distribution_option_transfer_option_size_no_unit():
     record = record.generate_xml_document().decode()
     _record = MetadataRecord(record=record)
     _config = _record.make_config()
-    assert _config.config["distribution"][0]["distribution_options"][0]["transfer_option"]["size"] == {"magnitude": 40}
+    assert _config.config["distribution"][0]["transfer_option"]["size"] == {"magnitude": 40}
 
 
 def test_edge_case_citation_title_anchor_no_value_with_href():
