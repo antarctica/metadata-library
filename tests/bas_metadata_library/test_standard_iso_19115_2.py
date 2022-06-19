@@ -199,8 +199,12 @@ def test_parse_existing_record_v2(config_name):
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)
-    configuration = record.make_config()
-    config = configuration.config
+    configuration_v3 = record.make_config()
+    configuration_v2 = configuration_v3.downgrade_to_v2_config()
+    config = configuration_v2.config
+    # v2 test configs in these tests didn't include the optional '$schema' property so remove if present
+    if "$schema" in config:
+        del config["$schema"]
     assert config == configs_safe_v2[config_name]
 
 

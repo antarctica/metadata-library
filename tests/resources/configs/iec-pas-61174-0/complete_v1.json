@@ -1,4 +1,5 @@
 {
+  "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json",
   "route_author": "Constance Watson",
   "route_name": "complete-test-route",
   "route_status": "complete",

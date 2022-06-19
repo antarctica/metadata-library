@@ -1,19 +1,37 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "UK PDC Metadata Record Generator - Test Standard configuration schema",
-    "description": "Metadata record configuration schema for the 'Test Standard' metadata standard",
-    "definitions": {},
-    "type": "object",
-    "required": [
-        "resource"
-    ],
-    "additionalProperties": true,
-    "properties": {
-        "resource": {
-            "type": "object",
-            "required": [],
-            "additionalProperties": true,
-            "properties": {}
-        }
+  "$id": "#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UK PDC Metadata Record Generator - Test Standard configuration schema",
+  "description": "Metadata record configuration schema for the 'Test Standard' metadata standard",
+  "definitions": {
+    "_schema": {
+      "title": "JSON Schema",
+      "description": "JSON Schema keyword indicating the schema a document complies with.",
+      "type": "string",
+      "format": "uri",
+      "examples": [
+        "#"
+      ]
+    },
+    "resource": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {}
     }
+  },
+  "type": "object",
+  "required": [
+    "$schema",
+    "resource"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": {
+      "$ref": "#/definitions/_schema"
+    },
+    "resource": {
+      "$ref": "#/definitions/resource"
+    }
+  }
 }

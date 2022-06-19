@@ -107,7 +107,11 @@ class MetadataRecordConfig(object):
     this class, or by using the `load()` or `loads()` methods to load the configuration from a JSON document.
 
     The structure and values of this configuration are specified by a JSON schema, and which should be used to validate
-    configuration instances using the 'validate()' method.
+    configuration instances using the 'validate()' method. The `schema` property will hold the contents of that JSON
+    Schema, the `schema_uri` lists the identity expected/required for that schema.
+
+    It's expected this class will be used a base for standard specific classes, hard-coding the schema that must be
+    used for validating a record configuration.
     """
 
     def __init__(self, **kwargs: dict):
@@ -115,17 +119,25 @@ class MetadataRecordConfig(object):
         :type kwargs: dict
         :param kwargs: record configuration
         """
-        self.config = kwargs
-        self.schema = None
+        self.config: dict = kwargs
+        self.schema: dict = {}
+        self.schema_uri: str = ""
+
+        if "$schema" not in self.config:
+            self.config["$schema"] = self.schema_uri
 
     def validate(self) -> None:
         """
         Ensures the configuration is valid against the relevant JSON Schema
 
+        The record configuration (a Python dict) is first duplicated to a JSON safe encoding (i.e. Python dates objects
+        converted to strings), to allow validation against the JSON Schema.
+
         Where the configuration is invalid, a relevant exception will be raised.
         """
         if self.schema is not None:
-            _config = json.loads(json.dumps(self.config, default=str))
+            _config = json.loads(json.dumps(deepcopy(self.config), default=str))
+
             return validate(instance=_config, schema=self.schema)
 
     def load(self, file: Path) -> None:

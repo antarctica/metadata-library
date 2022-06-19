@@ -85,6 +85,15 @@
                 "Logistics run from base X to base y with opportunistic science transect"
             ]
         },
+        "_schema": {
+            "title": "JSON Schema",
+            "description": "JSON Schema keyword indicating the schema a document complies with.",
+            "type": "string",
+            "format": "uri",
+            "examples": [
+                "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json"
+            ]
+        },
         "waypoints": {
             "type": "array",
             "items": {
@@ -123,6 +132,9 @@
     ],
     "additionalProperties": false,
     "properties": {
+        "$schema": {
+            "$ref": "#/definitions/_schema"
+        },
         "route_author": {
             "$ref": "#/definitions/route_author"
         },

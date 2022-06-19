@@ -324,14 +324,21 @@ def encode_config_for_json(config: dict) -> dict:
     return _encode_date_properties(dictionary=config)
 
 
-def upgrade_from_v2_config(v2_config: dict) -> dict:
+def upgrade_from_v2_config(v2_config: dict, schema_uri: str) -> dict:
     """
     Converts a v2 Metadata Configuration instance into a v3 Metadata Configuration instance.
 
     :type v2_config dict
     :param v2_config v2 Record Metadata Configuration instance
+    :type schema_uri str
+    :param schema_uri JSON Schema URI for the relevant standard (i.e. ISO 19115-0/1 or ISO 19115-2)
     """
-    return v2_config
+    v3_config = deepcopy(v2_config)
+
+    # $schema property is now required
+    v3_config["$schema"] = schema_uri
+
+    return v3_config
 
 
 def downgrade_to_v2_config(v3_config: dict) -> dict:
@@ -344,6 +351,8 @@ def downgrade_to_v2_config(v3_config: dict) -> dict:
     :returns record configuration as a v2 Record Metadata Configuration instance
     """
     v2_config = deepcopy(v3_config)
+
+    # $schema property is not required but is allowed so not removed
 
     # resource constraints can't contain a 'permissions' property in v2 so drop (lossy)
     try:

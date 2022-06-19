@@ -717,6 +717,7 @@ complete_record_v2 = {
 }
 
 minimal_record_v3 = {
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -745,6 +746,7 @@ minimal_record_v3 = {
 }
 
 base_simple_record_v3 = {
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
     "hierarchy_level": "dataset",
     "metadata": {
@@ -870,6 +872,7 @@ base_simple_record_v3 = {
 }
 
 base_complex_record_v3 = {
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
     "hierarchy_level": "dataset",
     "metadata": {
@@ -1074,6 +1077,7 @@ base_complex_record_v3 = {
 }
 
 complete_record_v3 = {
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
     "hierarchy_level": "dataset",
     "metadata": {
