@@ -36,7 +36,7 @@ def test_configuration_from_json_file():
 
 
 def test_configuration_from_json_string():
-    _config = '{"resource": {"title": {"value": "Test Record"}}}'
+    _config = '{"$schema": "#", "resource": {"title": {"value": "Test Record"}}}'
     configuration = MetadataRecordConfig()
     configuration.loads(string=_config)
     configuration.validate()

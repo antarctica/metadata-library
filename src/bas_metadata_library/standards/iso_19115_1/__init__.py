@@ -72,6 +72,9 @@ class MetadataRecordConfigV2(_MetadataRecordConfig):
             schema_data = json.load(schema_file)
         self.schema = schema_data
 
+        if "$schema" in self.config:
+            del self.config["$schema"]
+
     def validate(self) -> None:
         if self.schema is not None:
             _config = encode_config_for_json(config=deepcopy(self.config))
@@ -109,6 +112,10 @@ class MetadataRecordConfigV3(_MetadataRecordConfig):
             schema_data = json.load(schema_file)
         self.schema = schema_data
 
+        # Workaround - will be addressed in #149
+        self.schema_uri = schema_data["$id"]
+        self.config = {"$schema": self.schema_uri, **kwargs}
+
     def validate(self) -> None:
         if self.schema is not None:
             _config = encode_config_for_json(config=deepcopy(self.config))
@@ -135,7 +142,10 @@ class MetadataRecordConfigV3(_MetadataRecordConfig):
         :type v2_config MetadataRecordConfigV2
         :param v2_config record configuration as a MetadataRecordConfigV2 instance
         """
-        self.config = _upgrade_from_v2_config(v2_config=v2_config.config)
+        self.config = _upgrade_from_v2_config(
+            v2_config=v2_config.config,
+            schema_uri="https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
+        )
 
     def downgrade_to_v2_config(self) -> MetadataRecordConfigV2:
         """

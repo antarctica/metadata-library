@@ -10,7 +10,7 @@ _config = {"foo": "bar"}
 
 def test_config_class():
     configuration = MetadataRecordConfig(**_config)
-    assert configuration.schema is None
+    assert configuration.schema == {}
 
 
 def test_record_class_configuration():
@@ -28,7 +28,7 @@ def test_record_class_record():
 
     record = MetadataRecord(record=record_data)
     config = record.make_config()
-    assert config.config == {}
+    assert config.config == {"$schema": ""}
 
 
 def test_element_class_config():

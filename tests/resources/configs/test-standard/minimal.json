@@ -1,4 +1,5 @@
 {
+  "$schema": "#",
   "resource": {
     "title": {
       "value": "Test Record"

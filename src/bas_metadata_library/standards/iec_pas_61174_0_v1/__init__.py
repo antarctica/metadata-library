@@ -83,6 +83,10 @@ class MetadataRecordConfigV1(_MetadataRecordConfig):
             schema_data = json.load(schema_file)
         self.schema = schema_data
 
+        # Workaround - will be addressed in #149
+        self.schema_uri = schema_data["$id"]
+        self.config = {"$schema": self.schema_uri, **kwargs}
+
 
 class MetadataRecord(_MetadataRecord):
     """

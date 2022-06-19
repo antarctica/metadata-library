@@ -44,14 +44,18 @@ class MetadataRecordConfig(_MetadataRecordConfig):
 
         self.config = kwargs
 
-        # workaround for #179
+        # Workaround for #179
         schema_path = Path().resolve().joinpath("tests/schemas/test_standard_v1.json")
         if not schema_path.exists():
             schema_path = Path().resolve().parent.joinpath("schemas/test_standard_v1.json")
 
-        with open(schema_path, mode="r") as configuration_schema_file:
-            configuration_schema_data = json.load(configuration_schema_file)
-        self.schema = configuration_schema_data
+        with open(schema_path, mode="r") as schema_file:
+            schema_data = json.load(schema_file)
+        self.schema = schema_data
+
+        # Workaround - will be addressed in #149
+        self.schema_uri = schema_data["$id"]
+        self.config = {"$schema": self.schema_uri, **kwargs}
 
 
 class MetadataRecord(_MetadataRecord):

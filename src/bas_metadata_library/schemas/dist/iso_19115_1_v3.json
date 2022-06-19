@@ -1366,7 +1366,7 @@
             "type": "string",
             "format": "uri",
             "examples": [
-                "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json"
+                "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json"
             ]
         },
         "spatial_representation_type": {
@@ -1691,6 +1691,7 @@
     },
     "type": "object",
     "required": [
+        "$schema",
         "hierarchy_level",
         "metadata",
         "identification"

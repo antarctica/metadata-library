@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-minimal_record = {"resource": {"title": {"value": "Test Record"}}}
+minimal_record = {"$schema": "#", "resource": {"title": {"value": "Test Record"}}}
 
 typical_record = deepcopy(minimal_record)
 typical_record["resource"]["title"]["href"] = "https://www.example.com"
