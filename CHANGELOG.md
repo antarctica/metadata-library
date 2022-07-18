@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+* Order of keys in ISO 19115 decoded configuration dictionaries
+  [#200](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/200)
 * Removing required citation usage constraint in test record configurations
   [#187](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/187)
 * Removing the need to run Flask app separately when capturing test records
