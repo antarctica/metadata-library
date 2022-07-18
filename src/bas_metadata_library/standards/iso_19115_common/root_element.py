@@ -19,7 +19,7 @@ class ISOMetadataRecord(MetadataRecordElement):
     def make_config(  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
         self,
     ) -> dict:
-        _ = {"metadata": {}, "identification": {}, "distribution": []}
+        _ = {}
 
         file_identifier = FileIdentifier(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _file_identifier = file_identifier.make_config()
@@ -30,7 +30,8 @@ class ISOMetadataRecord(MetadataRecordElement):
         language = Language(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:language")
         _language = language.make_config()
         if _language != "":
-            # noinspection PyTypeChecker
+            if "metadata" not in _:
+                _["metadata"] = {}
             _["metadata"]["language"] = _language
 
         character_set = CharacterSet(
@@ -38,7 +39,6 @@ class ISOMetadataRecord(MetadataRecordElement):
         )
         _character_set = character_set.make_config()
         if _character_set != "":
-            # noinspection PyTypeChecker
             _["metadata"]["character_set"] = _character_set
 
         hierarchy_level = HierarchyLevel(
@@ -46,7 +46,6 @@ class ISOMetadataRecord(MetadataRecordElement):
         )
         _hierarchy_level = hierarchy_level.make_config()
         if _hierarchy_level != "":
-            # noinspection PyTypeChecker
             _["hierarchy_level"] = _hierarchy_level
 
         _contacts = []
@@ -64,13 +63,11 @@ class ISOMetadataRecord(MetadataRecordElement):
             if bool(_contact):
                 _contacts.append(_contact)
         if len(_contacts) > 0:
-            # noinspection PyTypeChecker
             _["metadata"]["contacts"] = _contacts
 
         date_stamp = DateStamp(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _date_stamp = date_stamp.make_config()
         if _date_stamp is not None:
-            # noinspection PyTypeChecker
             _["metadata"]["date_stamp"] = _date_stamp
 
         metadata_standard = MetadataStandard(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
@@ -89,6 +86,8 @@ class ISOMetadataRecord(MetadataRecordElement):
         data_identification = DataIdentification(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
         _data_identification = data_identification.make_config()
         if bool(_data_identification):
+            if "identification" not in _:
+                _["identification"] = {}
             _["identification"] = {**_["identification"], **_data_identification}
 
         data_distribution = DataDistribution(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
@@ -106,14 +105,10 @@ class ISOMetadataRecord(MetadataRecordElement):
         )
         _metadata_maintenance = metadata_maintenance.make_config()
         if bool(_metadata_maintenance):
-            # noinspection PyTypeChecker
             _["metadata"]["maintenance"] = _metadata_maintenance
 
         if "identification" in _.keys() and "contacts" in _["identification"].keys():
             _["identification"]["contacts"] = condense_contacts_roles(contacts=_["identification"]["contacts"])
-
-        if not _["distribution"]:
-            del _["distribution"]
 
         return _
 
