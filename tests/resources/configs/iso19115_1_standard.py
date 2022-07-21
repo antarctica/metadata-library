@@ -732,16 +732,19 @@ minimal_record_v3 = {
         "character_set": "utf-8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
-            }
-        },
+        "extents": [
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                },
+            },
+        ],
     },
 }
 
@@ -783,22 +786,25 @@ base_simple_record_v3 = {
         "character_set": "utf-8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
+        "extents": [
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                },
+                "temporal": {
+                    "period": {
+                        "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
+                        "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                    }
+                },
             },
-            "temporal": {
-                "period": {
-                    "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
-                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
-                }
-            },
-        },
+        ],
         "credit": "No credit.",
         "status": "completed",
         "contacts": [
@@ -922,21 +928,24 @@ base_complex_record_v3 = {
         "character_set": "utf-8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "identifier": {
-                    "identifier": "ANTARCTICA",
-                    "href": "https://gcmd.earthdata.nasa.gov/kms/concept/70fb5a3b-35b1-4048-a8be-56a0d865281c",
-                    "namespace": "gcmd-keywords-location",
+        "extents": [
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "identifier": {
+                        "identifier": "ANTARCTICA",
+                        "href": "https://gcmd.earthdata.nasa.gov/kms/concept/70fb5a3b-35b1-4048-a8be-56a0d865281c",
+                        "namespace": "gcmd-keywords-location",
+                    },
+                },
+                "temporal": {
+                    "period": {
+                        "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
+                        "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                    }
                 },
             },
-            "temporal": {
-                "period": {
-                    "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
-                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
-                }
-            },
-        },
+        ],
         "credit": "No credit.",
         "status": "completed",
         "contacts": [
@@ -1125,34 +1134,95 @@ complete_record_v3 = {
         "character_set": "utf-8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
+        "extents": [
+            {
+                "identifier": "extent1",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                },
+                "temporal": {
+                    "period": {
+                        "start": {"date": datetime.datetime(2018, 3, 15, 0, 0)},
+                        "end": {"date": datetime.date(2018, 3, 1), "date_precision": "month"},
+                    }
+                },
+                "vertical": {
+                    "minimum": 20.0,
+                    "maximum": 40.0,
+                    "identifier": "ogp-crs-5714_1",
+                    "code": "urn:ogc:def:crs:EPSG::5714",
+                    "name": "MSL height",
+                    "remarks": "Not specific to any location or epoch.",
+                    "scope": "Hydrography.",
+                    "domain_of_validity": {"href": "urn:ogc:def:area:EPSG::1262"},
+                    "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
+                    "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
+                },
             },
-            "temporal": {
-                "period": {
-                    "start": {"date": datetime.datetime(2018, 3, 15, 0, 0)},
-                    "end": {"date": datetime.date(2018, 3, 1), "date_precision": "month"},
-                }
+            {
+                "identifier": "extent2",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -73.06,
+                        "east_longitude": -73.04,
+                        "south_latitude": -74.33,
+                        "north_latitude": -74.31,
+                    }
+                },
+                "temporal": {
+                    "period": {
+                        "start": {"date": datetime.date(1992, 1, 1), "date_precision": "year"},
+                        "end": {"date": datetime.date(2019, 1, 1), "date_precision": "year"},
+                    }
+                },
+                "vertical": {
+                    "minimum": 0.0,
+                    "maximum": 1139.0,
+                    "identifier": "ogp-crs-5714_2",
+                    "code": "urn:ogc:def:crs:EPSG::5714",
+                    "name": "MSL height",
+                    "remarks": "Not specific to any location or epoch.",
+                    "scope": "Hydrography.",
+                    "domain_of_validity": {"href": "urn:ogc:def:area:EPSG::1262"},
+                    "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
+                    "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
+                },
             },
-            "vertical": {
-                "minimum": 20.0,
-                "maximum": 40.0,
-                "identifier": "ogp-crs-5714",
-                "code": "urn:ogc:def:crs:EPSG::5714",
-                "name": "MSL height",
-                "remarks": "Not specific to any location or epoch.",
-                "scope": "Hydrography.",
-                "domain_of_validity": {"href": "urn:ogc:def:area:EPSG::1262"},
-                "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
-                "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -73.06,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -74.33,
+                        "north_latitude": -54.30761,
+                    }
+                },
+                "temporal": {
+                    "period": {
+                        "start": {"date": datetime.date(1992, 1, 1), "date_precision": "year"},
+                        "end": {"date": datetime.date(2019, 1, 1), "date_precision": "year"},
+                    }
+                },
+                "vertical": {
+                    "minimum": 0.0,
+                    "maximum": 1139.0,
+                    "identifier": "ogp-crs-5714_bounding",
+                    "code": "urn:ogc:def:crs:EPSG::5714",
+                    "name": "MSL height",
+                    "remarks": "Not specific to any location or epoch.",
+                    "scope": "Hydrography.",
+                    "domain_of_validity": {"href": "urn:ogc:def:area:EPSG::1262"},
+                    "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
+                    "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
+                },
             },
-        },
+        ],
         "credit": "No credit.",
         "status": "completed",
         "contacts": [

@@ -525,10 +525,19 @@
             "description": "The spatial (2D or 3D) and temporal span of the resource, in terms of area/volume and time covered.",
             "type": "object",
             "required": [
+                "identifier",
                 "geographic"
             ],
             "additionalProperties": false,
             "properties": {
+                "identifier": {
+                    "title": "Identifier",
+                    "description": "XML ID attribute for the whole extent.  A special case is the overall bounding extent",
+                    "type": "string",
+                    "examples": [
+                        "bounding"
+                    ]
+                },
                 "geographic": {
                     "$ref": "#/definitions/geographic_extent"
                 },
@@ -539,6 +548,15 @@
                     "$ref": "#/definitions/temporal_extent"
                 }
             }
+        },
+        "extents": {
+            "title": "Extents",
+            "description": "The spatial (2D or 3D) and temporal spans of the resource, in terms of areas/volumes and times covered.",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/extent"
+            },
+            "minItems": 1
         },
         "file_identifier": {
             "title": "File identifier",
@@ -795,7 +813,7 @@
                 "language",
                 "character_set",
                 "topics",
-                "extent"
+                "extents"
             ],
             "additionalProperties": false,
             "properties": {
@@ -865,8 +883,8 @@
                 "topics": {
                     "$ref": "#/definitions/topics"
                 },
-                "extent": {
-                    "$ref": "#/definitions/extent"
+                "extents": {
+                    "$ref": "#/definitions/extents"
                 },
                 "lineage": {
                     "$ref": "#/definitions/lineage"

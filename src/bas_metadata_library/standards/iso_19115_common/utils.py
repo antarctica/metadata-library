@@ -66,7 +66,7 @@ def _decode_date_properties(dictionary: dict, parent_keys: Optional[List[str]] =
         elif (
             isinstance(value, str)
             and "identification" in parent_keys
-            and "extent" in parent_keys
+            and ("extent" in parent_keys or "extents" in parent_keys)
             and "temporal" in parent_keys
             and "period" in parent_keys
         ):
@@ -461,6 +461,10 @@ def upgrade_from_v2_config(v2_config: dict, schema_uri: str) -> dict:
     except KeyError:
         pass
 
+    # there can now be multiple extents (lossless)
+    v3_config["identification"]["extents"] = [v3_config.get("identification").pop("extent")]
+    v3_config["identification"]["extents"][0]["identifier"] = "bounding"
+
     return v3_config
 
 
@@ -495,5 +499,9 @@ def downgrade_to_v2_config(v3_config: dict) -> dict:
         v2_config["distribution"] = condense_distribution_distributors(distributions=v2_config["distribution"])
     except KeyError:
         pass
+
+    # there can only be a single extent (lossy)
+    v2_config["identification"]["extent"] = v2_config.get("identification").pop("extents")[0]
+    del v2_config["identification"]["extent"]["identifier"]
 
     return v2_config
