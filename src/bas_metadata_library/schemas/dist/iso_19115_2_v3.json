@@ -2613,10 +2613,19 @@
                     "description": "The spatial (2D or 3D) and temporal span of the resource, in terms of area/volume and time covered.",
                     "type": "object",
                     "required": [
+                        "identifier",
                         "geographic"
                     ],
                     "additionalProperties": false,
                     "properties": {
+                        "identifier": {
+                            "title": "Identifier",
+                            "description": "XML ID attribute for the whole extent.  A special case is the overall bounding extent",
+                            "type": "string",
+                            "examples": [
+                                "bounding"
+                            ]
+                        },
                         "geographic": {
                             "title": "Geographic extent",
                             "description": "A description of the area the resource covers.",
@@ -2901,6 +2910,315 @@
                             }
                         }
                     }
+                },
+                "extents": {
+                    "title": "Extents",
+                    "description": "The spatial (2D or 3D) and temporal spans of the resource, in terms of areas/volumes and times covered.",
+                    "type": "array",
+                    "items": {
+                        "title": "Extent",
+                        "description": "The spatial (2D or 3D) and temporal span of the resource, in terms of area/volume and time covered.",
+                        "type": "object",
+                        "required": [
+                            "identifier",
+                            "geographic"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "identifier": {
+                                "title": "Identifier",
+                                "description": "XML ID attribute for the whole extent.  A special case is the overall bounding extent",
+                                "type": "string",
+                                "examples": [
+                                    "bounding"
+                                ]
+                            },
+                            "geographic": {
+                                "title": "Geographic extent",
+                                "description": "A description of the area the resource covers.",
+                                "type": "object",
+                                "oneOf": [
+                                    {
+                                        "required": [
+                                            "bounding_box"
+                                        ],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "bounding_box": {
+                                                "title": "Bounding box",
+                                                "description": "A set of coordinates for a rectangle that encloses the resource.",
+                                                "type": "object",
+                                                "required": [
+                                                    "west_longitude",
+                                                    "east_longitude",
+                                                    "south_latitude",
+                                                    "north_latitude"
+                                                ],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "west_longitude": {
+                                                        "title": "West longitude",
+                                                        "description": "Western most longitude.",
+                                                        "type": "number",
+                                                        "maximum": 180,
+                                                        "minimum": -180,
+                                                        "examples": [
+                                                            "-120"
+                                                        ]
+                                                    },
+                                                    "east_longitude": {
+                                                        "title": "East longitude",
+                                                        "description": "Eastern most longitude.",
+                                                        "type": "number",
+                                                        "maximum": 180,
+                                                        "minimum": -180,
+                                                        "examples": [
+                                                            "-120"
+                                                        ]
+                                                    },
+                                                    "south_latitude": {
+                                                        "title": "South latitude",
+                                                        "description": "Southern most latitude.",
+                                                        "type": "number",
+                                                        "maximum": 90,
+                                                        "minimum": -90,
+                                                        "examples": [
+                                                            "-60"
+                                                        ]
+                                                    },
+                                                    "north_latitude": {
+                                                        "title": "North latitude",
+                                                        "description": "Northern latitude.",
+                                                        "type": "number",
+                                                        "maximum": 90,
+                                                        "minimum": -90,
+                                                        "examples": [
+                                                            "-60"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "required": [
+                                            "identifier"
+                                        ],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "identifier": {
+                                                "allOf": [
+                                                    {
+                                                        "title": "Geographic Identifier",
+                                                        "description": "A geographic identifier relating to the area or location of the resource."
+                                                    },
+                                                    {
+                                                        "title": "Identifier",
+                                                        "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                                        "type": "object",
+                                                        "required": [
+                                                            "identifier"
+                                                        ],
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "identifier": {
+                                                                "title": "Identifier (value)",
+                                                                "description": "Identifier value, this may be a URL.",
+                                                                "type": "string",
+                                                                "examples": [
+                                                                    "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                ]
+                                                            },
+                                                            "href": {
+                                                                "title": "URL",
+                                                                "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                                                "type": "string",
+                                                                "format": "uri",
+                                                                "examples": [
+                                                                    "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                ]
+                                                            },
+                                                            "namespace": {
+                                                                "title": "Namespace",
+                                                                "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                                                                "type": "string",
+                                                                "examples": [
+                                                                    "doi",
+                                                                    "orcid"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "vertical": {
+                                "title": "Vertical extent",
+                                "description": "A description of the vertical volume a resource covers.",
+                                "type": "object",
+                                "required": [],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "minimum": {
+                                        "title": "Minimum",
+                                        "description": "The minimum vertical extent.",
+                                        "type": "number",
+                                        "examples": [
+                                            "0"
+                                        ]
+                                    },
+                                    "maximum": {
+                                        "title": "Maximum",
+                                        "description": "The maximum vertical extent.",
+                                        "type": "number",
+                                        "examples": [
+                                            "40"
+                                        ]
+                                    },
+                                    "identifier": {
+                                        "title": "Identifier",
+                                        "description": "XML ID attribute for the vertical CRS, typically based on the CRS code in the form 'ogp-crs-[code]'.",
+                                        "type": "string",
+                                        "examples": [
+                                            "ogp-crs-5714"
+                                        ]
+                                    },
+                                    "code": {
+                                        "title": "Code",
+                                        "description": "URN for the vertical CRS.",
+                                        "type": "string",
+                                        "examples": [
+                                            "urn:ogc:def:crs:EPSG::5714"
+                                        ]
+                                    },
+                                    "name": {
+                                        "title": "Name",
+                                        "description": "Name of the vertical CRS (e.g. 'MSL height' for Mean Sea Level height).",
+                                        "type": "string",
+                                        "examples": [
+                                            "MSL height"
+                                        ]
+                                    },
+                                    "remarks": {
+                                        "title": "remarks",
+                                        "description": "Clarifying information about the vertical CRS.",
+                                        "type": "string",
+                                        "examples": [
+                                            "Not specific to any location or epoch."
+                                        ]
+                                    },
+                                    "scope": {
+                                        "title": "Scope",
+                                        "description": "Domain in which the vertical CRS is defined.",
+                                        "type": "string",
+                                        "examples": [
+                                            "Hydrography"
+                                        ]
+                                    },
+                                    "domain_of_validity": {
+                                        "title": "Domain of validity",
+                                        "description": "The area the vertical CRS is valid for (e.g. the world).",
+                                        "type": "object",
+                                        "required": [],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "href": {
+                                                "title": "URL",
+                                                "description": "URL or URN for a resource that defines the domain of validity.",
+                                                "type": "string",
+                                                "format": "uri",
+                                                "examples": [
+                                                    "urn:ogc:def:area:EPSG::1262"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "vertical_cs": {
+                                        "title": "Vertical Coordinate System",
+                                        "description": "The coordinate system used in the vertical CRS.",
+                                        "type": "object",
+                                        "required": [],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "href": {
+                                                "title": "URL",
+                                                "description": "URL or URN for a resource that defines the coordinate system.",
+                                                "type": "string",
+                                                "format": "uri",
+                                                "examples": [
+                                                    "urn:ogc:def:cs:EPSG::6498"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "vertical_datum": {
+                                        "title": "Vertical Datum",
+                                        "description": "The datum used in the vertical CRS.",
+                                        "type": "object",
+                                        "required": [],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "href": {
+                                                "title": "URL",
+                                                "description": "URL or URN for a resource that defines the datum.",
+                                                "type": "string",
+                                                "format": "uri",
+                                                "examples": [
+                                                    "urn:ogc:def:datum:EPSG::5100"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "temporal": {
+                                "title": "Temporal extent",
+                                "description": "A description of the time a resource covers.",
+                                "type": "object",
+                                "required": [],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "period": {
+                                        "title": "Period",
+                                        "description": "A set of dates for a period of time that encloses the resource.",
+                                        "type": "object",
+                                        "required": [],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "start": {
+                                                "title": "Date",
+                                                "description": "A literal (partial) date or date time, including time zone which should be UTC.",
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "examples": [
+                                                    "2010",
+                                                    "2010-04",
+                                                    "2010-04-20",
+                                                    "2010-04-20T14:39:45+00:00"
+                                                ]
+                                            },
+                                            "end": {
+                                                "title": "Date",
+                                                "description": "A literal (partial) date or date time, including time zone which should be UTC.",
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "examples": [
+                                                    "2010",
+                                                    "2010-04",
+                                                    "2010-04-20",
+                                                    "2010-04-20T14:39:45+00:00"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "minItems": 1
                 },
                 "file_identifier": {
                     "title": "File identifier",
@@ -3191,7 +3509,7 @@
                         "language",
                         "character_set",
                         "topics",
-                        "extent"
+                        "extents"
                     ],
                     "additionalProperties": false,
                     "properties": {
@@ -4658,299 +4976,314 @@
                                 "environment"
                             ]
                         },
-                        "extent": {
-                            "title": "Extent",
-                            "description": "The spatial (2D or 3D) and temporal span of the resource, in terms of area/volume and time covered.",
-                            "type": "object",
-                            "required": [
-                                "geographic"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                                "geographic": {
-                                    "title": "Geographic extent",
-                                    "description": "A description of the area the resource covers.",
-                                    "type": "object",
-                                    "oneOf": [
-                                        {
-                                            "required": [
-                                                "bounding_box"
-                                            ],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "bounding_box": {
-                                                    "title": "Bounding box",
-                                                    "description": "A set of coordinates for a rectangle that encloses the resource.",
-                                                    "type": "object",
-                                                    "required": [
-                                                        "west_longitude",
-                                                        "east_longitude",
-                                                        "south_latitude",
-                                                        "north_latitude"
-                                                    ],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "west_longitude": {
-                                                            "title": "West longitude",
-                                                            "description": "Western most longitude.",
-                                                            "type": "number",
-                                                            "maximum": 180,
-                                                            "minimum": -180,
-                                                            "examples": [
-                                                                "-120"
-                                                            ]
-                                                        },
-                                                        "east_longitude": {
-                                                            "title": "East longitude",
-                                                            "description": "Eastern most longitude.",
-                                                            "type": "number",
-                                                            "maximum": 180,
-                                                            "minimum": -180,
-                                                            "examples": [
-                                                                "-120"
-                                                            ]
-                                                        },
-                                                        "south_latitude": {
-                                                            "title": "South latitude",
-                                                            "description": "Southern most latitude.",
-                                                            "type": "number",
-                                                            "maximum": 90,
-                                                            "minimum": -90,
-                                                            "examples": [
-                                                                "-60"
-                                                            ]
-                                                        },
-                                                        "north_latitude": {
-                                                            "title": "North latitude",
-                                                            "description": "Northern latitude.",
-                                                            "type": "number",
-                                                            "maximum": 90,
-                                                            "minimum": -90,
-                                                            "examples": [
-                                                                "-60"
-                                                            ]
+                        "extents": {
+                            "title": "Extents",
+                            "description": "The spatial (2D or 3D) and temporal spans of the resource, in terms of areas/volumes and times covered.",
+                            "type": "array",
+                            "items": {
+                                "title": "Extent",
+                                "description": "The spatial (2D or 3D) and temporal span of the resource, in terms of area/volume and time covered.",
+                                "type": "object",
+                                "required": [
+                                    "identifier",
+                                    "geographic"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "identifier": {
+                                        "title": "Identifier",
+                                        "description": "XML ID attribute for the whole extent.  A special case is the overall bounding extent",
+                                        "type": "string",
+                                        "examples": [
+                                            "bounding"
+                                        ]
+                                    },
+                                    "geographic": {
+                                        "title": "Geographic extent",
+                                        "description": "A description of the area the resource covers.",
+                                        "type": "object",
+                                        "oneOf": [
+                                            {
+                                                "required": [
+                                                    "bounding_box"
+                                                ],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "bounding_box": {
+                                                        "title": "Bounding box",
+                                                        "description": "A set of coordinates for a rectangle that encloses the resource.",
+                                                        "type": "object",
+                                                        "required": [
+                                                            "west_longitude",
+                                                            "east_longitude",
+                                                            "south_latitude",
+                                                            "north_latitude"
+                                                        ],
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "west_longitude": {
+                                                                "title": "West longitude",
+                                                                "description": "Western most longitude.",
+                                                                "type": "number",
+                                                                "maximum": 180,
+                                                                "minimum": -180,
+                                                                "examples": [
+                                                                    "-120"
+                                                                ]
+                                                            },
+                                                            "east_longitude": {
+                                                                "title": "East longitude",
+                                                                "description": "Eastern most longitude.",
+                                                                "type": "number",
+                                                                "maximum": 180,
+                                                                "minimum": -180,
+                                                                "examples": [
+                                                                    "-120"
+                                                                ]
+                                                            },
+                                                            "south_latitude": {
+                                                                "title": "South latitude",
+                                                                "description": "Southern most latitude.",
+                                                                "type": "number",
+                                                                "maximum": 90,
+                                                                "minimum": -90,
+                                                                "examples": [
+                                                                    "-60"
+                                                                ]
+                                                            },
+                                                            "north_latitude": {
+                                                                "title": "North latitude",
+                                                                "description": "Northern latitude.",
+                                                                "type": "number",
+                                                                "maximum": 90,
+                                                                "minimum": -90,
+                                                                "examples": [
+                                                                    "-60"
+                                                                ]
+                                                            }
                                                         }
                                                     }
                                                 }
-                                            }
-                                        },
-                                        {
-                                            "required": [
-                                                "identifier"
-                                            ],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "identifier": {
-                                                    "allOf": [
-                                                        {
-                                                            "title": "Geographic Identifier",
-                                                            "description": "A geographic identifier relating to the area or location of the resource."
-                                                        },
-                                                        {
-                                                            "title": "Identifier",
-                                                            "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
-                                                            "type": "object",
-                                                            "required": [
-                                                                "identifier"
-                                                            ],
-                                                            "additionalProperties": false,
-                                                            "properties": {
-                                                                "identifier": {
-                                                                    "title": "Identifier (value)",
-                                                                    "description": "Identifier value, this may be a URL.",
-                                                                    "type": "string",
-                                                                    "examples": [
-                                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
-                                                                    ]
-                                                                },
-                                                                "href": {
-                                                                    "title": "URL",
-                                                                    "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
-                                                                    "type": "string",
-                                                                    "format": "uri",
-                                                                    "examples": [
-                                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
-                                                                    ]
-                                                                },
-                                                                "namespace": {
-                                                                    "title": "Namespace",
-                                                                    "description": "The code or identifier for the domain or scheme this identifier is registered within.",
-                                                                    "type": "string",
-                                                                    "examples": [
-                                                                        "doi",
-                                                                        "orcid"
-                                                                    ]
+                                            },
+                                            {
+                                                "required": [
+                                                    "identifier"
+                                                ],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "identifier": {
+                                                        "allOf": [
+                                                            {
+                                                                "title": "Geographic Identifier",
+                                                                "description": "A geographic identifier relating to the area or location of the resource."
+                                                            },
+                                                            {
+                                                                "title": "Identifier",
+                                                                "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                                                "type": "object",
+                                                                "required": [
+                                                                    "identifier"
+                                                                ],
+                                                                "additionalProperties": false,
+                                                                "properties": {
+                                                                    "identifier": {
+                                                                        "title": "Identifier (value)",
+                                                                        "description": "Identifier value, this may be a URL.",
+                                                                        "type": "string",
+                                                                        "examples": [
+                                                                            "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                        ]
+                                                                    },
+                                                                    "href": {
+                                                                        "title": "URL",
+                                                                        "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                                                        "type": "string",
+                                                                        "format": "uri",
+                                                                        "examples": [
+                                                                            "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                        ]
+                                                                    },
+                                                                    "namespace": {
+                                                                        "title": "Namespace",
+                                                                        "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                                                                        "type": "string",
+                                                                        "examples": [
+                                                                            "doi",
+                                                                            "orcid"
+                                                                        ]
+                                                                    }
                                                                 }
                                                             }
-                                                        }
-                                                    ]
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "vertical": {
+                                        "title": "Vertical extent",
+                                        "description": "A description of the vertical volume a resource covers.",
+                                        "type": "object",
+                                        "required": [],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "minimum": {
+                                                "title": "Minimum",
+                                                "description": "The minimum vertical extent.",
+                                                "type": "number",
+                                                "examples": [
+                                                    "0"
+                                                ]
+                                            },
+                                            "maximum": {
+                                                "title": "Maximum",
+                                                "description": "The maximum vertical extent.",
+                                                "type": "number",
+                                                "examples": [
+                                                    "40"
+                                                ]
+                                            },
+                                            "identifier": {
+                                                "title": "Identifier",
+                                                "description": "XML ID attribute for the vertical CRS, typically based on the CRS code in the form 'ogp-crs-[code]'.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "ogp-crs-5714"
+                                                ]
+                                            },
+                                            "code": {
+                                                "title": "Code",
+                                                "description": "URN for the vertical CRS.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "urn:ogc:def:crs:EPSG::5714"
+                                                ]
+                                            },
+                                            "name": {
+                                                "title": "Name",
+                                                "description": "Name of the vertical CRS (e.g. 'MSL height' for Mean Sea Level height).",
+                                                "type": "string",
+                                                "examples": [
+                                                    "MSL height"
+                                                ]
+                                            },
+                                            "remarks": {
+                                                "title": "remarks",
+                                                "description": "Clarifying information about the vertical CRS.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "Not specific to any location or epoch."
+                                                ]
+                                            },
+                                            "scope": {
+                                                "title": "Scope",
+                                                "description": "Domain in which the vertical CRS is defined.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "Hydrography"
+                                                ]
+                                            },
+                                            "domain_of_validity": {
+                                                "title": "Domain of validity",
+                                                "description": "The area the vertical CRS is valid for (e.g. the world).",
+                                                "type": "object",
+                                                "required": [],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "href": {
+                                                        "title": "URL",
+                                                        "description": "URL or URN for a resource that defines the domain of validity.",
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "examples": [
+                                                            "urn:ogc:def:area:EPSG::1262"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "vertical_cs": {
+                                                "title": "Vertical Coordinate System",
+                                                "description": "The coordinate system used in the vertical CRS.",
+                                                "type": "object",
+                                                "required": [],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "href": {
+                                                        "title": "URL",
+                                                        "description": "URL or URN for a resource that defines the coordinate system.",
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "examples": [
+                                                            "urn:ogc:def:cs:EPSG::6498"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "vertical_datum": {
+                                                "title": "Vertical Datum",
+                                                "description": "The datum used in the vertical CRS.",
+                                                "type": "object",
+                                                "required": [],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "href": {
+                                                        "title": "URL",
+                                                        "description": "URL or URN for a resource that defines the datum.",
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "examples": [
+                                                            "urn:ogc:def:datum:EPSG::5100"
+                                                        ]
+                                                    }
                                                 }
                                             }
                                         }
-                                    ]
-                                },
-                                "vertical": {
-                                    "title": "Vertical extent",
-                                    "description": "A description of the vertical volume a resource covers.",
-                                    "type": "object",
-                                    "required": [],
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "minimum": {
-                                            "title": "Minimum",
-                                            "description": "The minimum vertical extent.",
-                                            "type": "number",
-                                            "examples": [
-                                                "0"
-                                            ]
-                                        },
-                                        "maximum": {
-                                            "title": "Maximum",
-                                            "description": "The maximum vertical extent.",
-                                            "type": "number",
-                                            "examples": [
-                                                "40"
-                                            ]
-                                        },
-                                        "identifier": {
-                                            "title": "Identifier",
-                                            "description": "XML ID attribute for the vertical CRS, typically based on the CRS code in the form 'ogp-crs-[code]'.",
-                                            "type": "string",
-                                            "examples": [
-                                                "ogp-crs-5714"
-                                            ]
-                                        },
-                                        "code": {
-                                            "title": "Code",
-                                            "description": "URN for the vertical CRS.",
-                                            "type": "string",
-                                            "examples": [
-                                                "urn:ogc:def:crs:EPSG::5714"
-                                            ]
-                                        },
-                                        "name": {
-                                            "title": "Name",
-                                            "description": "Name of the vertical CRS (e.g. 'MSL height' for Mean Sea Level height).",
-                                            "type": "string",
-                                            "examples": [
-                                                "MSL height"
-                                            ]
-                                        },
-                                        "remarks": {
-                                            "title": "remarks",
-                                            "description": "Clarifying information about the vertical CRS.",
-                                            "type": "string",
-                                            "examples": [
-                                                "Not specific to any location or epoch."
-                                            ]
-                                        },
-                                        "scope": {
-                                            "title": "Scope",
-                                            "description": "Domain in which the vertical CRS is defined.",
-                                            "type": "string",
-                                            "examples": [
-                                                "Hydrography"
-                                            ]
-                                        },
-                                        "domain_of_validity": {
-                                            "title": "Domain of validity",
-                                            "description": "The area the vertical CRS is valid for (e.g. the world).",
-                                            "type": "object",
-                                            "required": [],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "href": {
-                                                    "title": "URL",
-                                                    "description": "URL or URN for a resource that defines the domain of validity.",
-                                                    "type": "string",
-                                                    "format": "uri",
-                                                    "examples": [
-                                                        "urn:ogc:def:area:EPSG::1262"
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "vertical_cs": {
-                                            "title": "Vertical Coordinate System",
-                                            "description": "The coordinate system used in the vertical CRS.",
-                                            "type": "object",
-                                            "required": [],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "href": {
-                                                    "title": "URL",
-                                                    "description": "URL or URN for a resource that defines the coordinate system.",
-                                                    "type": "string",
-                                                    "format": "uri",
-                                                    "examples": [
-                                                        "urn:ogc:def:cs:EPSG::6498"
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "vertical_datum": {
-                                            "title": "Vertical Datum",
-                                            "description": "The datum used in the vertical CRS.",
-                                            "type": "object",
-                                            "required": [],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "href": {
-                                                    "title": "URL",
-                                                    "description": "URL or URN for a resource that defines the datum.",
-                                                    "type": "string",
-                                                    "format": "uri",
-                                                    "examples": [
-                                                        "urn:ogc:def:datum:EPSG::5100"
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "temporal": {
-                                    "title": "Temporal extent",
-                                    "description": "A description of the time a resource covers.",
-                                    "type": "object",
-                                    "required": [],
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "period": {
-                                            "title": "Period",
-                                            "description": "A set of dates for a period of time that encloses the resource.",
-                                            "type": "object",
-                                            "required": [],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "start": {
-                                                    "title": "Date",
-                                                    "description": "A literal (partial) date or date time, including time zone which should be UTC.",
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "examples": [
-                                                        "2010",
-                                                        "2010-04",
-                                                        "2010-04-20",
-                                                        "2010-04-20T14:39:45+00:00"
-                                                    ]
-                                                },
-                                                "end": {
-                                                    "title": "Date",
-                                                    "description": "A literal (partial) date or date time, including time zone which should be UTC.",
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "examples": [
-                                                        "2010",
-                                                        "2010-04",
-                                                        "2010-04-20",
-                                                        "2010-04-20T14:39:45+00:00"
-                                                    ]
+                                    },
+                                    "temporal": {
+                                        "title": "Temporal extent",
+                                        "description": "A description of the time a resource covers.",
+                                        "type": "object",
+                                        "required": [],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "period": {
+                                                "title": "Period",
+                                                "description": "A set of dates for a period of time that encloses the resource.",
+                                                "type": "object",
+                                                "required": [],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "start": {
+                                                        "title": "Date",
+                                                        "description": "A literal (partial) date or date time, including time zone which should be UTC.",
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "examples": [
+                                                            "2010",
+                                                            "2010-04",
+                                                            "2010-04-20",
+                                                            "2010-04-20T14:39:45+00:00"
+                                                        ]
+                                                    },
+                                                    "end": {
+                                                        "title": "Date",
+                                                        "description": "A literal (partial) date or date time, including time zone which should be UTC.",
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "examples": [
+                                                            "2010",
+                                                            "2010-04",
+                                                            "2010-04-20",
+                                                            "2010-04-20T14:39:45+00:00"
+                                                        ]
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
+                            },
+                            "minItems": 1
                         },
                         "lineage": {
                             "title": "Lineage",
@@ -7372,7 +7705,7 @@
                                 "language",
                                 "character_set",
                                 "topics",
-                                "extent"
+                                "extents"
                             ],
                             "additionalProperties": false,
                             "properties": {
@@ -8839,299 +9172,314 @@
                                         "environment"
                                     ]
                                 },
-                                "extent": {
-                                    "title": "Extent",
-                                    "description": "The spatial (2D or 3D) and temporal span of the resource, in terms of area/volume and time covered.",
-                                    "type": "object",
-                                    "required": [
-                                        "geographic"
-                                    ],
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "geographic": {
-                                            "title": "Geographic extent",
-                                            "description": "A description of the area the resource covers.",
-                                            "type": "object",
-                                            "oneOf": [
-                                                {
-                                                    "required": [
-                                                        "bounding_box"
-                                                    ],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "bounding_box": {
-                                                            "title": "Bounding box",
-                                                            "description": "A set of coordinates for a rectangle that encloses the resource.",
-                                                            "type": "object",
-                                                            "required": [
-                                                                "west_longitude",
-                                                                "east_longitude",
-                                                                "south_latitude",
-                                                                "north_latitude"
-                                                            ],
-                                                            "additionalProperties": false,
-                                                            "properties": {
-                                                                "west_longitude": {
-                                                                    "title": "West longitude",
-                                                                    "description": "Western most longitude.",
-                                                                    "type": "number",
-                                                                    "maximum": 180,
-                                                                    "minimum": -180,
-                                                                    "examples": [
-                                                                        "-120"
-                                                                    ]
-                                                                },
-                                                                "east_longitude": {
-                                                                    "title": "East longitude",
-                                                                    "description": "Eastern most longitude.",
-                                                                    "type": "number",
-                                                                    "maximum": 180,
-                                                                    "minimum": -180,
-                                                                    "examples": [
-                                                                        "-120"
-                                                                    ]
-                                                                },
-                                                                "south_latitude": {
-                                                                    "title": "South latitude",
-                                                                    "description": "Southern most latitude.",
-                                                                    "type": "number",
-                                                                    "maximum": 90,
-                                                                    "minimum": -90,
-                                                                    "examples": [
-                                                                        "-60"
-                                                                    ]
-                                                                },
-                                                                "north_latitude": {
-                                                                    "title": "North latitude",
-                                                                    "description": "Northern latitude.",
-                                                                    "type": "number",
-                                                                    "maximum": 90,
-                                                                    "minimum": -90,
-                                                                    "examples": [
-                                                                        "-60"
-                                                                    ]
+                                "extents": {
+                                    "title": "Extents",
+                                    "description": "The spatial (2D or 3D) and temporal spans of the resource, in terms of areas/volumes and times covered.",
+                                    "type": "array",
+                                    "items": {
+                                        "title": "Extent",
+                                        "description": "The spatial (2D or 3D) and temporal span of the resource, in terms of area/volume and time covered.",
+                                        "type": "object",
+                                        "required": [
+                                            "identifier",
+                                            "geographic"
+                                        ],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "identifier": {
+                                                "title": "Identifier",
+                                                "description": "XML ID attribute for the whole extent.  A special case is the overall bounding extent",
+                                                "type": "string",
+                                                "examples": [
+                                                    "bounding"
+                                                ]
+                                            },
+                                            "geographic": {
+                                                "title": "Geographic extent",
+                                                "description": "A description of the area the resource covers.",
+                                                "type": "object",
+                                                "oneOf": [
+                                                    {
+                                                        "required": [
+                                                            "bounding_box"
+                                                        ],
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "bounding_box": {
+                                                                "title": "Bounding box",
+                                                                "description": "A set of coordinates for a rectangle that encloses the resource.",
+                                                                "type": "object",
+                                                                "required": [
+                                                                    "west_longitude",
+                                                                    "east_longitude",
+                                                                    "south_latitude",
+                                                                    "north_latitude"
+                                                                ],
+                                                                "additionalProperties": false,
+                                                                "properties": {
+                                                                    "west_longitude": {
+                                                                        "title": "West longitude",
+                                                                        "description": "Western most longitude.",
+                                                                        "type": "number",
+                                                                        "maximum": 180,
+                                                                        "minimum": -180,
+                                                                        "examples": [
+                                                                            "-120"
+                                                                        ]
+                                                                    },
+                                                                    "east_longitude": {
+                                                                        "title": "East longitude",
+                                                                        "description": "Eastern most longitude.",
+                                                                        "type": "number",
+                                                                        "maximum": 180,
+                                                                        "minimum": -180,
+                                                                        "examples": [
+                                                                            "-120"
+                                                                        ]
+                                                                    },
+                                                                    "south_latitude": {
+                                                                        "title": "South latitude",
+                                                                        "description": "Southern most latitude.",
+                                                                        "type": "number",
+                                                                        "maximum": 90,
+                                                                        "minimum": -90,
+                                                                        "examples": [
+                                                                            "-60"
+                                                                        ]
+                                                                    },
+                                                                    "north_latitude": {
+                                                                        "title": "North latitude",
+                                                                        "description": "Northern latitude.",
+                                                                        "type": "number",
+                                                                        "maximum": 90,
+                                                                        "minimum": -90,
+                                                                        "examples": [
+                                                                            "-60"
+                                                                        ]
+                                                                    }
                                                                 }
                                                             }
                                                         }
-                                                    }
-                                                },
-                                                {
-                                                    "required": [
-                                                        "identifier"
-                                                    ],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "identifier": {
-                                                            "allOf": [
-                                                                {
-                                                                    "title": "Geographic Identifier",
-                                                                    "description": "A geographic identifier relating to the area or location of the resource."
-                                                                },
-                                                                {
-                                                                    "title": "Identifier",
-                                                                    "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
-                                                                    "type": "object",
-                                                                    "required": [
-                                                                        "identifier"
-                                                                    ],
-                                                                    "additionalProperties": false,
-                                                                    "properties": {
-                                                                        "identifier": {
-                                                                            "title": "Identifier (value)",
-                                                                            "description": "Identifier value, this may be a URL.",
-                                                                            "type": "string",
-                                                                            "examples": [
-                                                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
-                                                                            ]
-                                                                        },
-                                                                        "href": {
-                                                                            "title": "URL",
-                                                                            "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
-                                                                            "type": "string",
-                                                                            "format": "uri",
-                                                                            "examples": [
-                                                                                "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
-                                                                            ]
-                                                                        },
-                                                                        "namespace": {
-                                                                            "title": "Namespace",
-                                                                            "description": "The code or identifier for the domain or scheme this identifier is registered within.",
-                                                                            "type": "string",
-                                                                            "examples": [
-                                                                                "doi",
-                                                                                "orcid"
-                                                                            ]
+                                                    },
+                                                    {
+                                                        "required": [
+                                                            "identifier"
+                                                        ],
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "identifier": {
+                                                                "allOf": [
+                                                                    {
+                                                                        "title": "Geographic Identifier",
+                                                                        "description": "A geographic identifier relating to the area or location of the resource."
+                                                                    },
+                                                                    {
+                                                                        "title": "Identifier",
+                                                                        "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                                                        "type": "object",
+                                                                        "required": [
+                                                                            "identifier"
+                                                                        ],
+                                                                        "additionalProperties": false,
+                                                                        "properties": {
+                                                                            "identifier": {
+                                                                                "title": "Identifier (value)",
+                                                                                "description": "Identifier value, this may be a URL.",
+                                                                                "type": "string",
+                                                                                "examples": [
+                                                                                    "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                                ]
+                                                                            },
+                                                                            "href": {
+                                                                                "title": "URL",
+                                                                                "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                                                                "type": "string",
+                                                                                "format": "uri",
+                                                                                "examples": [
+                                                                                    "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                                ]
+                                                                            },
+                                                                            "namespace": {
+                                                                                "title": "Namespace",
+                                                                                "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                                                                                "type": "string",
+                                                                                "examples": [
+                                                                                    "doi",
+                                                                                    "orcid"
+                                                                                ]
+                                                                            }
                                                                         }
                                                                     }
-                                                                }
-                                                            ]
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "vertical": {
+                                                "title": "Vertical extent",
+                                                "description": "A description of the vertical volume a resource covers.",
+                                                "type": "object",
+                                                "required": [],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "minimum": {
+                                                        "title": "Minimum",
+                                                        "description": "The minimum vertical extent.",
+                                                        "type": "number",
+                                                        "examples": [
+                                                            "0"
+                                                        ]
+                                                    },
+                                                    "maximum": {
+                                                        "title": "Maximum",
+                                                        "description": "The maximum vertical extent.",
+                                                        "type": "number",
+                                                        "examples": [
+                                                            "40"
+                                                        ]
+                                                    },
+                                                    "identifier": {
+                                                        "title": "Identifier",
+                                                        "description": "XML ID attribute for the vertical CRS, typically based on the CRS code in the form 'ogp-crs-[code]'.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "ogp-crs-5714"
+                                                        ]
+                                                    },
+                                                    "code": {
+                                                        "title": "Code",
+                                                        "description": "URN for the vertical CRS.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "urn:ogc:def:crs:EPSG::5714"
+                                                        ]
+                                                    },
+                                                    "name": {
+                                                        "title": "Name",
+                                                        "description": "Name of the vertical CRS (e.g. 'MSL height' for Mean Sea Level height).",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "MSL height"
+                                                        ]
+                                                    },
+                                                    "remarks": {
+                                                        "title": "remarks",
+                                                        "description": "Clarifying information about the vertical CRS.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "Not specific to any location or epoch."
+                                                        ]
+                                                    },
+                                                    "scope": {
+                                                        "title": "Scope",
+                                                        "description": "Domain in which the vertical CRS is defined.",
+                                                        "type": "string",
+                                                        "examples": [
+                                                            "Hydrography"
+                                                        ]
+                                                    },
+                                                    "domain_of_validity": {
+                                                        "title": "Domain of validity",
+                                                        "description": "The area the vertical CRS is valid for (e.g. the world).",
+                                                        "type": "object",
+                                                        "required": [],
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "href": {
+                                                                "title": "URL",
+                                                                "description": "URL or URN for a resource that defines the domain of validity.",
+                                                                "type": "string",
+                                                                "format": "uri",
+                                                                "examples": [
+                                                                    "urn:ogc:def:area:EPSG::1262"
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "vertical_cs": {
+                                                        "title": "Vertical Coordinate System",
+                                                        "description": "The coordinate system used in the vertical CRS.",
+                                                        "type": "object",
+                                                        "required": [],
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "href": {
+                                                                "title": "URL",
+                                                                "description": "URL or URN for a resource that defines the coordinate system.",
+                                                                "type": "string",
+                                                                "format": "uri",
+                                                                "examples": [
+                                                                    "urn:ogc:def:cs:EPSG::6498"
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "vertical_datum": {
+                                                        "title": "Vertical Datum",
+                                                        "description": "The datum used in the vertical CRS.",
+                                                        "type": "object",
+                                                        "required": [],
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "href": {
+                                                                "title": "URL",
+                                                                "description": "URL or URN for a resource that defines the datum.",
+                                                                "type": "string",
+                                                                "format": "uri",
+                                                                "examples": [
+                                                                    "urn:ogc:def:datum:EPSG::5100"
+                                                                ]
+                                                            }
                                                         }
                                                     }
                                                 }
-                                            ]
-                                        },
-                                        "vertical": {
-                                            "title": "Vertical extent",
-                                            "description": "A description of the vertical volume a resource covers.",
-                                            "type": "object",
-                                            "required": [],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "minimum": {
-                                                    "title": "Minimum",
-                                                    "description": "The minimum vertical extent.",
-                                                    "type": "number",
-                                                    "examples": [
-                                                        "0"
-                                                    ]
-                                                },
-                                                "maximum": {
-                                                    "title": "Maximum",
-                                                    "description": "The maximum vertical extent.",
-                                                    "type": "number",
-                                                    "examples": [
-                                                        "40"
-                                                    ]
-                                                },
-                                                "identifier": {
-                                                    "title": "Identifier",
-                                                    "description": "XML ID attribute for the vertical CRS, typically based on the CRS code in the form 'ogp-crs-[code]'.",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "ogp-crs-5714"
-                                                    ]
-                                                },
-                                                "code": {
-                                                    "title": "Code",
-                                                    "description": "URN for the vertical CRS.",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "urn:ogc:def:crs:EPSG::5714"
-                                                    ]
-                                                },
-                                                "name": {
-                                                    "title": "Name",
-                                                    "description": "Name of the vertical CRS (e.g. 'MSL height' for Mean Sea Level height).",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "MSL height"
-                                                    ]
-                                                },
-                                                "remarks": {
-                                                    "title": "remarks",
-                                                    "description": "Clarifying information about the vertical CRS.",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "Not specific to any location or epoch."
-                                                    ]
-                                                },
-                                                "scope": {
-                                                    "title": "Scope",
-                                                    "description": "Domain in which the vertical CRS is defined.",
-                                                    "type": "string",
-                                                    "examples": [
-                                                        "Hydrography"
-                                                    ]
-                                                },
-                                                "domain_of_validity": {
-                                                    "title": "Domain of validity",
-                                                    "description": "The area the vertical CRS is valid for (e.g. the world).",
-                                                    "type": "object",
-                                                    "required": [],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "href": {
-                                                            "title": "URL",
-                                                            "description": "URL or URN for a resource that defines the domain of validity.",
-                                                            "type": "string",
-                                                            "format": "uri",
-                                                            "examples": [
-                                                                "urn:ogc:def:area:EPSG::1262"
-                                                            ]
-                                                        }
-                                                    }
-                                                },
-                                                "vertical_cs": {
-                                                    "title": "Vertical Coordinate System",
-                                                    "description": "The coordinate system used in the vertical CRS.",
-                                                    "type": "object",
-                                                    "required": [],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "href": {
-                                                            "title": "URL",
-                                                            "description": "URL or URN for a resource that defines the coordinate system.",
-                                                            "type": "string",
-                                                            "format": "uri",
-                                                            "examples": [
-                                                                "urn:ogc:def:cs:EPSG::6498"
-                                                            ]
-                                                        }
-                                                    }
-                                                },
-                                                "vertical_datum": {
-                                                    "title": "Vertical Datum",
-                                                    "description": "The datum used in the vertical CRS.",
-                                                    "type": "object",
-                                                    "required": [],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "href": {
-                                                            "title": "URL",
-                                                            "description": "URL or URN for a resource that defines the datum.",
-                                                            "type": "string",
-                                                            "format": "uri",
-                                                            "examples": [
-                                                                "urn:ogc:def:datum:EPSG::5100"
-                                                            ]
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "temporal": {
-                                            "title": "Temporal extent",
-                                            "description": "A description of the time a resource covers.",
-                                            "type": "object",
-                                            "required": [],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "period": {
-                                                    "title": "Period",
-                                                    "description": "A set of dates for a period of time that encloses the resource.",
-                                                    "type": "object",
-                                                    "required": [],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "start": {
-                                                            "title": "Date",
-                                                            "description": "A literal (partial) date or date time, including time zone which should be UTC.",
-                                                            "type": "string",
-                                                            "format": "date-time",
-                                                            "examples": [
-                                                                "2010",
-                                                                "2010-04",
-                                                                "2010-04-20",
-                                                                "2010-04-20T14:39:45+00:00"
-                                                            ]
-                                                        },
-                                                        "end": {
-                                                            "title": "Date",
-                                                            "description": "A literal (partial) date or date time, including time zone which should be UTC.",
-                                                            "type": "string",
-                                                            "format": "date-time",
-                                                            "examples": [
-                                                                "2010",
-                                                                "2010-04",
-                                                                "2010-04-20",
-                                                                "2010-04-20T14:39:45+00:00"
-                                                            ]
+                                            },
+                                            "temporal": {
+                                                "title": "Temporal extent",
+                                                "description": "A description of the time a resource covers.",
+                                                "type": "object",
+                                                "required": [],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "period": {
+                                                        "title": "Period",
+                                                        "description": "A set of dates for a period of time that encloses the resource.",
+                                                        "type": "object",
+                                                        "required": [],
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "start": {
+                                                                "title": "Date",
+                                                                "description": "A literal (partial) date or date time, including time zone which should be UTC.",
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "examples": [
+                                                                    "2010",
+                                                                    "2010-04",
+                                                                    "2010-04-20",
+                                                                    "2010-04-20T14:39:45+00:00"
+                                                                ]
+                                                            },
+                                                            "end": {
+                                                                "title": "Date",
+                                                                "description": "A literal (partial) date or date time, including time zone which should be UTC.",
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "examples": [
+                                                                    "2010",
+                                                                    "2010-04",
+                                                                    "2010-04-20",
+                                                                    "2010-04-20T14:39:45+00:00"
+                                                                ]
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    "minItems": 1
                                 },
                                 "lineage": {
                                     "title": "Lineage",
@@ -11222,7 +11570,7 @@
                         "language",
                         "character_set",
                         "topics",
-                        "extent"
+                        "extents"
                     ],
                     "additionalProperties": false,
                     "properties": {
@@ -12689,299 +13037,314 @@
                                 "environment"
                             ]
                         },
-                        "extent": {
-                            "title": "Extent",
-                            "description": "The spatial (2D or 3D) and temporal span of the resource, in terms of area/volume and time covered.",
-                            "type": "object",
-                            "required": [
-                                "geographic"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                                "geographic": {
-                                    "title": "Geographic extent",
-                                    "description": "A description of the area the resource covers.",
-                                    "type": "object",
-                                    "oneOf": [
-                                        {
-                                            "required": [
-                                                "bounding_box"
-                                            ],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "bounding_box": {
-                                                    "title": "Bounding box",
-                                                    "description": "A set of coordinates for a rectangle that encloses the resource.",
-                                                    "type": "object",
-                                                    "required": [
-                                                        "west_longitude",
-                                                        "east_longitude",
-                                                        "south_latitude",
-                                                        "north_latitude"
-                                                    ],
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "west_longitude": {
-                                                            "title": "West longitude",
-                                                            "description": "Western most longitude.",
-                                                            "type": "number",
-                                                            "maximum": 180,
-                                                            "minimum": -180,
-                                                            "examples": [
-                                                                "-120"
-                                                            ]
-                                                        },
-                                                        "east_longitude": {
-                                                            "title": "East longitude",
-                                                            "description": "Eastern most longitude.",
-                                                            "type": "number",
-                                                            "maximum": 180,
-                                                            "minimum": -180,
-                                                            "examples": [
-                                                                "-120"
-                                                            ]
-                                                        },
-                                                        "south_latitude": {
-                                                            "title": "South latitude",
-                                                            "description": "Southern most latitude.",
-                                                            "type": "number",
-                                                            "maximum": 90,
-                                                            "minimum": -90,
-                                                            "examples": [
-                                                                "-60"
-                                                            ]
-                                                        },
-                                                        "north_latitude": {
-                                                            "title": "North latitude",
-                                                            "description": "Northern latitude.",
-                                                            "type": "number",
-                                                            "maximum": 90,
-                                                            "minimum": -90,
-                                                            "examples": [
-                                                                "-60"
-                                                            ]
+                        "extents": {
+                            "title": "Extents",
+                            "description": "The spatial (2D or 3D) and temporal spans of the resource, in terms of areas/volumes and times covered.",
+                            "type": "array",
+                            "items": {
+                                "title": "Extent",
+                                "description": "The spatial (2D or 3D) and temporal span of the resource, in terms of area/volume and time covered.",
+                                "type": "object",
+                                "required": [
+                                    "identifier",
+                                    "geographic"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "identifier": {
+                                        "title": "Identifier",
+                                        "description": "XML ID attribute for the whole extent.  A special case is the overall bounding extent",
+                                        "type": "string",
+                                        "examples": [
+                                            "bounding"
+                                        ]
+                                    },
+                                    "geographic": {
+                                        "title": "Geographic extent",
+                                        "description": "A description of the area the resource covers.",
+                                        "type": "object",
+                                        "oneOf": [
+                                            {
+                                                "required": [
+                                                    "bounding_box"
+                                                ],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "bounding_box": {
+                                                        "title": "Bounding box",
+                                                        "description": "A set of coordinates for a rectangle that encloses the resource.",
+                                                        "type": "object",
+                                                        "required": [
+                                                            "west_longitude",
+                                                            "east_longitude",
+                                                            "south_latitude",
+                                                            "north_latitude"
+                                                        ],
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "west_longitude": {
+                                                                "title": "West longitude",
+                                                                "description": "Western most longitude.",
+                                                                "type": "number",
+                                                                "maximum": 180,
+                                                                "minimum": -180,
+                                                                "examples": [
+                                                                    "-120"
+                                                                ]
+                                                            },
+                                                            "east_longitude": {
+                                                                "title": "East longitude",
+                                                                "description": "Eastern most longitude.",
+                                                                "type": "number",
+                                                                "maximum": 180,
+                                                                "minimum": -180,
+                                                                "examples": [
+                                                                    "-120"
+                                                                ]
+                                                            },
+                                                            "south_latitude": {
+                                                                "title": "South latitude",
+                                                                "description": "Southern most latitude.",
+                                                                "type": "number",
+                                                                "maximum": 90,
+                                                                "minimum": -90,
+                                                                "examples": [
+                                                                    "-60"
+                                                                ]
+                                                            },
+                                                            "north_latitude": {
+                                                                "title": "North latitude",
+                                                                "description": "Northern latitude.",
+                                                                "type": "number",
+                                                                "maximum": 90,
+                                                                "minimum": -90,
+                                                                "examples": [
+                                                                    "-60"
+                                                                ]
+                                                            }
                                                         }
                                                     }
                                                 }
-                                            }
-                                        },
-                                        {
-                                            "required": [
-                                                "identifier"
-                                            ],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "identifier": {
-                                                    "allOf": [
-                                                        {
-                                                            "title": "Geographic Identifier",
-                                                            "description": "A geographic identifier relating to the area or location of the resource."
-                                                        },
-                                                        {
-                                                            "title": "Identifier",
-                                                            "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
-                                                            "type": "object",
-                                                            "required": [
-                                                                "identifier"
-                                                            ],
-                                                            "additionalProperties": false,
-                                                            "properties": {
-                                                                "identifier": {
-                                                                    "title": "Identifier (value)",
-                                                                    "description": "Identifier value, this may be a URL.",
-                                                                    "type": "string",
-                                                                    "examples": [
-                                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
-                                                                    ]
-                                                                },
-                                                                "href": {
-                                                                    "title": "URL",
-                                                                    "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
-                                                                    "type": "string",
-                                                                    "format": "uri",
-                                                                    "examples": [
-                                                                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
-                                                                    ]
-                                                                },
-                                                                "namespace": {
-                                                                    "title": "Namespace",
-                                                                    "description": "The code or identifier for the domain or scheme this identifier is registered within.",
-                                                                    "type": "string",
-                                                                    "examples": [
-                                                                        "doi",
-                                                                        "orcid"
-                                                                    ]
+                                            },
+                                            {
+                                                "required": [
+                                                    "identifier"
+                                                ],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "identifier": {
+                                                        "allOf": [
+                                                            {
+                                                                "title": "Geographic Identifier",
+                                                                "description": "A geographic identifier relating to the area or location of the resource."
+                                                            },
+                                                            {
+                                                                "title": "Identifier",
+                                                                "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+                                                                "type": "object",
+                                                                "required": [
+                                                                    "identifier"
+                                                                ],
+                                                                "additionalProperties": false,
+                                                                "properties": {
+                                                                    "identifier": {
+                                                                        "title": "Identifier (value)",
+                                                                        "description": "Identifier value, this may be a URL.",
+                                                                        "type": "string",
+                                                                        "examples": [
+                                                                            "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                        ]
+                                                                    },
+                                                                    "href": {
+                                                                        "title": "URL",
+                                                                        "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                                                                        "type": "string",
+                                                                        "format": "uri",
+                                                                        "examples": [
+                                                                            "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                                                                        ]
+                                                                    },
+                                                                    "namespace": {
+                                                                        "title": "Namespace",
+                                                                        "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                                                                        "type": "string",
+                                                                        "examples": [
+                                                                            "doi",
+                                                                            "orcid"
+                                                                        ]
+                                                                    }
                                                                 }
                                                             }
-                                                        }
-                                                    ]
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "vertical": {
+                                        "title": "Vertical extent",
+                                        "description": "A description of the vertical volume a resource covers.",
+                                        "type": "object",
+                                        "required": [],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "minimum": {
+                                                "title": "Minimum",
+                                                "description": "The minimum vertical extent.",
+                                                "type": "number",
+                                                "examples": [
+                                                    "0"
+                                                ]
+                                            },
+                                            "maximum": {
+                                                "title": "Maximum",
+                                                "description": "The maximum vertical extent.",
+                                                "type": "number",
+                                                "examples": [
+                                                    "40"
+                                                ]
+                                            },
+                                            "identifier": {
+                                                "title": "Identifier",
+                                                "description": "XML ID attribute for the vertical CRS, typically based on the CRS code in the form 'ogp-crs-[code]'.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "ogp-crs-5714"
+                                                ]
+                                            },
+                                            "code": {
+                                                "title": "Code",
+                                                "description": "URN for the vertical CRS.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "urn:ogc:def:crs:EPSG::5714"
+                                                ]
+                                            },
+                                            "name": {
+                                                "title": "Name",
+                                                "description": "Name of the vertical CRS (e.g. 'MSL height' for Mean Sea Level height).",
+                                                "type": "string",
+                                                "examples": [
+                                                    "MSL height"
+                                                ]
+                                            },
+                                            "remarks": {
+                                                "title": "remarks",
+                                                "description": "Clarifying information about the vertical CRS.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "Not specific to any location or epoch."
+                                                ]
+                                            },
+                                            "scope": {
+                                                "title": "Scope",
+                                                "description": "Domain in which the vertical CRS is defined.",
+                                                "type": "string",
+                                                "examples": [
+                                                    "Hydrography"
+                                                ]
+                                            },
+                                            "domain_of_validity": {
+                                                "title": "Domain of validity",
+                                                "description": "The area the vertical CRS is valid for (e.g. the world).",
+                                                "type": "object",
+                                                "required": [],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "href": {
+                                                        "title": "URL",
+                                                        "description": "URL or URN for a resource that defines the domain of validity.",
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "examples": [
+                                                            "urn:ogc:def:area:EPSG::1262"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "vertical_cs": {
+                                                "title": "Vertical Coordinate System",
+                                                "description": "The coordinate system used in the vertical CRS.",
+                                                "type": "object",
+                                                "required": [],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "href": {
+                                                        "title": "URL",
+                                                        "description": "URL or URN for a resource that defines the coordinate system.",
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "examples": [
+                                                            "urn:ogc:def:cs:EPSG::6498"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "vertical_datum": {
+                                                "title": "Vertical Datum",
+                                                "description": "The datum used in the vertical CRS.",
+                                                "type": "object",
+                                                "required": [],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "href": {
+                                                        "title": "URL",
+                                                        "description": "URL or URN for a resource that defines the datum.",
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "examples": [
+                                                            "urn:ogc:def:datum:EPSG::5100"
+                                                        ]
+                                                    }
                                                 }
                                             }
                                         }
-                                    ]
-                                },
-                                "vertical": {
-                                    "title": "Vertical extent",
-                                    "description": "A description of the vertical volume a resource covers.",
-                                    "type": "object",
-                                    "required": [],
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "minimum": {
-                                            "title": "Minimum",
-                                            "description": "The minimum vertical extent.",
-                                            "type": "number",
-                                            "examples": [
-                                                "0"
-                                            ]
-                                        },
-                                        "maximum": {
-                                            "title": "Maximum",
-                                            "description": "The maximum vertical extent.",
-                                            "type": "number",
-                                            "examples": [
-                                                "40"
-                                            ]
-                                        },
-                                        "identifier": {
-                                            "title": "Identifier",
-                                            "description": "XML ID attribute for the vertical CRS, typically based on the CRS code in the form 'ogp-crs-[code]'.",
-                                            "type": "string",
-                                            "examples": [
-                                                "ogp-crs-5714"
-                                            ]
-                                        },
-                                        "code": {
-                                            "title": "Code",
-                                            "description": "URN for the vertical CRS.",
-                                            "type": "string",
-                                            "examples": [
-                                                "urn:ogc:def:crs:EPSG::5714"
-                                            ]
-                                        },
-                                        "name": {
-                                            "title": "Name",
-                                            "description": "Name of the vertical CRS (e.g. 'MSL height' for Mean Sea Level height).",
-                                            "type": "string",
-                                            "examples": [
-                                                "MSL height"
-                                            ]
-                                        },
-                                        "remarks": {
-                                            "title": "remarks",
-                                            "description": "Clarifying information about the vertical CRS.",
-                                            "type": "string",
-                                            "examples": [
-                                                "Not specific to any location or epoch."
-                                            ]
-                                        },
-                                        "scope": {
-                                            "title": "Scope",
-                                            "description": "Domain in which the vertical CRS is defined.",
-                                            "type": "string",
-                                            "examples": [
-                                                "Hydrography"
-                                            ]
-                                        },
-                                        "domain_of_validity": {
-                                            "title": "Domain of validity",
-                                            "description": "The area the vertical CRS is valid for (e.g. the world).",
-                                            "type": "object",
-                                            "required": [],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "href": {
-                                                    "title": "URL",
-                                                    "description": "URL or URN for a resource that defines the domain of validity.",
-                                                    "type": "string",
-                                                    "format": "uri",
-                                                    "examples": [
-                                                        "urn:ogc:def:area:EPSG::1262"
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "vertical_cs": {
-                                            "title": "Vertical Coordinate System",
-                                            "description": "The coordinate system used in the vertical CRS.",
-                                            "type": "object",
-                                            "required": [],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "href": {
-                                                    "title": "URL",
-                                                    "description": "URL or URN for a resource that defines the coordinate system.",
-                                                    "type": "string",
-                                                    "format": "uri",
-                                                    "examples": [
-                                                        "urn:ogc:def:cs:EPSG::6498"
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "vertical_datum": {
-                                            "title": "Vertical Datum",
-                                            "description": "The datum used in the vertical CRS.",
-                                            "type": "object",
-                                            "required": [],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "href": {
-                                                    "title": "URL",
-                                                    "description": "URL or URN for a resource that defines the datum.",
-                                                    "type": "string",
-                                                    "format": "uri",
-                                                    "examples": [
-                                                        "urn:ogc:def:datum:EPSG::5100"
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "temporal": {
-                                    "title": "Temporal extent",
-                                    "description": "A description of the time a resource covers.",
-                                    "type": "object",
-                                    "required": [],
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "period": {
-                                            "title": "Period",
-                                            "description": "A set of dates for a period of time that encloses the resource.",
-                                            "type": "object",
-                                            "required": [],
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "start": {
-                                                    "title": "Date",
-                                                    "description": "A literal (partial) date or date time, including time zone which should be UTC.",
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "examples": [
-                                                        "2010",
-                                                        "2010-04",
-                                                        "2010-04-20",
-                                                        "2010-04-20T14:39:45+00:00"
-                                                    ]
-                                                },
-                                                "end": {
-                                                    "title": "Date",
-                                                    "description": "A literal (partial) date or date time, including time zone which should be UTC.",
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "examples": [
-                                                        "2010",
-                                                        "2010-04",
-                                                        "2010-04-20",
-                                                        "2010-04-20T14:39:45+00:00"
-                                                    ]
+                                    },
+                                    "temporal": {
+                                        "title": "Temporal extent",
+                                        "description": "A description of the time a resource covers.",
+                                        "type": "object",
+                                        "required": [],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "period": {
+                                                "title": "Period",
+                                                "description": "A set of dates for a period of time that encloses the resource.",
+                                                "type": "object",
+                                                "required": [],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "start": {
+                                                        "title": "Date",
+                                                        "description": "A literal (partial) date or date time, including time zone which should be UTC.",
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "examples": [
+                                                            "2010",
+                                                            "2010-04",
+                                                            "2010-04-20",
+                                                            "2010-04-20T14:39:45+00:00"
+                                                        ]
+                                                    },
+                                                    "end": {
+                                                        "title": "Date",
+                                                        "description": "A literal (partial) date or date time, including time zone which should be UTC.",
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "examples": [
+                                                            "2010",
+                                                            "2010-04",
+                                                            "2010-04-20",
+                                                            "2010-04-20T14:39:45+00:00"
+                                                        ]
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
+                            },
+                            "minItems": 1
                         },
                         "lineage": {
                             "title": "Lineage",

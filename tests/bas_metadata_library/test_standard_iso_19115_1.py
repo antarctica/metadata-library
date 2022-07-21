@@ -1462,7 +1462,7 @@ def test_edge_case_temporal_extent_begin_missing_date():
     )
     record = MetadataRecord(record=record_data)
     config = record.make_config().config
-    assert "end" in config["identification"]["extent"]["temporal"]["period"]
+    assert "end" in config["identification"]["extents"][0]["temporal"]["period"]
 
 
 _distributor = {

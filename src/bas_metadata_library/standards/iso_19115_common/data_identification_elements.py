@@ -257,10 +257,24 @@ class DataIdentification(MetadataRecordElement):
         if len(_topic_categories) > 0:
             _["topics"] = _topic_categories
 
-        extent = Extent(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")
-        _extent = extent.make_config()
-        if bool(_extent):
-            _["extent"] = _extent
+        _extents = []
+        extents_length = int(
+            self.record.xpath(
+                f"count({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent)",
+                namespaces=self.ns.nsmap(),
+            )
+        )
+        for extent_index in range(1, extents_length + 1):
+            extent = Extent(
+                record=self.record,
+                attributes=self.attributes,
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent)" f"[{extent_index}]",
+            )
+            _extent = extent.make_config()
+            if _extent != "":
+                _extents.append(_extent)
+        if len(_extents) > 0:
+            _["extents"] = _extents
 
         supplemental_information = SupplementalInformation(
             record=self.record,
@@ -439,14 +453,15 @@ class DataIdentification(MetadataRecordElement):
                 )
                 topic.make_element()
 
-        if "extent" in self.attributes["identification"]:
-            extent = Extent(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=data_identification_element,
-                element_attributes=self.attributes["identification"]["extent"],
-            )
-            extent.make_element()
+        if "extents" in self.attributes["identification"]:
+            for extent_attribute in self.attributes["identification"]["extents"]:
+                extent = Extent(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_identification_element,
+                    element_attributes={"extent": extent_attribute},
+                )
+                extent.make_element()
 
         if "supplemental_information" in self.attributes["identification"]:
             supplemental_information = SupplementalInformation(
@@ -1221,10 +1236,17 @@ class Extent(MetadataRecordElement):
     def make_config(self) -> dict:
         _ = {}
 
+        identifier_value = self.record.xpath(
+            f"{self.xpath}/gmd:EX_Extent/@id",
+            namespaces=self.ns.nsmap(),
+        )
+        if len(identifier_value) == 1:
+            _["identifier"] = identifier_value[0]
+
         geographic_extent = GeographicExtent(
             record=self.record,
             attributes=self.attributes,
-            xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent",
+            xpath=f"{self.xpath}/gmd:EX_Extent",
         )
         _geographic_extent = geographic_extent.make_config()
         if bool(_geographic_extent):
@@ -1233,7 +1255,7 @@ class Extent(MetadataRecordElement):
         temporal_extent = TemporalExtent(
             record=self.record,
             attributes=self.attributes,
-            xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent",
+            xpath=f"{self.xpath}/gmd:EX_Extent",
         )
         _temporal_extent = temporal_extent.make_config()
         if bool(_temporal_extent):
@@ -1242,8 +1264,7 @@ class Extent(MetadataRecordElement):
         vertical_extent = VerticalExtent(
             record=self.record,
             attributes=self.attributes,
-            xpath=f"{self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
-            f"gmd:verticalElement",
+            xpath=f"{self.xpath}/gmd:EX_Extent/" f"gmd:verticalElement",
         )
         _vertical_extent = vertical_extent.make_config()
         if bool(_vertical_extent):
@@ -1253,34 +1274,40 @@ class Extent(MetadataRecordElement):
 
     def make_element(self):
         extent_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}extent")
-        extent_element = SubElement(extent_wrapper, f"{{{self.ns.gmd}}}EX_Extent")
+        extent_element = SubElement(
+            extent_wrapper,
+            f"{{{self.ns.gmd}}}EX_Extent",
+            attrib={"id": self.element_attributes["extent"]["identifier"]},
+        )
 
-        if "geographic" in self.element_attributes:
-            geographic_extent = GeographicExtent(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=extent_element,
-                element_attributes=self.element_attributes["geographic"],
-            )
-            geographic_extent.make_element()
+        for extent_item in self.element_attributes.values():
 
-        if "temporal" in self.element_attributes:
-            temporal_extent = TemporalExtent(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=extent_element,
-                element_attributes=self.element_attributes["temporal"],
-            )
-            temporal_extent.make_element()
+            if "geographic" in extent_item:
+                geographic_extent = GeographicExtent(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=extent_element,
+                    element_attributes=extent_item["geographic"],
+                )
+                geographic_extent.make_element()
 
-        if "vertical" in self.element_attributes:
-            vertical_extent = VerticalExtent(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=extent_element,
-                element_attributes=self.element_attributes["vertical"],
-            )
-            vertical_extent.make_element()
+            if "temporal" in extent_item:
+                temporal_extent = TemporalExtent(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=extent_element,
+                    element_attributes=extent_item["temporal"],
+                )
+                temporal_extent.make_element()
+
+            if "vertical" in extent_item:
+                vertical_extent = VerticalExtent(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=extent_element,
+                    element_attributes=extent_item["vertical"],
+                )
+                vertical_extent.make_element()
 
 
 class GeographicExtent(MetadataRecordElement):
@@ -1370,7 +1397,6 @@ class BoundingBox(MetadataRecordElement):
         bounding_box_element = SubElement(
             self.parent_element,
             f"{{{self.ns.gmd}}}EX_GeographicBoundingBox",
-            attrib={"id": "boundingGeographicExtent"},
         )
 
         west_element = SubElement(bounding_box_element, f"{{{self.ns.gmd}}}westBoundLongitude")
@@ -1583,7 +1609,6 @@ class TemporalExtent(MetadataRecordElement):
             time_period_element = SubElement(
                 temporal_extent_element,
                 f"{{{self.ns.gml}}}TimePeriod",
-                attrib={f"{{{self.ns.gml}}}id": "boundingTemporalExtent"},
             )
 
             _date_precision = None
