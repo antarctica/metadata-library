@@ -39,6 +39,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+* Adjusting lineage configuration property from string to an object in preparation for adding lineage sources
+  [#73](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/73)
 * Switching to new GCMD keywords URL
   [#186](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/186)
 * Metadata (title, description) updated in existing schemas made clearer

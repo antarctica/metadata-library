@@ -842,7 +842,7 @@ base_simple_record_v3 = {
         ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
-        "lineage": "Example lineage statement",
+        "lineage": {"statement": "Example lineage statement"},
     },
     "distribution": [
         {
@@ -1039,7 +1039,7 @@ base_complex_record_v3 = {
         ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
-        "lineage": "Example lineage statement",
+        "lineage": {"statement": "Example lineage statement"},
     },
     "distribution": [
         {
@@ -1381,7 +1381,7 @@ complete_record_v3 = {
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
         "spatial_resolution": 1000000,
-        "lineage": "Example lineage statement",
+        "lineage": {"statement": "Example lineage statement"},
         "edition": "2",
         "other_citation_details": "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi",
         "identifiers": [
