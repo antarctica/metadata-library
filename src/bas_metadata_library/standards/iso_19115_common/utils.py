@@ -465,6 +465,12 @@ def upgrade_from_v2_config(v2_config: dict, schema_uri: str) -> dict:
     v3_config["identification"]["extents"] = [v3_config.get("identification").pop("extent")]
     v3_config["identification"]["extents"][0]["identifier"] = "bounding"
 
+    # linage is now an object (lossless)
+    try:
+        v3_config["identification"]["lineage"] = {"statement": v3_config["identification"]["lineage"]}
+    except KeyError:
+        pass
+
     return v3_config
 
 
@@ -503,5 +509,11 @@ def downgrade_to_v2_config(v3_config: dict) -> dict:
     # there can only be a single extent (lossy)
     v2_config["identification"]["extent"] = v2_config.get("identification").pop("extents")[0]
     del v2_config["identification"]["extent"]["identifier"]
+
+    # lineage can only contain a statement (lossy)
+    try:
+        v2_config["identification"]["lineage"] = v2_config["identification"]["lineage"]["statement"]
+    except KeyError:
+        pass
 
     return v2_config

@@ -1299,9 +1299,11 @@ def test_data_quality_lineage(get_record_response, config_name):
     if "identification" not in config or "lineage" not in config["identification"]:
         pytest.skip("record does not contain a lineage")
 
+    # note: this should be refactored to have a dedicated Statement and Source element when lineage sources are
+    # added properly [#73]
     lineage_values = record.xpath(
         f"/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/"
-        f"gco:CharacterString/text() = '{config['identification']['lineage']}'",
+        f"gco:CharacterString/text() = '{config['identification']['lineage']['statement']}'",
         namespaces=namespaces.nsmap(),
     )
     assert lineage_values is True

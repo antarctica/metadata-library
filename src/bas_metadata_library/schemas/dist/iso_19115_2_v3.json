@@ -5288,10 +5288,19 @@
                         "lineage": {
                             "title": "Lineage",
                             "description": "Information on the history of the resource, inc. data quality and methodological limitations.",
-                            "type": "string",
-                            "examples": [
-                                "This dataset is fictitious and does not exist, it therefore has no lineage."
-                            ]
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": false,
+                            "properties": {
+                                "statement": {
+                                    "title": "Statement",
+                                    "description": "General explanation about the history of the resource.",
+                                    "type": "string",
+                                    "examples": [
+                                        "This dataset is fictitious and does not exist, it therefore has no lineage."
+                                    ]
+                                }
+                            }
                         }
                     }
                 },
@@ -5822,10 +5831,19 @@
                 "lineage": {
                     "title": "Lineage",
                     "description": "Information on the history of the resource, inc. data quality and methodological limitations.",
-                    "type": "string",
-                    "examples": [
-                        "This dataset is fictitious and does not exist, it therefore has no lineage."
-                    ]
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": false,
+                    "properties": {
+                        "statement": {
+                            "title": "Statement",
+                            "description": "General explanation about the history of the resource.",
+                            "type": "string",
+                            "examples": [
+                                "This dataset is fictitious and does not exist, it therefore has no lineage."
+                            ]
+                        }
+                    }
                 },
                 "maintenance": {
                     "title": "Maintenance",
@@ -9484,10 +9502,19 @@
                                 "lineage": {
                                     "title": "Lineage",
                                     "description": "Information on the history of the resource, inc. data quality and methodological limitations.",
-                                    "type": "string",
-                                    "examples": [
-                                        "This dataset is fictitious and does not exist, it therefore has no lineage."
-                                    ]
+                                    "type": "object",
+                                    "required": [],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "statement": {
+                                            "title": "Statement",
+                                            "description": "General explanation about the history of the resource.",
+                                            "type": "string",
+                                            "examples": [
+                                                "This dataset is fictitious and does not exist, it therefore has no lineage."
+                                            ]
+                                        }
+                                    }
                                 }
                             }
                         },
@@ -13349,10 +13376,19 @@
                         "lineage": {
                             "title": "Lineage",
                             "description": "Information on the history of the resource, inc. data quality and methodological limitations.",
-                            "type": "string",
-                            "examples": [
-                                "This dataset is fictitious and does not exist, it therefore has no lineage."
-                            ]
+                            "type": "object",
+                            "required": [],
+                            "additionalProperties": false,
+                            "properties": {
+                                "statement": {
+                                    "title": "Statement",
+                                    "description": "General explanation about the history of the resource.",
+                                    "type": "string",
+                                    "examples": [
+                                        "This dataset is fictitious and does not exist, it therefore has no lineage."
+                                    ]
+                                }
+                            }
                         }
                     }
                 },

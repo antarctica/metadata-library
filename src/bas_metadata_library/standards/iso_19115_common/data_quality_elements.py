@@ -1,3 +1,5 @@
+from typing import Dict
+
 from lxml.etree import SubElement  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement
@@ -14,7 +16,7 @@ class DataQuality(MetadataRecordElement):
             xpath=f"{self.xpath}/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage",
         )
         _lineage = lineage.make_config()
-        if _lineage != "":
+        if bool(_lineage):
             _["lineage"] = _lineage
 
         return _
@@ -45,14 +47,16 @@ class Scope(MetadataRecordElement):
 
 
 class Lineage(MetadataRecordElement):
-    def make_config(self) -> str:
-        _ = ""
+    def make_config(self) -> Dict[str, str]:
+        _ = {}
 
+        # note: this should be refactored to have a dedicated Statement and Source element when lineage sources are
+        # added properly [#73]
         lineage_value = self.record.xpath(
             f"{self.xpath}/gmd:LI_Lineage/gmd:statement/gco:CharacterString/text()", namespaces=self.ns.nsmap()
         )
         if len(lineage_value) == 1:
-            _ = lineage_value[0]
+            _["statement"] = lineage_value[0]
 
         return _
 
@@ -60,6 +64,9 @@ class Lineage(MetadataRecordElement):
         if "lineage" in self.element_attributes:
             lineage_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}lineage")
             lineage_wrapper = SubElement(lineage_container, f"{{{self.ns.gmd}}}LI_Lineage")
+
+            # note: this should be refactored to have a dedicated Statement and Source element when lineage sources are
+            # added properly [#73]
             lineage_element = SubElement(lineage_wrapper, f"{{{self.ns.gmd}}}statement")
             lineage_value = SubElement(lineage_element, f"{{{self.ns.gco}}}CharacterString")
-            lineage_value.text = self.element_attributes["lineage"]
+            lineage_value.text = self.element_attributes["lineage"]["statement"]
