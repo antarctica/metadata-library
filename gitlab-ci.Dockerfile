@@ -2,12 +2,13 @@ FROM python:3.6-alpine as base
 
 LABEL maintainer = "Felix Fennell <felnne@bas.ac.uk>"
 
-RUN apk add --no-cache libxslt-dev libffi-dev openssl-dev libxml2-utils
+RUN apk add --update --no-cache libxslt-dev libffi-dev openssl-dev libxml2-utils
 
 FROM base as build
 
-RUN apk add --no-cache build-base cargo curl
-RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN apk add --update --no-cache build-base cargo curl
+RUN python3 -m pip install pipx
+RUN python3 -m pipx install poetry==1.1.4
 
 ENV PATH="/root/.local/bin:$PATH"
 COPY pyproject.toml poetry.lock /
@@ -16,7 +17,7 @@ RUN poetry install --no-root --no-interaction --no-ansi
 
 FROM base as run
 
-COPY --from=build /root/.local/share/pypoetry /root/.local/share/pypoetry
+COPY --from=build /root/.local/pipx/venvs/poetry /root/.local/pipx/venvs/poetry
 COPY --from=build /root/.local/bin/poetry /root/.local/bin/poetry
 COPY --from=build /.venv/ /.venv
 ENV PATH="/venv/bin:/root/.local/bin:$PATH"
