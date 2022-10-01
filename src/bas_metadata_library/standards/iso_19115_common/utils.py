@@ -507,8 +507,11 @@ def downgrade_to_v2_config(v3_config: dict) -> dict:
         pass
 
     # there can only be a single extent (lossy)
-    v2_config["identification"]["extent"] = v2_config.get("identification").pop("extents")[0]
-    del v2_config["identification"]["extent"]["identifier"]
+    try:
+        v2_config["identification"]["extent"] = v2_config.get("identification").pop("extents")[0]
+        del v2_config["identification"]["extent"]["identifier"]
+    except KeyError:
+        pass
 
     # lineage can only contain a statement (lossy)
     try:

@@ -1792,6 +1792,21 @@ def test_edge_case_parse_config_year_only_date_no_precision():
     }
 
 
+def test_edge_case_v3_to_v2_record_config_no_extent_identifier():
+    with open(
+        Path().resolve().parent.joinpath(f"resources/records/{standard}/minimal_v3-record.xml"), mode="r"
+    ) as record_file:
+        record_data = record_file.read()
+
+    record_data = record_data.replace('<gmd:EX_Extent id="bounding">', "<gmd:EX_Extent>")
+    record = MetadataRecord(record=record_data)
+
+    configuration_v3 = record.make_config()
+    configuration_v2 = configuration_v3.downgrade_to_v2_config()
+
+    assert configuration_v2.config == configs_safe_v2["minimal_v2"]
+
+
 class MockResponse:
     def raise_for_status(self):
         pass
