@@ -474,7 +474,7 @@ def upgrade_from_v2_config(v2_config: dict, schema_uri: str) -> dict:
     return v3_config
 
 
-def downgrade_to_v2_config(v3_config: dict) -> dict:
+def downgrade_to_v2_config(v3_config: dict) -> dict:  # noqa: C901 function is temporary so impact limited
     """
     Converts a v3 Metadata Configuration instance into a v2 Metadata Configuration instance.
 
