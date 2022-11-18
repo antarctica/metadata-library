@@ -130,6 +130,7 @@ from datetime import date
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3, MetadataRecord
 
 minimal_record_config = {
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -144,16 +145,19 @@ minimal_record_config = {
         "character_set": "utf-8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
-            }
-        },
+        "extents": [
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                },
+            },
+        ],
     },
 }
 configuration = MetadataRecordConfigV3(**minimal_record_config)
@@ -247,6 +251,7 @@ from datetime import date
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3
 
 minimal_record_config_v3 = {
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -261,16 +266,19 @@ minimal_record_config_v3 = {
         "character_set": "utf-8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
-            }
-        },
+        "extents": [
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                },
+            },
+        ],
     },
 }
 configuration_v3 = MetadataRecordConfigV3(**minimal_record_config_v3)
@@ -390,6 +398,7 @@ from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3
 output_path = str('/path/to/file.json')
 
 minimal_record_config = {
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -404,16 +413,19 @@ minimal_record_config = {
         "character_set": "utf-8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
-            }
-        },
+        "extents": [
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                },
+            },
+        ],
     },
 }
 configuration = MetadataRecordConfigV3(**minimal_record_config)
@@ -434,6 +446,7 @@ from bas_metadata_library import RecordValidationError
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3, MetadataRecord
 
 minimal_record_config = {
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -448,16 +461,19 @@ minimal_record_config = {
         "character_set": "utf-8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
-            }
-        },
+        "extents": [
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                },
+            },
+        ],
     },
 }
 configuration = MetadataRecordConfigV3(**minimal_record_config)
@@ -493,6 +509,7 @@ from jsonschema import ValidationError
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3
 
 minimal_record_config = {
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -507,16 +524,19 @@ minimal_record_config = {
         "character_set": "utf-8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
-            }
-        },
+        "extents": [
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                },
+            },
+        ],
     },
 }
 configuration = MetadataRecordConfigV3(**minimal_record_config)
@@ -875,6 +895,7 @@ the basis these methods will be relatively short lived.
 
 1. as changes are made, add notes and caveats to the upgrade/downgrade methods in code, and summarise any 
    significant points in the [Usage](#usage) instructions as needed (e.g. that the process is lossy)
+2. if changes are made to the minimal record configuration, update examples in the README
 
 ### ISO 19115 - Automatic transfer option / format IDs
 

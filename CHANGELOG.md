@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+* Updating README examples to reflect V3 config changes 
+  [#215](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/205)
+
 ## 0.9.1 - 2022-10-01
 
 ### Fixed
