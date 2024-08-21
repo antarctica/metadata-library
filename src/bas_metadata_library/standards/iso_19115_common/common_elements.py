@@ -1074,7 +1074,6 @@ class Format(MetadataRecordElement):
         return _
 
     def make_element(self):
-
         if "_id" in self.element_attributes:
             format_element = SubElement(
                 self.parent_element,

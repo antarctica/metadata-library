@@ -1328,9 +1328,9 @@ def test_metadata_maintenance(get_record_response, config_name):
 def test_edge_case_contact_without_email_address():
     config = deepcopy(configs_v3_all["minimal_v3"])
     config["metadata"]["contacts"][0]["address"] = {}
-    config["metadata"]["contacts"][0]["address"][
-        "delivery_point"
-    ] = "British Antarctic Survey, High Cross, Madingley Road"
+    config["metadata"]["contacts"][0]["address"]["delivery_point"] = (
+        "British Antarctic Survey, High Cross, Madingley Road"
+    )
     configuration = MetadataRecordConfigV3(**config)
     record = MetadataRecord(configuration)
     document = fromstring(record.generate_xml_document())

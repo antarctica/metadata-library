@@ -1281,7 +1281,6 @@ class Extent(MetadataRecordElement):
         )
 
         for extent_item in self.element_attributes.values():
-
             if "geographic" in extent_item:
                 geographic_extent = GeographicExtent(
                     record=self.record,
