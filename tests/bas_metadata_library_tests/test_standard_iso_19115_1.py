@@ -30,7 +30,7 @@ from bas_metadata_library.standards.iso_19115_1 import (
 )
 from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently, encode_date_string
 
-from tests.bas_metadata_library.standard_iso_19115_1_common import (
+from tests.bas_metadata_library_tests.standard_iso_19115_1_common import (
     assert_responsible_party,
     assert_maintenance,
     assert_citation,
