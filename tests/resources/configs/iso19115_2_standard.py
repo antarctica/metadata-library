@@ -1,14 +1,28 @@
 from copy import deepcopy
 
 from tests.resources.configs.iso19115_1_standard import (
-    minimal_record_v2 as _minimal_record_v2,
-    base_simple_record_v2 as _base_simple_record_v2,
     base_complex_record_v2 as _base_complex_record_v2,
-    complete_record_v2 as _complete_record_v2,
-    minimal_record_v3 as _minimal_record_v3,
-    base_simple_record_v3 as _base_simple_record_v3,
+)
+from tests.resources.configs.iso19115_1_standard import (
     base_complex_record_v3 as _base_complex_record_v3,
+)
+from tests.resources.configs.iso19115_1_standard import (
+    base_simple_record_v2 as _base_simple_record_v2,
+)
+from tests.resources.configs.iso19115_1_standard import (
+    base_simple_record_v3 as _base_simple_record_v3,
+)
+from tests.resources.configs.iso19115_1_standard import (
+    complete_record_v2 as _complete_record_v2,
+)
+from tests.resources.configs.iso19115_1_standard import (
     complete_record_v3 as _complete_record_v3,
+)
+from tests.resources.configs.iso19115_1_standard import (
+    minimal_record_v2 as _minimal_record_v2,
+)
+from tests.resources.configs.iso19115_1_standard import (
+    minimal_record_v3 as _minimal_record_v3,
 )
 
 minimal_record_v2 = deepcopy(_minimal_record_v2)  # type: dict

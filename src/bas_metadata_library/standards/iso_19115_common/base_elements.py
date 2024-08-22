@@ -1,8 +1,8 @@
-from datetime import date
-from typing import Optional
+from __future__ import annotations
 
-from backports.datetime_fromisoformat import MonkeyPatch
-from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
+from datetime import date
+
+from lxml.etree import Element, SubElement
 
 from bas_metadata_library import MetadataRecord
 from bas_metadata_library.standards.iso_19115_common import CodeListElement, MetadataRecordElement
@@ -13,9 +13,6 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import (
     ResponsibleParty,
 )
 from bas_metadata_library.standards.iso_19115_common.utils import decode_date_string, encode_date_string
-
-# Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
-MonkeyPatch.patch_fromisoformat()
 
 
 class FileIdentifier(MetadataRecordElement):
@@ -30,7 +27,7 @@ class FileIdentifier(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         if "file_identifier" in self.attributes:
             file_identifier_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}fileIdentifier")
             file_identifier_value = SubElement(file_identifier_element, f"{{{self.ns.gco}}}CharacterString")
@@ -43,8 +40,8 @@ class ScopeCode(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -93,8 +90,8 @@ class HierarchyLevel(ScopeCode):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -105,7 +102,7 @@ class HierarchyLevel(ScopeCode):
         )
         self.element = f"{{{self.ns.gmd}}}hierarchyLevel"
 
-    def make_element(self):
+    def make_element(self) -> None:
         super().make_element()
         hierarchy_level_name_element = SubElement(self.record, f"{{{self.ns.gmd}}}hierarchyLevelName")
         if self.attribute in self.attributes and self.attributes[self.attribute] in self.code_list_values:
@@ -114,13 +111,12 @@ class HierarchyLevel(ScopeCode):
 
 
 class Contact(MetadataRecordElement):
+    @property
     def make_config(self) -> dict:
         responsible_party = ResponsibleParty(record=self.record, attributes=self.attributes, xpath=self.xpath)
-        _responsible_party = responsible_party.make_config()
+        return responsible_party.make_config()
 
-        return _responsible_party
-
-    def make_element(self):
+    def make_element(self) -> None:
         contact_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}contact")
 
         responsible_party = ResponsibleParty(
@@ -133,7 +129,7 @@ class Contact(MetadataRecordElement):
 
 
 class DateStamp(MetadataRecordElement):
-    def make_config(self) -> Optional[date]:
+    def make_config(self) -> date | None:
         _ = None
 
         value = self.record.xpath(f"{self.xpath}/gmd:dateStamp/gco:Date/text()", namespaces=self.ns.nsmap())
@@ -141,11 +137,12 @@ class DateStamp(MetadataRecordElement):
             try:
                 _ = decode_date_string(date_datetime=value[0])["date"]
             except ValueError:
-                raise RuntimeError("Datestamp could not be parsed as an ISO date value") from None
+                msg = "Datestamp could not be parsed as an ISO date value"
+                raise RuntimeError(msg) from None
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         date_stamp_element = SubElement(self.record, f"{{{self.ns.gmd}}}dateStamp")
         date_stamp_value = SubElement(date_stamp_element, f"{{{self.ns.gco}}}Date")
         date_stamp_value.text = encode_date_string(self.attributes["date_stamp"])
@@ -158,7 +155,7 @@ class MetadataMaintenance(MetadataRecordElement):
         )
         return maintenance_information.make_config()
 
-    def make_element(self):
+    def make_element(self) -> None:
         if "maintenance" in self.attributes["metadata"]:
             metadata_maintenance_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}metadataMaintenance")
 
@@ -189,7 +186,7 @@ class MetadataStandard(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         if "name" in self.element_attributes:
             metadata_standard_name_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}metadataStandardName")
             metadata_standard_name_value = SubElement(
@@ -228,7 +225,7 @@ class ReferenceSystemInfo(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(code_value) == 1:
-            if "code" not in _.keys():
+            if "code" not in _:
                 _["code"] = {}
             _["code"]["value"] = code_value[0]
 
@@ -250,7 +247,7 @@ class ReferenceSystemInfo(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         reference_system_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}referenceSystemInfo")
         reference_system_element = SubElement(reference_system_wrapper, f"{{{self.ns.gmd}}}MD_ReferenceSystem")
         reference_system_identifier_wrapper = SubElement(

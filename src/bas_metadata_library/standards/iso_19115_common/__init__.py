@@ -1,18 +1,20 @@
-from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
+from __future__ import annotations
+
+from lxml.etree import Element, SubElement
 
 from bas_metadata_library import (
     MetadataRecord as _MetadataRecord,
+)
+from bas_metadata_library import (
     MetadataRecordElement as _MetadataRecordElement,
+)
+from bas_metadata_library import (
     Namespaces as _Namespaces,
 )
 
 
 class Namespaces(_Namespaces):
-    """
-    Overloaded base Namespaces class
-
-    Defines the namespaces for this standard
-    """
+    """Defines the namespaces for this standard."""
 
     gmd = "http://www.isotc211.org/2005/gmd"
     gco = "http://www.isotc211.org/2005/gco"
@@ -26,7 +28,7 @@ class Namespaces(_Namespaces):
     gsr = "http://www.isotc211.org/2005/gsr"
     gts = "http://www.isotc211.org/2005/gts"
 
-    _schema_locations = {
+    _schema_locations = {  # noqa: RUF012
         "gmd": "https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd",
         "gco": "https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd",
         "gmx": "https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmx/gmx.xsd",
@@ -56,9 +58,9 @@ class Namespaces(_Namespaces):
 
 class MetadataRecordElement(_MetadataRecordElement):
     """
-    Overloaded base MetadataRecordElement class
+    Overloaded base MetadataRecordElement class.
 
-    Sets the type hint of the record attribute to the MetadataRecord class for this metadata standard
+    Sets the type hint of the record attribute to the MetadataRecord class for this metadata standard.
     """
 
     def __init__(
@@ -66,8 +68,8 @@ class MetadataRecordElement(_MetadataRecordElement):
         record: _MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -80,17 +82,15 @@ class MetadataRecordElement(_MetadataRecordElement):
 
 
 class CodeListElement(MetadataRecordElement):
-    """
-    Derived MetadataRecordElement class defining an ISO code list element
-    """
+    """Derived MetadataRecordElement class defining an ISO code list element."""
 
     def __init__(
         self,
         record: _MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -106,6 +106,7 @@ class CodeListElement(MetadataRecordElement):
         self.attribute = None
 
     def make_config(self) -> str:
+        """Build partial record configuration."""
         _ = ""
 
         value = self.record.xpath(
@@ -117,7 +118,8 @@ class CodeListElement(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
+        """Build XML element."""
         code_list_element = SubElement(self.parent_element, self.element)
         if (
             self.attribute in self.element_attributes

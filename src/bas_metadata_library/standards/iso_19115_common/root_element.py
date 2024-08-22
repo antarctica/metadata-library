@@ -59,7 +59,7 @@ class ISOMetadataRecord(MetadataRecordElement):
             contact = Contact(
                 record=self.record, attributes=self.attributes, xpath=f"({self.xpath}/gmd:contact)[{contact_index}]"
             )
-            _contact = contact.make_config()
+            _contact = contact.make_config
             if bool(_contact):
                 _contacts.append(_contact)
         if len(_contacts) > 0:
@@ -107,12 +107,12 @@ class ISOMetadataRecord(MetadataRecordElement):
         if bool(_metadata_maintenance):
             _["metadata"]["maintenance"] = _metadata_maintenance
 
-        if "identification" in _.keys() and "contacts" in _["identification"].keys():
+        if "identification" in _ and "contacts" in _["identification"]:
             _["identification"]["contacts"] = condense_contacts_roles(contacts=_["identification"]["contacts"])
 
         return _
 
-    def make_element(self):  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
+    def make_element(self) -> None:  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175
         if "file_identifier" in self.attributes:
             identifier = FileIdentifier(record=self.record, attributes=self.attributes, parent_element=self.record)
             identifier.make_element()
@@ -177,10 +177,6 @@ class ISOMetadataRecord(MetadataRecordElement):
             )
             data_distribution.make_element()
 
-        # if
-        #   [hierarchy_level] or
-        #   [identification][measures] or
-        #   [identification][lineage]
         if ("hierarchy_level" in self.attributes) or (
             "identification" in self.attributes
             and ("measures" in self.attributes["identification"] or "lineage" in self.attributes["identification"])

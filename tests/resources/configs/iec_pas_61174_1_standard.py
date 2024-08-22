@@ -1,7 +1,7 @@
 from copy import deepcopy
 
-from tests.resources.configs.iec_pas_61174_0_standard import minimal_record_v1 as _minimal_record_v1
 from tests.resources.configs.iec_pas_61174_0_standard import complete_record_v1 as _complete_record_v1
+from tests.resources.configs.iec_pas_61174_0_standard import minimal_record_v1 as _minimal_record_v1
 
 minimal_record_v1 = deepcopy(_minimal_record_v1)  # type: dict
 minimal_record_v1["$schema"] = (
