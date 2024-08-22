@@ -24,7 +24,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-jsonschema = "3.2.0" # locked to maintain Python 3.6 compatibility
+jsonschema = "4.23.0"
 lxml = "^4.9.1"
 rfc3987 = "^1.3.8"  # jsonschema indirect dependency
 strict-rfc3339 = "^0.7"  # jsonschema indirect dependency
