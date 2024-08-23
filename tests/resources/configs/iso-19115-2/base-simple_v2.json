@@ -1,1 +1,175 @@
-{"file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371", "hierarchy_level": "dataset", "metadata": {"language": "eng", "character_set": "utf-8", "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"], "phone": "+44 (0)1223 221400", "address": {"delivery_point": "British Antarctic Survey, High Cross, Madingley Road", "city": "Cambridge", "administrative_area": "Cambridgeshire", "postal_code": "CB3 0ET", "country": "United Kingdom"}, "email": "polardatacentre@bas.ac.uk"}], "date_stamp": "2018-10-18", "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"}, "metadata_standard": {"name": "ISO 19115", "version": "1.0"}}, "reference_system_info": {"code": {"value": "urn:ogc:def:crs:EPSG::4326"}}, "identification": {"title": {"value": "Test Record"}, "dates": {"creation": "2018", "publication": "2018-10-08T14:40:44+00:00"}, "abstract": "Test Record for ISO 19115 metadata standard (no profile) with simple baseline properties only. In this context baseline properties are those that are required, or have default values. Values in this record are non-complex, meaning they are simple character strings rather than anchors. Authorities are not included in elements that support citations.", "purpose": "Fictitious test record (ISO 19115, no profile, simple).", "character_set": "utf-8", "language": "eng", "topics": ["environment", "climatologyMeteorologyAtmosphere"], "extent": {"geographic": {"bounding_box": {"west_longitude": -45.61521, "east_longitude": -27.04976, "south_latitude": -68.1511, "north_latitude": -54.30761}}, "temporal": {"period": {"start": "2018", "end": "2018-09-15T00:00:00"}}}, "credit": "No credit.", "status": "completed", "contacts": [{"individual": {"name": "Watson, Constance"}, "organisation": {"name": "British Antarctic Survey"}, "email": "conwat@bas.ac.uk", "role": ["author"]}, {"organisation": {"name": "UK Polar Data Centre"}, "phone": "+44 (0)1223 221400", "address": {"delivery_point": "British Antarctic Survey, High Cross, Madingley Road", "city": "Cambridge", "administrative_area": "Cambridgeshire", "postal_code": "CB3 0ET", "country": "United Kingdom"}, "email": "polardatacentre@bas.ac.uk", "role": ["pointOfContact", "custodian", "publisher"]}], "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"}, "resource_formats": [{"format": "GeoTIFF"}], "keywords": [{"terms": [{"term": "Atmospheric conditions"}], "type": "theme"}], "constraints": [{"type": "usage", "restriction_code": "license", "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/"}], "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.", "spatial_representation_type": "textTable", "lineage": "Example lineage statement"}, "distribution": [{"distributor": {"organisation": {"name": "UK Polar Data Centre"}, "phone": "+44 (0)1223 221400", "address": {"delivery_point": "British Antarctic Survey, High Cross, Madingley Road", "city": "Cambridge", "administrative_area": "Cambridgeshire", "postal_code": "CB3 0ET", "country": "United Kingdom"}, "email": "polardatacentre@bas.ac.uk", "role": ["distributor"]}, "distribution_options": [{"format": {"format": "netCDF"}, "transfer_option": {"online_resource": {"href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371", "title": "Get Data", "description": "Download measurement data", "protocol": "WWW:LINK-1.0-http--link", "function": "download"}}}]}]}
+{
+  "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+  "hierarchy_level": "dataset",
+  "metadata": {
+    "language": "eng",
+    "character_set": "utf-8",
+    "contacts": [
+      {
+        "organisation": {
+          "name": "UK Polar Data Centre"
+        },
+        "role": [
+          "pointOfContact"
+        ],
+        "phone": "+44 (0)1223 221400",
+        "address": {
+          "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+          "city": "Cambridge",
+          "administrative_area": "Cambridgeshire",
+          "postal_code": "CB3 0ET",
+          "country": "United Kingdom"
+        },
+        "email": "polardatacentre@bas.ac.uk"
+      }
+    ],
+    "date_stamp": "2018-10-18",
+    "maintenance": {
+      "maintenance_frequency": "asNeeded",
+      "progress": "completed"
+    },
+    "metadata_standard": {
+      "name": "ISO 19115",
+      "version": "1.0"
+    }
+  },
+  "reference_system_info": {
+    "code": {
+      "value": "urn:ogc:def:crs:EPSG::4326"
+    }
+  },
+  "identification": {
+    "title": {
+      "value": "Test Record"
+    },
+    "dates": {
+      "creation": "2018",
+      "publication": "2018-10-08T14:40:44+00:00"
+    },
+    "abstract": "Test Record for ISO 19115 metadata standard (no profile) with simple baseline properties only. In this context baseline properties are those that are required, or have default values. Values in this record are non-complex, meaning they are simple character strings rather than anchors. Authorities are not included in elements that support citations.",
+    "purpose": "Fictitious test record (ISO 19115, no profile, simple).",
+    "character_set": "utf-8",
+    "language": "eng",
+    "topics": [
+      "environment",
+      "climatologyMeteorologyAtmosphere"
+    ],
+    "extent": {
+      "geographic": {
+        "bounding_box": {
+          "west_longitude": -45.61521,
+          "east_longitude": -27.04976,
+          "south_latitude": -68.1511,
+          "north_latitude": -54.30761
+        }
+      },
+      "temporal": {
+        "period": {
+          "start": "2018",
+          "end": "2018-09-15T00:00:00+00:00"
+        }
+      }
+    },
+    "credit": "No credit.",
+    "status": "completed",
+    "contacts": [
+      {
+        "individual": {
+          "name": "Watson, Constance"
+        },
+        "organisation": {
+          "name": "British Antarctic Survey"
+        },
+        "email": "conwat@bas.ac.uk",
+        "role": [
+          "author"
+        ]
+      },
+      {
+        "organisation": {
+          "name": "UK Polar Data Centre"
+        },
+        "phone": "+44 (0)1223 221400",
+        "address": {
+          "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+          "city": "Cambridge",
+          "administrative_area": "Cambridgeshire",
+          "postal_code": "CB3 0ET",
+          "country": "United Kingdom"
+        },
+        "email": "polardatacentre@bas.ac.uk",
+        "role": [
+          "pointOfContact",
+          "custodian",
+          "publisher"
+        ]
+      }
+    ],
+    "maintenance": {
+      "maintenance_frequency": "asNeeded",
+      "progress": "completed"
+    },
+    "resource_formats": [
+      {
+        "format": "GeoTIFF"
+      }
+    ],
+    "keywords": [
+      {
+        "terms": [
+          {
+            "term": "Atmospheric conditions"
+          }
+        ],
+        "type": "theme"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "usage",
+        "restriction_code": "license",
+        "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/"
+      }
+    ],
+    "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
+    "spatial_representation_type": "textTable",
+    "lineage": "Example lineage statement"
+  },
+  "distribution": [
+    {
+      "distributor": {
+        "organisation": {
+          "name": "UK Polar Data Centre"
+        },
+        "phone": "+44 (0)1223 221400",
+        "address": {
+          "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+          "city": "Cambridge",
+          "administrative_area": "Cambridgeshire",
+          "postal_code": "CB3 0ET",
+          "country": "United Kingdom"
+        },
+        "email": "polardatacentre@bas.ac.uk",
+        "role": [
+          "distributor"
+        ]
+      },
+      "distribution_options": [
+        {
+          "format": {
+            "format": "netCDF"
+          },
+          "transfer_option": {
+            "online_resource": {
+              "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
+              "title": "Get Data",
+              "description": "Download measurement data",
+              "protocol": "WWW:LINK-1.0-http--link",
+              "function": "download"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

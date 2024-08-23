@@ -77,7 +77,7 @@ base_simple_record_v2 = {
             "temporal": {
                 "period": {
                     "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
-                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0, tzinfo=datetime.timezone.utc)},
                 }
             },
         },
@@ -218,7 +218,7 @@ base_complex_record_v2 = {
             "temporal": {
                 "period": {
                     "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
-                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                    "end": {"date": datetime.datetime(2018, 9, 15, 0, 0, tzinfo=datetime.timezone.utc)},
                 }
             },
         },
@@ -424,7 +424,7 @@ complete_record_v2 = {
             },
             "temporal": {
                 "period": {
-                    "start": {"date": datetime.datetime(2018, 3, 15, 0, 0)},
+                    "start": {"date": datetime.datetime(2018, 3, 15, 0, 0, tzinfo=datetime.timezone.utc)},
                     "end": {"date": datetime.date(2018, 3, 1), "date_precision": "month"},
                 }
             },
@@ -800,7 +800,7 @@ base_simple_record_v3 = {
                 "temporal": {
                     "period": {
                         "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
-                        "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                        "end": {"date": datetime.datetime(2018, 9, 15, 0, 0, tzinfo=datetime.timezone.utc)},
                     }
                 },
             },
@@ -941,7 +941,7 @@ base_complex_record_v3 = {
                 "temporal": {
                     "period": {
                         "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
-                        "end": {"date": datetime.datetime(2018, 9, 15, 0, 0)},
+                        "end": {"date": datetime.datetime(2018, 9, 15, 0, 0, tzinfo=datetime.timezone.utc)},
                     }
                 },
             },
@@ -1147,7 +1147,7 @@ complete_record_v3 = {
                 },
                 "temporal": {
                     "period": {
-                        "start": {"date": datetime.datetime(2018, 3, 15, 0, 0)},
+                        "start": {"date": datetime.datetime(2018, 3, 15, 0, 0, tzinfo=datetime.timezone.utc)},
                         "end": {"date": datetime.date(2018, 3, 1), "date_precision": "month"},
                     }
                 },

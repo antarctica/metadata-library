@@ -217,6 +217,9 @@ def _capture_json_test_configs() -> None:
                 json_config_path = Path(f"./tests/resources/configs/{standard}/{config_name}.json")
                 json_config_path.parent.mkdir(exist_ok=True, parents=True)
                 configuration.dump(file=json_config_path)
+                # add newline to file (for compatibility with pre-commit hook)
+                with json_config_path.open(mode="a") as json_config_file:
+                    json_config_file.write("\n")
 
 
 def _update_rtzp_artefact_if_changed(
