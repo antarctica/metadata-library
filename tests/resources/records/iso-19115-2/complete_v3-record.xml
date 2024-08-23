@@ -209,6 +209,16 @@
               </gmd:codeSpace>
             </gmd:RS_Identifier>
           </gmd:identifier>
+          <gmd:identifier>
+            <gmd:RS_Identifier>
+              <gmd:code>
+                <gco:CharacterString>978-3-16-148410-0</gco:CharacterString>
+              </gmd:code>
+              <gmd:codeSpace>
+                <gco:CharacterString>isbn</gco:CharacterString>
+              </gmd:codeSpace>
+            </gmd:RS_Identifier>
+          </gmd:identifier>
           <gmd:otherCitationDetails>
             <gco:CharacterString>Author, A., Author, B., &amp; Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi</gco:CharacterString>
           </gmd:otherCitationDetails>
