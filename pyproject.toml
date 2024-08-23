@@ -96,8 +96,6 @@ ignore = ["ANN101", "ANN204", "D100", "D101", "D102", "D104", "D107", "D203", "D
 "tests/*" = ["ANN201", "S101"]
 #   tests/* | ANN201 | ignore missing type annotations from test functions
 #   tests/* |   S101 | ignore use of assert
-"tests/resources/configs/*" = ["DTZ001"]
-# tests/resources/configs/* | DTZ001 | ignore datetime without timezone - see #221
 
 [tool.pytest.ini_options]
 addopts = "--strict-markers --random-order -x --ff"
