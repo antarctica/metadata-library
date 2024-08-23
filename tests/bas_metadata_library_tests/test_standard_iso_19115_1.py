@@ -12,8 +12,6 @@ from tempfile import TemporaryDirectory
 
 from jsonschema import ValidationError
 
-# Workaround for lack of `date(time).fromisoformat()` method in Python 3.6
-from backports.datetime_fromisoformat import MonkeyPatch
 
 # Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
 #
@@ -38,9 +36,6 @@ from tests.bas_metadata_library_tests.standard_iso_19115_1_common import (
     assert_identifier,
 )
 from tests.resources.configs.iso19115_1_standard import configs_safe_v2, configs_v3_all
-
-
-MonkeyPatch.patch_fromisoformat()
 
 standard = "iso-19115-1"
 namespaces = Namespaces()

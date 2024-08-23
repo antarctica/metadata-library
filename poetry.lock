@@ -30,16 +30,6 @@ tests = ["cloudpickle", "hypothesis", "mypy (>=1.11.1)", "pympler", "pytest (>=4
 tests-mypy = ["mypy (>=1.11.1)", "pytest-mypy-plugins"]
 
 [[package]]
-name = "backports-datetime-fromisoformat"
-version = "1.0.0"
-description = "Backport of Python 3.7's datetime.fromisoformat"
-optional = false
-python-versions = "*"
-files = [
-    {file = "backports-datetime-fromisoformat-1.0.0.tar.gz", hash = "sha256:9577a2a9486cd7383a5f58b23bb8e81cf0821dbbc0eb7c87d3fa198c1df40f5c"},
-]
-
-[[package]]
 name = "blinker"
 version = "1.8.2"
 description = "Fast, simple object-to-object and broadcast signaling"
@@ -1086,4 +1076,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "303f6ef85a85b978170df259517ec3447b3794430b4f8825554dd9f7d7e3b995"
+content-hash = "55d7ffda62f2f34875ee89b25d6e6d4a58eabd56b5daae3530b149ad20b54d32"
