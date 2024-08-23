@@ -1,8 +1,8 @@
 __pycache__
 /provisioning/terraform/.terraform
-/htmlcov
+/htmlcov/
 /.coverage
-/.venv
-/dist
+/.venv/
 /.idea/
+/dist/
 .python-version
