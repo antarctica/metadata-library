@@ -106,6 +106,28 @@ ignore = ["ANN101", "ANN204", "D100", "D101", "D102", "D104", "D107", "D203", "D
 "tests/resources/configs/*" = ["DTZ001"]
 # tests/resources/configs/* | DTZ001 | ignore datetime without timezone - see #221
 
+[tool.pytest.ini_options]
+addopts = "--strict-markers --random-order -x --ff"
+# --strict-markers | fail if unknown markers are used
+# --random-order   | run tests in random order
+# -x               | stop after first failure [Overriden in CI]
+# --ff             | run failed tests first
+markers = [
+  "cov: coverage checks (deselect with '-m \"not cov\"')"
+]
+
+[tool.coverage.report]
+skip_empty = true
+show_missing = false
+fail_under = 100
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
