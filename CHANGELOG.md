@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * JSON indenting when dumping record configurations for ISO 19115 standards
   [#214](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/214)
 * Including static schemas without making a Python module
-  []()
+  [#226](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/226)
 
 ### Changed
 

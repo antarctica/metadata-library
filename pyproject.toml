@@ -10,7 +10,6 @@ authors = [
     "Paul Breen <pbree@bas.ac.uk>"
 ]
 readme = "README.md"
-packages = [{include = "bas_metadata_library", from = "src"}]
 homepage = "https://github.com/antarctica/metadata-library"
 repository = "https://github.com/antarctica/metadata-library"
 classifiers = [
@@ -22,6 +21,8 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Software Development :: Libraries"
 ]
+packages = [{include = "bas_metadata_library", from = "src"}]
+include = ["schemas"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
