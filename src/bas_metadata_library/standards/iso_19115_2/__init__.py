@@ -95,10 +95,10 @@ class MetadataRecordConfigV3(_MetadataRecordConfig):
 
     def dump(self, file: Path) -> None:
         with file.open(mode="w") as file:
-            json.dump(encode_config_for_json(config=deepcopy(self.config)), file)
+            json.dump(encode_config_for_json(config=deepcopy(self.config)), file, indent=2)
 
     def dumps(self) -> str:
-        return json.dumps(encode_config_for_json(config=deepcopy(self.config)))
+        return json.dumps(encode_config_for_json(config=deepcopy(self.config)), indent=2)
 
     def upgrade_from_v2_config(self, v2_config: MetadataRecordConfigV2) -> None:
         """
