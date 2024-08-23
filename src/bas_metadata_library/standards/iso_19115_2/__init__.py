@@ -55,7 +55,7 @@ class MetadataRecordConfigV2(_MetadataRecordConfig):
         self.config = decode_config_from_json(config=json.loads(s=string))
 
     def dump(self, file: Path) -> None:
-        with file.open(mode='w') as file:
+        with file.open(mode="w") as file:
             json.dump(encode_config_for_json(config=deepcopy(self.config)), file)
 
     def dumps(self) -> str:

@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import json
@@ -72,7 +71,9 @@ def _generate_record_test_standard_v1(config_label: str) -> Response:
         record = TestStandardMetadataRecord(record_config)
         return Response(record.generate_xml_document(), mimetype="text/xml")
     except KeyError:
-        return Response(f"Invalid configuration, valid options: " f"[{', '.join(list(test_metadata_standard_configs.keys()))}]")
+        return Response(
+            f"Invalid configuration, valid options: " f"[{', '.join(list(test_metadata_standard_configs.keys()))}]"
+        )
 
 
 def _generate_record_iso_19115_1(config_label: str) -> Response:
@@ -157,7 +158,7 @@ def _generate_schemas() -> None:
         print(f"Generating schema for [{schema['id']}]")
         src_schema_path = Path(f"./src/bas_metadata_library/schemas/src/{schema['id']}.json")
         dest_schema_path = Path(f"./src/bas_metadata_library/schemas/dist/{schema['id']}.json")
-        with src_schema_path.open() as src_schema_file, dest_schema_path.open(mode='w') as dist_schema_file:
+        with src_schema_path.open() as src_schema_file, dest_schema_path.open(mode="w") as dist_schema_file:
             src_schema_data = json.load(src_schema_file)
             dist_schema_data = src_schema_data
             if schema["resolve"]:
@@ -270,12 +271,10 @@ def _capture_test_records() -> None:
     standards = {
         "test-standard": {"configurations": list(test_metadata_standard_configs.keys())},
         "iso-19115-1": {
-            "configurations": list(iso19115_1_standard_configs_v2.keys())
-                              + list(iso19115_1_standard_configs_v3.keys())
+            "configurations": list(iso19115_1_standard_configs_v2.keys()) + list(iso19115_1_standard_configs_v3.keys())
         },
         "iso-19115-2": {
-            "configurations": list(iso19115_2_standard_configs_v2.keys())
-                              + list(iso19115_1_standard_configs_v3.keys())
+            "configurations": list(iso19115_2_standard_configs_v2.keys()) + list(iso19115_1_standard_configs_v3.keys())
         },
         "iec-pas-61174-0": {"configurations": list(iec_pas_61174_0_standard_configs_v1.keys())},
         "iec-pas-61174-1": {"configurations": list(iec_pas_61174_1_standard_configs_v1.keys())},

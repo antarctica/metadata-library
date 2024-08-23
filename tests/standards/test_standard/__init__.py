@@ -23,7 +23,11 @@ from bas_metadata_library import (
 
 class MetadataRecordElement(_MetadataRecordElement):
     def __init__(
-        self, record: _MetadataRecord, attributes: dict, parent_element: Element = None, element_attributes: dict | None = None
+        self,
+        record: _MetadataRecord,
+        attributes: dict,
+        parent_element: Element = None,
+        element_attributes: dict | None = None,
     ):
         super().__init__(
             record=record, attributes=attributes, parent_element=parent_element, element_attributes=element_attributes

@@ -56,12 +56,16 @@ def _decode_date_properties(dictionary: dict, parent_keys: list[str] | None = No
         # check if key is a property that will contain a date(time) value
         elif isinstance(value, str) and "metadata" in parent_keys and key == "date_stamp":
             dictionary[key] = date.fromisoformat(value)
-        elif isinstance(value, str) and "dates" in parent_keys or (
+        elif (
             isinstance(value, str)
-            and "identification" in parent_keys
-            and ("extent" in parent_keys or "extents" in parent_keys)
-            and "temporal" in parent_keys
-            and "period" in parent_keys
+            and "dates" in parent_keys
+            or (
+                isinstance(value, str)
+                and "identification" in parent_keys
+                and ("extent" in parent_keys or "extents" in parent_keys)
+                and "temporal" in parent_keys
+                and "period" in parent_keys
+            )
         ):
             dictionary[key] = decode_date_string(date_datetime=value)
 
