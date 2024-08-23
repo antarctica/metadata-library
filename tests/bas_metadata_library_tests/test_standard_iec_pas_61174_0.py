@@ -5,6 +5,7 @@ from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
 import pytest
+from flask.testing import FlaskClient
 from jsonschema import ValidationError
 from lxml.etree import XML, ElementTree, fromstring, tostring
 
@@ -47,7 +48,7 @@ def test_edge_case_invalid_configuration_v1_geometry_type():
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_configuration_v1_from_json_file(config_name):
+def test_configuration_v1_from_json_file(config_name: str):
     configuration = MetadataRecordConfigV1()
     configuration.load(file=Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"))
     configuration.validate()
@@ -55,8 +56,8 @@ def test_configuration_v1_from_json_file(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_configuration_v1_from_json_string(config_name):
-    with open(Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r") as file:
+def test_configuration_v1_from_json_string(config_name: str):
+    with Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json").open() as file:
         config_str = file.read()
         configuration = MetadataRecordConfigV1()
         configuration.loads(string=config_str)
@@ -64,38 +65,32 @@ def test_configuration_v1_from_json_string(config_name):
         assert configuration.config == configs_v1[config_name]
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_response(client, config_name):
-    response = client.get(f"/standards/{standard}/{config_name}")
+def test_response(app_client: FlaskClient, config_name: str):
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     assert response.status_code == HTTPStatus.OK
     assert response.mimetype == "text/xml"
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_complete_record(client, config_name):
-    with open(
-        Path().resolve().parent.joinpath(f"resources/records/iec-pas-61174-0/{config_name}-record.xml")
-    ) as expected_contents_file:
+def test_complete_record(app_client: FlaskClient, config_name: str):
+    with Path().resolve().parent.joinpath(f"resources/records/iec-pas-61174-0/{config_name}-record.xml").open() as expected_contents_file:
         expected_contents = expected_contents_file.read()
 
-    response = client.get(f"/standards/{standard}/{config_name}")
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     assert response.data.decode() == expected_contents
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_xml_declaration(client, config_name):
-    response = client.get(f"/standards/{standard}/{config_name}")
+def test_xml_declaration(app_client: FlaskClient, config_name: str):
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     record = ElementTree(XML(response.data))
     assert record.docinfo.xml_version == "1.0"
     assert record.docinfo.encoding == "utf-8"
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_xml_namespaces(get_record_response, config_name):
+def test_xml_namespaces(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
@@ -103,9 +98,8 @@ def test_xml_namespaces(get_record_response, config_name):
     assert record.nsmap[None] == "http://www.cirm.org/RTZ/1/0"
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_root_element(get_record_response, config_name):
+def test_root_element(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
 
     metadata_records = record.xpath("/rtz:route", namespaces=namespaces.nsmap(suppress_root_namespace=True))
@@ -127,10 +121,8 @@ def test_standard_version():
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_parse_existing_record_v1(config_name):
-    with open(
-        Path().resolve().parent.joinpath(f"resources/records/iec-pas-61174-0/{config_name}-record.xml")
-    ) as record_file:
+def test_parse_existing_record_v1(config_name: str):
+    with Path().resolve().parent.joinpath(f"resources/records/iec-pas-61174-0/{config_name}-record.xml").open() as record_file:
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)
@@ -139,9 +131,8 @@ def test_parse_existing_record_v1(config_name):
     assert config == configs_v1[config_name]
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_lossless_conversion_v1(get_record_response, config_name):
+def test_lossless_conversion_v1(get_record_response, config_name: str):
     _record = tostring(
         get_record_response(standard=standard, config=config_name),
         pretty_print=True,

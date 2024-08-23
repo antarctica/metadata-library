@@ -7,6 +7,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
+from flask.testing import FlaskClient
 from jsonschema import ValidationError
 from lxml.etree import XML, ElementTree, XMLParser, fromstring, tostring
 
@@ -48,7 +49,7 @@ def test_invalid_configuration_v3():
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_from_json_file(config_name):
+def test_configuration_v2_from_json_file(config_name: str):
     configuration = MetadataRecordConfigV2()
     config_path = Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json")
     configuration.load(file=config_path)
@@ -57,7 +58,7 @@ def test_configuration_v2_from_json_file(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_from_json_string(config_name):
+def test_configuration_v2_from_json_string(config_name: str):
     with open(Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r") as file:
         config_str = file.read()
         configuration = MetadataRecordConfigV2()
@@ -67,7 +68,7 @@ def test_configuration_v2_from_json_string(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_to_json_file(config_name):
+def test_configuration_v2_to_json_file(config_name: str):
     configuration = MetadataRecordConfigV2(**configs_safe_v2[config_name])
 
     with TemporaryDirectory() as tmp_dir_name:
@@ -96,7 +97,7 @@ def test_configuration_v2_to_json_string(config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_json_round_trip(config_name):
+def test_configuration_v2_json_round_trip(config_name: str):
     configuration = MetadataRecordConfigV2(**configs_safe_v2[config_name])
     config = configuration.dumps()
     _config = MetadataRecordConfigV2()
@@ -105,7 +106,7 @@ def test_configuration_v2_json_round_trip(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_configuration_v3_from_json_file(config_name):
+def test_configuration_v3_from_json_file(config_name: str):
     configuration = MetadataRecordConfigV3()
     config_path = Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json")
     configuration.load(file=config_path)
@@ -114,7 +115,7 @@ def test_configuration_v3_from_json_file(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_configuration_v3_from_json_string(config_name):
+def test_configuration_v3_from_json_string(config_name: str):
     with open(Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r") as file:
         config_str = file.read()
         configuration = MetadataRecordConfigV3()
@@ -161,29 +162,26 @@ def test_configuration_v3_json_round_trip(config_name: str):
     assert configuration.config == _config.config
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_response(client, config_name):
-    response = client.get(f"/standards/{standard}/{config_name}")
+def test_response(app_client: FlaskClient, config_name: str):
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     assert response.status_code == HTTPStatus.OK
     assert response.mimetype == "text/xml"
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_complete_record(client, config_name):
+def test_complete_record(app_client: FlaskClient, config_name: str):
     with open(
         Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
     ) as expected_contents_file:
         expected_contents = expected_contents_file.read()
-        response = client.get(f"/standards/{standard}/{config_name}")
+        response = app_client.get(f"/standards/{standard}/{config_name}")
         assert response.data.decode() == expected_contents
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_xml_declaration(client, config_name):
-    response = client.get(f"/standards/{standard}/{config_name}")
+def test_xml_declaration(app_client: FlaskClient, config_name: str):
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     record = ElementTree(XML(response.data))
     assert record.docinfo.xml_version == "1.0"
     assert record.docinfo.encoding == "utf-8"
@@ -191,7 +189,7 @@ def test_xml_declaration(client, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_xml_namespaces(get_record_response, config_name):
+def test_xml_namespaces(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
@@ -199,7 +197,7 @@ def test_xml_namespaces(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_root_element(get_record_response, config_name):
+def test_root_element(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
 
     metadata_records = record.xpath("/gmd:MD_Metadata", namespaces=namespaces.nsmap())
@@ -208,7 +206,7 @@ def test_root_element(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_file_identifier(get_record_response, config_name):
+def test_file_identifier(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -224,7 +222,7 @@ def test_file_identifier(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_language(get_record_response, config_name):
+def test_language(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -243,7 +241,7 @@ def test_language(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_character_set(get_record_response, config_name):
+def test_character_set(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -263,7 +261,7 @@ def test_character_set(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_hierarchy_level(get_record_response, config_name):
+def test_hierarchy_level(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -281,7 +279,7 @@ def test_hierarchy_level(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_hierarchy_level_name(get_record_response, config_name):
+def test_hierarchy_level_name(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -297,7 +295,7 @@ def test_hierarchy_level_name(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_contact(get_record_response, config_name):
+def test_contact(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -320,7 +318,7 @@ def test_contact(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_datestamp(get_record_response, config_name):
+def test_datestamp(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -334,7 +332,7 @@ def test_datestamp(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_metadata_standard(get_record_response, config_name):
+def test_metadata_standard(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -355,7 +353,7 @@ def test_metadata_standard(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_metadata_standard_version(get_record_response, config_name):
+def test_metadata_standard_version(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -376,7 +374,7 @@ def test_metadata_standard_version(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_reference_system_info(get_record_response, config_name):
+def test_reference_system_info(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -433,7 +431,7 @@ def test_reference_system_info(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_citation(get_record_response, config_name):
+def test_identification_citation(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -450,7 +448,7 @@ def test_identification_citation(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_abstract(get_record_response, config_name):
+def test_identification_abstract(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -467,7 +465,7 @@ def test_identification_abstract(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_purpose(get_record_response, config_name):
+def test_identification_purpose(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -484,7 +482,7 @@ def test_identification_purpose(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_credit(get_record_response, config_name):
+def test_identification_credit(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -501,7 +499,7 @@ def test_identification_credit(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_status(get_record_response, config_name):
+def test_identification_status(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -561,7 +559,7 @@ def _resolve_points_of_contact_xpaths(point_of_contact_type, config):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_points_of_contact(get_record_response, config_name):
+def test_identification_points_of_contact(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -589,7 +587,7 @@ def test_identification_points_of_contact(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_maintenance(get_record_response, config_name):
+def test_identification_maintenance(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -607,7 +605,7 @@ def test_identification_maintenance(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_graphic_overviews(get_record_response, config_name):
+def test_graphic_overviews(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -644,7 +642,7 @@ def test_graphic_overviews(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_resource_formats(get_record_response, config_name):
+def test_resource_formats(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_safe_v2[config_name]
 
@@ -723,7 +721,7 @@ def _resolve_descriptive_keywords_xpaths(config) -> list[dict]:
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_descriptive_keywords(get_record_response, config_name):
+def test_identification_descriptive_keywords(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -768,10 +766,9 @@ def test_identification_descriptive_keywords(get_record_response, config_name):
             assert_citation(element=thesaurus_elements[0], config=keyword["config"]["thesaurus"])
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_resource_constraints(client, config_name):
-    response = client.get(f"/standards/{standard}/{config_name}")
+def test_identification_resource_constraints(app_client: FlaskClient, config_name: str):
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     record = fromstring(response.data)
     config = configs_v3_all[config_name]
 
@@ -846,10 +843,9 @@ def test_identification_resource_constraints(client, config_name):
             assert other_constraint_statement is True
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_aggregations(client, config_name):
-    response = client.get(f"/standards/{standard}/{config_name}")
+def test_identification_aggregations(app_client: FlaskClient, config_name: str):
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     record = fromstring(response.data)
     config = configs_v3_all[config_name]
 
@@ -891,7 +887,7 @@ def test_identification_aggregations(client, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_spatial_representation_type(get_record_response, config_name):
+def test_identification_spatial_representation_type(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -932,7 +928,7 @@ def _test_identification_spatial_resolution(record, config):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_spatial_resolution(get_record_response, config_name):
+def test_identification_spatial_resolution(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
     _test_identification_spatial_resolution(record=record, config=config)
@@ -940,7 +936,7 @@ def test_identification_spatial_resolution(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_character_set(get_record_response, config_name):
+def test_identification_character_set(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -957,7 +953,7 @@ def test_identification_character_set(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_language(get_record_response, config_name):
+def test_identification_language(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -976,7 +972,7 @@ def test_identification_language(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_topics(get_record_response, config_name):
+def test_identification_topics(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -994,7 +990,7 @@ def test_identification_topics(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_geographic_extent_bounding_box(get_record_response, config_name):
+def test_identification_geographic_extent_bounding_box(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -1042,7 +1038,7 @@ def test_identification_geographic_extent_bounding_box(get_record_response, conf
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_geographic_extent_identifier(get_record_response, config_name):
+def test_identification_geographic_extent_identifier(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -1068,7 +1064,7 @@ def test_identification_geographic_extent_identifier(get_record_response, config
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_temporal_extent(get_record_response, config_name):
+def test_identification_temporal_extent(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -1113,7 +1109,7 @@ def test_identification_temporal_extent(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_vertical_extent(get_record_response, config_name):
+def test_identification_vertical_extent(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -1158,7 +1154,7 @@ def test_identification_vertical_extent(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_identification_supplemental_info(get_record_response, config_name):
+def test_identification_supplemental_info(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -1175,7 +1171,7 @@ def test_identification_supplemental_info(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_distributions(get_record_response, config_name):
+def test_distributions(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
     xpath_base = "/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor"
@@ -1253,7 +1249,7 @@ def test_distributions(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_data_quality_scope(get_record_response, config_name):
+def test_data_quality_scope(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -1271,7 +1267,7 @@ def test_data_quality_scope(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_data_quality_lineage(get_record_response, config_name):
+def test_data_quality_lineage(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -1290,7 +1286,7 @@ def test_data_quality_lineage(get_record_response, config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_metadata_maintenance(get_record_response, config_name):
+def test_metadata_maintenance(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v3_all[config_name]
 
@@ -1799,7 +1795,7 @@ class MockResponse:
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_parse_existing_record_v2(config_name):
+def test_parse_existing_record_v2(config_name: str):
     with open(
         Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
     ) as record_file:
@@ -1817,7 +1813,7 @@ def test_parse_existing_record_v2(config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_lossless_conversion_v2(get_record_response, config_name):
+def test_lossless_conversion_v2(get_record_response, config_name: str):
     _record = tostring(
         get_record_response(standard=standard, config=config_name),
         pretty_print=True,
@@ -1838,7 +1834,7 @@ def test_lossless_conversion_v2(get_record_response, config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_parse_existing_record_v3(config_name):
+def test_parse_existing_record_v3(config_name: str):
     with open(
         Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
     ) as record_file:
@@ -1852,7 +1848,7 @@ def test_parse_existing_record_v3(config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_lossless_conversion_v3(get_record_response, config_name):
+def test_lossless_conversion_v3(get_record_response, config_name: str):
     _record = tostring(
         get_record_response(standard=standard, config=config_name),
         pretty_print=True,
@@ -1871,7 +1867,7 @@ def test_lossless_conversion_v3(get_record_response, config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_record_schema_validation_valid(config_name):
+def test_record_schema_validation_valid(config_name: str):
     config = MetadataRecordConfigV3(**configs_v3_all[config_name])
     record = MetadataRecord(configuration=config)
     record.validate()

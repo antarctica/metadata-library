@@ -1137,25 +1137,6 @@ pytest = ">=4.6"
 testing = ["fields", "hunter", "process-tests", "pytest-xdist", "virtualenv"]
 
 [[package]]
-name = "pytest-flask"
-version = "1.3.0"
-description = "A set of py.test fixtures to test Flask applications."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "pytest-flask-1.3.0.tar.gz", hash = "sha256:58be1c97b21ba3c4d47e0a7691eb41007748506c36bf51004f78df10691fa95e"},
-    {file = "pytest_flask-1.3.0-py3-none-any.whl", hash = "sha256:c0e36e6b0fddc3b91c4362661db83fa694d1feb91fa505475be6732b5bc8c253"},
-]
-
-[package.dependencies]
-Flask = "*"
-pytest = ">=5.2"
-Werkzeug = "*"
-
-[package.extras]
-docs = ["Sphinx", "sphinx-rtd-theme"]
-
-[[package]]
 name = "pytest-random-order"
 version = "1.1.1"
 description = "Randomise the order in which pytest tests are run with some control over the randomness"
@@ -1631,4 +1612,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "cb2ed9241b00042ef5aca4ad6f9a77df5fcbc8938d3317e10cb6c5a7e960caef"
+content-hash = "713187daa1db0e2642886f533678df32624764e547c0a75b3084dff1151c02af"

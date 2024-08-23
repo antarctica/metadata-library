@@ -5,6 +5,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
+from flask.testing import FlaskClient
 from jsonschema import ValidationError
 from lxml.etree import XML, ElementTree, tostring
 
@@ -38,7 +39,7 @@ def test_invalid_configuration_v3():
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_from_json_file(config_name):
+def test_configuration_v2_from_json_file(config_name: str):
     configuration = MetadataRecordConfigV2()
     config_path = Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json")
     configuration.load(file=config_path)
@@ -47,18 +48,16 @@ def test_configuration_v2_from_json_file(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_to_json_file(config_name):
+def test_configuration_v2_to_json_file(config_name: str):
     configuration = MetadataRecordConfigV2(**configs_safe_v2[config_name])
 
     with TemporaryDirectory() as tmp_dir_name:
         config_path = Path(tmp_dir_name).joinpath("config.json")
         configuration.dump(file=config_path)
-        with open(config_path, mode="r") as config_file:
+        with config_path.open() as config_file:
             config = json.load(config_file)
 
-        with open(
-            Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r"
-        ) as _config_file:
+        with Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json").open() as _config_file:
             _config = json.load(_config_file)
 
         assert config == _config
@@ -77,7 +76,7 @@ def test_configuration_v2_to_json_string(config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_json_round_trip(config_name):
+def test_configuration_v2_json_round_trip(config_name: str):
     configuration = MetadataRecordConfigV2(**configs_safe_v2[config_name])
     config = configuration.dumps()
     _config = MetadataRecordConfigV2()
@@ -86,7 +85,7 @@ def test_configuration_v2_json_round_trip(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_configuration_v3_from_json_file(config_name):
+def test_configuration_v3_from_json_file(config_name: str):
     configuration = MetadataRecordConfigV3()
     config_path = Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json")
     configuration.load(file=config_path)
@@ -133,46 +132,39 @@ def test_configuration_v3_json_round_trip(config_name: str):
     assert configuration.config == _config.config
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_response(client, config_name):
-    response = client.get(f"/standards/{standard}/{config_name}")
+def test_response(app_client: FlaskClient, config_name: str):
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     assert response.status_code == HTTPStatus.OK
     assert response.mimetype == "text/xml"
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_complete_record(client, config_name):
-    with open(
-        Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
-    ) as expected_contents_file:
+def test_complete_record(app_client: FlaskClient, config_name: str):
+    with Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml").open() as expected_contents_file:
         expected_contents = expected_contents_file.read()
 
-    response = client.get(f"/standards/{standard}/{config_name}")
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     assert response.data.decode() == expected_contents
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_xml_declaration(client, config_name):
-    response = client.get(f"/standards/{standard}/{config_name}")
+def test_xml_declaration(app_client: FlaskClient, config_name: str):
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     record = ElementTree(XML(response.data))
     assert record.docinfo.xml_version == "1.0"
     assert record.docinfo.encoding == "utf-8"
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_xml_namespaces(get_record_response, config_name):
+def test_xml_namespaces(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_root_element(get_record_response, config_name):
+def test_root_element(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
 
     metadata_records = record.xpath("/gmi:MI_Metadata", namespaces=namespaces.nsmap())
@@ -180,10 +172,8 @@ def test_root_element(get_record_response, config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_parse_existing_record_v2(config_name):
-    with open(
-        Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
-    ) as record_file:
+def test_parse_existing_record_v2(config_name: str):
+    with Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml").open() as record_file:
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)
@@ -196,9 +186,8 @@ def test_parse_existing_record_v2(config_name):
     assert config == configs_safe_v2[config_name]
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_lossless_conversion_v2(get_record_response, config_name):
+def test_lossless_conversion_v2(get_record_response, config_name: str):
     _record = tostring(
         get_record_response(standard=standard, config=config_name),
         pretty_print=True,
@@ -219,10 +208,8 @@ def test_lossless_conversion_v2(get_record_response, config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_parse_existing_record_v3(config_name):
-    with open(
-        Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
-    ) as record_file:
+def test_parse_existing_record_v3(config_name: str):
+    with Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml").open() as record_file:
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)
@@ -231,9 +218,8 @@ def test_parse_existing_record_v3(config_name):
     assert config == configs_v3_all[config_name]
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_lossless_conversion_v3(get_record_response, config_name):
+def test_lossless_conversion_v3(get_record_response, config_name: str):
     _record = tostring(
         get_record_response(standard=standard, config=config_name),
         pretty_print=True,
@@ -252,7 +238,7 @@ def test_lossless_conversion_v3(get_record_response, config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_record_schema_validation_valid(config_name):
+def test_record_schema_validation_valid(config_name: str):
     config = MetadataRecordConfigV3(**configs_v3_all[config_name])
     record = MetadataRecord(configuration=config)
     record.validate()

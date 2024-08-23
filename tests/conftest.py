@@ -36,16 +36,15 @@ def app_runner(app: Flask):
 @pytest.fixture
 def app_client(app: Flask) -> FlaskClient:
     """Test app client."""
-    with app.test_client() as client:
-        return client
+    return app.test_client()
 
 
 @pytest.fixture
-def get_record_response(client: FlaskClient) -> ElementTree():
+def get_record_response(app_client: FlaskClient) -> ElementTree():
     """Get a generated record for a given standard and config."""
 
     def _get_record_response_for_config(standard: str, config: str) -> etree:
-        response = client.get(f"/standards/{standard}/{config}")
+        response = app_client.get(f"/standards/{standard}/{config}")
         return fromstring(response.data)  # noqa: S320
 
     return _get_record_response_for_config
