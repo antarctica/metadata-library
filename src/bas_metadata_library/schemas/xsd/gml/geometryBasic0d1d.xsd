@@ -3,9 +3,9 @@
     <documentation>This file was generated programmatically for validating files produced by the BAS Metadata Library. Schema locations have been modified to use local versions.</documentation>
     <appinfo source="urn:x-ogc:specification:gml:schema-xsd:geometryBasic0d1d:3.2.2">geometryBasic0d1d.xsd</appinfo>
     <documentation>See ISO/DIS 19136 Clause 10.
-Any geometry element that inherits the semantics of AbstractGeometryType may be viewed as a set of direct positions. 
+Any geometry element that inherits the semantics of AbstractGeometryType may be viewed as a set of direct positions.
 All of the classes derived from AbstractGeometryType inherit an optional association to a coordinate reference system. All direct positions shall directly or indirectly be associated with a coordinate reference system. When geometry elements are aggregated in another geometry element (such as a MultiGeometry or GeometricComplex), which already has a coordinate reference system specified, then these elements are assumed to be in that same coordinate reference system unless otherwise specified.
-The geometry model distinguishes geometric primitives, aggregates and complexes. 
+The geometry model distinguishes geometric primitives, aggregates and complexes.
 Geometric primitives, i.e. instances of a subtype of AbstractGeometricPrimitiveType, will be open, that is, they will not contain their boundary points; curves will not contain their end points, surfaces will not contain their boundary curves, and solids will not contain their bounding surfaces.
 
 GML is an OGC Standard.
@@ -31,7 +31,7 @@ The following rules shall be adhered to:
   <attributeGroup name="SRSReferenceGroup">
     <annotation>
       <documentation>The attribute group SRSReferenceGroup is an optional reference to the CRS used by this geometry, with optional additional information to simplify the processing of the coordinates when a more complete definition of the CRS is not needed.
-In general the attribute srsName points to a CRS instance of gml:AbstractCoordinateReferenceSystem. For well-known references it is not required that the CRS description exists at the location the URI points to. 
+In general the attribute srsName points to a CRS instance of gml:AbstractCoordinateReferenceSystem. For well-known references it is not required that the CRS description exists at the location the URI points to.
 If no srsName attribute is given, the CRS shall be specified as part of the larger context this geometry element is part of.</documentation>
     </annotation>
     <attribute name="srsName" type="anyURI"/>
@@ -65,7 +65,7 @@ If a feature has a property that takes a geometry element as its value, this is 
   </complexType>
   <complexType name="GeometryArrayPropertyType">
     <annotation>
-      <documentation>If a feature has a property which takes an array of geometry elements as its value, this is called a geometry array property. A generic type for such a geometry property is GeometryArrayPropertyType. 
+      <documentation>If a feature has a property which takes an array of geometry elements as its value, this is called a geometry array property. A generic type for such a geometry property is GeometryArrayPropertyType.
 The elements are always contained inline in the array property, referencing geometry elements or arrays of geometry elements via XLinks is not supported.</documentation>
     </annotation>
     <sequence minOccurs="0" maxOccurs="unbounded">
@@ -88,7 +88,7 @@ if no srsName attribute is given, the CRS shall be specified as part of the larg
   <complexType name="DirectPositionListType">
     <annotation>
       <documentation>posList instances (and other instances with the content model specified by DirectPositionListType) hold the coordinates for a sequence of direct positions within the same coordinate reference system (CRS).
-if no srsName attribute is given, the CRS shall be specified as part of the larger context this geometry element is part of, typically a geometric object like a point, curve, etc. 
+if no srsName attribute is given, the CRS shall be specified as part of the larger context this geometry element is part of, typically a geometric object like a point, curve, etc.
 The optional attribute count specifies the number of direct positions in the list. If the attribute count is present then the attribute srsDimension shall be present, too.
 The number of entries in the list is equal to the product of the dimensionality of the coordinate reference system (i.e. it is a derived value of the coordinate reference system definition) and the number of direct positions.</documentation>
     </annotation>
@@ -113,7 +113,7 @@ pointProperty elements contain a point that may be referenced from other geometr
   </group>
   <group name="geometricPositionListGroup">
     <annotation>
-      <documentation>GML supports two different ways to specify a list of geometric positions: either by a sequence of geometric positions (by reusing the group definition) or a sequence of direct positions (element posList). 
+      <documentation>GML supports two different ways to specify a list of geometric positions: either by a sequence of geometric positions (by reusing the group definition) or a sequence of direct positions (element posList).
 The posList element allows for a compact way to specify the coordinates of the positions, if all positions are represented in the same coordinate reference system.</documentation>
     </annotation>
     <choice>

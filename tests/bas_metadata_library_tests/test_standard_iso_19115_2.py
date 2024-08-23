@@ -65,15 +65,13 @@ def test_configuration_v2_to_json_file(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_to_json_string(config_name):
+def test_configuration_v2_to_json_string(config_name: str):
     configuration = MetadataRecordConfigV2(**configs_safe_v2[config_name])
 
     config = configuration.dumps()
 
-    with open(
-        Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r"
-    ) as _config_file:
-        _config = _config_file.read()
+    with Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json").open() as _config_file:
+        _config = _config_file.read().rstrip("\n")
 
     assert config == _config
 
@@ -97,39 +95,37 @@ def test_configuration_v3_from_json_file(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_configuration_v3_to_json_file(config_name):
+def test_configuration_v3_to_json_file(config_name: str):
     configuration = MetadataRecordConfigV3(**configs_v3_all[config_name])
 
     with TemporaryDirectory() as tmp_dir_name:
         config_path = Path(tmp_dir_name).joinpath("config.json")
         configuration.dump(file=config_path)
-        with open(config_path, mode="r") as config_file:
+        with config_path.open() as config_file:
             config = json.load(config_file)
 
-        with open(
-            Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r"
-        ) as _config_file:
+        with (
+            Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json").open() as _config_file
+        ):
             _config = json.load(_config_file)
 
         assert config == _config
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_configuration_v3_to_json_string(config_name):
+def test_configuration_v3_to_json_string(config_name: str):
     configuration = MetadataRecordConfigV3(**configs_v3_all[config_name])
 
     config = configuration.dumps()
 
-    with open(
-        Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r"
-    ) as _config_file:
-        _config = _config_file.read()
+    with Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json").open() as _config_file:
+        _config = _config_file.read().rstrip("\n")
 
     assert config == _config
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
-def test_configuration_v3_json_round_trip(config_name):
+def test_configuration_v3_json_round_trip(config_name: str):
     configuration = MetadataRecordConfigV3(**configs_v3_all[config_name])
     config = configuration.dumps()
     _config = MetadataRecordConfigV3()

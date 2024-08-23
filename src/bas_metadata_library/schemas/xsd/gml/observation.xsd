@@ -17,11 +17,11 @@ To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
   <include schemaLocation="valueObjects.xsd"/>
   <element name="Observation" type="gml:ObservationType" substitutionGroup="gml:AbstractFeature">
     <annotation>
-      <documentation>The content model is a straightforward extension of gml:AbstractFeatureType; it automatically has the gml:identifier, gml:description, gml:descriptionReference, gml:name, and gml:boundedBy properties. 
+      <documentation>The content model is a straightforward extension of gml:AbstractFeatureType; it automatically has the gml:identifier, gml:description, gml:descriptionReference, gml:name, and gml:boundedBy properties.
 The gml:validTime element describes the time of the observation. Note that this may be a time instant or a time period.
 The gml:using property contains or references a description of a sensor, instrument or procedure used for the observation.
-The gml:target property contains or references the specimen, region or station which is the object of the observation. This property is particularly useful for remote observations, such as photographs, where a generic location property might apply to the location of the camera or the location of the field of view, and thus may be ambiguous.  
-The gml:subject element is provided as a convenient synonym for gml:target. This is the term commonly used in phtotography.  
+The gml:target property contains or references the specimen, region or station which is the object of the observation. This property is particularly useful for remote observations, such as photographs, where a generic location property might apply to the location of the camera or the location of the field of view, and thus may be ambiguous.
+The gml:subject element is provided as a convenient synonym for gml:target. This is the term commonly used in phtotography.
 The gml:resultOf property indicates the result of the observation.  The value may be inline, or a reference to a value elsewhere.
 </documentation>
     </annotation>

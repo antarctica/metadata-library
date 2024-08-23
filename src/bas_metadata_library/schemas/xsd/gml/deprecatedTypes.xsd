@@ -3,7 +3,7 @@
     <documentation>This file was generated programmatically for validating files produced by the BAS Metadata Library. Schema locations have been modified to use local versions.</documentation>
     <appinfo source="urn:x-ogc:specification:gml:schema-xsd:deprecatedTypes:3.2.2">deprecatedTypes.xsd</appinfo>
     <documentation>All global schema components that are part of the GML schema, but were deprecated. See Annex I.
-			
+
 			GML is an OGC Standard.
 			Copyright (c) 2007, 2010, 2016, 2018 Open Geospatial Consortium.
 			To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .

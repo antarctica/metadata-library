@@ -4,7 +4,7 @@
     <appinfo source="urn:x-ogc:specification:gml:schema-xsd:topology:3.2.2">topology.xsd</appinfo>
     <documentation>See ISO/DIS 19136 Clause 14.
 Topology is the branch of mathematics describing the properties of objects which are invariant under continuous deformation. For example, a circle is topologically equivalent to an ellipse because one can be transformed into the other by stretching. In geographic modelling, the foremost use of topology is in accelerating computational geometry. The constructs of topology allow characterisation of the spatial relationships between objects using simple combinatorial or algebraic algorithms. Topology, realised by the appropriate geometry, also allows a compact and unambiguous mechanism for expressing shared geometry among geographic features.
-There are four instantiable classes of primitive topology objects, one for each dimension up to 3D. In addition, topological complexes are supported, too. 
+There are four instantiable classes of primitive topology objects, one for each dimension up to 3D. In addition, topological complexes are supported, too.
 There is strong symmetry in the (topological boundary and coboundary) relationships between topology primitives of adjacent dimensions. Topology primitives are bounded by directed primitives of one lower dimension. The coboundary of each topology primitive is formed from directed topology primitives of one higher dimension.
 
 GML is an OGC Standard.
@@ -30,7 +30,7 @@ To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
   </complexType>
   <element name="AbstractTopoPrimitive" type="gml:AbstractTopoPrimitiveType" abstract="true" substitutionGroup="gml:AbstractTopology">
     <annotation>
-      <documentation>gml:AbstractTopoPrimitive acts as the base type for all topological primitives. Topology primitives are the atomic (smallest possible) units of a topology complex. 
+      <documentation>gml:AbstractTopoPrimitive acts as the base type for all topological primitives. Topology primitives are the atomic (smallest possible) units of a topology complex.
 Each topology primitive may contain references to other topology primitives of codimension 2 or more (gml:isolated). Conversely, nodes may have faces as containers and nodes and edges may have solids as containers (gml:container).</documentation>
     </annotation>
   </element>
@@ -83,7 +83,7 @@ Each topology primitive may contain references to other topology primitives of c
   <element name="Node" type="gml:NodeType" substitutionGroup="gml:AbstractTopoPrimitive">
     <annotation>
       <documentation>gml:Node represents the 0-dimensional primitive.
-The optional coboundary of a node (gml:directedEdge) is a sequence of directed edges which are incident on this node. Edges emanating from this node appear in the node coboundary with a negative orientation. 
+The optional coboundary of a node (gml:directedEdge) is a sequence of directed edges which are incident on this node. Edges emanating from this node appear in the node coboundary with a negative orientation.
 If provided, the aggregationType attribute shall have the value "sequence".
 A node may optionally be realised by a 0-dimensional geometric primitive (gml:pointProperty).</documentation>
     </annotation>
@@ -117,8 +117,8 @@ A node may optionally be realised by a 0-dimensional geometric primitive (gml:po
   <element name="Edge" type="gml:EdgeType" substitutionGroup="gml:AbstractTopoPrimitive">
     <annotation>
       <documentation>gml:Edge represents the 1-dimensional primitive.
-The topological boundary of an Edge (gml:directedNode) consists of a negatively directed start Node and a positively directed end Node.   
-The optional coboundary of an edge (gml:directedFace) is a circular sequence of directed faces which are incident on this edge in document order. In the 2D case, the orientation of the face on the left of the edge is "+"; the orientation of the face on the right on its right is "-". 
+The topological boundary of an Edge (gml:directedNode) consists of a negatively directed start Node and a positively directed end Node.
+The optional coboundary of an edge (gml:directedFace) is a circular sequence of directed faces which are incident on this edge in document order. In the 2D case, the orientation of the face on the left of the edge is "+"; the orientation of the face on the right on its right is "-".
 If provided, the aggregationType attribute shall have the value "sequence".
 An edge may optionally be realised by a 1-dimensional geometric primitive (gml:curveProperty).</documentation>
     </annotation>
@@ -158,7 +158,7 @@ An edge may optionally be realised by a 1-dimensional geometric primitive (gml:c
     <annotation>
       <documentation>gml:Face represents the 2-dimensional topology primitive.
 The topological boundary of a face (gml:directedEdge) consists of a sequence of directed edges. If provided, the aggregationType attribute shall have the value "sequence".
-The optional coboundary of a face (gml:directedTopoSolid) is a pair of directed solids which are bounded by this face. A positively directed solid corresponds to a solid which lies in the direction of the negatively directed normal to the face in any geometric realisation. 
+The optional coboundary of a face (gml:directedTopoSolid) is a pair of directed solids which are bounded by this face. A positively directed solid corresponds to a solid which lies in the direction of the negatively directed normal to the face in any geometric realisation.
 A face may optionally be realised by a 2-dimensional geometric primitive (gml:surfaceProperty).</documentation>
     </annotation>
   </element>
@@ -194,7 +194,7 @@ A face may optionally be realised by a 2-dimensional geometric primitive (gml:su
   </complexType>
   <element name="TopoSolid" type="gml:TopoSolidType" substitutionGroup="gml:AbstractTopoPrimitive">
     <annotation>
-      <documentation>gml:TopoSolid represents the 3-dimensional topology primitive. 
+      <documentation>gml:TopoSolid represents the 3-dimensional topology primitive.
 The topological boundary of a solid (gml:directedFace) consists of a set of directed faces.
 A solid may optionally be realised by a 3-dimensional geometric primitive (gml:solidProperty).</documentation>
     </annotation>
@@ -334,7 +334,7 @@ If provided, the aggregationType attribute shall have the value "sequence".</doc
   <element name="TopoComplex" type="gml:TopoComplexType" substitutionGroup="gml:AbstractTopology">
     <annotation>
       <documentation>gml:TopoComplex is a collection of topological primitives.
-Each complex holds a reference to its maximal complex (gml:maximalComplex) and optionally to sub- or super-complexes (gml:subComplex, gml:superComplex). 
+Each complex holds a reference to its maximal complex (gml:maximalComplex) and optionally to sub- or super-complexes (gml:subComplex, gml:superComplex).
 A topology complex contains its primitive and sub-complex members.
 </documentation>
     </annotation>

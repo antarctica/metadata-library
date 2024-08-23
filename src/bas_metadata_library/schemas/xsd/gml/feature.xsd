@@ -16,8 +16,8 @@ To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
   <complexType name="AbstractFeatureType" abstract="true">
     <annotation>
       <documentation>The basic feature model is given by the gml:AbstractFeatureType.
-The content model for gml:AbstractFeatureType adds two specific properties suitable for geographic features to the content model defined in gml:AbstractGMLType. 
-The value of the gml:boundedBy property describes an envelope that encloses the entire feature instance, and is primarily useful for supporting rapid searching for features that occur in a particular location. 
+The content model for gml:AbstractFeatureType adds two specific properties suitable for geographic features to the content model defined in gml:AbstractGMLType.
+The value of the gml:boundedBy property describes an envelope that encloses the entire feature instance, and is primarily useful for supporting rapid searching for features that occur in a particular location.
 The value of the gml:location property describes the extent, position or relative location of the feature.</documentation>
     </annotation>
     <complexContent>
@@ -31,7 +31,7 @@ The value of the gml:location property describes the extent, position or relativ
   </complexType>
   <element name="AbstractFeature" type="gml:AbstractFeatureType" abstract="true" substitutionGroup="gml:AbstractGML">
     <annotation>
-      <documentation>This abstract element serves as the head of a substitution group which may contain any elements whose content model is derived from gml:AbstractFeatureType.  This may be used as a variable in the construction of content models.  
+      <documentation>This abstract element serves as the head of a substitution group which may contain any elements whose content model is derived from gml:AbstractFeatureType.  This may be used as a variable in the construction of content models.
 gml:AbstractFeature may be thought of as "anything that is a GML feature" and may be used to define variables or templates in which the value of a GML property is "any feature". This occurs in particular in a GML feature collection where the feature member properties contain one or multiple copies of gml:AbstractFeature respectively.</documentation>
     </annotation>
   </element>
@@ -58,7 +58,7 @@ gml:AbstractFeature may be thought of as "anything that is a GML feature" and ma
   </complexType>
   <element name="EnvelopeWithTimePeriod" type="gml:EnvelopeWithTimePeriodType" substitutionGroup="gml:Envelope">
     <annotation>
-      <documentation>gml:EnvelopeWithTimePeriod is provided for envelopes that include a temporal extent. It adds two time position properties, gml:beginPosition and gml:endPosition, which describe the extent of a time-envelope.  
+      <documentation>gml:EnvelopeWithTimePeriod is provided for envelopes that include a temporal extent. It adds two time position properties, gml:beginPosition and gml:endPosition, which describe the extent of a time-envelope.
 Since gml:EnvelopeWithTimePeriod is assigned to the substitution group headed by gml:Envelope, it may be used whenever gml:Envelope is valid.</documentation>
     </annotation>
   </element>
