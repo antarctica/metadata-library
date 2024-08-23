@@ -7,10 +7,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed [BREAKING!]
+
+* Minimum Python version updated to 3.9
+  [#211](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/211)
+
+### Added
+
+* Pre-commit hook
+  [#222](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/222)
+
 ### Fixed
 
-* Updating README examples to reflect V3 config changes 
+* Updating README examples to reflect V3 config changes
   [#215](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/205)
+
+### Changed
+
+* Upgraded project dependencies
+  [#211](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/211)
+* Updated `pytest` configuration (fast fail, retry failed test first, randomise tests by default)
+  [#223](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/223)
+* Refactored internal / testing Flask app
+
+### Removed
+
+* Unused `requests`, `tomlkit` and `pytest-flask` dependencies
+  [#211](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/211)
 
 ## 0.9.1 - 2022-10-01
 
