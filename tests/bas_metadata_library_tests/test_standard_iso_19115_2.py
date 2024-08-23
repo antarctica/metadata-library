@@ -1,28 +1,20 @@
 import json
-
-from tempfile import TemporaryDirectory
 from copy import deepcopy
-from pathlib import Path
 from http import HTTPStatus
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import pytest
-
 from jsonschema import ValidationError
-
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
-# should be safe. In any case the test environment is not exposed and so does not present a risk.
-from lxml.etree import ElementTree, XML, tostring
+from lxml.etree import XML, ElementTree, tostring
 
 from bas_metadata_library import RecordValidationError
 from bas_metadata_library.standards.iso_19115_2 import (
-    Namespaces,
+    MetadataRecord,
     MetadataRecordConfigV2,
     MetadataRecordConfigV3,
-    MetadataRecord,
+    Namespaces,
 )
-
 from tests.resources.configs.iso19115_2_standard import configs_safe_v2, configs_v3_all
 
 standard = "iso-19115-2"

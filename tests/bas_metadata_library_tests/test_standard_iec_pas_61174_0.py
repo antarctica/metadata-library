@@ -1,28 +1,19 @@
+from copy import deepcopy
+from http import HTTPStatus
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
 import pytest
-
-from copy import deepcopy
-from pathlib import Path
-from http import HTTPStatus
-from tempfile import TemporaryDirectory
-
 from jsonschema import ValidationError
-
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
-# should be safe. In any case the test environment is not exposed and so does not present a risk.
-from lxml.etree import ElementTree, XML, tostring, fromstring
+from lxml.etree import XML, ElementTree, fromstring, tostring
 
 from bas_metadata_library.standards.iec_pas_61174_0_v1 import (
-    Namespaces,
-    MetadataRecordConfigV1,
     MetadataRecord,
+    MetadataRecordConfigV1,
+    Namespaces,
 )
-
 from tests.resources.configs.iec_pas_61174_0_standard import configs_v1
-
 
 standard = "iec-pas-61174-0"
 namespaces = Namespaces()

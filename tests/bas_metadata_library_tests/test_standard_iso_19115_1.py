@@ -1,39 +1,29 @@
 import datetime
 import json
-
-import pytest
-
 from copy import deepcopy
 from datetime import date
-from typing import List
 from http import HTTPStatus
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import pytest
 from jsonschema import ValidationError
-
-
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
-# should be safe. In any case the test environment is not exposed and so does not present a risk.
-from lxml.etree import ElementTree, XML, fromstring, tostring, XMLParser
+from lxml.etree import XML, ElementTree, XMLParser, fromstring, tostring
 
 from bas_metadata_library import RecordValidationError
 from bas_metadata_library.standards.iso_19115_1 import (
-    Namespaces,
+    MetadataRecord,
     MetadataRecordConfigV2,
     MetadataRecordConfigV3,
-    MetadataRecord,
+    Namespaces,
 )
-from bas_metadata_library.standards.iso_19115_common.utils import format_numbers_consistently, encode_date_string
-
+from bas_metadata_library.standards.iso_19115_common.utils import encode_date_string, format_numbers_consistently
 from tests.bas_metadata_library_tests.standard_iso_19115_1_common import (
-    assert_responsible_party,
-    assert_maintenance,
     assert_citation,
-    assert_online_resource,
     assert_identifier,
+    assert_maintenance,
+    assert_online_resource,
+    assert_responsible_party,
 )
 from tests.resources.configs.iso19115_1_standard import configs_safe_v2, configs_v3_all
 
@@ -709,7 +699,7 @@ def test_resource_formats(get_record_response, config_name):
             assert file_decompression_technique_element is True
 
 
-def _resolve_descriptive_keywords_xpaths(config) -> List[dict]:
+def _resolve_descriptive_keywords_xpaths(config) -> list[dict]:
     keywords = []
     for keyword in config:
         xpath = (

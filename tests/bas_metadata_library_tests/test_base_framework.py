@@ -1,9 +1,7 @@
 # noinspection PyUnresolvedReferences
 from pathlib import Path
 
-import pytest
-
-from bas_metadata_library import MetadataRecordConfig, MetadataRecord, MetadataRecordElement
+from bas_metadata_library import MetadataRecord, MetadataRecordConfig, MetadataRecordElement
 
 _config = {"foo": "bar"}
 

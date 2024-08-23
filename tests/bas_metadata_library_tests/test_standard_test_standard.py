@@ -1,21 +1,16 @@
 import json
-
-import pytest
-
 from copy import deepcopy
-from tempfile import TemporaryDirectory
 from http import HTTPStatus
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
-# should be safe. In any case the test environment is not exposed and so does not present a risk.
+import pytest
 from jsonschema import ValidationError
-from lxml.etree import ElementTree, XML, tostring
+from lxml.etree import XML, ElementTree, tostring
 
-from tests.resources.configs.test_metadata_standard import configs_all as configs, minimal_record as minimal_config
-from tests.standards.test_standard import Namespaces, MetadataRecordConfig, MetadataRecord
+from tests.resources.configs.test_metadata_standard import configs_all as configs
+from tests.resources.configs.test_metadata_standard import minimal_record as minimal_config
+from tests.standards.test_standard import MetadataRecord, MetadataRecordConfig, Namespaces
 
 standard = "test-standard"
 

@@ -35,7 +35,7 @@ class Namespaces(_Namespaces):
     xlink = "http://www.w3.org/1999/xlink"
     xsi = "http://www.w3.org/2001/XMLSchema-instance"
 
-    _schema_locations = {}
+    _schema_locations = {}  # noqa: RUF012
 
     def __init__(self):
         self._namespaces = {"xlink": self.xlink, "xsi": self.xsi}

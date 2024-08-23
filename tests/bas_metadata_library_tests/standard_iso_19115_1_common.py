@@ -1,5 +1,6 @@
 from copy import deepcopy
-from datetime import date as _date, datetime as _datetime
+from datetime import date as _date
+from datetime import datetime as _datetime
 
 from lxml.etree import Element
 
