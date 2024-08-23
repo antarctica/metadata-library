@@ -1,5 +1,3 @@
-from typing import Dict
-
 from lxml.etree import SubElement  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library.standards.iso_19115_common import MetadataRecordElement
@@ -21,7 +19,7 @@ class DataQuality(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         data_quality_wrapper = SubElement(self.record, f"{{{self.ns.gmd}}}dataQualityInfo")
         data_quality_element = SubElement(data_quality_wrapper, f"{{{self.ns.gmd}}}DQ_DataQuality")
 
@@ -38,7 +36,7 @@ class DataQuality(MetadataRecordElement):
 
 
 class Scope(MetadataRecordElement):
-    def make_element(self):
+    def make_element(self) -> None:
         scope_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}scope")
         scope_element = SubElement(scope_wrapper, f"{{{self.ns.gmd}}}DQ_Scope")
 
@@ -47,7 +45,7 @@ class Scope(MetadataRecordElement):
 
 
 class Lineage(MetadataRecordElement):
-    def make_config(self) -> Dict[str, str]:
+    def make_config(self) -> dict[str, str]:
         _ = {}
 
         # note: this should be refactored to have a dedicated Statement and Source element when lineage sources are
@@ -60,7 +58,7 @@ class Lineage(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         if "lineage" in self.element_attributes:
             lineage_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}lineage")
             lineage_wrapper = SubElement(lineage_container, f"{{{self.ns.gmd}}}LI_Lineage")

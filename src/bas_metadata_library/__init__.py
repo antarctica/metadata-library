@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 import json
-import subprocess  # noqa: S404 - see notes in `MetadataRecord.validate` method - nosec
+import subprocess
 from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Optional
 
 from importlib_resources import files as resource_file
 from jsonschema import validate
@@ -11,31 +12,31 @@ from lxml.etree import (
     Element,
     ElementTree,
     fromstring,
+)
+from lxml.etree import (
     tostring as element_string,
-)  # nosec - see 'lxml` package (bandit)' section in README
+)
 
 
 class RecordValidationError(Exception):
-    """
-    Internal error indicating a record has failed schema validation
-    """
+    """Internal error indicating a record has failed schema validation."""
 
     pass
 
 
-class Namespaces(object):
+class Namespaces:
     """
-    Gathers all XML namespaces used in a standard
+    Gathers all XML namespaces used in a standard.
 
     Provides a way to reference namespaces when constructing elements and declaring namespaces in the root element of
-    a XML document.
+    an XML document.
 
     This class is intended to be overridden in each metadata standard's module. See existing standards for examples.
     """
 
-    _schema_locations = {}
+    _schema_locations = {}  # noqa: RUF012
 
-    def __init__(self, namespaces: dict = None, root_namespace: str = None):
+    def __init__(self, namespaces: dict | None = None, root_namespace: str | None = None):
         """
         Root namespace support.
 
@@ -64,7 +65,7 @@ class Namespaces(object):
         E.g. {'xlink': 'http://www.w3.org/1999/xlink'}
 
         When a root namespace is set, a default namespace will be set by using the `None` constant for the relevant
-        dict key (this is an lxml convention). This will create an invalid namespace map for use in XPath queries, this
+        dict key (this is a lxml convention). This will create an invalid namespace map for use in XPath queries, this
         can be overcome using the `suppress_root_namespace` parameter, which will create a 'regular' map.
 
         :type suppress_root_namespace: bool
@@ -83,14 +84,11 @@ class Namespaces(object):
 
     def schema_locations(self) -> str:
         """
-        Generates the value for a `xsi:schemaLocation` attribute
+        Generate value for a `xsi:schemaLocation` attribute.
 
         Defines the XML Schema Document (XSD) for each namespace in an XML tree
 
         E.g. 'xsi:schemaLocation="http://www.w3.org/1999/xlink https://www.w3.org/1999/xlink.xsd"'
-
-        :rtype str
-        :return: schema location attribute value
         """
         schema_locations = ""
         for prefix, location in self._schema_locations.items():
@@ -99,9 +97,9 @@ class Namespaces(object):
         return schema_locations.lstrip()
 
 
-class MetadataRecordConfig(object):
+class MetadataRecordConfig:
     """
-    Represents the configuration for a metadata record
+    Represents the configuration for a metadata record.
 
     The record configuration can either be passed directly as a Python object (dict), when instantiating an instance of
     this class, or by using the `load()` or `loads()` methods to load the configuration from a JSON document.
@@ -115,10 +113,6 @@ class MetadataRecordConfig(object):
     """
 
     def __init__(self, **kwargs: dict):
-        """
-        :type kwargs: dict
-        :param kwargs: record configuration
-        """
         self.config: dict = kwargs
         self.schema: dict = {}
         self.schema_uri: str = ""
@@ -128,7 +122,7 @@ class MetadataRecordConfig(object):
 
     def validate(self) -> None:
         """
-        Ensures the configuration is valid against the relevant JSON Schema
+        Ensures the configuration is valid against the relevant JSON Schema.
 
         The record configuration (a Python dict) is first duplicated to a JSON safe encoding (i.e. Python dates objects
         converted to strings), to allow validation against the JSON Schema.
@@ -137,53 +131,30 @@ class MetadataRecordConfig(object):
         """
         if self.schema is not None:
             _config = json.loads(json.dumps(deepcopy(self.config), default=str))
-
-            return validate(instance=_config, schema=self.schema)
+            validate(instance=_config, schema=self.schema)
 
     def load(self, file: Path) -> None:
-        """
-        Loads a record configuration from a JSON encoded file
-
-        :type file: Path
-        :param file: path to the JSON encoded file to load from
-        """
-        with open(str(file), mode="r") as file:
+        """Loads a record configuration from a JSON encoded file."""
+        with file.open(mode="r") as file:
             self.config = json.load(fp=file)
 
     def loads(self, string: str) -> None:
-        """
-        Loads a record configuration from a JSON encoded string
-
-        :type string: str
-        :param string: JSON encoded string to load from
-        """
+        """Loads a record configuration from a JSON encoded string."""
         self.config = json.loads(s=string)
 
     def dump(self, file: Path) -> None:
-        """
-        Dumps a record configuration as a JSON encoded file
-
-        The path to the file to read from should be expressed using a Python pathlib.Path object.
-
-        :type file: Path
-        :param file: path at which to create a JSON encoded file
-        """
-        with open(str(file), mode="w") as file:
+        """Dumps a record configuration as a JSON encoded file."""
+        with file.open(mode="w") as file:
             json.dump(self.config, file, indent=2)
 
     def dumps(self) -> str:
-        """
-        Dumps a record configuration as a JSON encoded string
-
-        :rtype str
-        :returns record configuration as a JSON encoded string
-        """
+        """Dumps a record configuration as a JSON encoded string."""
         return json.dumps(self.config, indent=2)
 
 
-class MetadataRecord(object):
+class MetadataRecord:
     """
-    Generates a metadata record using a configuration, or a configuration using a record
+    Generates a metadata record using a configuration, or a configuration using a record.
 
     If a configuration is given, an XML tree of elements is built using the configuration object, typically for output
     as a complete record.
@@ -194,13 +165,7 @@ class MetadataRecord(object):
     should be able to create exactly the same configuration object again without loosing any information.
     """
 
-    def __init__(self, configuration: MetadataRecordConfig = None, record: str = None):
-        """
-        :type configuration: MetadataRecordConfig
-        :param configuration: Metadata record configuration object
-        :type record: str
-        :param record: XML document string representing a record
-        """
+    def __init__(self, configuration: MetadataRecordConfig = None, record: str | None = None):
         self.ns = Namespaces()
         self.attributes = {}
         self.record = None
@@ -210,39 +175,29 @@ class MetadataRecord(object):
             self.attributes = configuration.config
 
         if record is not None:
-            self.record = fromstring(record.encode())
+            self.record = fromstring(record.encode())  # noqa: S320 (see '`lxml` package (security)' README section)
 
     def make_config(self) -> MetadataRecordConfig:
         """
-        Builds a metadata configuration object by parsing an existing XML record
+        Builds a metadata configuration object by parsing an existing XML record.
 
-        This method is effectively the reverse of make_element() and generate_xml_document().
-
-        :rtype: MetadataRecordConfig
-        :return: Metadata record configuration object
+        This method is effectively the reverse of `make_element()` and `generate_xml_document()`.
         """
         return MetadataRecordConfig(**self.attributes)
 
-    def make_element(self) -> Optional[Element]:
+    def make_element(self) -> Element:
         """
-        Builds a metadata record from a root XML element
+        Builds a metadata record from a root XML element.
 
         Elements are added to this root element defining the contents of the record.
-
-        :rtype: Element
-        :return: XML element representing the root of a metadata record
         """
-        metadata_record = None
-        return metadata_record
+        return None
 
     def generate_xml_document(self) -> bytes:
         """
-        Generates an XML document and tree from an XML element defining a record
+        Generates an XML document and tree from an XML element defining a record.
 
         The XML document is encoded as a UTF-8 byte string, with pretty-printing and an XML declaration.
-
-        :rtype bytes
-        :return: XML document in bytes
         """
         self.record = self.make_element()
         document = ElementTree(self.record)
@@ -251,7 +206,7 @@ class MetadataRecord(object):
 
     def validate(self, xsd_path: Path) -> None:
         """
-        Validates the contents of a record against a given XSD schema
+        Validates the contents of a record against a given XSD schema.
 
         The external `xmllint` binary is used to validate records as the `lxml` methods did not easily support relative
         paths for schemas that use imports/includes (which includes the ISO 19115 family).
@@ -264,49 +219,41 @@ class MetadataRecord(object):
 
         It is assumed this method will be overridden in concrete implementations of this class. Specifically it's
         assumed the `xsd_path` parameter will be hard coded to a schema suitable for the standard each class implements.
-
-        :type xsd_path: Path
-        :param xsd_path: Path relative to `bas_metadata_library.schemas.xsd` to the schema to validate against
         """
         schema_path = resource_file("bas_metadata_library.schemas.xsd").joinpath(xsd_path)
 
         with TemporaryDirectory() as document_path:
             document_path = Path(document_path).joinpath("record.xml")
             validation_document: MetadataRecord = deepcopy(self)
-            with open(document_path, mode="w") as document_file:
+            with document_path.open(mode="w") as document_file:
                 document_data = validation_document.generate_xml_document().decode()
                 document_file.write(document_data)
 
             try:
-                # Exempting Bandit/flake8 security issue (using subprocess)
-                # Checking for untrusted input is not a concern for this library, rather those implementing
-                # this library should ensure it is used in a way that is secure (i.e. it is context dependent).
-                #
-                # Use `capture_output=True` in future when we can use Python 3.7+
-                subprocess.run(  # noqa: S274,S603 - nosec
+                subprocess.run(
                     args=["xmllint", "--noout", "--schema", str(schema_path), str(document_path)],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
+                    capture_output=True,
                     check=True,
                 )
             except subprocess.CalledProcessError as e:
-                raise RecordValidationError(f"Record validation failed: {e.stderr.decode()}") from e
+                msg = f"Record validation failed: {e.stderr.decode()}"
+                raise RecordValidationError(msg) from e
 
 
-class MetadataRecordElement(object):
-    """
-    Creates an XML element
-    """
+class MetadataRecordElement:
+    """Create an XML element."""
 
     def __init__(
         self,
         record: Element,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         """
+        Initialise.
+
         :type record: Element
         :param record: overall root element of a metadata record
         :type attributes: dict
@@ -331,13 +278,9 @@ class MetadataRecordElement(object):
             self.element_attributes = self.attributes
 
     def make_config(self) -> None:
-        """
-        Parses an XML element to reverse engineer a partial configuration object
-        """
+        """Parses an XML element to reverse engineer a partial configuration object."""
         pass
 
     def make_element(self) -> None:
-        """
-        Builds an XML element
-        """
+        """Build an XML element."""
         pass

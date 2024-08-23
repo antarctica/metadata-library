@@ -1,47 +1,50 @@
 import pytest
-
+from _pytest.fixtures import FixtureRequest
+from _pytest.monkeypatch import MonkeyPatch
+from flask import Flask
 from flask.testing import FlaskClient
+from lxml import etree
+from lxml.etree import ElementTree, fromstring
 
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
-# should be safe. In any case the test environment is not exposed and so does not present a risk.
-from lxml.etree import ElementTree, fromstring  # nosec
-
-from app import create_app
+from tests.app import create_app
 
 
 @pytest.fixture(autouse=True)
-def change_test_dir(request, monkeypatch):
+def _change_test_dir(request: FixtureRequest, monkeypatch: MonkeyPatch) -> None:
+    """
+    Change working directory to `tests/`.
+
+    Not the most elegant solution, but so widely used in tests that refactoring it would be a major undertaking.
+    """
     monkeypatch.chdir(request.fspath.dirname)
 
 
 @pytest.fixture
-def app():
+def app() -> Flask:
+    """Test app."""
     app = create_app()
     app.config["TESTING"] = True
     return app
 
 
 @pytest.fixture
-@pytest.mark.usefixtures("app")
-def app_runner(app):
+def app_runner(app: Flask):
+    """Test app runner."""
     return app.test_cli_runner()
 
 
 @pytest.fixture
-@pytest.mark.usefixtures("app")
-def app_client(app) -> FlaskClient:
-    with app.test_client() as client:
-        return client
+def app_client(app: Flask) -> FlaskClient:
+    """Test app client."""
+    return app.test_client()
 
 
 @pytest.fixture
-@pytest.mark.usefixtures("app_client")
-def get_record_response(client) -> ElementTree():
-    def _get_record_response_for_config(standard: str, config: str):
-        response = client.get(f"/standards/{standard}/{config}")
-        xml_document = fromstring(response.data)
-        return xml_document
+def get_record_response(app_client: FlaskClient) -> ElementTree():
+    """Get a generated record for a given standard and config."""
+
+    def _get_record_response_for_config(standard: str, config: str) -> etree:
+        response = app_client.get(f"/standards/{standard}/{config}")
+        return fromstring(response.data)  # noqa: S320
 
     return _get_record_response_for_config

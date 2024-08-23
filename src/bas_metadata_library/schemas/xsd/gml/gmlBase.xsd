@@ -59,7 +59,7 @@ To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
     <annotation>
       <documentation>Applying this pattern shall restrict the multiplicity of objects in a property element using this content model to exactly one. An instance of this type shall contain an element representing an object, or serve as a pointer to a remote object.
 Applying the pattern to define an application schema specific property type allows to restrict
--	the inline object to specified object types, 
+-	the inline object to specified object types,
 -	the encoding to "by-reference only" (see 7.2.3.7),
 -	the encoding to "inline only" (see 7.2.3.8).</documentation>
     </annotation>
@@ -80,8 +80,8 @@ When the value of the owns attribute is "true", the existence of inline or refer
   </attributeGroup>
   <element name="abstractStrictAssociationRole" type="gml:AssociationRoleType" abstract="true">
     <annotation>
-      <documentation>This element shows how an element 
-	declaration may include a Schematron constraint to limit the property to act 
+      <documentation>This element shows how an element
+	declaration may include a Schematron constraint to limit the property to act
 	in either inline or by-reference mode, but not both.</documentation>
     </annotation>
   </element>
@@ -169,9 +169,9 @@ The allowed values for the aggregationType attribute are defined by gml:Aggregat
   </simpleType>
   <complexType name="AbstractMetadataPropertyType" abstract="true">
     <annotation>
-      <documentation>To associate metadata described by any XML Schema with a GML object, a property element shall be defined whose content model is derived by extension from gml:AbstractMetadataPropertyType. 
+      <documentation>To associate metadata described by any XML Schema with a GML object, a property element shall be defined whose content model is derived by extension from gml:AbstractMetadataPropertyType.
 The value of such a property shall be metadata. The content model of such a property type, i.e. the metadata application schema shall be specified by the GML Application Schema.
-By default, this abstract property type does not imply any ownership of the metadata. The owns attribute of gml:OwnershipAttributeGroup may be used on a metadata property element instance to assert ownership of the metadata. 
+By default, this abstract property type does not imply any ownership of the metadata. The owns attribute of gml:OwnershipAttributeGroup may be used on a metadata property element instance to assert ownership of the metadata.
 If metadata following the conceptual model of ISO 19115 is to be encoded in a GML document, the corresponding Implementation Specification specified in ISO/TS 19139 shall be used to encode the metadata information.
 </documentation>
     </annotation>

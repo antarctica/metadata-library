@@ -1,33 +1,39 @@
+from __future__ import annotations
+
 import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from importlib_resources import files as resource_file
-from lxml.etree import Element, fromstring, SubElement  # nosec - see 'lxml` package (bandit)' section in README
+from lxml.etree import Element, SubElement, fromstring
 
 from bas_metadata_library import (
     MetadataRecord as _MetadataRecord,
+)
+from bas_metadata_library import (
     MetadataRecordConfig as _MetadataRecordConfig,
+)
+from bas_metadata_library import (
     MetadataRecordElement as _MetadataRecordElement,
+)
+from bas_metadata_library import (
     Namespaces as _Namespaces,
 )
 from bas_metadata_library.standards.iec_pas_61174_common.utils import (
     generate_rtzp_archive as _generate_rtzp_archive,
+)
+from bas_metadata_library.standards.iec_pas_61174_common.utils import (
     load_record_from_rtzp_archive,
 )
 
 
 class Namespaces(_Namespaces):
-    """
-    Overloaded base Namespaces class
-
-    Defines the namespaces for this standard
-    """
+    """Defines the namespaces for this standard."""
 
     rtz = "http://www.cirm.org/RTZ/1/2"
     xsi = "http://www.w3.org/2001/XMLSchema-instance"
 
-    _schema_locations = {
+    _schema_locations = {  # noqa: RUF012
         "rtz": "https://www.cirm.org/rtz/RTZ%20Schema%20version%201_2.xsd",
     }
 
@@ -42,7 +48,7 @@ class Namespaces(_Namespaces):
 
 class MetadataRecordElement(_MetadataRecordElement):
     """
-    Overloaded base MetadataRecordElement class
+    Overloaded base MetadataRecordElement class.
 
     Sets:
      - the type hint of the record attribute to the MetadataRecord class for this metadata standard
@@ -54,8 +60,8 @@ class MetadataRecordElement(_MetadataRecordElement):
         record: _MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -69,9 +75,9 @@ class MetadataRecordElement(_MetadataRecordElement):
 
 class MetadataRecordConfigV1(_MetadataRecordConfig):
     """
-    Overloaded base MetadataRecordConfig class
+    Overloaded base MetadataRecordConfig class.
 
-    Defines version 1 of the JSON Schema used for this metadata standard
+    Defines version 1 of the JSON Schema used for this metadata standard.
     """
 
     def __init__(self, **kwargs: dict):
@@ -80,7 +86,7 @@ class MetadataRecordConfigV1(_MetadataRecordConfig):
         self.config = kwargs
 
         schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath("iec_pas_61174_1_v1.json")
-        with open(schema_path, mode="r") as schema_file:
+        with schema_path.open() as schema_file:
             schema_data = json.load(schema_file)
         self.schema = schema_data
 
@@ -90,13 +96,9 @@ class MetadataRecordConfigV1(_MetadataRecordConfig):
 
 
 class MetadataRecord(_MetadataRecord):
-    """
-    Overloaded base MetadataRecordConfig class
+    """Defines the root element, and it's sub-elements, for this metadata standard."""
 
-    Defines the root element, and it's sub-elements, for this metadata standard
-    """
-
-    def __init__(self, configuration: MetadataRecordConfigV1 = None, record: str = None):
+    def __init__(self, configuration: MetadataRecordConfigV1 = None, record: str | None = None):
         self.ns = Namespaces()
         self.attributes = {}
         self.record = Element(
@@ -111,10 +113,10 @@ class MetadataRecord(_MetadataRecord):
 
         if configuration is not None:
             configuration.validate()
-            self.attributes: Dict[str, Any] = configuration.config
+            self.attributes: dict[str, Any] = configuration.config
 
         if record is not None:
-            self.record = fromstring(record.encode())
+            self.record = fromstring(record.encode())  # noqa: S320 (see '`lxml` package (security)' README section)
 
         self.metadata_record = Route(record=self.record, attributes=self.attributes, xpath=self.xpath)
 
@@ -126,24 +128,18 @@ class MetadataRecord(_MetadataRecord):
 
     def generate_rtzp_archive(self, file: Path) -> None:
         """
-        Generates RTZ/XML record in a RTZP data container
+        Generates RTZ/XML record in a RTZP data container.
 
         A RTZP container is a zip archive containing a single RTZ file.
 
-        :type file: Path
         :param file: path at which to create RTZP data container
         """
         _generate_rtzp_archive(
             file=file, rtz_name=self.attributes["route_name"], rtz_document=self.generate_xml_document().decode()
         )
 
-    def load_from_rtzp_archive(self, file: Path):
-        """
-        Loads a RTZ record from a RTZP data container
-
-        :type file: Path
-        :param file: path to RTZP data container
-        """
+    def load_from_rtzp_archive(self, file: Path) -> None:
+        """Loads a RTZ record from a RTZP data container."""
         self.record = load_record_from_rtzp_archive(file=file)
         self.metadata_record = Route(record=self.record, attributes=self.attributes, xpath=self.xpath)
 

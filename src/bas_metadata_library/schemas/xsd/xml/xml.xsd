@@ -13,7 +13,7 @@
       See <a href="http://www.w3.org/XML/1998/namespace.html">
       http://www.w3.org/XML/1998/namespace.html</a> and
       <a href="http://www.w3.org/TR/REC-xml">
-      http://www.w3.org/TR/REC-xml</a> for information 
+      http://www.w3.org/TR/REC-xml</a> for information
       about this namespace.
      </p>
           <p>
@@ -23,7 +23,7 @@
       They should not be used with conflicting semantics by any Working
       Group, specification, or document instance.
      </p>
-          <p>   
+          <p>
       See further below in this document for more information about <a href="#usage">how to refer to this schema document from your own
       XSD schema documents</a> and about <a href="#nsversioning">the
       namespace-versioning policy governing this schema document</a>.
@@ -48,7 +48,7 @@
           <p>
       Attempting to install the relevant ISO 2- and 3-letter
       codes as the enumerated possible values is probably never
-      going to be a realistic possibility.  
+      going to be a realistic possibility.
      </p>
           <p>
       See BCP 47 at <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">
@@ -145,9 +145,9 @@
         <h3>Father (in any context at all)</h3>
         <div class="bodytext">
           <p>
-      denotes Jon Bosak, the chair of 
-      the original XML Working Group.  This name is reserved by 
-      the following decision of the W3C XML Plenary and 
+      denotes Jon Bosak, the chair of
+      the original XML Working Group.  This name is reserved by
+      the following decision of the W3C XML Plenary and
       XML Coordination groups:
      </p>
           <blockquote>
@@ -233,16 +233,16 @@
       Schema itself, or with the XML namespace itself.  In other words,
       if the XML Schema or XML namespaces change, the version of this
       document at <a href="../xml/xml.xsd">
-       ../xml/xml.xsd 
-      </a> 
-      will change accordingly; the version at 
+       ../xml/xml.xsd
+      </a>
+      will change accordingly; the version at
       <a href="../xml/xml.xsd">
-       ../xml/xml.xsd 
-      </a> 
+       ../xml/xml.xsd
+      </a>
       will not change.
      </p>
           <p>
-      Previous dated (and unchanging) versions of this schema 
+      Previous dated (and unchanging) versions of this schema
       document are at:
      </p>
           <ul>

@@ -3,7 +3,7 @@
     <documentation>This file was generated programmatically for validating files produced by the BAS Metadata Library. Schema locations have been modified to use local versions.</documentation>
     <appinfo source="urn:x-ogc:specification:gml:schema-xsd:geometryBasic2d:3.2.2">geometryBasic2d.xsd</appinfo>
     <documentation>See ISO/DIS 19136 Clause 10.
-			
+
 			GML is an OGC Standard.
 			Copyright (c) 2007, 2010, 2016, 2018 Open Geospatial Consortium.
 			To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
@@ -60,7 +60,7 @@
   </complexType>
   <element name="Polygon" type="gml:PolygonType" substitutionGroup="gml:AbstractSurface">
     <annotation>
-      <documentation>A Polygon is a special surface that is defined by a single surface patch (see D.3.6). The boundary of this patch is coplanar and the polygon uses planar interpolation in its interior. 
+      <documentation>A Polygon is a special surface that is defined by a single surface patch (see D.3.6). The boundary of this patch is coplanar and the polygon uses planar interpolation in its interior.
 The elements exterior and interior describe the surface boundary of the polygon.</documentation>
     </annotation>
   </element>

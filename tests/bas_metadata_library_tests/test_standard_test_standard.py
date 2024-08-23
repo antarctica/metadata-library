@@ -1,21 +1,17 @@
 import json
-
-import pytest
-
 from copy import deepcopy
-from tempfile import TemporaryDirectory
 from http import HTTPStatus
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
-# Exempting Bandit security issue (Using Element to parse untrusted XML data is known to be vulnerable to XML attacks)
-#
-# This is a testing environment, testing against endpoints that don't themselves allow user input, so the XML returned
-# should be safe. In any case the test environment is not exposed and so does not present a risk.
+import pytest
+from flask.testing import FlaskClient
 from jsonschema import ValidationError
-from lxml.etree import ElementTree, XML, tostring
+from lxml.etree import XML, ElementTree, tostring
 
-from tests.resources.configs.test_metadata_standard import configs_all as configs, minimal_record as minimal_config
-from tests.standards.test_standard import Namespaces, MetadataRecordConfig, MetadataRecord
+from tests.resources.configs.test_metadata_standard import configs_all as configs
+from tests.resources.configs.test_metadata_standard import minimal_record as minimal_config
+from tests.standards.test_standard import MetadataRecord, MetadataRecordConfig, Namespaces
 
 standard = "test-standard"
 
@@ -63,30 +59,25 @@ def test_configuration_to_json_string():
     assert _config == config_
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_response(client, config_name):
-    response = client.get(f"/standards/{standard}/{config_name}")
+def test_response(app_client: FlaskClient, config_name: str):
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     assert response.status_code == HTTPStatus.OK
     assert response.mimetype == "text/xml"
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_complete_record(client, config_name):
-    with open(
-        Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
-    ) as expected_contents_file:
+def test_complete_record(app_client: FlaskClient, config_name: str):
+    with Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml").open() as expected_contents_file:
         expected_contents = expected_contents_file.read()
 
-    response = client.get(f"/standards/{standard}/{config_name}")
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     assert response.data.decode() == expected_contents
 
 
-@pytest.mark.usefixtures("app_client")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_xml_declaration(client, config_name):
-    response = client.get(f"/standards/{standard}/{config_name}")
+def test_xml_declaration(app_client: FlaskClient, config_name: str):
+    response = app_client.get(f"/standards/{standard}/{config_name}")
     record = ElementTree(XML(response.data))
     assert record.docinfo.xml_version == "1.0"
     assert record.docinfo.encoding == "utf-8"
@@ -100,17 +91,15 @@ def test_xml_declaration_enabled():
     assert "<?xml version='1.0' encoding='utf-8'?>" in document.decode()
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_xml_namespaces(get_record_response, config_name):
+def test_xml_namespaces(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_root_element(get_record_response, config_name):
+def test_root_element(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs[config_name]
 
@@ -121,9 +110,8 @@ def test_root_element(get_record_response, config_name):
     assert resource is not None
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_resource_title(get_record_response, config_name):
+def test_resource_title(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs[config_name]
 
@@ -144,10 +132,8 @@ def test_resource_title(get_record_response, config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_parse_existing_record(config_name):
-    with open(
-        Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
-    ) as record_file:
+def test_parse_existing_record(config_name: str):
+    with Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml").open() as record_file:
         record_data = record_file.read()
 
     record = MetadataRecord(record=record_data)
@@ -158,7 +144,7 @@ def test_parse_existing_record(config_name):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_lossless_conversion(get_record_response, config_name):
+def test_lossless_conversion(get_record_response, config_name: str):
     _record = tostring(
         get_record_response(standard=standard, config=config_name),
         pretty_print=True,

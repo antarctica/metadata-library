@@ -1,8 +1,11 @@
+from __future__ import annotations
+
+import contextlib
 import json
 from hashlib import sha1
 from json import JSONDecodeError
 
-from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
+from lxml.etree import Element, SubElement
 
 from bas_metadata_library import MetadataRecord
 from bas_metadata_library.standards.iso_19115_common import CodeListElement, MetadataRecordElement
@@ -287,7 +290,7 @@ class DataIdentification(MetadataRecordElement):
 
         return _
 
-    def make_element(self):  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
+    def make_element(self) -> None:  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
         data_identification_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}identificationInfo")
         data_identification_element = SubElement(data_identification_wrapper, f"{{{self.ns.gmd}}}MD_DataIdentification")
 
@@ -483,7 +486,7 @@ class Abstract(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         abstract_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}abstract")
         abstract_value = SubElement(abstract_element, f"{{{self.ns.gco}}}CharacterString")
         abstract_value.text = self.element_attributes["abstract"]
@@ -499,7 +502,7 @@ class Purpose(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         purpose_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}purpose")
         purpose_value = SubElement(purpose_element, f"{{{self.ns.gco}}}CharacterString")
         purpose_value.text = self.element_attributes["purpose"]
@@ -515,7 +518,7 @@ class Credit(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         credit_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}credit")
         credit_value = SubElement(credit_element, f"{{{self.ns.gco}}}CharacterString")
         credit_value.text = self.element_attributes["credit"]
@@ -527,8 +530,8 @@ class Status(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -558,11 +561,9 @@ class Status(CodeListElement):
 class PointOfContact(MetadataRecordElement):
     def make_config(self) -> dict:
         responsible_party = ResponsibleParty(record=self.record, attributes=self.attributes, xpath=self.xpath)
-        _responsible_party = responsible_party.make_config()
+        return responsible_party.make_config()
 
-        return _responsible_party
-
-    def make_element(self):
+    def make_element(self) -> None:
         point_of_contact_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}pointOfContact")
 
         responsible_party = ResponsibleParty(
@@ -583,7 +584,7 @@ class ResourceMaintenance(MetadataRecordElement):
         )
         return maintenance_information.make_config()
 
-    def make_element(self):
+    def make_element(self) -> None:
         resource_maintenance_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceMaintenance")
         maintenance_information = MaintenanceInformation(
             record=self.record,
@@ -623,7 +624,7 @@ class GraphicOverview(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         graphic_wrapper = SubElement(
             self.parent_element,
             f"{{{self.ns.gmd}}}graphicOverview",
@@ -691,7 +692,7 @@ class DescriptiveKeywords(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         keywords_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}descriptiveKeywords")
         keywords_element = SubElement(keywords_wrapper, f"{{{self.ns.gmd}}}MD_Keywords")
 
@@ -735,8 +736,8 @@ class DescriptiveKeywordsType(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -758,11 +759,9 @@ class DescriptiveKeywordsType(CodeListElement):
 class Thesaurus(MetadataRecordElement):
     def make_config(self) -> dict:
         citation = Citation(record=self.record, attributes=self.attributes, xpath=self.xpath)
-        _citation = citation.make_config()
+        return citation.make_config()
 
-        return _citation
-
-    def make_element(self):
+    def make_element(self) -> None:
         thesaurus_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}thesaurusName")
 
         citation = Citation(
@@ -810,14 +809,12 @@ class ResourceConstraint(MetadataRecordElement):
         if len(constraint_id) == 1 and "permissions" in constraint_id[0] and "statement" in _:
             _["permissions"] = _["statement"]
             del _["statement"]
-            try:
+            with contextlib.suppress(JSONDecodeError):
                 _["permissions"] = json.loads(_["permissions"])
-            except JSONDecodeError:
-                pass
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         constraints_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceConstraints")
         constraints_element = SubElement(constraints_wrapper, f"{{{self.ns.gmd}}}MD_LegalConstraints")
 
@@ -849,8 +846,8 @@ class ResourceConstraint(MetadataRecordElement):
             other_constraint.make_element()
 
         if "permissions" in self.element_attributes:
-            # Bandit B303/S303 warning is exempted as these hashes are not used for any security related purposes
-            _id = sha1(json.dumps(self.element_attributes["permissions"]).encode()).hexdigest()  # noqa: S303 - nosec
+            # Bandit S324 warning is exempted as these hashes are not used for any security related purposes
+            _id = sha1(json.dumps(self.element_attributes["permissions"]).encode()).hexdigest()  # noqa: S324
             constraints_element.attrib["id"] = f"bml-permissions-{_id}"
 
             _statement = self.element_attributes["permissions"]
@@ -872,8 +869,8 @@ class AccessConstraint(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -913,8 +910,8 @@ class UseConstraint(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -966,13 +963,13 @@ class OtherConstraints(MetadataRecordElement):
         if len(other_constraint_href) == 1:
             _["href"] = other_constraint_href[0]
             # account for constraints that use a URL only,
-            # as the text value will repeat the URL so it can encoded properly
+            # as the text value will repeat the URL, so it can encoded properly
             if "statement" in _ and _["statement"] == _["href"]:
                 del _["statement"]
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         other_constraints_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}otherConstraints")
 
         if "href" in self.element_attributes:
@@ -1028,7 +1025,7 @@ class Aggregation(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         aggregation_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}aggregationInfo")
         aggregation_element = SubElement(aggregation_wrapper, f"{{{self.ns.gmd}}}MD_AggregateInformation")
 
@@ -1065,8 +1062,8 @@ class AssociationType(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -1100,8 +1097,8 @@ class InitiativeType(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -1148,7 +1145,7 @@ class SupplementalInformation(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         if "supplemental_information" in self.element_attributes:
             supplemental_info_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}supplementalInformation")
             supplemental_info_value = SubElement(supplemental_info_element, f"{{{self.ns.gco}}}CharacterString")
@@ -1161,8 +1158,8 @@ class SpatialRepresentationType(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -1195,7 +1192,7 @@ class SpatialResolution(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         if self.element_attributes["spatial_resolution"] is None:
             SubElement(
                 self.parent_element,
@@ -1226,7 +1223,7 @@ class TopicCategory(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         topic_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}topicCategory")
         topic_value = SubElement(topic_element, f"{{{self.ns.gmd}}}MD_TopicCategoryCode")
         topic_value.text = self.element_attributes["topic"]
@@ -1272,7 +1269,7 @@ class Extent(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         extent_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}extent")
         extent_element = SubElement(
             extent_wrapper,
@@ -1281,7 +1278,6 @@ class Extent(MetadataRecordElement):
         )
 
         for extent_item in self.element_attributes.values():
-
             if "geographic" in extent_item:
                 geographic_extent = GeographicExtent(
                     record=self.record,
@@ -1334,7 +1330,7 @@ class GeographicExtent(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         geographic_extent_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}geographicElement")
 
         if "bounding_box" in self.element_attributes:
@@ -1393,7 +1389,7 @@ class BoundingBox(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         bounding_box_element = SubElement(
             self.parent_element,
             f"{{{self.ns.gmd}}}EX_GeographicBoundingBox",
@@ -1443,7 +1439,7 @@ class VerticalExtent(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         vertical_extent_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}verticalElement")
         vertical_extent_element = SubElement(vertical_extent_wrapper, f"{{{self.ns.gmd}}}EX_VerticalExtent")
 
@@ -1529,7 +1525,7 @@ class VerticalCRS(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         vertical_crs_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}verticalCRS")
         vertical_crs_element = SubElement(
             vertical_crs_wrapper,
@@ -1579,28 +1575,30 @@ class TemporalExtent(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(begin_value) == 1:
-            if "period" not in _.keys():
+            if "period" not in _:
                 _["period"] = {}
             try:
                 _["period"]["start"] = decode_date_string(date_datetime=begin_value[0])
             except ValueError:
-                raise RuntimeError("Date/datetime could not be parsed as an ISO date value") from None
+                msg = "Date/datetime could not be parsed as an ISO date value"
+                raise RuntimeError(msg) from None
 
         end_value = self.record.xpath(
             f"{self.xpath}/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(end_value) == 1:
-            if "period" not in _.keys():
+            if "period" not in _:
                 _["period"] = {}
             try:
                 _["period"]["end"] = decode_date_string(date_datetime=end_value[0])
             except ValueError:
-                raise RuntimeError("Date/datetime could not be parsed as an ISO date value") from None
+                msg = "Date/datetime could not be parsed as an ISO date value"
+                raise RuntimeError(msg) from None
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         temporal_extent_container = SubElement(self.parent_element, f"{{{self.ns.gmd}}}temporalElement")
         temporal_extent_wrapper = SubElement(temporal_extent_container, f"{{{self.ns.gmd}}}EX_TemporalExtent")
         temporal_extent_element = SubElement(temporal_extent_wrapper, f"{{{self.ns.gmd}}}extent")
@@ -1612,7 +1610,7 @@ class TemporalExtent(MetadataRecordElement):
             )
 
             _date_precision = None
-            if "date_precision" in self.element_attributes["period"]["start"].keys():
+            if "date_precision" in self.element_attributes["period"]["start"]:
                 _date_precision = self.element_attributes["period"]["start"]["date_precision"]
             begin_position_element = SubElement(time_period_element, f"{{{self.ns.gml}}}beginPosition")
             begin_position_element.text = encode_date_string(
@@ -1621,7 +1619,7 @@ class TemporalExtent(MetadataRecordElement):
             )
 
             _date_precision = None
-            if "date_precision" in self.element_attributes["period"]["end"].keys():
+            if "date_precision" in self.element_attributes["period"]["end"]:
                 _date_precision = self.element_attributes["period"]["end"]["date_precision"]
             end_position_element = SubElement(time_period_element, f"{{{self.ns.gml}}}endPosition")
             end_position_element.text = encode_date_string(
@@ -1633,11 +1631,9 @@ class TemporalExtent(MetadataRecordElement):
 class ResourceFormat(MetadataRecordElement):
     def make_config(self) -> dict:
         resource_format = Format(record=self.record, attributes=self.attributes, xpath=self.xpath)
-        _resource_format = resource_format.make_config()
+        return resource_format.make_config()
 
-        return _resource_format
-
-    def make_element(self):
+    def make_element(self) -> None:
         resource_format_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceFormat")
 
         resource_format = Format(

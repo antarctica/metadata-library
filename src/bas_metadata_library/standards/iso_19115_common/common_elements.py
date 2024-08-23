@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 from copy import deepcopy
 from datetime import datetime
-from typing import Optional
 
-from lxml.etree import Element, SubElement  # nosec - see 'lxml` package (bandit)' section in README
+from lxml.etree import Element, SubElement
 
-from bas_metadata_library import MetadataRecord as _MetadataRecord, MetadataRecord
+from bas_metadata_library import MetadataRecord
+from bas_metadata_library import MetadataRecord as _MetadataRecord
 from bas_metadata_library.standards.iso_19115_common import CodeListElement, MetadataRecordElement
 from bas_metadata_library.standards.iso_19115_common.utils import decode_date_string, encode_date_string
 
@@ -15,8 +17,8 @@ class Language(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -38,8 +40,8 @@ class CharacterSet(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -64,8 +66,8 @@ class ResponsibleParty(MetadataRecordElement):
         record: _MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(record, attributes, parent_element, element_attributes, xpath)
 
@@ -80,7 +82,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(individual_name) > 0:
-            if "individual" not in _.keys():
+            if "individual" not in _:
                 _["individual"] = {}
             _["individual"]["name"] = individual_name[0]
 
@@ -89,7 +91,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(individual_href) > 0:
-            if "individual" not in _.keys():
+            if "individual" not in _:
                 _["individual"] = {}
             _["individual"]["href"] = individual_href[0]
 
@@ -106,7 +108,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(organisation_name) > 0:
-            if "organisation" not in _.keys():
+            if "organisation" not in _:
                 _["organisation"] = {}
             _["organisation"]["name"] = organisation_name[0]
 
@@ -115,7 +117,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(organisation_href) > 0:
-            if "organisation" not in _.keys():
+            if "organisation" not in _:
                 _["organisation"] = {}
             _["organisation"]["href"] = organisation_href[0]
 
@@ -147,7 +149,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(delivery_point_value) > 0:
-            if "address" not in _.keys():
+            if "address" not in _:
                 _["address"] = {}
             _["address"]["delivery_point"] = delivery_point_value[0]
 
@@ -157,7 +159,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(city_value) > 0:
-            if "address" not in _.keys():
+            if "address" not in _:
                 _["address"] = {}
             _["address"]["city"] = city_value[0]
 
@@ -167,7 +169,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(administrative_area_value) > 0:
-            if "address" not in _.keys():
+            if "address" not in _:
                 _["address"] = {}
             _["address"]["administrative_area"] = administrative_area_value[0]
 
@@ -177,7 +179,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(postal_code_value) > 0:
-            if "address" not in _.keys():
+            if "address" not in _:
                 _["address"] = {}
             _["address"]["postal_code"] = postal_code_value[0]
 
@@ -187,7 +189,7 @@ class ResponsibleParty(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(country_value) > 0:
-            if "address" not in _.keys():
+            if "address" not in _:
                 _["address"] = {}
             _["address"]["country"] = country_value[0]
 
@@ -217,7 +219,7 @@ class ResponsibleParty(MetadataRecordElement):
 
         return _
 
-    def make_element(self):  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
+    def make_element(self) -> None:  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175
         responsible_party_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}CI_ResponsibleParty")
 
         if "individual" in self.element_attributes and "name" in self.element_attributes["individual"]:
@@ -342,7 +344,7 @@ class OnlineResource(MetadataRecordElement):
             xpath=f"{ self.xpath }/gmd:CI_OnlineResource/gmd:linkage",
         )
         _linkage = linkage.make_config()
-        if "href" in _linkage.keys():
+        if "href" in _linkage:
             _["href"] = _linkage["href"]
 
         name_value = self.record.xpath(
@@ -377,7 +379,7 @@ class OnlineResource(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         online_resource_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}CI_OnlineResource")
 
         if "href" in self.element_attributes:
@@ -427,7 +429,7 @@ class Linkage(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         linkage_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}linkage")
         if "href" in self.element_attributes:
             url_value = SubElement(linkage_element, f"{{{self.ns.gmd}}}URL")
@@ -440,8 +442,8 @@ class Role(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -484,8 +486,8 @@ class OnlineRole(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -510,8 +512,8 @@ class MaintenanceInformation(MetadataRecordElement):
         record: _MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -544,7 +546,7 @@ class MaintenanceInformation(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         maintenance_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}MD_MaintenanceInformation")
 
         if "maintenance_frequency" in self.element_attributes:
@@ -572,8 +574,8 @@ class MaintenanceAndUpdateFrequency(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -611,8 +613,8 @@ class MaintenanceProgress(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -645,8 +647,8 @@ class Citation(MetadataRecordElement):
         record: _MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -666,13 +668,13 @@ class Citation(MetadataRecordElement):
             namespaces=self.ns.nsmap(),
         )
         if len(title_value) == 1:
-            if "title" not in _.keys():
+            if "title" not in _:
                 _["title"] = {}
             _["title"]["value"] = title_value[0]
 
         title_href = self.record.xpath(f"{self.xpath}/gmd:title/gmx:Anchor/@xlink:href", namespaces=self.ns.nsmap())
         if len(title_href) == 1:
-            if "title" not in _.keys():
+            if "title" not in _:
                 _["title"] = {}
             _["title"]["href"] = title_href[0]
 
@@ -733,7 +735,7 @@ class Citation(MetadataRecordElement):
 
         return _
 
-    def make_element(self):  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
+    def make_element(self) -> None:  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
         citation_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}CI_Citation")
 
         if "title" in self.element_attributes:
@@ -785,7 +787,8 @@ class Citation(MetadataRecordElement):
             _contact_element_attributes = self.element_attributes["contact"]
             if type(self.element_attributes["contact"]["role"]) is list:
                 if len(self.element_attributes["contact"]["role"]) > 1:
-                    raise ValueError("Contacts can only have a single role. Citations can only have a single contact.")
+                    msg = "Contacts can only have a single role. Citations can only have a single contact."
+                    raise ValueError(msg)
                 _contact_element_attributes = deepcopy(self.element_attributes["contact"])
                 _contact_element_attributes["role"] = _contact_element_attributes["role"][0]
 
@@ -811,8 +814,8 @@ class Date(MetadataRecordElement):
         record: _MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -833,7 +836,8 @@ class Date(MetadataRecordElement):
             try:
                 _ = decode_date_string(date_datetime=date_value[0])
             except ValueError:
-                raise RuntimeError("Date/datetime could not be parsed as an ISO date value") from None
+                msg = "Date/datetime could not be parsed as an ISO date value"
+                raise RuntimeError(msg) from None
 
         date_type = DateType(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:dateType")
         _date_type = date_type.make_config()
@@ -841,7 +845,7 @@ class Date(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         date_container_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}date")
         date_container_element = SubElement(date_container_wrapper, f"{{{self.ns.gmd}}}CI_Date")
 
@@ -852,7 +856,7 @@ class Date(MetadataRecordElement):
             date_value_element = f"{{{self.ns.gco}}}DateTime"
 
         _date_precision = None
-        if "date_precision" in self.element_attributes.keys():
+        if "date_precision" in self.element_attributes:
             _date_precision = self.element_attributes["date_precision"]
         date_value = SubElement(date_element, date_value_element)
         date_value.text = encode_date_string(
@@ -874,8 +878,8 @@ class DateType(CodeListElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -914,9 +918,9 @@ class Identifier(MetadataRecordElement):
         record: _MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
-        identifier_container: Optional[str] = f"{{{'http://www.isotc211.org/2005/gmd'}}}identifier",
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
+        identifier_container: str | None = f"{{{'http://www.isotc211.org/2005/gmd'}}}identifier",
     ):
         super().__init__(
             record=record,
@@ -949,7 +953,7 @@ class Identifier(MetadataRecordElement):
 
         return _
 
-    def make_element(self):
+    def make_element(self) -> None:
         identifier_container = SubElement(self.parent_element, self.identifier_container)
         identifier_wrapper = SubElement(identifier_container, f"{{{self.ns.gmd}}}RS_Identifier")
         identifier_element = SubElement(identifier_wrapper, f"{{{self.ns.gmd}}}code")
@@ -979,15 +983,15 @@ class AnchorElement(MetadataRecordElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        element_value: str = None,
+        element_attributes: dict | None = None,
+        element_value: str | None = None,
     ):
         super().__init__(
             record=record, attributes=attributes, parent_element=parent_element, element_attributes=element_attributes
         )
         self.text = element_value
 
-    def make_element(self):
+    def make_element(self) -> None:
         attributes = {}
 
         if "href" in self.element_attributes:
@@ -1007,8 +1011,8 @@ class Format(MetadataRecordElement):
         record: MetadataRecord,
         attributes: dict,
         parent_element: Element = None,
-        element_attributes: dict = None,
-        xpath: str = None,
+        element_attributes: dict | None = None,
+        xpath: str | None = None,
     ):
         super().__init__(
             record=record,
@@ -1073,8 +1077,7 @@ class Format(MetadataRecordElement):
             _ = {}
         return _
 
-    def make_element(self):
-
+    def make_element(self) -> None:
         if "_id" in self.element_attributes:
             format_element = SubElement(
                 self.parent_element,
