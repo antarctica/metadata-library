@@ -51,6 +51,8 @@ image: python:3.9-slim
 
 .before_script_python_app_deps: &before_script_python_app_deps
   - *before_script_python
+  - apt-get update
+  - apt-get install -y libxml2-utils
   - poetry install --no-interaction --no-ansi
 
 .before_script_release: &before_script_release
@@ -157,7 +159,7 @@ publish-schemas-stage:
     - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_2_v3.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json"
     - "aws s3 cp src/bas_metadata_library/schemas/dist/iec_pas_61174_0_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iec_pas_61174_0_v1.json"
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG == null'
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG == null'
 
 publish-schemas-prod:
   stage: 📦 publish
