@@ -29,6 +29,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Updated `pytest` configuration (fast fail, retry failed test first, randomise tests by default)
   [#223](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/223)
 * Refactored internal / testing Flask app
+* Updated project documentation
+  [#225](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/225)
+
 
 ### Removed
 
