@@ -1395,6 +1395,10 @@ complete_record_v3 = {
                 "href": "https://gtr.ukri.org/projects?ref=NE%2FE007895%2F1",
                 "namespace": "award",
             },
+            {
+                "identifier": "978-3-16-148410-0",
+                "namespace": "isbn",
+            },
         ],
     },
     "distribution": [

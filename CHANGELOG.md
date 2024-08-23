@@ -16,11 +16,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Pre-commit hook
   [#222](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/222)
+* ISBN identifier example to complete ISO 19115 test record
+  [#219](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/219)
 
 ### Fixed
 
 * Updating README examples to reflect V3 config changes
   [#215](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/205)
+* Including static schemas without making a Python module
+  []()
 
 ### Changed
 
