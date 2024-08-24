@@ -23,11 +23,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#222](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/222)
 * ISBN identifier example to complete ISO 19115 test record
   [#219](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/219)
+* Documentation on how to remove a retired configuration version for an existing standard
+  [#196](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/196)
 
 ### Fixed
 
 * Updating README examples to reflect V3 config changes
-  [#215](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/205)
+  [#215](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/215)
 * JSON indenting when dumping record configurations for ISO 19115 standards
   [#214](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/214)
 * Including static schemas without making a Python module
@@ -44,7 +46,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Refactored internal / testing Flask app
 * Updated project documentation
   [#225](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/225)
-
 
 ### Removed
 
