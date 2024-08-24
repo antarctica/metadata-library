@@ -16,13 +16,13 @@ To add a new standard:
    `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
 7. add a route in `app.py` for generating test records for the new standard
 8. update the `capture_test_records` method in `app.py` to generate and save test records
-9. add relevant [tests](#testing) with methods to test each metadata element class and test records
+9. add relevant [tests](#tests) with methods to test each metadata element class and test records
 
 ## Adding a new element to an existing standard
 
 **Note:** These instructions are specific to the ISO 19115 metadata standards family.
 
-1. [amend configuration schema](#configuration-schemas):
+1. [amend configuration schema](/README.md#configuration-schemas):
    * new or changed properties should be added to the configuration for the relevant standard (e.g. ISO 19115-1)
    * typically, this involves adding new elements to the `definitions` property and referencing these in the relevant
      parent element (e.g. to the `identification` property)
@@ -41,7 +41,7 @@ To add a new standard:
    * values used for identifiers and other external references should use the correct form/structure but do not need
      to exist or relate to the resource described by each configuration (i.e. DOIs should be valid URLs but could be
      a DOI for another resource for example)
-4. add relevant [element class](#record-element-classes):
+4. add relevant [element class](/README.md#record-element-classes):
    * new or changed elements should be added to the configuration for the relevant package for each standard
    * for the ISO 19115 family of standards, element classes should be added to the `iso_19115_common` package
    * the exact module to use within this package will depend on the nature of the element being added, but in general,
@@ -67,7 +67,7 @@ To add a new standard:
       sufficient test coverage
     * where this isn't the case, it's suggested to add one or more 'edge case' test cases to test remaining code paths
       explicitly
-8. check [test coverage](#test-coverage):
+8. check [test coverage](#pytest-cov-test-coverage):
     * for missing coverage, consider adding edge case test cases where applicable
     * coverage exemptions should be avoided wherever feasible and all exemptions must be discussed before they are added
     * where exceptions are added, they should be documented as an issue with information on how they will be addressed
@@ -80,7 +80,7 @@ To add a new standard:
 ## Adding a new config version for an existing standard [WIP]
 
 **Note:** This is typically only needed if breaking changes need to be made to the schema for a configuration, as the
-work involved is quite involved.
+work involved is quite significant.
 
 **Note:** This section is a work in progress whilst developing the ISO 19115 v3 configuration in
 [#182](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/182).
@@ -88,7 +88,9 @@ work involved is quite involved.
 **Note:** In these instructions, `v1` refers to the current/previous configuration version. `v2` refers to the new
 configuration version.
 
-First create a new configuration version that is identical to the current/previous version, but that sets up the
+## Step 1: Add new version
+
+First, create a new configuration version that is identical to the current/previous version, but that sets up the
 schema, objects, methods, tests and documentation needed for the new configuration, and to convert between the old
 and new configurations.
 
@@ -107,7 +109,8 @@ and new configurations.
     * the `downgrade_to_v1_config()` method should return a current/previous configuration class
 5. change the signature of the `MetadataRecord` class to use the new configuration class
 6. change the `make_config()` method of the `MetadataRecord` class to return the new configuration class
-7. update the `generate_schemas()` method in `app.py` to generate distribution schemas for the new schema version
+7. update the `generate_schemas()` method in the [Test App](#testing-flask-app) to generate distribution schemas for
+   the new schema version
 8. [Generate configuration schemas](#generating-configuration-schemas)
 9. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
    the distribution schema for the new schema version within the BAS Metadata Standards website
@@ -116,14 +119,17 @@ and new configurations.
      * note that the version in these file names is for the version of the standard, not the configuration
      * new config objects will be made within this file that relate to the new configuration version
      * initially these new config objects can inherit from test configurations for the current/previous version
-11. update the `generate_json_test_configs()` method in `app.py` to generate JSON versions of each test configuration
+11. update the `generate_json_test_configs()` method in [Test App](#testing-flask-app) to generate JSON versions of
+    each test configuration
 12. [Capture test JSON record configurations](#capturing-test-configurations-as-json)
-13. update the route for the standard in `app.py` (e.g. `standard_foo_v1`) to:
+13. update the route for the standard in [Test App](#testing-flask-app) (e.g. `standard_foo_v1`) to:
      1. upgrade configs for the old/current version of the standard (as the old/current MetadataRecordConfig class will
         now be incompatible with the updated MetadataRecord class)
      2. include configs for the new config version of the standard
-14. update the `capture_test_records()` method in `app.py` to capture test records for the new test configurations
+14. update the `capture_test_records()` method in [Test App](#testing-flask-app) to capture test records for the new
+    test configurations
 15. [Capture test XML records](#capturing-test-records)
+
 16. add test cases for the new `MetadataRecordConfig` class in the relevant module in `tests.bas_metadata_library`:
     * `test_invalid_configuration_v2`
     * `test_configuration_v2_from_json_file`
@@ -138,31 +144,40 @@ and new configurations.
     the XML/XSD schema for the standard, not the configuration JSON schema
 19. update the existing `test_lossless_conversion_v1` test case to upgrade v1 configurations to v2, as the
     `MetadataRecord` class will no longer be compatible with the `MetadataRecordConfigV1` class
-20. update the [Supported configuration versions](#supported-configuration-versions) section of the README
+20. update the [Supported configuration versions](/README.md#supported-configuration-versions) section of the README
      * add the new schema version, with a status of 'alpha'
-21. update the encode/decode subsections in the [Usage](#usage) section of the README to use the new RecordConfig class
-22. if the lead standard (ISO 19115) is being updated also update these [Usage](#usage) subsections:
-    * [Loading a record configuration from JSON](#loading-a-record-configuration-from-json)
-    * [Dumping a record configuration to JSON](#dumping-a-record-configuration-to-json)
-    * [Validating a record](#validating-a-record)
-    * [Validating a record configuration](#validating-a-record-configuration)
-23. add a subsection to the [Usage](#usage) section of the README explaining how to upgrade and downgrade a
+21. update the encode/decode subsections in the [Usage](/README.md#usage) section of the README to use the new
+    `RecordConfig` class
+22. if the lead standard (ISO 19115) is being updated also update these [Usage](/README.md#usage) subsections:
+    * [Loading a record configuration from JSON](/README.md#loading-a-record-configuration-from-json)
+    * [Dumping a record configuration to JSON](/README.md#dumping-a-record-configuration-to-json)
+    * [Validating a record](/README.md#validating-a-record)
+    * [Validating a record configuration](/README.md#validating-a-record-configuration)
+23. add a subsection to the [Usage](/README.md#usage) section of the README explaining how to upgrade and downgrade a
     configuration between the old and new versions
 24. Update the change log to reference the creation of the new schema version, referencing the summary issue
 
+### Step 2: Make changes
+
 Second, iteratively introduce changes to the new configuration, adding logic to convert between the old and new
 configurations as needed. This logic will likely be messy and may target specific known use-cases. This is acceptable on
-the basis these methods will be relatively short lived.
+the basis these methods will be relatively short-lived.
 
 1. as changes are made, add notes and caveats to the upgrade/downgrade methods in code, and summarise any
-   significant points in the [Usage](#usage) instructions as needed (e.g. that the process is lossy)
+   significant points in the [Usage](/README.md#usage) instructions as needed (e.g. that the process is lossy)
 2. if changes are made to the minimal record configuration, update examples in the README
-
-- ... if circumstances where data can't be mapped between schemas, consider raising exception in methods for manual
+3. if circumstances where data can't be mapped between schemas, consider raising exception in methods for manual
   conversion
-- third, release the new configuration version as experimental for the standard:
-- fourth, release the new configuration as standard for the standard, deprecating the previous version:
-- fifth, retire/remove the previous version for the standard, leaving only the new/current version:
+
+### Step 3: Release as experimental version
+
+... release the new configuration version as experimental for the standard.
+
+### Step 4: Mark as stable version
+
+1. update the [Supported configuration versions](/README.md#supported-configuration-versions) section of the README
+     * update the new/current schema version with a status of 'stable'
+     * update the old schema version with a status of 'deprecated'
 
 ### Step 5: Retire previous version
 
@@ -206,7 +221,7 @@ for an example of removing a schema version.
 ## Generating configuration schemas
 
 The `generate-schemas` command in the [Flask Test App](#testing-flask-app) generates
-[distribution schemas from source schemas](#source-and-distribution-schemas) in
+[distribution schemas from source schemas](/README.md#source-and-distribution-schemas) in
 `src/bas_metadata_library/schemas/dist`.
 
 ```shell
@@ -229,7 +244,8 @@ To add a schema for a new standard/profile:
 
 Terraform is used to provision resources required to operate this application in staging and production environments.
 
-These resources allow [Configuration schemas](#configuration-schemas) for each standard to be accessed externally.
+These resources allow [Configuration schemas](/README.md#configuration-schemas) for each standard to be accessed
+externally.
 
 Access to the [BAS AWS account 🛡️](https://gitlab.data.bas.ac.uk/WSF/bas-aws) is needed to provision these resources.
 

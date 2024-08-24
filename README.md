@@ -641,7 +641,8 @@ dependencies on remote sources. Distribution schemas are used by [Configuration 
 published to the BAS Metadata Standards website, they are located in the `bas_metadata_library.schemas.dist` module.
 
 When editing configuration schemas, you should edit the source schemas, located in the
-`bas_metadata_library.schemas.src` module, then [generate distribution schemas](#generating-configuration-schemas).
+`bas_metadata_library.schemas.src` module, then
+[generate distribution schemas](/DEVELOPING.md#generating-configuration-schemas).
 
 JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsonschemavalidator.net).
 
