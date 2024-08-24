@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.10.0 - 2024-08-24
+
 ### Changed [BREAKING!]
 
 * Minimum Python version updated to 3.9
