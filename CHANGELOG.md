@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Minimum Python version updated to 3.9
   [#211](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/211)
 
+### Removed [BREAKING!]
+
+* Version 2 configurations for ISO 19115-1 and ISO 19115-2
+  [#199](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/199)
+
 ### Added
 
 * Pre-commit hook

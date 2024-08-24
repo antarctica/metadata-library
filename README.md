@@ -42,16 +42,16 @@ wait until a stable profile for UK PDC Discovery metadata has been developed and
 
 ### Supported configuration versions
 
-| Standard           | Profile | Configuration Version                                                                                                     | Status     | Notes                                 |
-|--------------------|---------|---------------------------------------------------------------------------------------------------------------------------|------------|---------------------------------------|
-| ISO 19115:2003     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired    | Replaced by `v2`, no longer supported |
-| ISO 19115:2003     | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Deprecated | Due to be retired                     |
-| ISO 19115:2003     | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-1-v2.json)     | Live       | Stable version                        |
-| ISO 19115-2:2009   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Retired    | Replaced by `v2`, no longer supported |
-| ISO 19115-2:2009   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Deprecated | Due to retired                        |
-| ISO 19115-2:2009   | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json)     | Stable     | Stable version                        |
-| IEC 61174:2015     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Stable     | Stable version                        |
-| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Stable     | Stable version                        |
+| Standard           | Profile | Configuration Version                                                                                                     | Status  | Notes                                 |
+|--------------------|---------|---------------------------------------------------------------------------------------------------------------------------|---------|---------------------------------------|
+| ISO 19115:2003     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired | Replaced by `v2`, no longer supported |
+| ISO 19115:2003     | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Retired | Replaced by `v3`, no longer supported |
+| ISO 19115:2003     | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-1-v2.json)     | Live    | Stable version                        |
+| ISO 19115-2:2009   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Retired | Replaced by `v2`, no longer supported |
+| ISO 19115-2:2009   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Retired | Replaced by `v3`, no longer supported |
+| ISO 19115-2:2009   | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json)     | Stable  | Stable version                        |
+| IEC 61174:2015     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Stable  | Stable version                        |
+| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Stable  | Stable version                        |
 
 ### Supported standards coverage
 
@@ -190,102 +190,6 @@ minimal_record_config = configuration.config
 
 # output configuration
 print(minimal_record_config)
-```
-
-### Upgrade a version 2 ISO 19115 metadata record configuration to version 3
-
-The version 3 record configuration object includes an upgrade method. This method accepts a version 2 record and returns
-a version 3 object. This method will change the record configuration structure to account for changes introduced in the
-version configuration schema.
-
-```python
-from datetime import date
-
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV2, MetadataRecordConfigV3
-
-minimal_record_config_v2 = {
-    "hierarchy_level": "dataset",
-    "metadata": {
-        "language": "eng",
-        "character_set": "utf-8",
-        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
-        "date_stamp": date(2018, 10, 18),
-    },
-    "identification": {
-        "title": {"value": "Test Record"},
-        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
-        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf-8",
-        "language": "eng",
-        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extent": {
-            "geographic": {
-                "bounding_box": {
-                    "west_longitude": -45.61521,
-                    "east_longitude": -27.04976,
-                    "south_latitude": -68.1511,
-                    "north_latitude": -54.30761,
-                }
-            }
-        },
-    },
-}
-configuration_v2 = MetadataRecordConfigV2(**minimal_record_config_v2)
-configuration_v3 = MetadataRecordConfigV3()
-configuration_v3.upgrade_from_v2_config(v2_config=configuration_v2)
-```
-
-### Downgrade a version 3 ISO 19115 metadata record configuration to version 2
-
-The version 3 record configuration object includes a downgrade method. This method accepts returns a version 2
-equivalent of the record configuration.
-
-**Note**: This will result in data loss, in that the V3 configuration allows information that the V2 configuration
-does not. This additional information will be lost when downgrading to V2, even if the resulting V2 configuration is
-upgraded to V3 again.
-
-Information that will be lost when downgrading:
-
-* any resource constraints with a `permissions` property - the entire constraint will be lost
-
-```python
-from datetime import date
-
-from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3
-
-minimal_record_config_v3 = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
-    "hierarchy_level": "dataset",
-    "metadata": {
-        "language": "eng",
-        "character_set": "utf-8",
-        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
-        "date_stamp": date(2018, 10, 18),
-    },
-    "identification": {
-        "title": {"value": "Test Record"},
-        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
-        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf-8",
-        "language": "eng",
-        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extents": [
-            {
-                "identifier": "bounding",
-                "geographic": {
-                    "bounding_box": {
-                        "west_longitude": -45.61521,
-                        "east_longitude": -27.04976,
-                        "south_latitude": -68.1511,
-                        "north_latitude": -54.30761,
-                    }
-                },
-            },
-        ],
-    },
-}
-configuration_v3 = MetadataRecordConfigV3(**minimal_record_config_v3)
-configuration_v2 = configuration_v3.downgrade_to_v2_config()
 ```
 
 ### Encode an IEC 61174 route information record

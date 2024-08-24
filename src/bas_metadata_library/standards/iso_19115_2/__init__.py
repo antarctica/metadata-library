@@ -16,50 +16,6 @@ from bas_metadata_library.standards.iso_19115_common.utils import (
     decode_config_from_json,
     encode_config_for_json,
 )
-from bas_metadata_library.standards.iso_19115_common.utils import (
-    downgrade_to_v2_config as _downgrade_to_v2_config,
-)
-from bas_metadata_library.standards.iso_19115_common.utils import (
-    upgrade_from_v2_config as _upgrade_from_v2_config,
-)
-
-
-class MetadataRecordConfigV2(_MetadataRecordConfig):
-    """Defines version 2 of the JSON Schema used for this metadata standard."""
-
-    def __init__(self, **kwargs: dict):
-        super().__init__(**kwargs)
-
-        self.config = kwargs
-
-        schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath("iso_19115_2_v2.json")
-        with schema_path.open() as schema_file:
-            schema_data = json.load(schema_file)
-        self.schema = schema_data
-
-        if "$schema" in self.config:
-            del self.config["$schema"]
-
-    def validate(self) -> None:
-        if self.schema is None:
-            return None
-
-        _config = encode_config_for_json(config=deepcopy(self.config))
-        return validate(instance=_config, schema=self.schema)
-
-    def load(self, file: Path) -> None:
-        with file.open() as file:
-            self.config = decode_config_from_json(config=json.load(fp=file))
-
-    def loads(self, string: str) -> None:
-        self.config = decode_config_from_json(config=json.loads(s=string))
-
-    def dump(self, file: Path) -> None:
-        with file.open(mode="w") as file:
-            json.dump(encode_config_for_json(config=deepcopy(self.config)), file, indent=2)
-
-    def dumps(self) -> str:
-        return json.dumps(encode_config_for_json(config=deepcopy(self.config)), indent=2)
 
 
 class MetadataRecordConfigV3(_MetadataRecordConfig):
@@ -99,27 +55,6 @@ class MetadataRecordConfigV3(_MetadataRecordConfig):
 
     def dumps(self) -> str:
         return json.dumps(encode_config_for_json(config=deepcopy(self.config)), indent=2)
-
-    def upgrade_from_v2_config(self, v2_config: MetadataRecordConfigV2) -> None:
-        """
-        Converts a v2 Metadata Configuration instance into a v2 Metadata Configuration instance.
-
-        :type v2_config MetadataRecordConfigV2
-        :param v2_config record configuration as a MetadataRecordConfigV2 instance
-        """
-        self.config = _upgrade_from_v2_config(
-            v2_config=v2_config.config,
-            schema_uri="https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json",
-        )
-
-    def downgrade_to_v2_config(self) -> MetadataRecordConfigV2:
-        """
-        Converts a v3 Metadata Configuration instance into a v2 Metadata Configuration instance.
-
-        :rtype MetadataRecordConfigV2
-        :returns record configuration as a MetadataRecordConfigV2 instance
-        """
-        return MetadataRecordConfigV2(**_downgrade_to_v2_config(v3_config=self.config))
 
 
 class MetadataRecord(_MetadataRecord):

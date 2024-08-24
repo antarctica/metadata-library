@@ -27,16 +27,10 @@ from bas_metadata_library.standards.iso_19115_1 import (
     MetadataRecord as ISO19115_1_MetadataRecord,
 )
 from bas_metadata_library.standards.iso_19115_1 import (
-    MetadataRecordConfigV2 as ISO19115_1_MetadataRecordConfigV2,
-)
-from bas_metadata_library.standards.iso_19115_1 import (
     MetadataRecordConfigV3 as ISO19115_1_MetadataRecordConfigV3,
 )
 from bas_metadata_library.standards.iso_19115_2 import (
     MetadataRecord as ISO19115_2_MetadataRecord,
-)
-from bas_metadata_library.standards.iso_19115_2 import (
-    MetadataRecordConfigV2 as ISO19115_2_MetadataRecordConfigV2,
 )
 from bas_metadata_library.standards.iso_19115_2 import (
     MetadataRecordConfigV3 as ISO19115_2_MetadataRecordConfigV3,
@@ -44,13 +38,7 @@ from bas_metadata_library.standards.iso_19115_2 import (
 from tests.resources.configs.iec_pas_61174_0_standard import configs_v1 as iec_pas_61174_0_standard_configs_v1
 from tests.resources.configs.iec_pas_61174_1_standard import configs_v1 as iec_pas_61174_1_standard_configs_v1
 from tests.resources.configs.iso19115_1_standard import (
-    configs_v2_all as iso19115_1_standard_configs_v2,
-)
-from tests.resources.configs.iso19115_1_standard import (
     configs_v3_all as iso19115_1_standard_configs_v3,
-)
-from tests.resources.configs.iso19115_2_standard import (
-    configs_v2_all as iso19115_2_standard_configs_v2,
 )
 from tests.resources.configs.iso19115_2_standard import (
     configs_v3_all as iso19115_2_standard_configs_v3,
@@ -77,14 +65,6 @@ def _generate_record_test_standard_v1(config_label: str) -> Response:
 
 
 def _generate_record_iso_19115_1(config_label: str) -> Response:
-    if config_label in iso19115_1_standard_configs_v2:
-        configuration_object = iso19115_1_standard_configs_v2[config_label]
-        configuration_v2 = ISO19115_1_MetadataRecordConfigV2(**configuration_object)
-        configuration = ISO19115_1_MetadataRecordConfigV3()
-        configuration.upgrade_from_v2_config(v2_config=configuration_v2)
-        record = ISO19115_1_MetadataRecord(configuration)
-        return Response(record.generate_xml_document(), mimetype="text/xml")
-
     if config_label in iso19115_1_standard_configs_v3:
         configuration_object = iso19115_1_standard_configs_v3[config_label]
         configuration = ISO19115_1_MetadataRecordConfigV3(**configuration_object)
@@ -92,20 +72,11 @@ def _generate_record_iso_19115_1(config_label: str) -> Response:
         return Response(record.generate_xml_document(), mimetype="text/xml")
 
     return Response(
-        f"Invalid configuration, valid options: "
-        f"[{', '.join(list(iso19115_1_standard_configs_v2.keys()) + list(iso19115_1_standard_configs_v3.keys()))}]"
+        f"Invalid configuration, valid options: " f"[{', '.join(list(iso19115_1_standard_configs_v3.keys()))}]"
     )
 
 
 def _generate_record_iso_19115_2(config_label: str) -> Response:
-    if config_label in iso19115_2_standard_configs_v2:
-        configuration_object = iso19115_2_standard_configs_v2[config_label]
-        configuration_v2 = ISO19115_2_MetadataRecordConfigV2(**configuration_object)
-        configuration = ISO19115_2_MetadataRecordConfigV3()
-        configuration.upgrade_from_v2_config(v2_config=configuration_v2)
-        record = ISO19115_2_MetadataRecord(configuration)
-        return Response(record.generate_xml_document(), mimetype="text/xml")
-
     if config_label in iso19115_2_standard_configs_v3:
         configuration_object = iso19115_2_standard_configs_v3[config_label]
         configuration = ISO19115_2_MetadataRecordConfigV3(**configuration_object)
@@ -113,8 +84,7 @@ def _generate_record_iso_19115_2(config_label: str) -> Response:
         return Response(record.generate_xml_document(), mimetype="text/xml")
 
     return Response(
-        f"Invalid configuration, valid options: "
-        f"[{', '.join(list(iso19115_2_standard_configs_v2.keys()) + list(iso19115_2_standard_configs_v2.keys()))}]"
+        f"Invalid configuration, valid options: " f"[{', '.join(list(iso19115_2_standard_configs_v3.keys()))}]"
     )
 
 
@@ -146,8 +116,6 @@ def _standard_ice_pas_61174_1(config_label: str) -> Response:
 
 def _generate_schemas() -> None:
     schemas = [
-        {"id": "iso_19115_1_v2", "resolve": False},
-        {"id": "iso_19115_2_v2", "resolve": True},
         {"id": "iso_19115_1_v3", "resolve": False},
         {"id": "iso_19115_2_v3", "resolve": True},
         {"id": "iec_pas_61174_0_v1", "resolve": False},
@@ -178,19 +146,11 @@ def _capture_json_test_configs() -> None:
         ],
         "iso-19115-1": [
             {
-                "configs": iso19115_1_standard_configs_v2,
-                "config_class": ISO19115_1_MetadataRecordConfigV2,
-            },
-            {
                 "configs": iso19115_1_standard_configs_v3,
                 "config_class": ISO19115_1_MetadataRecordConfigV3,
             },
         ],
         "iso-19115-2": [
-            {
-                "configs": iso19115_2_standard_configs_v2,
-                "config_class": ISO19115_2_MetadataRecordConfigV2,
-            },
             {
                 "configs": iso19115_2_standard_configs_v3,
                 "config_class": ISO19115_2_MetadataRecordConfigV3,
@@ -273,12 +233,8 @@ def _update_rtzp_artefact_if_changed(
 def _capture_test_records() -> None:
     standards = {
         "test-standard": {"configurations": list(test_metadata_standard_configs.keys())},
-        "iso-19115-1": {
-            "configurations": list(iso19115_1_standard_configs_v2.keys()) + list(iso19115_1_standard_configs_v3.keys())
-        },
-        "iso-19115-2": {
-            "configurations": list(iso19115_2_standard_configs_v2.keys()) + list(iso19115_1_standard_configs_v3.keys())
-        },
+        "iso-19115-1": {"configurations": list(iso19115_1_standard_configs_v3.keys())},
+        "iso-19115-2": {"configurations": list(iso19115_1_standard_configs_v3.keys())},
         "iec-pas-61174-0": {"configurations": list(iec_pas_61174_0_standard_configs_v1.keys())},
         "iec-pas-61174-1": {"configurations": list(iec_pas_61174_1_standard_configs_v1.keys())},
     }
