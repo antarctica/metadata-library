@@ -164,6 +164,45 @@ the basis these methods will be relatively short lived.
 - fourth, release the new configuration as standard for the standard, deprecating the previous version:
 - fifth, retire/remove the previous version for the standard, leaving only the new/current version:
 
+### Step 5: Retire previous version
+
+1. create an issue for retiring the old schema version
+2. delete the previous metadata configuration JSON schema from `bas_metadata_library.schemas.src`
+   e.g. `bas_metadata_library.schemas.src.foo_v1.json`
+3. delete the configuration classes for the standard in `bas_metadata_library.standards`
+    * i.e. in `bas_metadata_library.standards.foo_v1/__init__.py`, delete `MetadataRecordConfigV1`
+4. in the new/current configuration class, remove `upgrade_to_v1_config()` and `downgrade_to_v2_config()` methods
+5. delete the `upgrade_to_v1_config()` and `downgrade_to_v2_config()` methods from the standards `utils` module
+6. delete the test configurations from `tests/resources/configs` (`minimal_record_v1`, etc. in `foo_v1.py`)
+7. delete corresponding JSON configurations from `tests/resources/configs` (e.g. in `tests/resources/configs/foo_v1/`)
+8. delete corresponding test records from `tests/resources/records` (e.g. in `tests/resources/records/foo_v1/`)
+9. update the relevant `_generate_record_*()` method in the [Test App](#testing-flask-app)
+10. update the `_generate_schemas()` method in the [Test App](#testing-flask-app) to remove the old schema version
+11. update the `_capture_json_test_configs()` method in the [Test App](#testing-flask-app) to remove the old schema
+    version
+12. update the `_capture_test_records()` method in the [Test App](#testing-flask-app) to remove the old schema version
+13. update the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to remove the old schema
+    version
+14. remove test cases for the old `MetadataRecordConfig` class in the relevant module in `tests.bas_metadata_library`:
+    * `test_invalid_configuration_v1`
+    * `test_configuration_v1_from_json_file`
+    * `test_configuration_v1_from_json_string`
+    * `test_configuration_v1_to_json_file`
+    * `test_configuration_v1_to_json_string`
+    * `test_configuration_v1_json_round_trip`
+    * `test_parse_existing_record_v1`
+    * `test_lossless_conversion_v1`
+15. if applicable, remove any edge case tests for converting from the old to new/current schema version
+16. update the [Supported configuration versions](/README.md#supported-configuration-versions) section of the README
+     * update the old schema version with a status of 'retired'
+17. remove the subsection to the [Usage](/README.md#usage) section of the README for how to upgrade and downgrade a
+    configuration between the old and new/current versions
+18. Update the change log to reference the removal of the new schema version, referencing the summary issue, as a
+    breaking change
+
+See [33b7509c 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/commit/33b7509cdb73525b79b1a81f7038b805769e0057)
+for an example of removing a schema version.
+
 ## Generating configuration schemas
 
 The `generate-schemas` command in the [Flask Test App](#testing-flask-app) generates
