@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import contextlib
 import json
 from copy import deepcopy
 from datetime import date, datetime
@@ -410,74 +409,3 @@ def encode_config_for_json(config: dict) -> dict:
     :return encoded record configuration
     """
     return _encode_date_properties(dictionary=config)
-
-
-def upgrade_from_v2_config(v2_config: dict, schema_uri: str) -> dict:
-    """
-    Converts a v2 Metadata Configuration instance into a v3 Metadata Configuration instance.
-
-    :type v2_config dict
-    :param v2_config v2 Record Metadata Configuration instance
-    :type schema_uri str
-    :param schema_uri JSON Schema URI for the relevant standard (i.e. ISO 19115-0/1 or ISO 19115-2)
-    """
-    v3_config = deepcopy(v2_config)
-
-    # $schema property is now required (it was allowed but not required in v2 so lossless)
-    v3_config["$schema"] = schema_uri
-
-    # distribution options are now flattened so reorganise (lossless)
-    with contextlib.suppress(KeyError):
-        v3_config["distribution"] = flatten_distribution_distributors(distributions=v3_config["distribution"])
-
-    # there can now be multiple extents (lossless)
-    v3_config["identification"]["extents"] = [v3_config.get("identification").pop("extent")]
-    v3_config["identification"]["extents"][0]["identifier"] = "bounding"
-
-    # linage is now an object (lossless)
-    with contextlib.suppress(KeyError):
-        v3_config["identification"]["lineage"] = {"statement": v3_config["identification"]["lineage"]}
-
-    return v3_config
-
-
-def downgrade_to_v2_config(v3_config: dict) -> dict:
-    """
-    Converts a v3 Metadata Configuration instance into a v2 Metadata Configuration instance.
-
-    Note: This is a lossy process.
-
-    :rtype dict
-    :returns record configuration as a v2 Record Metadata Configuration instance
-    """
-    v2_config = deepcopy(v3_config)
-
-    # $schema property is not required but is allowed so not removed
-
-    # resource constraints couldn't contain a 'permissions' property in v2 so drop (lossy)
-    try:
-        _constraints = []
-        for constraint in v2_config["identification"]["constraints"]:
-            with contextlib.suppress(KeyError):
-                del constraint["permission"]
-            _constraints.append(constraint)
-        v2_config["identification"]["constraints"] = _constraints
-    except KeyError:
-        pass
-
-    # distribution options were grouped by distributors in v2 so reorganise (lossless)
-    with contextlib.suppress(KeyError):
-        v2_config["distribution"] = condense_distribution_distributors(distributions=v2_config["distribution"])
-
-    # there can only be a single extent (lossy)
-    try:
-        v2_config["identification"]["extent"] = v2_config.get("identification").pop("extents")[0]
-        del v2_config["identification"]["extent"]["identifier"]
-    except KeyError:
-        pass
-
-    # lineage can only contain a statement (lossy)
-    with contextlib.suppress(KeyError):
-        v2_config["identification"]["lineage"] = v2_config["identification"]["lineage"]["statement"]
-
-    return v2_config

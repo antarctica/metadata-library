@@ -14,7 +14,6 @@ from lxml.etree import XML, ElementTree, XMLParser, fromstring, tostring
 from bas_metadata_library import RecordValidationError
 from bas_metadata_library.standards.iso_19115_1 import (
     MetadataRecord,
-    MetadataRecordConfigV2,
     MetadataRecordConfigV3,
     Namespaces,
 )
@@ -26,18 +25,10 @@ from tests.bas_metadata_library_tests.standard_iso_19115_1_common import (
     assert_online_resource,
     assert_responsible_party,
 )
-from tests.resources.configs.iso19115_1_standard import configs_safe_v2, configs_v3_all
+from tests.resources.configs.iso19115_1_standard import configs_v3_all
 
 standard = "iso-19115-1"
 namespaces = Namespaces()
-
-
-def test_invalid_configuration_v2():
-    config = {"invalid-configuration": "invalid-configuration"}
-    with pytest.raises(ValidationError) as e:
-        configuration = MetadataRecordConfigV2(**config)
-        configuration.validate()
-    assert "'hierarchy_level' is a required property" in str(e.value)
 
 
 def test_invalid_configuration_v3():
@@ -46,63 +37,6 @@ def test_invalid_configuration_v3():
         configuration = MetadataRecordConfigV3(**config)
         configuration.validate()
     assert "'hierarchy_level' is a required property" in str(e.value)
-
-
-@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_from_json_file(config_name: str):
-    configuration = MetadataRecordConfigV2()
-    config_path = Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json")
-    configuration.load(file=config_path)
-    configuration.validate()
-    assert configuration.config == configs_safe_v2[config_name]
-
-
-@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_from_json_string(config_name: str):
-    with open(Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r") as file:
-        config_str = file.read()
-        configuration = MetadataRecordConfigV2()
-        configuration.loads(string=config_str)
-        configuration.validate()
-        assert configuration.config == configs_safe_v2[config_name]
-
-
-@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_to_json_file(config_name: str):
-    configuration = MetadataRecordConfigV2(**configs_safe_v2[config_name])
-
-    with TemporaryDirectory() as tmp_dir_name:
-        config_path = Path(tmp_dir_name).joinpath("config.json")
-        configuration.dump(file=config_path)
-        with open(config_path, mode="r") as config_file:
-            config = json.load(config_file)
-
-        with open(
-            Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json"), mode="r"
-        ) as _config_file:
-            _config = json.load(_config_file)
-
-        assert config == _config
-
-
-@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_to_json_string(config_name: str):
-    configuration = MetadataRecordConfigV2(**configs_safe_v2[config_name])
-    config = configuration.dumps()
-
-    with Path().resolve().parent.joinpath(f"resources/configs/{standard}/{config_name}.json").open() as _config_file:
-        _config = _config_file.read().rstrip("\n")
-
-    assert config == _config
-
-
-@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_configuration_v2_json_round_trip(config_name: str):
-    configuration = MetadataRecordConfigV2(**configs_safe_v2[config_name])
-    config = configuration.dumps()
-    _config = MetadataRecordConfigV2()
-    _config.loads(config)
-    assert configuration.config == _config.config
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
@@ -641,10 +575,10 @@ def test_graphic_overviews(get_record_response, config_name: str):
 
 
 @pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
+@pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
 def test_resource_formats(get_record_response, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
-    config = configs_safe_v2[config_name]
+    config = configs_v3_all[config_name]
 
     if "identification" not in config or "resource_formats" not in config["identification"]:
         pytest.skip("record does not contain resource formats")
@@ -1767,21 +1701,6 @@ def test_edge_case_parse_config_year_only_date_no_precision():
     }
 
 
-def test_edge_case_v3_to_v2_record_config_no_extent_identifier():
-    with open(
-        Path().resolve().parent.joinpath(f"resources/records/{standard}/minimal_v3-record.xml"), mode="r"
-    ) as record_file:
-        record_data = record_file.read()
-
-    record_data = record_data.replace('<gmd:EX_Extent id="bounding">', "<gmd:EX_Extent>")
-    record = MetadataRecord(record=record_data)
-
-    configuration_v3 = record.make_config()
-    configuration_v2 = configuration_v3.downgrade_to_v2_config()
-
-    assert configuration_v2.config == configs_safe_v2["minimal_v2"]
-
-
 class MockResponse:
     def raise_for_status(self):
         pass
@@ -1792,45 +1711,6 @@ class MockResponse:
             "Campbell, S. (2014). <i>Auster Antarctic aircraft</i>. University of Alberta Libraries. "
             "https://doi.org/10.7939/R3QZ22K64"
         )
-
-
-@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_parse_existing_record_v2(config_name: str):
-    with open(
-        Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
-    ) as record_file:
-        record_data = record_file.read()
-
-    record = MetadataRecord(record=record_data)
-    configuration_v3 = record.make_config()
-    configuration_v2 = configuration_v3.downgrade_to_v2_config()
-    config = configuration_v2.config
-    # v2 test configs in these tests didn't include the optional '$schema' property so remove if present
-    if "$schema" in config:
-        del config["$schema"]
-    assert config == configs_safe_v2[config_name]
-
-
-@pytest.mark.usefixtures("get_record_response")
-@pytest.mark.parametrize("config_name", list(configs_safe_v2.keys()))
-def test_lossless_conversion_v2(get_record_response, config_name: str):
-    _record = tostring(
-        get_record_response(standard=standard, config=config_name),
-        pretty_print=True,
-        xml_declaration=True,
-        encoding="utf-8",
-    ).decode()
-    _config = configs_safe_v2[config_name]
-
-    record = MetadataRecord(record=_record)
-    config_v3 = record.make_config()
-    config_ = config_v3.downgrade_to_v2_config().config
-
-    config = MetadataRecordConfigV3()
-    config.upgrade_from_v2_config(v2_config=MetadataRecordConfigV2(**config_))
-    record_ = MetadataRecord(configuration=config).generate_xml_document().decode()
-    assert _record == record_
-    assert _config == config_
 
 
 @pytest.mark.parametrize("config_name", list(configs_v3_all.keys()))
