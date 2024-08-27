@@ -3,7 +3,7 @@
   "hierarchy_level": "dataset",
   "metadata": {
     "language": "eng",
-    "character_set": "utf-8",
+    "character_set": "utf8",
     "contacts": [
       {
         "organisation": {
@@ -24,7 +24,7 @@
       "creation": "2018"
     },
     "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-    "character_set": "utf-8",
+    "character_set": "utf8",
     "language": "eng",
     "topics": [
       "environment",

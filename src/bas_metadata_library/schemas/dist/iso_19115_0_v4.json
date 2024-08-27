@@ -134,18 +134,17 @@
         },
         "character_set": {
             "title": "Character set",
-            "description": "Character encoding scheme used (typically 'UTF-8)'.",
+            "description": "Character encoding scheme used (typically 'utf8').",
             "type": "string",
-            "examples": [
-                "UTF-8"
+            "enum": [
+                "utf8"
             ]
         },
         "constraint": {
             "title": "Constraint",
             "description": "Access/usage constraint describing a limitation on accessing or using the resource",
             "type": "object",
-            "oneOf": [
-                {
+            "oneOf": [                {
                     "required": [
                         "type",
                         "restriction_code"

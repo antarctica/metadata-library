@@ -4,7 +4,7 @@
   "hierarchy_level": "dataset",
   "metadata": {
     "language": "eng",
-    "character_set": "utf-8",
+    "character_set": "utf8",
     "contacts": [
       {
         "organisation": {
@@ -80,7 +80,7 @@
     },
     "abstract": "Test Record for ISO 19115 metadata standard (no profile) with properties that could typically be included in a record. This does not mean all properties permitted the standard are included, as these are too numerous. Values in this record are complex, meaning they use anchors where relevant rather than simple character strings. Authorities are included in elements that support citations. Identifiers in this record are fake.",
     "purpose": "Fictitious test record (ISO 19115, no profile, complete).",
-    "character_set": "utf-8",
+    "character_set": "utf8",
     "language": "eng",
     "topics": [
       "environment",

@@ -5,7 +5,7 @@ minimal_record_v4 = {
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
         "date_stamp": datetime.date(2018, 10, 18),
     },
@@ -13,7 +13,7 @@ minimal_record_v4 = {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": datetime.date(2018, 1, 1), "date_precision": "year"}},
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extents": [
@@ -38,7 +38,7 @@ base_simple_record_v4 = {
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "contacts": [
             {
                 "organisation": {"name": "UK Polar Data Centre"},
@@ -67,7 +67,7 @@ base_simple_record_v4 = {
         },
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with simple baseline properties only. In this context baseline properties are those that are required, or have default values. Values in this record are non-complex, meaning they are simple character strings rather than anchors. Authorities are not included in elements that support citations.",
         "purpose": "Fictitious test record (ISO 19115, no profile, simple).",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extents": [
@@ -163,7 +163,7 @@ base_complex_record_v4 = {
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "contacts": [
             {
                 "organisation": {"name": "UK Polar Data Centre", "href": "https://ror.org/01rhff309", "title": "ror"},
@@ -209,7 +209,7 @@ base_complex_record_v4 = {
         },
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with complex baseline properties only. In this context baseline properties are those that are required, or have default values. Values in this record are complex, meaning they use anchors where relevant rather than simple character strings. Authorities are included in elements that support citations.",
         "purpose": "Fictitious test record (ISO 19115, no profile, complex).",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extents": [
@@ -367,7 +367,7 @@ complete_record_v4 = {
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "contacts": [
             {
                 "organisation": {"name": "UK Polar Data Centre", "href": "https://ror.org/01rhff309", "title": "ror"},
@@ -415,7 +415,7 @@ complete_record_v4 = {
         },
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with properties that could typically be included in a record. This does not mean all properties permitted the standard are included, as these are too numerous. Values in this record are complex, meaning they use anchors where relevant rather than simple character strings. Authorities are included in elements that support citations. Identifiers in this record are fake.",
         "purpose": "Fictitious test record (ISO 19115, no profile, complete).",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extents": [

@@ -50,7 +50,7 @@ class CharacterSet(CodeListElement):
             element_attributes=element_attributes,
             xpath=f"{xpath}/gmd:MD_CharacterSetCode",
         )
-        self.code_list_values = ["utf-8"]
+        self.code_list_values = ["utf8"]
         self.code_list = (
             "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/"
             "codelist/gmxCodelists.xml#MD_CharacterSetCode"
