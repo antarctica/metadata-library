@@ -415,6 +415,7 @@
       "description": "A literal (partial) date or date time, including time zone which should be UTC.",
       "type": "string",
       "format": "date-time",
+      "minLength": 4,
       "examples": [
         "2010",
         "2010-04",

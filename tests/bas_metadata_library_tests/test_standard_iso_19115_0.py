@@ -1309,6 +1309,17 @@ def test_edge_case_spatial_resolution_null():
     _test_identification_spatial_resolution(record=record, config=config)
 
 
+def test_edge_case_date_empty_date():
+    """Validation fails when a date has an empty value."""
+    config = deepcopy(configs_v4_all["minimal_v4"])
+    config["identification"]["dates"]["publication"] = ""
+
+    configuration = MetadataRecordConfigV4(**config)
+    with pytest.raises(ValidationError) as e:
+        configuration.validate()
+    assert "'' is too short" in str(e.value)
+
+
 def test_edge_case_date_invalid_date():
     with open(
         Path().resolve().parent.joinpath(f"resources/records/{standard}/minimal_v4-record.xml"), mode="r"
