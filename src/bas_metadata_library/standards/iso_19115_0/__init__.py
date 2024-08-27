@@ -6,11 +6,11 @@ from pathlib import Path
 
 from importlib_resources import files as resource_file
 from jsonschema.validators import validate
-from lxml.etree import Element, fromstring
+from lxml.etree import Element, fromstring  # nosec - see 'lxml` package (bandit)' section in README
 
 from bas_metadata_library import MetadataRecord as _MetadataRecord
 from bas_metadata_library import MetadataRecordConfig as _MetadataRecordConfig
-from bas_metadata_library.standards.iso_19115_common import Namespaces
+from bas_metadata_library import Namespaces as _Namespaces
 from bas_metadata_library.standards.iso_19115_common.root_element import ISOMetadataRecord
 from bas_metadata_library.standards.iso_19115_common.utils import (
     decode_config_from_json,
@@ -18,6 +18,37 @@ from bas_metadata_library.standards.iso_19115_common.utils import (
     encode_config_for_json,
     upgrade_from_v3_config,
 )
+
+
+class Namespaces(_Namespaces):
+    """Defines the namespaces for this standard."""
+
+    gmd = "http://www.isotc211.org/2005/gmd"
+    gco = "http://www.isotc211.org/2005/gco"
+    gml = "http://www.opengis.net/gml/3.2"
+    gmx = "http://www.isotc211.org/2005/gmx"
+    srv = "http://www.isotc211.org/2005/srv"
+    xlink = "http://www.w3.org/1999/xlink"
+    xsi = "http://www.w3.org/2001/XMLSchema-instance"
+
+    _schema_locations = {  # noqa: RUF012
+        "gmd": "https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd",
+        "gco": "https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd",
+        "gmx": "https://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmx/gmx.xsd",
+        "srv": "https://standards.iso.org/iso/19119/srv/srv.xsd",
+    }
+
+    def __init__(self):
+        self._namespaces = {
+            "gmd": self.gmd,
+            "gco": self.gco,
+            "gml": self.gml,
+            "gmx": self.gmx,
+            "srv": self.srv,
+            "xlink": self.xlink,
+            "xsi": self.xsi,
+        }
+        super().__init__(namespaces=self._namespaces)
 
 
 class MetadataRecordConfigV3(_MetadataRecordConfig):
@@ -28,7 +59,7 @@ class MetadataRecordConfigV3(_MetadataRecordConfig):
 
         self.config = kwargs
 
-        schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath("iso_19115_2_v3.json")
+        schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath("iso_19115_1_v3.json")
         with schema_path.open() as schema_file:
             schema_data = json.load(schema_file)
         self.schema = schema_data
@@ -67,7 +98,7 @@ class MetadataRecordConfigV4(_MetadataRecordConfig):
 
         self.config = kwargs
 
-        schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath("iso_19115_2_v4.json")
+        schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath("iso_19115_0_v4.json")
         with schema_path.open() as schema_file:
             schema_data = json.load(schema_file)
         self.schema = schema_data
@@ -115,11 +146,11 @@ class MetadataRecord(_MetadataRecord):
         self.ns = Namespaces()
         self.attributes = {}
         self.record = Element(
-            f"{{{self.ns.gmi}}}MI_Metadata",
+            f"{{{self.ns.gmd}}}MD_Metadata",
             attrib={f"{{{self.ns.xsi}}}schemaLocation": self.ns.schema_locations()},
             nsmap=self.ns.nsmap(),
         )
-        self.xpath = "/gmi:MI_Metadata"
+        self.xpath = "/gmd:MD_Metadata"
 
         if configuration is not None:
             configuration.validate()
@@ -138,4 +169,4 @@ class MetadataRecord(_MetadataRecord):
 
     # noinspection PyMethodOverriding
     def validate(self) -> None:
-        super().validate(xsd_path=Path("gmi/gmi.xsd"))
+        super().validate(xsd_path=Path("gmd/gmd.xsd"))

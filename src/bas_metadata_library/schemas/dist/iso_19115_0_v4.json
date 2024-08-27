@@ -1,0 +1,1734 @@
+{
+    "$id": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "BAS Metadata Record Generator - ISO 19115:2003 v4 configuration schema",
+    "description": "Metadata record configuration schema for the ISO 19115:2003 metadata standard (version 4)",
+    "definitions": {
+        "abstract": {
+            "title": "Abstract",
+            "description": "Resource description.",
+            "type": "string",
+            "examples": [
+                "This abstract, and the record to which it belongs, is fictitious."
+            ]
+        },
+        "address": {
+            "title": "Physical address",
+            "description": "Address for a physical location/building, for sending post/mail or visiting in-person.",
+            "type": "object",
+            "required": [],
+            "additionalProperties": false,
+            "properties": {
+                "delivery_point": {
+                    "title": "Delivery point",
+                    "description": "Name and street address to location/building.",
+                    "type": "string",
+                    "examples": [
+                        "British Antarctic Survey, High Cross, Madingley Road"
+                    ]
+                },
+                "city": {
+                    "title": "City",
+                    "description": "Nearest (postal) city to location/building.",
+                    "type": "string",
+                    "examples": [
+                        "Cambridge"
+                    ]
+                },
+                "administrative_area": {
+                    "title": "Administrative area",
+                    "description": "County, state or other region containing location/building.",
+                    "type": "string",
+                    "examples": [
+                        "Cambridgeshire"
+                    ]
+                },
+                "postal_code": {
+                    "title": "Postal code",
+                    "description": "Post code, zip code or other reference for location/building.",
+                    "type": "string",
+                    "examples": [
+                        "CB3 0ET"
+                    ]
+                },
+                "country": {
+                    "title": "Country",
+                    "description": "Country or territory containing location/building.",
+                    "type": "string",
+                    "examples": [
+                        "United Kingdom"
+                    ]
+                }
+            }
+        },
+        "aggregations": {
+            "title": "Aggregations",
+            "description": "Foreign resources related to this resource.",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/aggregation"
+            },
+            "minItems": 1
+        },
+        "aggregation": {
+            "title": "Aggregation",
+            "description": "A foreign resource related to this resource.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "association_type",
+                "identifier"
+            ],
+            "properties": {
+                "association_type": {
+                    "title": "Association Type",
+                    "description": "Describes the type or kind of relation between this resource and the foreign resource.",
+                    "type": "string",
+                    "enum": [
+                        "collectiveTitle",
+                        "crossReference",
+                        "dependency",
+                        "isComposedOf",
+                        "largerWorkCitation",
+                        "partOfSeamlessDatabase",
+                        "revisionOf",
+                        "series",
+                        "stereoMate"
+                    ],
+                    "examples": [
+                        "crossReference"
+                    ]
+                },
+                "initiative_type": {
+                    "title": "Initiative Type",
+                    "description": "Provides additional context about the type of relation between this resource and the foreign resource.",
+                    "type": "string",
+                    "enum": [
+                        "campaign",
+                        "collection",
+                        "exercise",
+                        "experiment",
+                        "investigation",
+                        "mission",
+                        "operation",
+                        "platform",
+                        "process",
+                        "program",
+                        "project",
+                        "sensor",
+                        "study",
+                        "task",
+                        "trial",
+                        "dataDictionary",
+                        "sciencePaper",
+                        "userGuide"
+                    ],
+                    "examples": [
+                        "collection"
+                    ]
+                },
+                "identifier": {
+                    "$ref": "#/definitions/identifier"
+                }
+            }
+        },
+        "character_set": {
+            "title": "Character set",
+            "description": "Character encoding scheme used (typically 'UTF-8)'.",
+            "type": "string",
+            "examples": [
+                "UTF-8"
+            ]
+        },
+        "constraint": {
+            "title": "Constraint",
+            "description": "Access/usage constraint describing a limitation on accessing or using the resource",
+            "type": "object",
+            "oneOf": [
+                {
+                    "required": [
+                        "type",
+                        "restriction_code"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/constraint_type"
+                        },
+                        "restriction_code": {
+                            "$ref": "#/definitions/restriction_code"
+                        },
+                        "statement": false,
+                        "href": false,
+                        "permissions": false
+                    }
+                },
+                {
+                    "required": [
+                        "type",
+                        "restriction_code",
+                        "statement"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/constraint_type"
+                        },
+                        "restriction_code": {
+                            "$ref": "#/definitions/restriction_code"
+                        },
+                        "statement": {
+                            "title": "Statement",
+                            "description": "Free-text description/definition of the constraint.",
+                            "type": "string"
+                        },
+                        "href": {
+                            "title": "URL",
+                            "description": "URL identifying, or relating to, the constraint.",
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "permissions": false
+                    }
+                },
+                {
+                    "required": [
+                        "type",
+                        "restriction_code",
+                        "href"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/constraint_type"
+                        },
+                        "restriction_code": {
+                            "$ref": "#/definitions/restriction_code"
+                        },
+                        "statement": false,
+                        "href": {
+                            "title": "URL",
+                            "description": "URL identifying, or relating to, the constraint.",
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "permissions": false
+                    }
+                },
+                {
+                    "required": [
+                        "type",
+                        "restriction_code",
+                        "permissions"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "type": {
+                            "$ref": "#/definitions/constraint_type"
+                        },
+                        "restriction_code": {
+                            "$ref": "#/definitions/restriction_code"
+                        },
+                        "statement": false,
+                        "href": false,
+                        "permissions": {
+                            "$ref": "#/definitions/permissions"
+                        }
+                    }
+                }
+            ]
+        },
+        "constraint_type": {
+            "title": "Constraint type",
+            "description": "Whether the constraint constrains how the resource can be accessed, or be used.",
+            "type": "string",
+            "enum": [
+                "access",
+                "usage"
+            ]
+        },
+        "constraints": {
+            "title": "Constraints",
+            "description": "Access/usage constraints for describing limitations on accessing or using the resource.",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/constraint"
+            }
+        },
+        "contact": {
+            "title": "Contact",
+            "description": "An individual or organisation related to the resource, or related to an element related to the resource.",
+            "type": "object",
+            "allOf": [
+                {
+                    "required": [
+                        "role"
+                    ]
+                },
+                {
+                    "anyOf": [
+                        {
+                            "required": [
+                                "individual"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "organisation"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "individual": {
+                    "$ref": "#/definitions/contact_identity"
+                },
+                "organisation": {
+                    "$ref": "#/definitions/contact_identity"
+                },
+                "position": {
+                    "title": "Position",
+                    "description": "Position or role held.",
+                    "type": "string",
+                    "examples": [
+                        "Atmospheric Chemist"
+                    ]
+                },
+                "email": {
+                    "title": "Email",
+                    "description": "Email address.",
+                    "type": "string",
+                    "format": "email",
+                    "examples": [
+                        "magic@bas.ac.uk"
+                    ]
+                },
+                "phone": {
+                    "title": "Phone",
+                    "description": "Telephone number, including international dialing code.",
+                    "type": "string",
+                    "examples": [
+                        "+44 (0)1223 221400"
+                    ]
+                },
+                "address": {
+                    "$ref": "#/definitions/address"
+                },
+                "online_resource": {
+                    "$ref": "#/definitions/online_resource"
+                },
+                "role": {
+                    "title": "Role",
+                    "description": "Role describing how the contact relates to the resource, or how the contact relates to an element related to the resource.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "author",
+                            "custodian",
+                            "distributor",
+                            "originator",
+                            "owner",
+                            "pointOfContact",
+                            "principalInvestigator",
+                            "processor",
+                            "publisher",
+                            "resourceProvider",
+                            "sponsor",
+                            "user",
+                            "coAuthor",
+                            "collaborator",
+                            "contributor",
+                            "editor",
+                            "funder",
+                            "mediator",
+                            "rightsHolder",
+                            "stakeholder"
+                        ]
+                    },
+                    "examples": [
+                        "pointOfContact"
+                    ]
+                }
+            }
+        },
+        "contact_identity": {
+            "title": "Contact identity",
+            "description": "Name, and optionally identifier, for an individual or organisation.",
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "title": "Name",
+                    "description": "Name of an individual or organisation. Individuals should use the form '[family name], [given name(s)]'. Organisations can include departments and divisions as a prefix to provide clarity.",
+                    "type": "string",
+                    "examples": [
+                        "Mapping and Geographic Information Centre, British Antarctic Survey",
+                        "Watson, Constance"
+                    ]
+                },
+                "href": {
+                    "title": "URL",
+                    "description": "URL identifying, or relating to, the individual or organisation. Identifiers are restricted to ORCID iDs (for individuals) and Research Organisation Registry (ROR) or International Standard Name Identifier (ISNI) identifiers (for organisations).",
+                    "type": "string",
+                    "format": "uri",
+                    "examples": [
+                        "https://ror.org/01rhff309",
+                        "https://sandbox.orcid.org/0000-0001-8373-6934"
+                    ]
+                },
+                "title": {
+                    "title": "URL Tile (code)",
+                    "description": "Title for the URL, may only be used to indicate the type of identifier used in the URL.",
+                    "type": "string",
+                    "examples": [
+                        "ror",
+                        "orcid"
+                    ]
+                }
+            }
+        },
+        "contacts": {
+            "title": "Contacts",
+            "description": "Individuals or organisations related to the resource or the description of the resource.",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/contact"
+            },
+            "minItems": 1
+        },
+        "credit": {
+            "title": "Credit",
+            "description": "Recognition of those who contributed to the resource.",
+            "type": "string",
+            "examples": [
+                "Supported by the Wellcome Trust, grant no. 1234"
+            ]
+        },
+        "date": {
+            "title": "Date",
+            "description": "A literal (partial) date or date time, including time zone which should be UTC.",
+            "type": "string",
+            "format": "date-time",
+            "examples": [
+                "2010",
+                "2010-04",
+                "2010-04-20",
+                "2010-04-20T14:39:45+00:00"
+            ]
+        },
+        "dates": {
+            "title": "Dates",
+            "description": "A series of dates describing aspects of the resource (creation, update), or dates describing aspects of an element related to the resource.",
+            "type": "object",
+            "additionalProperties": false,
+            "propertyNames": {
+                "enum": [
+                    "creation",
+                    "publication",
+                    "revision",
+                    "adopted",
+                    "deprecated",
+                    "distribution",
+                    "expiry",
+                    "inForce",
+                    "lastRevision",
+                    "lastUpdate",
+                    "nextUpdate",
+                    "released",
+                    "superseded",
+                    "unavailable",
+                    "validityBegins",
+                    "validityExpires"
+                ]
+            },
+            "patternProperties": {
+                ".*": {
+                    "$ref": "#/definitions/date"
+                }
+            }
+        },
+        "date_stamp": {
+            "title": "The date when the record describing the resource was last updated.",
+            "type": "string",
+            "format": "date",
+            "examples": [
+                "2020-04-16"
+            ]
+        },
+        "distribution": {
+            "title": "Distribution",
+            "description": "Information about how to acquire, enquire about, or retrieve the resource.",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/distribution_option"
+            }
+        },
+        "distributor": {
+            "title": "Distributor",
+            "description": "A contact limited to the role of distributor.",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/contact"
+                },
+                {
+                    "properties": {
+                        "role": {
+                            "items": {
+                                "enum": [
+                                    "distributor"
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "distribution_option": {
+            "title": "Distribution Option",
+            "description": "Combination of a format, transfer option and distributor defining one way the resource is distributed.",
+            "type": "object",
+            "required": [
+                "distributor",
+                "transfer_option"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "distributor": {
+                    "$ref": "#/definitions/distributor"
+                },
+                "format": {
+                    "$ref": "#/definitions/format"
+                },
+                "transfer_option": {
+                    "$ref": "#/definitions/transfer_option"
+                }
+            }
+        },
+        "edition": {
+            "title": "Edition",
+            "description": "Version or edition of the resource, or element related to the resource.",
+            "type": "string",
+            "examples": [
+                "1",
+                "1.1",
+                "2010-04-01"
+            ]
+        },
+        "extent": {
+            "title": "Extent",
+            "description": "The spatial (2D or 3D) and temporal span of the resource, in terms of area/volume and time covered.",
+            "type": "object",
+            "required": [
+                "identifier",
+                "geographic"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "identifier": {
+                    "title": "Identifier",
+                    "description": "XML ID attribute for the whole extent.  A special case is the overall bounding extent",
+                    "type": "string",
+                    "examples": [
+                        "bounding"
+                    ]
+                },
+                "geographic": {
+                    "$ref": "#/definitions/geographic_extent"
+                },
+                "vertical": {
+                    "$ref": "#/definitions/vertical_extent"
+                },
+                "temporal": {
+                    "$ref": "#/definitions/temporal_extent"
+                }
+            }
+        },
+        "extents": {
+            "title": "Extents",
+            "description": "The spatial (2D or 3D) and temporal spans of the resource, in terms of areas/volumes and times covered.",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/extent"
+            },
+            "minItems": 1
+        },
+        "file_identifier": {
+            "title": "File identifier",
+            "description": "Identifier for the record describing the resource. This is almost always a UUID (v4).",
+            "type": "string",
+            "examples": [
+                "86bd7a1a-845d-48a9-8d71-59fdf7290556"
+            ]
+        },
+        "format": {
+            "title": "Format",
+            "description": "Data format the resource is available in.",
+            "type": "object",
+            "required": [
+                "format"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "format": {
+                    "title": "Format",
+                    "description": "Name of the data format.",
+                    "type": "string",
+                    "examples": [
+                        "GeoPackage"
+                    ]
+                },
+                "href": {
+                    "title": "URL",
+                    "description": "URL identifying the data format.",
+                    "type": "string",
+                    "format": "uri",
+                    "examples": [
+                        "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
+                    ]
+                },
+                "version": {
+                    "title": "Version",
+                    "description": "Version/Edition of the data format.",
+                    "type": "string",
+                    "examples": [
+                        "1.2"
+                    ]
+                },
+                "amendment_number": {
+                    "title": "Amendment Number",
+                    "description": "Format version amendment number",
+                    "type": "string",
+                    "examples": [
+                        "1.0"
+                    ]
+                },
+                "specification": {
+                    "title": "Specification",
+                    "description": "The subset name, profile, or product specification of the format",
+                    "type": "string",
+                    "examples": [
+                        "Final"
+                    ]
+                },
+                "file_decompression_technique": {
+                    "title": "File decompression technique",
+                    "description": "Description of recommended processes or algorithms to apply to the compressed resource.",
+                    "type": "string",
+                    "examples": [
+                        "ZIP"
+                    ]
+                }
+            }
+        },
+        "graphic_overviews": {
+            "title": "Graphic overview",
+            "description": "One or more images that summarise the resource visually.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "identifier",
+                    "href",
+                    "mime_type"
+                ],
+                "properties": {
+                    "identifier": {
+                        "title": "Identifier",
+                        "description": "Unique name or reference to differentiate each graphic overview.",
+                        "type": "string",
+                        "examples": [
+                            "thumbnail"
+                        ]
+                    },
+                    "href": {
+                        "title": "URL",
+                        "description": "URL to the graphic overview file.",
+                        "type": "string",
+                        "format": "uri",
+                        "examples": [
+                            "https://example.com/thumbnail.png"
+                        ]
+                    },
+                    "description": {
+                        "title": "Description",
+                        "description": "Free text description of the graphic overview, typically used for alternative text.",
+                        "type": "string",
+                        "examples": [
+                            "Thumbnail"
+                        ]
+                    },
+                    "mime_type": {
+                        "title": "MIME type",
+                        "description": "File format or media type for the graphic overview.",
+                        "type": "string",
+                        "enum": [
+                            "image/jpeg",
+                            "image/png"
+                        ],
+                        "examples": [
+                            "image/png"
+                        ]
+                    }
+                }
+            }
+        },
+        "geographic_extent": {
+            "title": "Geographic extent",
+            "description": "A description of the area the resource covers.",
+            "type": "object",
+            "oneOf": [
+                {
+                    "required": [
+                        "bounding_box"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "bounding_box": {
+                            "title": "Bounding box",
+                            "description": "A set of coordinates for a rectangle that encloses the resource.",
+                            "type": "object",
+                            "required": [
+                                "west_longitude",
+                                "east_longitude",
+                                "south_latitude",
+                                "north_latitude"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "west_longitude": {
+                                    "title": "West longitude",
+                                    "description": "Western most longitude.",
+                                    "type": "number",
+                                    "maximum": 180,
+                                    "minimum": -180,
+                                    "examples": [
+                                        "-120"
+                                    ]
+                                },
+                                "east_longitude": {
+                                    "title": "East longitude",
+                                    "description": "Eastern most longitude.",
+                                    "type": "number",
+                                    "maximum": 180,
+                                    "minimum": -180,
+                                    "examples": [
+                                        "-120"
+                                    ]
+                                },
+                                "south_latitude": {
+                                    "title": "South latitude",
+                                    "description": "Southern most latitude.",
+                                    "type": "number",
+                                    "maximum": 90,
+                                    "minimum": -90,
+                                    "examples": [
+                                        "-60"
+                                    ]
+                                },
+                                "north_latitude": {
+                                    "title": "North latitude",
+                                    "description": "Northern latitude.",
+                                    "type": "number",
+                                    "maximum": 90,
+                                    "minimum": -90,
+                                    "examples": [
+                                        "-60"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "required": [
+                        "identifier"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "identifier": {
+                            "allOf": [
+                                {
+                                    "title": "Geographic Identifier",
+                                    "description": "A geographic identifier relating to the area or location of the resource."
+                                },
+                                {
+                                    "$ref": "#/definitions/identifier"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "hierarchy_level": {
+            "title": "Hierarchy level",
+            "description": "The kind and scope of information the resource consists of and describes.",
+            "type": "string",
+            "enum": [
+                "aggregate",
+                "application",
+                "attribute",
+                "attributeType",
+                "collection",
+                "collectionHardware",
+                "collectionSession",
+                "dataset",
+                "dimensionGroup",
+                "document",
+                "feature",
+                "featureType",
+                "fieldSession",
+                "initiative",
+                "metadata",
+                "model",
+                "nonGeographicDataset",
+                "product",
+                "propertyType",
+                "repository",
+                "sample",
+                "series",
+                "service",
+                "software",
+                "tile"
+            ],
+            "examples": [
+                "dataset"
+            ]
+        },
+        "identification": {
+            "title": "Identification",
+            "description": "Information about how to reference, categorise, or describe the resource.",
+            "type": "object",
+            "required": [
+                "title",
+                "dates",
+                "abstract",
+                "language",
+                "character_set",
+                "topics",
+                "extents"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "title": {
+                    "$ref": "#/definitions/title"
+                },
+                "abstract": {
+                    "$ref": "#/definitions/abstract"
+                },
+                "purpose": {
+                    "$ref": "#/definitions/purpose"
+                },
+                "credit": {
+                    "$ref": "#/definitions/credit"
+                },
+                "status": {
+                    "$ref": "#/definitions/status"
+                },
+                "dates": {
+                    "$ref": "#/definitions/dates"
+                },
+                "edition": {
+                    "$ref": "#/definitions/edition"
+                },
+                "other_citation_details": {
+                    "$ref": "#/definitions/other_citation_details"
+                },
+                "identifiers": {
+                    "$ref": "#/definitions/identifiers"
+                },
+                "contacts": {
+                    "$ref": "#/definitions/contacts"
+                },
+                "maintenance": {
+                    "$ref": "#/definitions/maintenance"
+                },
+                "graphic_overviews": {
+                    "$ref": "#/definitions/graphic_overviews"
+                },
+                "resource_formats": {
+                    "$ref": "#/definitions/resource_formats"
+                },
+                "keywords": {
+                    "$ref": "#/definitions/keywords"
+                },
+                "constraints": {
+                    "$ref": "#/definitions/constraints"
+                },
+                "aggregations": {
+                    "$ref": "#/definitions/aggregations"
+                },
+                "supplemental_information": {
+                    "$ref": "#/definitions/supplemental_information"
+                },
+                "spatial_representation_type": {
+                    "$ref": "#/definitions/spatial_representation_type"
+                },
+                "spatial_resolution": {
+                    "$ref": "#/definitions/spatial_resolution"
+                },
+                "character_set": {
+                    "$ref": "#/definitions/character_set"
+                },
+                "language": {
+                    "$ref": "#/definitions/language"
+                },
+                "topics": {
+                    "$ref": "#/definitions/topics"
+                },
+                "extents": {
+                    "$ref": "#/definitions/extents"
+                },
+                "lineage": {
+                    "$ref": "#/definitions/lineage"
+                }
+            }
+        },
+        "identifier": {
+            "title": "Identifier",
+            "description": "An identifier assigned to the resource, or element related to the resource, by an external entity (e.g. a DOI, a grant reference).",
+            "type": "object",
+            "required": [
+                "identifier"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "identifier": {
+                    "title": "Identifier (value)",
+                    "description": "Identifier value, this may be a URL.",
+                    "type": "string",
+                    "examples": [
+                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                    ]
+                },
+                "href": {
+                    "title": "URL",
+                    "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
+                    "type": "string",
+                    "format": "uri",
+                    "examples": [
+                        "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
+                    ]
+                },
+                "namespace": {
+                    "title": "Namespace",
+                    "description": "The code or identifier for the domain or scheme this identifier is registered within.",
+                    "type": "string",
+                    "examples": [
+                        "doi",
+                        "orcid"
+                    ]
+                }
+            }
+        },
+        "identifiers": {
+            "title": "Identifiers",
+            "description": "A series of identifiers assigned to the resource by an external entity.",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/identifier"
+            }
+        },
+        "keywords": {
+            "title": "Keywords",
+            "description": "Sets of keywords describing characteristics or aspects of the resource, or that relate the resource to or within other resources. Different keyword sets should be used for different sources and types (e.g. theme, location, sensor).",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "terms"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "terms": {
+                        "title": "Terms",
+                        "description": "List of terms within the keyword set that describe the resource or its relation to, or within, other resources.",
+                        "type": "array",
+                        "items": {
+                            "title": "Term",
+                            "description": "Term within the keyword set that describes the resource or its relation to, or within, other resources.",
+                            "type": "object",
+                            "required": [
+                                "term"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "term": {
+                                    "title": "Term (value)",
+                                    "description": "A keyword term, as a single value or a path of values.",
+                                    "type": "string",
+                                    "examples": [
+                                        "COASTAL LANDFORMS"
+                                    ]
+                                },
+                                "href": {
+                                    "title": "URL",
+                                    "description": "URL identifying, or relating to, the term.",
+                                    "type": "string",
+                                    "format": "uri",
+                                    "examples": [
+                                        "https://gcmd.earthdata.nasa.gov/kms/concept/c58320e6-3f1d-4c36-9bee-6bad73404c21"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "type": {
+                        "title": "Type",
+                        "description": "The aspect of the resource the keyword set describes.",
+                        "type": "string",
+                        "enum": [
+                            "dataCentre",
+                            "discipline",
+                            "featureType",
+                            "instrument",
+                            "place",
+                            "platform",
+                            "process",
+                            "product",
+                            "project",
+                            "service",
+                            "stratum",
+                            "subTopicCategory",
+                            "taxon",
+                            "temporal",
+                            "theme"
+                        ],
+                        "examples": [
+                            "theme"
+                        ]
+                    },
+                    "thesaurus": {
+                        "$ref": "#/definitions/thesaurus"
+                    }
+                }
+            }
+        },
+        "language": {
+            "title": "Language",
+            "description": "Code for the spoken/written language used (typically 'eng' for English)'.",
+            "type": "string",
+            "examples": [
+                "eng"
+            ]
+        },
+        "lineage": {
+            "title": "Lineage",
+            "description": "Information on the history of the resource, inc. data quality and methodological limitations.",
+            "type": "object",
+            "required": [],
+            "additionalProperties": false,
+            "properties": {
+                "statement": {
+                    "title": "Statement",
+                    "description": "General explanation about the history of the resource.",
+                    "type": "string",
+                    "examples": [
+                        "This dataset is fictitious and does not exist, it therefore has no lineage."
+                    ]
+                }
+            }
+        },
+        "maintenance": {
+            "title": "Maintenance",
+            "description": "Information about how the resource or element related to the resource is maintained.",
+            "type": "object",
+            "required": [],
+            "additionalProperties": false,
+            "properties": {
+                "maintenance_frequency": {
+                    "title": "Maintenance frequency",
+                    "description": "How often the resource, or element related to the resource, is reviewed and updated.",
+                    "type": "string",
+                    "enum": [
+                        "continual",
+                        "daily",
+                        "weekly",
+                        "fortnightly",
+                        "monthly",
+                        "quarterly",
+                        "biannually",
+                        "annually",
+                        "asNeeded",
+                        "irregular",
+                        "notPlanned",
+                        "unknown"
+                    ],
+                    "examples": [
+                        "asNeeded"
+                    ]
+                },
+                "progress": {
+                    "$ref": "#/definitions/progress"
+                }
+            }
+        },
+        "metadata": {
+            "title": "Metadata",
+            "description": "Information about the metadata record describing the resource.",
+            "type": "object",
+            "required": [
+                "character_set",
+                "contacts",
+                "date_stamp",
+                "language"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "language": {
+                    "$ref": "#/definitions/language"
+                },
+                "character_set": {
+                    "$ref": "#/definitions/character_set"
+                },
+                "contacts": {
+                    "$ref": "#/definitions/contacts"
+                },
+                "date_stamp": {
+                    "$ref": "#/definitions/date_stamp"
+                },
+                "maintenance": {
+                    "$ref": "#/definitions/maintenance"
+                },
+                "metadata_standard": {
+                    "$ref": "#/definitions/metadata_standard"
+                }
+            }
+        },
+        "metadata_standard": {
+            "title": "Metadata standard",
+            "description": "Information about the metadata standard used for the record describing the resource.",
+            "type": "object",
+            "required": [],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "title": "Name",
+                    "description": "Name of the metadata standard.",
+                    "type": "string",
+                    "examples": [
+                        "ISO 19115-2 Geographic Information - Metadata - Part 2: Extensions for Imagery and Gridded Data"
+                    ]
+                },
+                "version": {
+                    "title": "Version",
+                    "description": "Version of the metadata standard.",
+                    "type": "string",
+                    "examples": [
+                        "ISO 19115-2:2009(E)"
+                    ]
+                }
+            }
+        },
+        "online_resource": {
+            "title": "Online resource",
+            "description": "An external website or page related to an element related to the resource, such as a website for a contact (e.g. a BAS staff profile).",
+            "type": "object",
+            "required": [
+                "href"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "href": {
+                    "title": "URL",
+                    "description": "URL to the external website or page.",
+                    "type": "string",
+                    "format": "uri",
+                    "examples": [
+                        "https://www.epsg-registry.org/"
+                    ]
+                },
+                "title": {
+                    "title": "Title",
+                    "description": "Title of the external website or page.",
+                    "type": "string",
+                    "examples": [
+                        "EPSG Geodetic Parameter Dataset"
+                    ]
+                },
+                "description": {
+                    "title": "Description",
+                    "description": "Description of the external website or page.",
+                    "type": "string",
+                    "examples": [
+                        "The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry."
+                    ]
+                },
+                "protocol": {
+                    "title": "Protocol",
+                    "description": "Description of the Protocol",
+                    "type": "string",
+                    "examples": [
+                        "WWW:LINK-1.0-http--link"
+                    ]
+                },
+                "function": {
+                    "title": "Function",
+                    "description": "The kind of action or service the external website or page provides.",
+                    "type": "string",
+                    "enum": [
+                        "download",
+                        "information",
+                        "offlineAccess",
+                        "order",
+                        "search"
+                    ],
+                    "examples": [
+                        "information"
+                    ]
+                }
+            }
+        },
+        "other_citation_details": {
+            "title": "Other Citation Details",
+            "description": "Other Citation Details of the resource, or element related to the resource.",
+            "type": "string",
+            "examples": [
+                "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi"
+            ]
+        },
+        "permission": {
+            "title": "permission",
+            "description": "Conditions which must be met to access a resource. Other schemas will further constrain this property.",
+            "type": "object",
+            "additionalProperties": true
+        },
+        "permissions": {
+            "title": "Permissions",
+            "description": "A series of conditions that must all be met to access a resource.",
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/permission"
+                    }
+                }
+            ]
+        },
+        "purpose": {
+            "title": "Purpose",
+            "description": "Resource summary.",
+            "type": "string",
+            "examples": [
+                "Fictitious test record."
+            ]
+        },
+        "progress": {
+            "title": "Progress",
+            "description": "The status of the resource, or element related to the resource.",
+            "type": "string",
+            "enum": [
+                "completed",
+                "historicalArchive",
+                "obsolete",
+                "onGoing",
+                "planned",
+                "required",
+                "underDevelopment"
+            ],
+            "examples": [
+                "completed"
+            ]
+        },
+        "resource_formats": {
+            "title": "Resource formats",
+            "description": "Provides a description of the formats of the resource(s)",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/format"
+            }
+        },
+        "reference_system_info": {
+            "title": "Reference system information",
+            "description": "Information about the spatial Coordinate Reference System (SRS/CRS) used by the resource.",
+            "type": "object",
+            "required": [
+                "code"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "code": {
+                    "title": "Code",
+                    "description": "CRS used by the resource.",
+                    "type": "object",
+                    "required": [
+                        "value"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "value": {
+                            "title": "value",
+                            "description": "CRS code, typically as a URN.",
+                            "type": "string",
+                            "examples": [
+                                "urn:ogc:def:crs:EPSG::3031"
+                            ]
+                        },
+                        "href": {
+                            "title": "URL",
+                            "description": "URL identifying the code.",
+                            "type": "string",
+                            "format": "uri",
+                            "examples": [
+                                "http://www.opengis.net/def/crs/EPSG/0/3031"
+                            ]
+                        }
+                    }
+                },
+                "version": {
+                    "title": "Version",
+                    "description": "Where the CRS is part of a versioned registry, the version used.",
+                    "type": "string",
+                    "examples": [
+                        "6.18.3"
+                    ]
+                },
+                "authority": {
+                    "title": "Authority",
+                    "description": "Provider of, and body behind, the registry defining the CRS.",
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": false,
+                    "properties": {
+                        "title": {
+                            "$ref": "#/definitions/title"
+                        },
+                        "dates": {
+                            "$ref": "#/definitions/dates"
+                        },
+                        "contact": {
+                            "$ref": "#/definitions/contact"
+                        }
+                    }
+                }
+            }
+        },
+        "resource": {
+            "title": "Resource",
+            "description": "The item/entity/thing being described by this metadata record.",
+            "type": "object",
+            "required": [
+                "hierarchy_level",
+                "metadata",
+                "identification"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "$schema": {
+                    "$ref": "#/definitions/_schema"
+                },
+                "file_identifier": {
+                    "$ref": "#/definitions/file_identifier"
+                },
+                "hierarchy_level": {
+                    "$ref": "#/definitions/hierarchy_level"
+                },
+                "metadata": {
+                    "$ref": "#/definitions/metadata"
+                },
+                "reference_system_info": {
+                    "$ref": "#/definitions/reference_system_info"
+                },
+                "identification": {
+                    "$ref": "#/definitions/identification"
+                },
+                "distribution": {
+                    "$ref": "#/definitions/distribution"
+                }
+            }
+        },
+        "restriction_code": {
+            "title": "Restriction code",
+            "description": "The domain the constraint pertains to.",
+            "type": "string",
+            "enum": [
+                "confidential",
+                "copyright",
+                "inConfidence",
+                "intellectualPropertyRights",
+                "licenceDistributor",
+                "licenceEndUser",
+                "licenceUnrestricted",
+                "license",
+                "otherRestrictions",
+                "patent",
+                "patentPending",
+                "private",
+                "restricted",
+                "SBU",
+                "statutory",
+                "trademark",
+                "unrestricted"
+            ]
+        },
+        "_schema": {
+            "title": "JSON Schema",
+            "description": "JSON Schema keyword indicating the schema a document complies with.",
+            "type": "string",
+            "format": "uri",
+            "examples": [
+                "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json"
+            ]
+        },
+        "spatial_representation_type": {
+            "title": "Spatial representation type",
+            "description": "Describes the form of the resource's spatial information (i.e. raster/vector).",
+            "type": "string",
+            "enum": [
+                "vector",
+                "grid",
+                "textTable",
+                "tin",
+                "steroModel",
+                "video"
+            ],
+            "examples": [
+                "vector"
+            ]
+        },
+        "spatial_resolution": {
+            "title": "Spatial resolution",
+            "description": "Describes the resolution of the resource's spatial information. May be set to null to indicate resolution is inapplicable.",
+            "type": [
+                "number",
+                "null"
+            ],
+            "examples": [
+                "1000000",
+                "1.24",
+                null
+            ]
+        },
+        "status": {
+            "allOf": [
+                {
+                    "title": "Status",
+                    "description": "The status of the resource."
+                },
+                {
+                    "$ref": "#/definitions/progress"
+                }
+            ]
+        },
+        "supplemental_information": {
+            "title": "Supplemental information",
+            "description": "Any additional information. Typically used for disclaimers.",
+            "type": "string",
+            "examples": [
+                "Not for navigation."
+            ]
+        },
+        "temporal_extent": {
+            "title": "Temporal extent",
+            "description": "A description of the time a resource covers.",
+            "type": "object",
+            "required": [],
+            "additionalProperties": false,
+            "properties": {
+                "period": {
+                    "title": "Period",
+                    "description": "A set of dates for a period of time that encloses the resource.",
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": false,
+                    "properties": {
+                        "start": {
+                            "$ref": "#/definitions/date"
+                        },
+                        "end": {
+                            "$ref": "#/definitions/date"
+                        }
+                    }
+                }
+            }
+        },
+        "thesaurus": {
+            "title": "Thesaurus",
+            "description": "Name, version and provider of a keyword set.",
+            "type": "object",
+            "required": [],
+            "additionalProperties": false,
+            "properties": {
+                "title": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/title"
+                        },
+                        {
+                            "properties": {
+                                "href": {
+                                    "title": "URL",
+                                    "description": "URL identifying the thesaurus.",
+                                    "type": "string",
+                                    "format": "uri",
+                                    "examples": [
+                                        "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "dates": {
+                    "$ref": "#/definitions/dates"
+                },
+                "edition": {
+                    "$ref": "#/definitions/edition"
+                },
+                "contact": {
+                    "$ref": "#/definitions/contact"
+                }
+            }
+        },
+        "title": {
+            "title": "Title",
+            "description": "The name of the resource, or element related to the resource.",
+            "type": "object",
+            "required": [
+                "value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "value": {
+                    "title": "Value",
+                    "description": "Title.",
+                    "type": "string"
+                }
+            }
+        },
+        "topics": {
+            "title": "Topics",
+            "description": "ISO topic keywords that describe/classify the resource.",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "farming",
+                    "biota",
+                    "boundaries",
+                    "climatologyMeteorologyAtmosphere",
+                    "economy",
+                    "elevation",
+                    "environment",
+                    "geoscientificInformation",
+                    "health",
+                    "imageryBaseMapsEarthCover",
+                    "intelligenceMilitary",
+                    "inlandWaters",
+                    "location",
+                    "oceans",
+                    "planningCadastre",
+                    "society",
+                    "structure",
+                    "transportation",
+                    "utilitiesCommunication",
+                    "extraTerrestrial",
+                    "disaster"
+                ]
+            },
+            "minItems": 1,
+            "examples": [
+                "environment"
+            ]
+        },
+        "transfer_option": {
+            "title": "Transfer option",
+            "description": "Data transfer option, describing where and how the resource can be accessed.",
+            "type": "object",
+            "required": [
+                "online_resource"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "size": {
+                    "title": "Size",
+                    "description": "Size of the transfer option if it uses files for example.",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [],
+                    "properties": {
+                        "unit": {
+                            "title": "unit",
+                            "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
+                            "type": "string",
+                            "examples": [
+                                "MB"
+                            ]
+                        },
+                        "magnitude": {
+                            "title": "unit",
+                            "description": "Size of the transfer option in a given unit.",
+                            "type": "number",
+                            "examples": [
+                                20.0
+                            ]
+                        }
+                    }
+                },
+                "online_resource": {
+                    "$ref": "#/definitions/online_resource"
+                }
+            }
+        },
+        "vertical_extent": {
+            "title": "Vertical extent",
+            "description": "A description of the vertical volume a resource covers.",
+            "type": "object",
+            "required": [],
+            "additionalProperties": false,
+            "properties": {
+                "minimum": {
+                    "title": "Minimum",
+                    "description": "The minimum vertical extent.",
+                    "type": "number",
+                    "examples": [
+                        "0"
+                    ]
+                },
+                "maximum": {
+                    "title": "Maximum",
+                    "description": "The maximum vertical extent.",
+                    "type": "number",
+                    "examples": [
+                        "40"
+                    ]
+                },
+                "identifier": {
+                    "title": "Identifier",
+                    "description": "XML ID attribute for the vertical CRS, typically based on the CRS code in the form 'ogp-crs-[code]'.",
+                    "type": "string",
+                    "examples": [
+                        "ogp-crs-5714"
+                    ]
+                },
+                "code": {
+                    "title": "Code",
+                    "description": "URN for the vertical CRS.",
+                    "type": "string",
+                    "examples": [
+                        "urn:ogc:def:crs:EPSG::5714"
+                    ]
+                },
+                "name": {
+                    "title": "Name",
+                    "description": "Name of the vertical CRS (e.g. 'MSL height' for Mean Sea Level height).",
+                    "type": "string",
+                    "examples": [
+                        "MSL height"
+                    ]
+                },
+                "remarks": {
+                    "title": "remarks",
+                    "description": "Clarifying information about the vertical CRS.",
+                    "type": "string",
+                    "examples": [
+                        "Not specific to any location or epoch."
+                    ]
+                },
+                "scope": {
+                    "title": "Scope",
+                    "description": "Domain in which the vertical CRS is defined.",
+                    "type": "string",
+                    "examples": [
+                        "Hydrography"
+                    ]
+                },
+                "domain_of_validity": {
+                    "title": "Domain of validity",
+                    "description": "The area the vertical CRS is valid for (e.g. the world).",
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": false,
+                    "properties": {
+                        "href": {
+                            "title": "URL",
+                            "description": "URL or URN for a resource that defines the domain of validity.",
+                            "type": "string",
+                            "format": "uri",
+                            "examples": [
+                                "urn:ogc:def:area:EPSG::1262"
+                            ]
+                        }
+                    }
+                },
+                "vertical_cs": {
+                    "title": "Vertical Coordinate System",
+                    "description": "The coordinate system used in the vertical CRS.",
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": false,
+                    "properties": {
+                        "href": {
+                            "title": "URL",
+                            "description": "URL or URN for a resource that defines the coordinate system.",
+                            "type": "string",
+                            "format": "uri",
+                            "examples": [
+                                "urn:ogc:def:cs:EPSG::6498"
+                            ]
+                        }
+                    }
+                },
+                "vertical_datum": {
+                    "title": "Vertical Datum",
+                    "description": "The datum used in the vertical CRS.",
+                    "type": "object",
+                    "required": [],
+                    "additionalProperties": false,
+                    "properties": {
+                        "href": {
+                            "title": "URL",
+                            "description": "URL or URN for a resource that defines the datum.",
+                            "type": "string",
+                            "format": "uri",
+                            "examples": [
+                                "urn:ogc:def:datum:EPSG::5100"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "type": "object",
+    "required": [
+        "$schema",
+        "hierarchy_level",
+        "metadata",
+        "identification"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "$schema": {
+            "$ref": "#/definitions/_schema"
+        },
+        "file_identifier": {
+            "$ref": "#/definitions/file_identifier"
+        },
+        "hierarchy_level": {
+            "$ref": "#/definitions/hierarchy_level"
+        },
+        "metadata": {
+            "$ref": "#/definitions/metadata"
+        },
+        "reference_system_info": {
+            "$ref": "#/definitions/reference_system_info"
+        },
+        "identification": {
+            "$ref": "#/definitions/identification"
+        },
+        "distribution": {
+            "$ref": "#/definitions/distribution"
+        }
+    }
+}

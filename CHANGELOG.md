@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added [BREAKING!]
+
+* Version 4 configurations for ISO 19115-1 and ISO 19115-2 to support backwards incompatible schema changes
+  [#228](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/228)
+
+### Changed [BREAKING!]
+
+* Renaming `iso_19115_1` to `iso_19115_0`
+  [#229](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/229)
+
 ## 0.10.0 - 2024-08-24
 
 ### Changed [BREAKING!]

@@ -1,0 +1,11 @@
+{
+  "$id": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BAS Metadata Record Generator - ISO 19115-2:2009 v4 configuration schema",
+  "description": "Metadata record configuration schema for the ISO 19115-2:2009 metadata standard (version 4)",
+  "allOf": [
+    {
+      "$ref": "iso_19115_0_v4.json"
+    }
+  ]
+}
