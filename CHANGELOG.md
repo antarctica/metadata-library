@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Fixing character set value error (`utf-8` should be `utf8`)
   [#232](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/232)
 
+### Fixed
+
+* Empty date values now correctly fail validation
+  [#213](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/213)
+
 ## 0.10.0 - 2024-08-24
 
 ### Changed [BREAKING!]
