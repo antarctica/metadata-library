@@ -109,17 +109,16 @@ and new configurations.
     * the `downgrade_to_v1_config()` method should return a current/previous configuration class
 5. change the signature of the `MetadataRecord` class to use the new configuration class
 6. change the `make_config()` method of the `MetadataRecord` class to return the new configuration class
-7. update the `generate_schemas()` method in the [Test App](#testing-flask-app) to generate distribution schemas for
+7. update the `_generate_schemas()` method in the [Test App](#testing-flask-app) to generate distribution schemas for
    the new schema version
 8. [Generate configuration schemas](#generating-configuration-schemas)
-9. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
+9. add a line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
    the distribution schema for the new schema version within the BAS Metadata Standards website
 10. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
     `tests/resources/configs/` e.g. `tests/resources/configs/foo_v1_standard.py`
      * note that the version in these file names is for the version of the standard, not the configuration
      * new config objects will be made within this file that relate to the new configuration version
-     * initially these new config objects can inherit from test configurations for the current/previous version
-11. update the `generate_json_test_configs()` method in [Test App](#testing-flask-app) to generate JSON versions of
+11. update the `_capture_json_test_configs()` method in [Test App](#testing-flask-app) to generate JSON versions of
     each test configuration
 12. [Capture test JSON record configurations](#capturing-test-configurations-as-json)
 13. update the route for the standard in [Test App](#testing-flask-app) (e.g. `standard_foo_v1`) to:
@@ -147,7 +146,7 @@ and new configurations.
 20. update the [Supported configuration versions](/README.md#supported-configuration-versions) section of the README
      * add the new schema version, with a status of 'alpha'
 21. update the encode/decode subsections in the [Usage](/README.md#usage) section of the README to use the new
-    `RecordConfig` class
+    `RecordConfig` class and `$schema` URI
 22. if the lead standard (ISO 19115) is being updated also update these [Usage](/README.md#usage) subsections:
     * [Loading a record configuration from JSON](/README.md#loading-a-record-configuration-from-json)
     * [Dumping a record configuration to JSON](/README.md#dumping-a-record-configuration-to-json)
@@ -164,7 +163,8 @@ configurations as needed. This logic will likely be messy and may target specifi
 the basis these methods will be relatively short-lived.
 
 1. as changes are made, add notes and caveats to the upgrade/downgrade methods in code, and summarise any
-   significant points in the [Usage](/README.md#usage) instructions as needed (e.g. that the process is lossy)
+   significant points in the [Usage](/README.md#usage) instructions as needed (e.g. in the 'Information that will be
+  lost when downgrading:' section)
 2. if changes are made to the minimal record configuration, update examples in the README
 3. if circumstances where data can't be mapped between schemas, consider raising exception in methods for manual
   conversion
@@ -225,7 +225,7 @@ The `generate-schemas` command in the [Flask Test App](#testing-flask-app) gener
 `src/bas_metadata_library/schemas/dist`.
 
 ```shell
-$ FLASK_APP=tests.app poetry run flask capture-test-records
+$ FLASK_APP=tests.app poetry run flask generate-schemas
 ```
 
 [`jsonref`](https://jsonref.readthedocs.io/en/latest/) is used to resolve any references in source schemas.

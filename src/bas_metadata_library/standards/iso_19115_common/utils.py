@@ -409,3 +409,43 @@ def encode_config_for_json(config: dict) -> dict:
     :return encoded record configuration
     """
     return _encode_date_properties(dictionary=config)
+
+
+iso_19115_0_v3 = (
+    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json"
+)
+iso_19115_2_v3 = (
+    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json"
+)
+iso_19115_0_v4 = (
+    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json"
+)
+iso_19115_2_v4 = (
+    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
+)
+
+
+def upgrade_from_v3_config(v3_config: dict) -> dict:
+    """Converts a v3 configuration to a v4 configuration."""
+    v4_config = deepcopy(v3_config)
+
+    # switch to newer schemas
+    if v3_config["$schema"] == iso_19115_0_v3:
+        v4_config["$schema"] = iso_19115_0_v4
+    elif v3_config["$schema"] == iso_19115_2_v3:
+        v4_config["$schema"] = iso_19115_2_v4
+
+    return v4_config
+
+
+def downgrade_from_v4_config(v4_config: dict) -> dict:
+    """Converts a v4 configuration to a v3 configuration."""
+    v3_config = deepcopy(v4_config)
+
+    # switch to newer schemas
+    if v4_config["$schema"] == iso_19115_0_v4:
+        v3_config["$schema"] = iso_19115_0_v3
+    elif v4_config["$schema"] == iso_19115_2_v4:
+        v3_config["$schema"] = iso_19115_2_v3
+
+    return v3_config
