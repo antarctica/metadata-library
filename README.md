@@ -140,7 +140,7 @@ minimal_record_config = {
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
         "date_stamp": date(2018, 10, 18),
     },
@@ -148,7 +148,7 @@ minimal_record_config = {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extents": [
@@ -266,7 +266,7 @@ minimal_record_config_v4 = {
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
         "date_stamp": date(2018, 10, 18),
     },
@@ -274,7 +274,7 @@ minimal_record_config_v4 = {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extents": [
@@ -413,7 +413,7 @@ minimal_record_config = {
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
         "date_stamp": date(2018, 10, 18),
     },
@@ -421,7 +421,7 @@ minimal_record_config = {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extents": [
@@ -461,7 +461,7 @@ minimal_record_config = {
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
         "date_stamp": date(2018, 10, 18),
     },
@@ -469,7 +469,7 @@ minimal_record_config = {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extents": [
@@ -523,7 +523,7 @@ minimal_record_config = {
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
         "date_stamp": date(2018, 10, 18),
     },
@@ -531,7 +531,7 @@ minimal_record_config = {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf-8",
+        "character_set": "utf8",
         "language": "eng",
         "topics": ["environment", "climatologyMeteorologyAtmosphere"],
         "extents": [

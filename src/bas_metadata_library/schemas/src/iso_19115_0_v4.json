@@ -134,10 +134,10 @@
     },
     "character_set": {
       "title": "Character set",
-      "description": "Character encoding scheme used (typically 'UTF-8)'.",
+      "description": "Character encoding scheme used (typically 'utf8').",
       "type": "string",
-      "examples": [
-        "UTF-8"
+      "enum": [
+        "utf8"
       ]
     },
     "constraint": {

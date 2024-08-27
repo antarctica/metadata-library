@@ -435,6 +435,20 @@ def upgrade_from_v3_config(v3_config: dict) -> dict:
     elif v3_config["$schema"] == iso_19115_2_v3:
         v4_config["$schema"] = iso_19115_2_v4
 
+    # change character encoding to valid value
+    if (
+        "metadata" in v4_config
+        and "character_set" in v4_config["metadata"]
+        and v4_config["metadata"]["character_set"] == "utf-8"
+    ):
+        v4_config["metadata"]["character_set"] = "utf8"
+    if (
+        "identification" in v4_config
+        and "character_set" in v4_config["identification"]
+        and v4_config["identification"]["character_set"] == "utf-8"
+    ):
+        v4_config["identification"]["character_set"] = "utf8"
+
     return v4_config
 
 
@@ -447,5 +461,19 @@ def downgrade_from_v4_config(v4_config: dict) -> dict:
         v3_config["$schema"] = iso_19115_0_v3
     elif v4_config["$schema"] == iso_19115_2_v4:
         v3_config["$schema"] = iso_19115_2_v3
+
+    # change character encoding to invalid value
+    if (
+        "metadata" in v4_config
+        and "character_set" in v4_config["metadata"]
+        and v4_config["metadata"]["character_set"] == "utf8"
+    ):
+        v3_config["metadata"]["character_set"] = "utf-8"
+    if (
+        "identification" in v4_config
+        and "character_set" in v4_config["identification"]
+        and v4_config["identification"]["character_set"] == "utf8"
+    ):
+        v3_config["identification"]["character_set"] = "utf-8"
 
     return v3_config

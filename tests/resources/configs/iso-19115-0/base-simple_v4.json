@@ -4,7 +4,7 @@
   "hierarchy_level": "dataset",
   "metadata": {
     "language": "eng",
-    "character_set": "utf-8",
+    "character_set": "utf8",
     "contacts": [
       {
         "organisation": {
@@ -49,7 +49,7 @@
     },
     "abstract": "Test Record for ISO 19115 metadata standard (no profile) with simple baseline properties only. In this context baseline properties are those that are required, or have default values. Values in this record are non-complex, meaning they are simple character strings rather than anchors. Authorities are not included in elements that support citations.",
     "purpose": "Fictitious test record (ISO 19115, no profile, simple).",
-    "character_set": "utf-8",
+    "character_set": "utf8",
     "language": "eng",
     "topics": [
       "environment",
