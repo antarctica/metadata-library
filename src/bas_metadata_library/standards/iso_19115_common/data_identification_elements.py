@@ -27,9 +27,12 @@ from bas_metadata_library.standards.iso_19115_common.utils import (
 
 
 class DataIdentification(MetadataRecordElement):
+    """gmd:identificationInfo."""
+
     def make_config(  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
         self,
     ) -> dict:
+        """Decode to Python."""
         _ = {}
 
         citation = Citation(
@@ -291,6 +294,7 @@ class DataIdentification(MetadataRecordElement):
         return _
 
     def make_element(self) -> None:  # noqa: C901 see uk-pdc/metadata-infrastructure/metadata-library#175 for more information
+        """Encode as XML."""
         data_identification_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}identificationInfo")
         data_identification_element = SubElement(data_identification_wrapper, f"{{{self.ns.gmd}}}MD_DataIdentification")
 

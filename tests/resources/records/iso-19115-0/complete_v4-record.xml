@@ -219,6 +219,16 @@
               </gmd:codeSpace>
             </gmd:RS_Identifier>
           </gmd:identifier>
+          <gmd:series>
+            <gmd:CI_Series>
+              <gmd:name>
+                <gco:CharacterString>Test Records</gco:CharacterString>
+              </gmd:name>
+              <gmd:issueIdentification>
+                <gco:CharacterString>2024 Series</gco:CharacterString>
+              </gmd:issueIdentification>
+            </gmd:CI_Series>
+          </gmd:series>
           <gmd:otherCitationDetails>
             <gco:CharacterString>Author, A., Author, B., &amp; Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi</gco:CharacterString>
           </gmd:otherCitationDetails>

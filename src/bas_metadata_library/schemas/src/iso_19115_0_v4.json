@@ -839,6 +839,9 @@
         "edition": {
           "$ref": "#/definitions/edition"
         },
+        "series": {
+          "$ref": "#/definitions/series"
+        },
         "other_citation_details": {
           "$ref": "#/definitions/other_citation_details"
         },
@@ -1380,6 +1383,21 @@
       "examples": [
         "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json"
       ]
+    },
+    "series": {
+      "title": "Series",
+      "description": "Information about a series this resource belongs to, such as a published map series.",
+      "type": "object",
+      "required": [],
+      "additionalItems": false,
+      "properties": {
+        "title": {
+          "$ref": "#/definitions/title"
+        },
+        "edition": {
+          "$ref": "#/definitions/edition"
+        }
+      }
     },
     "spatial_representation_type": {
       "title": "Spatial representation type",

@@ -285,3 +285,21 @@ def assert_citation(element: Element, config: dict):
     if "identifiers" in config:
         for identifier in config["identifiers"]:
             assert_identifier(element=element, config=identifier)
+
+    if 'series' in config:
+        series_elements = element.xpath(f"./gmd:series/gmd:CI_Series", namespaces=namespaces.nsmap())
+        assert len(series_elements) == 1
+
+        if "title" in config['series']:
+            name_element = series_elements[0].xpath(
+                f"./gmd:name/gco:CharacterString/text() = '{config['series']['title']['value']}'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert name_element is True
+
+        if "edition" in config['series']:
+            identification_element = series_elements[0].xpath(
+                f"./gmd:issueIdentification/gco:CharacterString/text() = '{config['series']['edition']}'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert identification_element is True
