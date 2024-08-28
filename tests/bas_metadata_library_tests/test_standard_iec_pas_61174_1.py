@@ -7,7 +7,7 @@ from zipfile import ZipFile
 import pytest
 from flask.testing import FlaskClient
 from jsonschema import ValidationError
-from lxml.etree import XML, ElementTree, fromstring, tostring
+from lxml.etree import XML, ElementTree, fromstring, tostring, Element
 
 from bas_metadata_library import RecordValidationError
 from bas_metadata_library.standards.iec_pas_61174_1_v1 import (
@@ -93,7 +93,7 @@ def test_xml_declaration(app_client: FlaskClient, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_xml_namespaces(get_record_response, config_name: str):
+def test_xml_namespaces(get_record_response: Element, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
@@ -102,7 +102,7 @@ def test_xml_namespaces(get_record_response, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_root_element(get_record_response, config_name: str):
+def test_root_element(get_record_response: Element, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
 
     metadata_records = record.xpath("/rtz:route", namespaces=namespaces.nsmap(suppress_root_namespace=True))
@@ -135,7 +135,7 @@ def test_parse_existing_record_v1(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_lossless_conversion_v1(get_record_response, config_name: str):
+def test_lossless_conversion_v1(get_record_response: Element, config_name: str):
     _record = tostring(
         get_record_response(standard=standard, config=config_name),
         pretty_print=True,

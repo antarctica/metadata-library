@@ -174,6 +174,9 @@ def _generate_schemas() -> None:
                     src_schema_data, base_uri=f"file://{src_schema_path.absolute()!s}"
                 )
             json.dump(dist_schema_data, dist_schema_file, indent=4)
+        # add newline to file (for compatibility with pre-commit hook)
+        with dest_schema_path.open(mode="a") as dist_schema_file:
+            dist_schema_file.write("\n")
 
 
 def _capture_json_test_configs() -> None:
