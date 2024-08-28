@@ -7,7 +7,7 @@ from tempfile import TemporaryDirectory
 import pytest
 from flask.testing import FlaskClient
 from jsonschema import ValidationError
-from lxml.etree import XML, ElementTree, tostring
+from lxml.etree import XML, ElementTree, tostring, Element
 
 from tests.resources.configs.test_metadata_standard import configs_all as configs
 from tests.resources.configs.test_metadata_standard import minimal_record as minimal_config
@@ -92,14 +92,14 @@ def test_xml_declaration_enabled():
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_xml_namespaces(get_record_response, config_name: str):
+def test_xml_namespaces(get_record_response: Element, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_root_element(get_record_response, config_name: str):
+def test_root_element(get_record_response: Element, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs[config_name]
 
@@ -111,7 +111,7 @@ def test_root_element(get_record_response, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_resource_title(get_record_response, config_name: str):
+def test_resource_title(get_record_response: Element, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs[config_name]
 
@@ -144,7 +144,7 @@ def test_parse_existing_record(config_name: str):
 
 @pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_lossless_conversion(get_record_response, config_name: str):
+def test_lossless_conversion(get_record_response: Element, config_name: str):
     _record = tostring(
         get_record_response(standard=standard, config=config_name),
         pretty_print=True,
