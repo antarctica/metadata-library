@@ -144,7 +144,8 @@
             "title": "Constraint",
             "description": "Access/usage constraint describing a limitation on accessing or using the resource",
             "type": "object",
-            "oneOf": [                {
+            "oneOf": [
+                {
                     "required": [
                         "type",
                         "restriction_code"
@@ -421,7 +422,8 @@
                 "2010-04-20",
                 "2010-04-20T14:39:45+00:00"
             ]
-        },        "dates": {
+        },
+        "dates": {
             "title": "Dates",
             "description": "A series of dates describing aspects of the resource (creation, update), or dates describing aspects of an element related to the resource.",
             "type": "object",

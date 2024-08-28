@@ -122,7 +122,7 @@ require these packages to be installed separately. Notably:
 | Operating System | Required Packages              |
 |------------------|--------------------------------|
 | Linux (Alpine)   | `libxslt-dev`, `libxml2-utils` |
-| Linux (Debian) 7 | `libxml2-utils`                |
+| Linux (Debian)   | `libxml2-utils`                |
 
 ## Usage
 
@@ -207,7 +207,7 @@ from datetime import date
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV3, MetadataRecordConfigV4
 
 minimal_record_config_v3 = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -262,7 +262,7 @@ from datetime import date
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4
 
 minimal_record_config_v4 = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -409,7 +409,7 @@ from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4
 output_path = str('/path/to/file.json')
 
 minimal_record_config = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -457,7 +457,7 @@ from bas_metadata_library import RecordValidationError
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4, MetadataRecord
 
 minimal_record_config = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -519,7 +519,7 @@ from jsonschema import ValidationError
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4
 
 minimal_record_config = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
+    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
