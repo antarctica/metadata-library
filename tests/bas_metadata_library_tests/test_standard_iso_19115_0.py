@@ -1281,7 +1281,6 @@ def test_edge_case_identifier_without_href():
     )
     assert identifier_value is True
 
-
 def test_edge_case_datestamp_invalid_date():
     with open(
         Path().resolve().parent.joinpath(f"resources/records/{standard}/minimal_v4-record.xml"), mode="r"
