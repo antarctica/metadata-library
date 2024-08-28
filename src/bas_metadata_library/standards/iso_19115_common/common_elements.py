@@ -727,6 +727,11 @@ class Citation(MetadataRecordElement):
         if bool(_cited_responsible_party):
             _["contact"] = _cited_responsible_party
 
+        series = Series(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:series")
+        _series = series.make_config()
+        if bool(_series):
+            _["series"] = _series
+
         other_citation_details_value = self.record.xpath(
             f"{self.xpath}/gmd:otherCitationDetails/gco:CharacterString/text()", namespaces=self.ns.nsmap()
         )
@@ -799,6 +804,15 @@ class Citation(MetadataRecordElement):
                 element_attributes=_contact_element_attributes,
             )
             responsible_party.make_element()
+
+        if "series" in self.element_attributes:
+            series = Series(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=citation_element,
+                element_attributes=self.element_attributes["series"],
+            )
+            series.make_element()
 
         if "other_citation_details" in self.element_attributes:
             other_citation_details_element = SubElement(citation_element, f"{{{self.ns.gmd}}}otherCitationDetails")
@@ -1130,3 +1144,40 @@ class Format(MetadataRecordElement):
                 file_decompression_technique_element, f"{{{self.ns.gco}}}CharacterString"
             )
             file_decompression_technique_value.text = self.element_attributes["file_decompression_technique"]
+
+
+class Series(MetadataRecordElement):
+    """gmd:series."""
+
+    def make_config(self) -> dict:
+        """Decode to Python."""
+        _ = {}
+
+        name_value = self.record.xpath(
+            f"{self.xpath}/gmd:CI_Series/gmd:name/gco:CharacterString/text()", namespaces=self.ns.nsmap()
+        )
+        if len(name_value) == 1:
+            _["title"] = {"value": name_value[0]}
+
+        issue_value = self.record.xpath(
+            f"{self.xpath}/gmd:CI_Series/gmd:issueIdentification/gco:CharacterString/text()", namespaces=self.ns.nsmap()
+        )
+        if len(issue_value) == 1:
+            _["edition"] = issue_value[0]
+
+        return _
+
+    def make_element(self) -> None:
+        """Encode as XML."""
+        series_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}series")
+        series_element = SubElement(series_wrapper, f"{{{self.ns.gmd}}}CI_Series")
+
+        if "title" in self.element_attributes:
+            name_element = SubElement(series_element, f"{{{self.ns.gmd}}}name")
+            name_value = SubElement(name_element, f"{{{self.ns.gco}}}CharacterString")
+            name_value.text = self.element_attributes["title"]["value"]
+
+        if "edition" in self.element_attributes:
+            issue_element = SubElement(series_element, f"{{{self.ns.gmd}}}issueIdentification")
+            issue_value = SubElement(issue_element, f"{{{self.ns.gco}}}CharacterString")
+            issue_value.text = self.element_attributes["edition"]

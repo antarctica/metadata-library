@@ -3634,6 +3634,41 @@
                                 "2010-04-01"
                             ]
                         },
+                        "series": {
+                            "title": "Series",
+                            "description": "Information about a series this resource belongs to, such as a published map series.",
+                            "type": "object",
+                            "required": [],
+                            "additionalItems": false,
+                            "properties": {
+                                "title": {
+                                    "title": "Title",
+                                    "description": "The name of the resource, or element related to the resource.",
+                                    "type": "object",
+                                    "required": [
+                                        "value"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "value": {
+                                            "title": "Value",
+                                            "description": "Title.",
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "edition": {
+                                    "title": "Edition",
+                                    "description": "Version or edition of the resource, or element related to the resource.",
+                                    "type": "string",
+                                    "examples": [
+                                        "1",
+                                        "1.1",
+                                        "2010-04-01"
+                                    ]
+                                }
+                            }
+                        },
                         "other_citation_details": {
                             "title": "Other Citation Details",
                             "description": "Other Citation Details of the resource, or element related to the resource.",
@@ -7855,6 +7890,41 @@
                                         "2010-04-01"
                                     ]
                                 },
+                                "series": {
+                                    "title": "Series",
+                                    "description": "Information about a series this resource belongs to, such as a published map series.",
+                                    "type": "object",
+                                    "required": [],
+                                    "additionalItems": false,
+                                    "properties": {
+                                        "title": {
+                                            "title": "Title",
+                                            "description": "The name of the resource, or element related to the resource.",
+                                            "type": "object",
+                                            "required": [
+                                                "value"
+                                            ],
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "value": {
+                                                    "title": "Value",
+                                                    "description": "Title.",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "edition": {
+                                            "title": "Edition",
+                                            "description": "Version or edition of the resource, or element related to the resource.",
+                                            "type": "string",
+                                            "examples": [
+                                                "1",
+                                                "1.1",
+                                                "2010-04-01"
+                                            ]
+                                        }
+                                    }
+                                },
                                 "other_citation_details": {
                                     "title": "Other Citation Details",
                                     "description": "Other Citation Details of the resource, or element related to the resource.",
@@ -10031,6 +10101,41 @@
                         "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json"
                     ]
                 },
+                "series": {
+                    "title": "Series",
+                    "description": "Information about a series this resource belongs to, such as a published map series.",
+                    "type": "object",
+                    "required": [],
+                    "additionalItems": false,
+                    "properties": {
+                        "title": {
+                            "title": "Title",
+                            "description": "The name of the resource, or element related to the resource.",
+                            "type": "object",
+                            "required": [
+                                "value"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "value": {
+                                    "title": "Value",
+                                    "description": "Title.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "edition": {
+                            "title": "Edition",
+                            "description": "Version or edition of the resource, or element related to the resource.",
+                            "type": "string",
+                            "examples": [
+                                "1",
+                                "1.1",
+                                "2010-04-01"
+                            ]
+                        }
+                    }
+                },
                 "spatial_representation_type": {
                     "title": "Spatial representation type",
                     "description": "Describes the form of the resource's spatial information (i.e. raster/vector).",
@@ -11736,6 +11841,41 @@
                                 "1.1",
                                 "2010-04-01"
                             ]
+                        },
+                        "series": {
+                            "title": "Series",
+                            "description": "Information about a series this resource belongs to, such as a published map series.",
+                            "type": "object",
+                            "required": [],
+                            "additionalItems": false,
+                            "properties": {
+                                "title": {
+                                    "title": "Title",
+                                    "description": "The name of the resource, or element related to the resource.",
+                                    "type": "object",
+                                    "required": [
+                                        "value"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "value": {
+                                            "title": "Value",
+                                            "description": "Title.",
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "edition": {
+                                    "title": "Edition",
+                                    "description": "Version or edition of the resource, or element related to the resource.",
+                                    "type": "string",
+                                    "examples": [
+                                        "1",
+                                        "1.1",
+                                        "2010-04-01"
+                                    ]
+                                }
+                            }
                         },
                         "other_citation_details": {
                             "title": "Other Citation Details",
