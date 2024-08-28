@@ -713,10 +713,10 @@ Allowed properties and values for record configurations for each [supported Stan
 [Supported Profile](#supported-profiles) are defined using a [JSON Schema](https://json-schema.org). These schemas
 define any required properties, and any properties with enumerated values.
 
-Configuration schemas are stored as JSON files in the `bas_metadata_library.schemas` module, and loaded as
-resource files from within this package to validate record configurations. Schemas are also made available externally
-through the BAS Metadata Standards website,
-[metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk), to allow:
+Configuration schemas are stored as JSON files in the `bas_metadata_library.schemas` module, and loaded as resource
+files from within this package to validate record configurations. Schemas are also made available externally through
+the BAS Metadata Standards website, [metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk), to
+allow:
 
 1. other applications to ensure their output will be compatible with this library - where they can't, or don't want to,
    use this library directly
@@ -749,6 +749,9 @@ When editing configuration schemas, you should edit the source schemas, located 
 [generate distribution schemas](/DEVELOPING.md#generating-configuration-schemas).
 
 JSON Schema's can be developed using [jsonschemavalidator.net](https://www.jsonschemavalidator.net).
+
+For ISO 19115 schemas only, which are currently essentially identical, a shortcut is taken for resolving references
+whereby the common members of the two schemas are directly copied from the ISO 19115-0 schema to ISO 19115-2.
 
 ### ISO 19115 - Automatic transfer option / format IDs
 
