@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Empty date values now correctly fail validation
   [#213](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/213)
+* Addressing file size of resolved ISO 19115 schemas
+  [#231](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/231)
 
 ## 0.10.0 - 2024-08-24
 

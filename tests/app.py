@@ -153,14 +153,28 @@ def _standard_ice_pas_61174_1(config_label: str) -> Response:
 
 
 def _generate_schemas() -> None:
+    """
+    Generate distribution schemas without references to any external resources.
+
+    Schemas within a standard typically share common elements, to avoid repeating these elements, we can use references
+    between different files/schemas. This doesn't work for unpublished schemas (as their references won't resolve) so
+    we inline them.
+
+    For the ISO 19115 schemas, which have essentially identical schemas, we simply copy the `definitions` and
+    `properties` members of the ISO 19115_0 schema to the ISO 19115_2 schema. This avoids a large amount of redundant
+    inlining but is more fragile and specific to that standard.
+
+    Note: The ISO 19115 V3 schemas do not use copy to prevent any accidental changes to a published schema.
+    """
     schemas = [
-        {"id": "iso_19115_1_v3", "resolve": False},
-        {"id": "iso_19115_2_v3", "resolve": True},
-        {"id": "iso_19115_0_v4", "resolve": False},
-        {"id": "iso_19115_2_v4", "resolve": True},
         {"id": "iec_pas_61174_0_v1", "resolve": False},
         {"id": "iec_pas_61174_1_v1", "resolve": True},
+        {"id": "iso_19115_1_v3", "resolve": False},
+        {"id": "iso_19115_2_v3", "resolve": True},
+        {"id": "iso_19115_0_v4", "copy": False},
+        {"id": "iso_19115_2_v4", "copy": True},
     ]
+    copy_properties = ["definitions", "type", "required", "additionalProperties", "properties"]
 
     for schema in schemas:
         print(f"Generating schema for [{schema['id']}]")
@@ -169,10 +183,21 @@ def _generate_schemas() -> None:
         with src_schema_path.open() as src_schema_file, dest_schema_path.open(mode="w") as dist_schema_file:
             src_schema_data = json.load(src_schema_file)
             dist_schema_data = src_schema_data
-            if schema["resolve"]:
+
+            if schema.get("resolve"):
                 dist_schema_data = JsonRef.replace_refs(
                     src_schema_data, base_uri=f"file://{src_schema_path.absolute()!s}"
                 )
+
+            if schema.get("copy"):
+                copy_schema_name = src_schema_data["allOf"][0]["$ref"]
+                copy_schema_path = Path(f"./src/bas_metadata_library/schemas/src/{copy_schema_name}")
+                with copy_schema_path.open() as copy_schema_file:
+                    copy_schema_data = json.load(copy_schema_file)
+                for prop in copy_properties:
+                    dist_schema_data[prop] = copy_schema_data[prop]
+                del src_schema_data["allOf"]
+
             json.dump(dist_schema_data, dist_schema_file, indent=4)
         # add newline to file (for compatibility with pre-commit hook)
         with dest_schema_path.open(mode="a") as dist_schema_file:
