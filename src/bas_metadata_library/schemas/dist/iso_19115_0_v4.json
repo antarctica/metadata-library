@@ -927,7 +927,8 @@
                     "type": "string",
                     "examples": [
                         "doi",
-                        "orcid"
+                        "orcid",
+                        "isbn"
                     ]
                 }
             }
