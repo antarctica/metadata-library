@@ -462,6 +462,15 @@
                 "2020-04-16"
             ]
         },
+        "description": {
+            "title": "Description",
+            "description": "Description of an element related to the resource.",
+            "type": "string",
+            "examples": [
+                "Data clipped to data limit.",
+                "A compilation of flight route travel time statistics."
+            ]
+        },
         "distribution": {
             "title": "Distribution",
             "description": "Information about how to acquire, enquire about, or retrieve the resource.",
@@ -1038,6 +1047,22 @@
                     "examples": [
                         "This dataset is fictitious and does not exist, it therefore has no lineage."
                     ]
+                },
+                "process_steps": {
+                    "title": "Process steps",
+                    "description": "A series of steps taken to create or modify the resource.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/process_step"
+                    }
+                },
+                "sources": {
+                    "title": "Sources",
+                    "description": "A series of resources used to create or modify the resource.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/source"
+                    }
                 }
             }
         },
@@ -1220,6 +1245,45 @@
                 }
             ]
         },
+        "process_step": {
+            "title": "Process step",
+            "description": "Steps taken to create or modify the resource.",
+            "type": "object",
+            "required": [
+                "description"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "description": {
+                    "$ref": "#/definitions/description"
+                },
+                "rationale": {
+                    "title": "Rationale",
+                    "description": "Reason for the process step.",
+                    "type": "string",
+                    "examples": [
+                        "To ensure consistent extent."
+                    ]
+                },
+                "date": {
+                    "$ref": "#/definitions/date"
+                },
+                "processors": {
+                    "description": "Individuals or organisations responsible for the processing.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/contact"
+                    }
+                },
+                "sources": {
+                    "description": "Sources used in the process step.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/source"
+                    }
+                }
+            }
+        },
         "purpose": {
             "title": "Purpose",
             "description": "Resource summary.",
@@ -1397,6 +1461,44 @@
                 },
                 "edition": {
                     "$ref": "#/definitions/edition"
+                }
+            }
+        },
+        "source": {
+            "title": "Source",
+            "description": "A reference to another resource used in the creation or update of the resource.",
+            "type": "object",
+            "required": [
+                "title",
+                "dates"
+            ],
+            "additionalItems": false,
+            "properties": {
+                "description": {
+                    "$ref": "#/definitions/description"
+                },
+                "title": {
+                    "$ref": "#/definitions/title"
+                },
+                "dates": {
+                    "$ref": "#/definitions/dates"
+                },
+                "edition": {
+                    "$ref": "#/definitions/edition"
+                },
+                "identifiers": {
+                    "$ref": "#/definitions/identifiers"
+                },
+                "contact": {
+                    "$ref": "#/definitions/contact"
+                },
+                "source_steps": {
+                    "title": "Source steps",
+                    "description": "A series of steps taken to create or modify the source.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/process_step"
+                    }
                 }
             }
         },

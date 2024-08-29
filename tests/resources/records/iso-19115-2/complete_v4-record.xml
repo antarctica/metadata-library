@@ -1161,6 +1161,170 @@
           <gmd:statement>
             <gco:CharacterString>Example lineage statement</gco:CharacterString>
           </gmd:statement>
+          <gmd:processStep>
+            <gmd:LI_ProcessStep>
+              <gmd:description>
+                <gco:CharacterString>Changed blue values to purple</gco:CharacterString>
+              </gmd:description>
+              <gmd:rationale>
+                <gco:CharacterString>To make the map more aesthetically pleasing</gco:CharacterString>
+              </gmd:rationale>
+              <gmd:dateTime>
+                <gco:DateTime>2018-10-08T14:40:44+00:00</gco:DateTime>
+              </gmd:dateTime>
+              <gmd:processor>
+                <gmd:CI_ResponsibleParty>
+                  <gmd:individualName>
+                    <gmx:Anchor xlink:href="https://sandbox.orcid.org/0000-0001-8373-6934" xlink:actuate="onRequest">Watson, Constance</gmx:Anchor>
+                  </gmd:individualName>
+                  <gmd:role>
+                    <gmd:CI_RoleCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="author">author</gmd:CI_RoleCode>
+                  </gmd:role>
+                </gmd:CI_ResponsibleParty>
+              </gmd:processor>
+              <gmd:source>
+                <gmd:LI_Source>
+                  <gmd:description>
+                    <gco:CharacterString>Recommended colour charts</gco:CharacterString>
+                  </gmd:description>
+                  <gmd:sourceCitation>
+                    <gmd:CI_Citation>
+                      <gmd:title>
+                        <gco:CharacterString>Accessibility colour charts</gco:CharacterString>
+                      </gmd:title>
+                      <gmd:date>
+                        <gmd:CI_Date>
+                          <gmd:date>
+                            <gco:Date>2018-08-16</gco:Date>
+                          </gmd:date>
+                          <gmd:dateType>
+                            <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+                          </gmd:dateType>
+                        </gmd:CI_Date>
+                      </gmd:date>
+                      <gmd:edition>
+                        <gco:CharacterString>1</gco:CharacterString>
+                      </gmd:edition>
+                      <gmd:citedResponsibleParty>
+                        <gmd:CI_ResponsibleParty>
+                          <gmd:organisationName>
+                            <gco:CharacterString>Fake design agency</gco:CharacterString>
+                          </gmd:organisationName>
+                          <gmd:contactInfo>
+                            <gmd:CI_Contact>
+                              <gmd:onlineResource>
+                                <gmd:CI_OnlineResource>
+                                  <gmd:linkage>
+                                    <gmd:URL>https://example.com/resources/colour-charts</gmd:URL>
+                                  </gmd:linkage>
+                                  <gmd:name>
+                                    <gco:CharacterString>Accessibility colour charts</gco:CharacterString>
+                                  </gmd:name>
+                                  <gmd:function>
+                                    <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information">information</gmd:CI_OnLineFunctionCode>
+                                  </gmd:function>
+                                </gmd:CI_OnlineResource>
+                              </gmd:onlineResource>
+                            </gmd:CI_Contact>
+                          </gmd:contactInfo>
+                          <gmd:role>
+                            <gmd:CI_RoleCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="publisher">publisher</gmd:CI_RoleCode>
+                          </gmd:role>
+                        </gmd:CI_ResponsibleParty>
+                      </gmd:citedResponsibleParty>
+                    </gmd:CI_Citation>
+                  </gmd:sourceCitation>
+                </gmd:LI_Source>
+              </gmd:source>
+            </gmd:LI_ProcessStep>
+          </gmd:processStep>
+          <gmd:source>
+            <gmd:LI_Source>
+              <gmd:description>
+                <gco:CharacterString>Original map</gco:CharacterString>
+              </gmd:description>
+              <gmd:sourceCitation>
+                <gmd:CI_Citation>
+                  <gmd:title>
+                    <gco:CharacterString>A map related to this resource somehow</gco:CharacterString>
+                  </gmd:title>
+                  <gmd:date>
+                    <gmd:CI_Date>
+                      <gmd:date>
+                        <gco:Date>2018-08-16</gco:Date>
+                      </gmd:date>
+                      <gmd:dateType>
+                        <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+                      </gmd:dateType>
+                    </gmd:CI_Date>
+                  </gmd:date>
+                  <gmd:edition>
+                    <gco:CharacterString>1</gco:CharacterString>
+                  </gmd:edition>
+                  <gmd:identifier>
+                    <gmd:RS_Identifier>
+                      <gmd:code>
+                        <gmx:Anchor xlink:href="https://doi.org/10.5072/r3qz22k64" xlink:actuate="onRequest">https://doi.org/10.5072/r3qz22k64</gmx:Anchor>
+                      </gmd:code>
+                      <gmd:codeSpace>
+                        <gco:CharacterString>doi</gco:CharacterString>
+                      </gmd:codeSpace>
+                    </gmd:RS_Identifier>
+                  </gmd:identifier>
+                  <gmd:citedResponsibleParty>
+                    <gmd:CI_ResponsibleParty>
+                      <gmd:organisationName>
+                        <gco:CharacterString>Map publisher</gco:CharacterString>
+                      </gmd:organisationName>
+                      <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                          <gmd:onlineResource>
+                            <gmd:CI_OnlineResource>
+                              <gmd:linkage>
+                                <gmd:URL>https://example.com/maps/1002</gmd:URL>
+                              </gmd:linkage>
+                              <gmd:name>
+                                <gco:CharacterString>Map number 1002</gco:CharacterString>
+                              </gmd:name>
+                              <gmd:function>
+                                <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information">information</gmd:CI_OnLineFunctionCode>
+                              </gmd:function>
+                            </gmd:CI_OnlineResource>
+                          </gmd:onlineResource>
+                        </gmd:CI_Contact>
+                      </gmd:contactInfo>
+                      <gmd:role>
+                        <gmd:CI_RoleCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="publisher">publisher</gmd:CI_RoleCode>
+                      </gmd:role>
+                    </gmd:CI_ResponsibleParty>
+                  </gmd:citedResponsibleParty>
+                </gmd:CI_Citation>
+              </gmd:sourceCitation>
+              <gmd:sourceStep>
+                <gmd:LI_ProcessStep>
+                  <gmd:description>
+                    <gco:CharacterString>Process step within a source</gco:CharacterString>
+                  </gmd:description>
+                  <gmd:rationale>
+                    <gco:CharacterString>To make the map more aesthetically pleasing</gco:CharacterString>
+                  </gmd:rationale>
+                  <gmd:dateTime>
+                    <gco:DateTime>2018-10-08T14:40:44+00:00</gco:DateTime>
+                  </gmd:dateTime>
+                  <gmd:processor>
+                    <gmd:CI_ResponsibleParty>
+                      <gmd:individualName>
+                        <gmx:Anchor xlink:href="https://sandbox.orcid.org/0000-0001-8373-6934" xlink:actuate="onRequest">Watson, Constance</gmx:Anchor>
+                      </gmd:individualName>
+                      <gmd:role>
+                        <gmd:CI_RoleCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="author">author</gmd:CI_RoleCode>
+                      </gmd:role>
+                    </gmd:CI_ResponsibleParty>
+                  </gmd:processor>
+                </gmd:LI_ProcessStep>
+              </gmd:sourceStep>
+            </gmd:LI_Source>
+          </gmd:source>
         </gmd:LI_Lineage>
       </gmd:lineage>
     </gmd:DQ_DataQuality>

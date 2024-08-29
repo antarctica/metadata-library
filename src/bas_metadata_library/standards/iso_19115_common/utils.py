@@ -57,6 +57,12 @@ def _decode_date_properties(dictionary: dict, parent_keys: list[str] | None = No
             dictionary[key] = date.fromisoformat(value)
         elif (
             isinstance(value, str)
+            and ("process_steps" in parent_keys or "source_steps" in parent_keys)
+            and key == "date"
+        ):
+            dictionary[key] = decode_date_string(date_datetime=value)["date"]  # unwrap date value
+        elif (
+            isinstance(value, str)
             and "dates" in parent_keys
             or (
                 isinstance(value, str)
@@ -101,6 +107,9 @@ def _encode_date_properties(dictionary: dict) -> dict:
             _encode_date_properties(dictionary=value)
         elif isinstance(value, date) and key == "date_stamp":
             # metadata.date_stamp is always a date
+            dictionary[key] = value.isoformat()
+        elif isinstance(value, date) and key == "date":
+            # lineage.process_step.date is always a datetime
             dictionary[key] = value.isoformat()
 
     return dictionary
