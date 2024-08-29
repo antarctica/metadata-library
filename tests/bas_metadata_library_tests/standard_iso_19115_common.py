@@ -5,6 +5,7 @@ from datetime import datetime as _datetime
 from lxml.etree import Element
 
 from bas_metadata_library.standards.iso_19115_1 import Namespaces
+from bas_metadata_library.standards.iso_19115_common.utils import encode_date_string
 
 namespaces = Namespaces()
 
@@ -303,3 +304,71 @@ def assert_citation(element: Element, config: dict):
                 namespaces=namespaces.nsmap(),
             )
             assert identification_element is True
+
+
+def assert_source(element: Element, config: dict) -> None:
+    """assert gmd:LI_Source."""
+    description_element = element.xpath(
+        f"./gmd:description/gco:CharacterString/text() = '{config['description']}'",
+        namespaces=namespaces.nsmap(),
+    )
+    assert description_element is True
+
+    if any(key in ["title", "dates", "edition", "identifiers", "contact"] for key in config):
+        source_citation_elements = element.xpath(
+            "./gmd:sourceCitation/gmd:CI_Citation", namespaces=namespaces.nsmap()
+        )
+        assert len(source_citation_elements) == 1
+        assert_citation(element=source_citation_elements[0], config=config)
+
+    if 'source_steps' in config:
+        for source_step_config in config['source_steps']:
+            source_step_elements = element.xpath(
+                f"./gmd:sourceStep/gmd:LI_ProcessStep[gmd:description/gco:CharacterString[text() = '{source_step_config['description']}']]",
+                namespaces=namespaces.nsmap(),
+            )
+            assert len(source_step_elements) == 1
+            assert_process_step(source_step_elements[0], source_step_config)
+
+def assert_process_step(element: Element, config: dict) -> None:
+    """assert gmd:LI_ProcessStep."""
+    description_element = element.xpath(
+        f"./gmd:description/gco:CharacterString/text() = '{config['description']}'",
+        namespaces=namespaces.nsmap(),
+    )
+    assert description_element is True
+
+    if "rationale" in config:
+        rationale_element = element.xpath(
+            f"./gmd:rationale/gco:CharacterString/text() = '{config['rationale']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert rationale_element is True
+
+    if "date" in config:
+        date_element = element.xpath(
+            f"./gmd:dateTime/gco:DateTime/text() = '{encode_date_string(config['date'])}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert date_element is True
+
+    if 'processors' in config:
+        for processor_config in config['processors']:
+            _property = 'individual' if 'individual' in processor_config else "organisation"
+            _element = f"gmd:{_property}Name"
+            processor_elements = element.xpath(
+                f"./gmd:processor/gmd:CI_ResponsibleParty[{_element}/gco:CharacterString/text() = '{processor_config[_property]['name']}'] | "
+                f"./gmd:processor/gmd:CI_ResponsibleParty[{_element}/gmx:Anchor/text() = '{processor_config[_property]['name']}']",
+                namespaces=namespaces.nsmap(),
+            )
+            assert len(processor_elements) == 1
+            assert_responsible_party(element=processor_elements[0], config=processor_config)
+
+    if 'sources' in config:
+        for source_config in config['sources']:
+            sources_elements = element.xpath(
+                f"./gmd:source/gmd:LI_Source[gmd:description[gco:CharacterString[text() = '{source_config['description']}']]]",
+                namespaces=namespaces.nsmap(),
+            )
+            assert len(sources_elements) == 1
+            assert_source(sources_elements[0], source_config)

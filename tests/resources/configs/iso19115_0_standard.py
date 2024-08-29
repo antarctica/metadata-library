@@ -665,7 +665,82 @@ complete_record_v4 = {
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
         "spatial_resolution": 1000000,
-        "lineage": {"statement": "Example lineage statement"},
+        "lineage": {
+            "statement": "Example lineage statement",
+            "process_steps": [
+                {
+                    "description": "Changed blue values to purple",
+                    "rationale": "To make the map more aesthetically pleasing",
+                    "date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc),
+                    "processors": [
+                        {
+                            "individual": {
+                                "name": "Watson, Constance",
+                                "href": "https://sandbox.orcid.org/0000-0001-8373-6934",
+                            },
+                            "role": ["author"],
+                        },
+                    ],
+                    "sources": [
+                        {
+                            "description": "Recommended colour charts",
+                            "title": {"value": "Accessibility colour charts"},
+                            "dates": {"publication": {"date": datetime.date(2018, 8, 16)}},
+                            "edition": "1",
+                            "contact": {
+                                "organisation": {"name": "Fake design agency"},
+                                "online_resource": {
+                                    "href": "https://example.com/resources/colour-charts",
+                                    "title": "Accessibility colour charts",
+                                    "function": "information",
+                                },
+                                "role": ["publisher"],
+                            },
+                        }
+                    ],
+                }
+            ],
+            "sources": [
+                {
+                    "description": "Original map",
+                    "title": {"value": "A map related to this resource somehow"},
+                    "dates": {"publication": {"date": datetime.date(2018, 8, 16)}},
+                    "edition": "1",
+                    "identifiers": [
+                        {
+                            "identifier": "https://doi.org/10.5072/r3qz22k64",
+                            "href": "https://doi.org/10.5072/r3qz22k64",
+                            "namespace": "doi",
+                        }
+                    ],
+                    "contact": {
+                        "organisation": {"name": "Map publisher"},
+                        "online_resource": {
+                            "href": "https://example.com/maps/1002",
+                            "title": "Map number 1002",
+                            "function": "information",
+                        },
+                        "role": ["publisher"],
+                    },
+                    "source_steps": [
+                        {
+                            "description": "Process step within a source",
+                            "rationale": "To make the map more aesthetically pleasing",
+                            "date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc),
+                            "processors": [
+                                {
+                                    "individual": {
+                                        "name": "Watson, Constance",
+                                        "href": "https://sandbox.orcid.org/0000-0001-8373-6934",
+                                    },
+                                    "role": ["author"],
+                                },
+                            ],
+                        }
+                    ],
+                }
+            ],
+        },
         "edition": "2",
         "series": {"title": {"value": "Test Records"}, "edition": "2024 Series"},
         "other_citation_details": "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi",

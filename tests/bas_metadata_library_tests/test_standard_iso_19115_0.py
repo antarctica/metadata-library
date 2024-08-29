@@ -23,7 +23,7 @@ from tests.bas_metadata_library_tests.standard_iso_19115_common import (
     assert_identifier,
     assert_maintenance,
     assert_online_resource,
-    assert_responsible_party,
+    assert_responsible_party, assert_source, assert_process_step,
 )
 from tests.resources.configs.iso19115_0_standard import configs_v4_all
 
@@ -1168,12 +1168,12 @@ def test_data_quality_scope(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_lineage(get_record_response: Element, config_name: str):
+def test_data_quality_lineage_statement(get_record_response: Element, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v4_all[config_name]
 
-    if "identification" not in config or "lineage" not in config["identification"]:
-        pytest.skip("record does not contain a lineage")
+    if "identification" not in config or "lineage" not in config["identification" or "statement" not in config["identification"]["lineage"]]:
+        pytest.skip("record does not contain a lineage statement")
 
     # note: this should be refactored to have a dedicated Statement and Source element when lineage sources are
     # added properly [#73]
@@ -1183,6 +1183,40 @@ def test_data_quality_lineage(get_record_response: Element, config_name: str):
         namespaces=namespaces.nsmap(),
     )
     assert lineage_values is True
+
+
+@pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
+def test_data_quality_lineage_process_steps(get_record_response: Element, config_name: str):
+    record = get_record_response(standard=standard, config=config_name)
+    config = configs_v4_all[config_name]
+
+    if "identification" not in config or "lineage" not in config["identification"] or "process_steps" not in config["identification"]["lineage"]:
+        pytest.skip("record does not contain any lineage process steps")
+
+    for process_step_config in config["identification"]["lineage"]['process_steps']:
+        process_step_elements = record.xpath(
+            f"/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep[gmd:description[gco:CharacterString[text() = '{process_step_config['description']}']]]",
+            namespaces=namespaces.nsmap(),
+        )
+        assert len(process_step_elements) == 1
+        assert_process_step(element=process_step_elements[0], config=process_step_config)
+
+
+@pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
+def test_data_quality_lineage_sources(get_record_response: Element, config_name: str):
+    record = get_record_response(standard=standard, config=config_name)
+    config = configs_v4_all[config_name]
+
+    if "identification" not in config or "lineage" not in config["identification"] or "sources" not in config["identification"]["lineage"]:
+        pytest.skip("record does not contain any lineage sources")
+
+    for source_config in config["identification"]["lineage"]['sources']:
+        sources_elements = record.xpath(
+            f"/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source[gmd:description[gco:CharacterString[text() = '{source_config['description']}']]]",
+            namespaces=namespaces.nsmap(),
+        )
+        assert len(sources_elements) == 1
+        assert_source(sources_elements[0], source_config)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
