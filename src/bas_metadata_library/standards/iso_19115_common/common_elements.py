@@ -1157,7 +1157,7 @@ class Series(MetadataRecordElement):
             f"{self.xpath}/gmd:CI_Series/gmd:name/gco:CharacterString/text()", namespaces=self.ns.nsmap()
         )
         if len(name_value) == 1:
-            _["title"] = {"value": name_value[0]}
+            _["name"] = name_value[0]
 
         issue_value = self.record.xpath(
             f"{self.xpath}/gmd:CI_Series/gmd:issueIdentification/gco:CharacterString/text()", namespaces=self.ns.nsmap()
@@ -1172,10 +1172,10 @@ class Series(MetadataRecordElement):
         series_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}series")
         series_element = SubElement(series_wrapper, f"{{{self.ns.gmd}}}CI_Series")
 
-        if "title" in self.element_attributes:
+        if "name" in self.element_attributes:
             name_element = SubElement(series_element, f"{{{self.ns.gmd}}}name")
             name_value = SubElement(name_element, f"{{{self.ns.gco}}}CharacterString")
-            name_value.text = self.element_attributes["title"]["value"]
+            name_value.text = self.element_attributes["name"]
 
         if "edition" in self.element_attributes:
             issue_element = SubElement(series_element, f"{{{self.ns.gmd}}}issueIdentification")
