@@ -6,7 +6,7 @@ from pathlib import Path
 
 from importlib_resources import files as resource_file
 from jsonschema.validators import validate
-from lxml.etree import Element, fromstring  # nosec - see 'lxml` package (bandit)' section in README
+from lxml.etree import Element, fromstring
 
 from bas_metadata_library import MetadataRecord as _MetadataRecord
 from bas_metadata_library import MetadataRecordConfig as _MetadataRecordConfig
@@ -108,9 +108,6 @@ class MetadataRecordConfigV4(_MetadataRecordConfig):
         self.config = {"$schema": self.schema_uri, **kwargs}
 
     def validate(self) -> None:
-        if self.schema is None:
-            return None
-
         _config = encode_config_for_json(config=deepcopy(self.config))
         return validate(instance=_config, schema=self.schema)
 

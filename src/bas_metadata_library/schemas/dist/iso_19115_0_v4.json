@@ -1456,8 +1456,14 @@
             "required": [],
             "additionalItems": false,
             "properties": {
-                "title": {
-                    "$ref": "#/definitions/title"
+                "name": {
+                    "title": "Name",
+                    "description": "Name of the series.",
+                    "type": "string",
+                    "examples": [
+                        "BAS Topographic Map Series",
+                        "Geomap"
+                    ]
                 },
                 "edition": {
                     "$ref": "#/definitions/edition"

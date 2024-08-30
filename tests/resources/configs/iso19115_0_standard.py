@@ -742,7 +742,7 @@ complete_record_v4 = {
             ],
         },
         "edition": "2",
-        "series": {"title": {"value": "Test Records"}, "edition": "2024 Series"},
+        "series": {"name": "Test Records", "edition": "2024 Series"},
         "other_citation_details": "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi",
         "identifiers": [
             {
