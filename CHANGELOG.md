@@ -7,13 +7,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Added [BREAKING!]
-
-* Version 4 configurations for ISO 19115-1 and ISO 19115-2 to support backwards incompatible schema changes
-  [#228](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/228)
-* Series (identification) element
-  [#69](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/69)
-
 ### Changed [BREAKING!]
 
 * Renaming `iso_19115_1` to `iso_19115_0`
@@ -21,10 +14,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Fixing character set value error (`utf-8` should be `utf8`)
   [#232](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/232)
 
+### Added
+
+* Version 4 configurations for ISO 19115-1 and ISO 19115-2 to support backwards incompatible schema changes
+  [#228](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/228)
+* Series (identification) element
+  [#69](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/69)
 * Process step element
   [#75](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/75)
 * Source element element
   [#73](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/73)
+
 ### Fixed
 
 * Empty date values now correctly fail validation

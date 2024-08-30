@@ -77,9 +77,6 @@ class MetadataRecordConfigV4(_MetadataRecordConfig):
         self.config = {"$schema": self.schema_uri, **kwargs}
 
     def validate(self) -> None:
-        if self.schema is None:
-            return None
-
         _config = encode_config_for_json(config=deepcopy(self.config))
         return validate(instance=_config, schema=self.schema)
 
