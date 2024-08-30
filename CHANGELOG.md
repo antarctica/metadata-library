@@ -7,12 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Changed [BREAKING!]
-
-* Renaming `iso_19115_1` to `iso_19115_0`
-  [#229](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/229)
-* Fixing character set value error (`utf-8` should be `utf8`)
-  [#232](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/232)
+## 0.11.0 - 2024-08-30
 
 ### Added
 
@@ -31,6 +26,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#213](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/213)
 * Addressing file size of resolved ISO 19115 schemas
   [#231](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/231)
+
+### Changed
+
+* Renaming `iso_19115_1` to `iso_19115_0`
+  [#229](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/229)
+* Fixing character set value error (`utf-8` should be `utf8`)
+  [#232](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/232)
 
 ## 0.10.0 - 2024-08-24
 

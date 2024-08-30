@@ -43,18 +43,18 @@ wait until a stable profile for UK PDC Discovery metadata has been developed and
 
 ### Supported configuration versions
 
-| Standard           | Profile | Configuration Version                                                                                                     | Status  | Notes                                 |
-|--------------------|---------|---------------------------------------------------------------------------------------------------------------------------|---------|---------------------------------------|
-| ISO 19115:2003     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired | Replaced by `v2`, no longer supported |
-| ISO 19115:2003     | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Retired | Replaced by `v3`, no longer supported |
-| ISO 19115:2003     | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-1-v3.json)     | Stable  | Current supported version             |
-| ISO 19115:2003     | -       | [`v4`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-0-v4.json)     | Alpha   | Experimental next version             |
-| ISO 19115-2:2009   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Retired | Replaced by `v2`, no longer supported |
-| ISO 19115-2:2009   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Retired | Replaced by `v3`, no longer supported |
-| ISO 19115-2:2009   | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json)     | Stable  | Current supported version             |
-| ISO 19115-2:2009   | -       | [`v4`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json)     | Alpha   | Experimental next version             |
-| IEC 61174:2015     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Stable  | Current supported version             |
-| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Stable  | Current supported version             |
+| Standard           | Profile | Configuration Version                                                                                                     | Status     | Notes                                 |
+|--------------------|---------|---------------------------------------------------------------------------------------------------------------------------|------------|---------------------------------------|
+| ISO 19115:2003     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired    | Replaced by `v2`, no longer supported |
+| ISO 19115:2003     | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Retired    | Replaced by `v3`, no longer supported |
+| ISO 19115:2003     | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-1-v3.json)     | Deprecated | Previous version, pending retirement  |
+| ISO 19115:2003     | -       | [`v4`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-0-v4.json)     | Stable     | Currently supported version           |
+| ISO 19115-2:2009   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Retired    | Replaced by `v2`, no longer supported |
+| ISO 19115-2:2009   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Retired    | Replaced by `v3`, no longer supported |
+| ISO 19115-2:2009   | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json)     | Deprecated | Previous version, pending retirement  |
+| ISO 19115-2:2009   | -       | [`v4`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json)     | Stable     | Currently supported version           |
+| IEC 61174:2015     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Stable     | Currently supported version           |
+| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Stable     | Currently supported version           |
 
 ### Supported standards coverage
 
