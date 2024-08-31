@@ -88,7 +88,7 @@ work involved is quite significant.
 **Note:** In these instructions, `v1` refers to the current/previous configuration version. `v2` refers to the new
 configuration version.
 
-## Step 1: Add new version
+### Step 1: Add new version
 
 First, create a new configuration version that is identical to the current/previous version, but that sets up the
 schema, objects, methods, tests and documentation needed for the new configuration, and to convert between the old
@@ -171,7 +171,10 @@ the basis these methods will be relatively short-lived.
 
 ### Step 3: Release as experimental version
 
-... release the new configuration version as experimental for the standard.
+... release the new configuration version as experimental for the standard ...
+
+1. update the [Supported configuration versions](/README.md#supported-configuration-versions) section of the README
+     * add the new/current schema version with a status of 'experimental'
 
 ### Step 4: Mark as stable version
 

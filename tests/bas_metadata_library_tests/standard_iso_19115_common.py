@@ -4,7 +4,7 @@ from datetime import datetime as _datetime
 
 from lxml.etree import Element
 
-from bas_metadata_library.standards.iso_19115_1 import Namespaces
+from bas_metadata_library.standards.iso_19115_0 import Namespaces
 from bas_metadata_library.standards.iso_19115_common.utils import encode_date_string
 
 namespaces = Namespaces()
