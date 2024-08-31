@@ -14,9 +14,7 @@ from bas_metadata_library import Namespaces as _Namespaces
 from bas_metadata_library.standards.iso_19115_common.root_element import ISOMetadataRecord
 from bas_metadata_library.standards.iso_19115_common.utils import (
     decode_config_from_json,
-    downgrade_from_v4_config,
     encode_config_for_json,
-    upgrade_from_v3_config,
 )
 
 
@@ -49,45 +47,6 @@ class Namespaces(_Namespaces):
             "xsi": self.xsi,
         }
         super().__init__(namespaces=self._namespaces)
-
-
-class MetadataRecordConfigV3(_MetadataRecordConfig):
-    """Defines version 3 of the JSON Schema used for this metadata standard."""
-
-    def __init__(self, **kwargs: dict):
-        super().__init__(**kwargs)
-
-        self.config = kwargs
-
-        schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath("iso_19115_1_v3.json")
-        with schema_path.open() as schema_file:
-            schema_data = json.load(schema_file)
-        self.schema = schema_data
-
-        # Workaround - will be addressed in #149
-        self.schema_uri = schema_data["$id"]
-        self.config = {"$schema": self.schema_uri, **kwargs}
-
-    def validate(self) -> None:
-        if self.schema is None:
-            return None
-
-        _config = encode_config_for_json(config=deepcopy(self.config))
-        return validate(instance=_config, schema=self.schema)
-
-    def load(self, file: Path) -> None:
-        with file.open() as file:
-            self.config = decode_config_from_json(config=json.load(fp=file))
-
-    def loads(self, string: str) -> None:
-        self.config = decode_config_from_json(config=json.loads(s=string))
-
-    def dump(self, file: Path) -> None:
-        with file.open(mode="w") as file:
-            json.dump(encode_config_for_json(config=deepcopy(self.config)), file, indent=2)
-
-    def dumps(self) -> str:
-        return json.dumps(encode_config_for_json(config=deepcopy(self.config)), indent=2)
 
 
 class MetadataRecordConfigV4(_MetadataRecordConfig):
@@ -124,12 +83,6 @@ class MetadataRecordConfigV4(_MetadataRecordConfig):
 
     def dumps(self) -> str:
         return json.dumps(encode_config_for_json(config=deepcopy(self.config)), indent=2)
-
-    def upgrade_from_v3_config(self, v3_config: MetadataRecordConfigV3) -> None:
-        self.config = upgrade_from_v3_config(v3_config=v3_config.config)
-
-    def downgrade_to_v3_config(self) -> MetadataRecordConfigV3:
-        return MetadataRecordConfigV3(**downgrade_from_v4_config(v4_config=self.config))
 
 
 class MetadataRecord(_MetadataRecord):

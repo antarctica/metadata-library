@@ -29,17 +29,8 @@ from bas_metadata_library.standards.iso_19115_0 import (
 from bas_metadata_library.standards.iso_19115_0 import (
     MetadataRecordConfigV4 as ISO19115_0_MetadataRecordConfigV4,
 )
-from bas_metadata_library.standards.iso_19115_1 import (
-    MetadataRecord as ISO19115_1_MetadataRecord,
-)
-from bas_metadata_library.standards.iso_19115_1 import (
-    MetadataRecordConfigV3 as ISO19115_1_MetadataRecordConfigV3,
-)
 from bas_metadata_library.standards.iso_19115_2 import (
     MetadataRecord as ISO19115_2_MetadataRecord,
-)
-from bas_metadata_library.standards.iso_19115_2 import (
-    MetadataRecordConfigV3 as ISO19115_2_MetadataRecordConfigV3,
 )
 from bas_metadata_library.standards.iso_19115_2 import (
     MetadataRecordConfigV4 as ISO19115_2_MetadataRecordConfigV4,
@@ -48,12 +39,6 @@ from tests.resources.configs.iec_pas_61174_0_standard import configs_v1 as iec_p
 from tests.resources.configs.iec_pas_61174_1_standard import configs_v1 as iec_pas_61174_1_standard_configs_v1
 from tests.resources.configs.iso19115_0_standard import (
     configs_v4_all as iso19115_0_standard_configs_v4,
-)
-from tests.resources.configs.iso19115_1_standard import (
-    configs_v3_all as iso19115_1_standard_configs_v3,
-)
-from tests.resources.configs.iso19115_2_standard import (
-    configs_v3_all as iso19115_2_standard_configs_v3,
 )
 from tests.resources.configs.iso19115_2_standard import (
     configs_v4_all as iso19115_2_standard_configs_v4,
@@ -86,44 +71,17 @@ def _generate_record_iso_19115_0(config_label: str) -> Response:
         record = ISO19115_0_MetadataRecord(configuration)
         return Response(record.generate_xml_document(), mimetype="text/xml")
 
-    return Response(
-        f"Invalid configuration, valid options: " f"[{', '.join(list(iso19115_0_standard_configs_v4.keys()))}]"
-    )
-
-
-def _generate_record_iso_19115_1(config_label: str) -> Response:
-    if config_label in iso19115_1_standard_configs_v3:
-        configuration_object = iso19115_1_standard_configs_v3[config_label]
-        configuration_v3 = ISO19115_1_MetadataRecordConfigV3(**configuration_object)
-        configuration_v4 = ISO19115_0_MetadataRecordConfigV4()
-        configuration_v4.upgrade_from_v3_config(v3_config=configuration_v3)
-        record = ISO19115_1_MetadataRecord(configuration_v4)
-        return Response(record.generate_xml_document(), mimetype="text/xml")
-
-    return Response(
-        f"Invalid configuration, valid options: " f"[{', '.join(list(iso19115_1_standard_configs_v3.keys()))}]"
-    )
+    return Response(f"Invalid configuration, valid options: [{', '.join(list(iso19115_0_standard_configs_v4.keys()))}]")
 
 
 def _generate_record_iso_19115_2(config_label: str) -> Response:
-    if config_label in iso19115_2_standard_configs_v3:
-        configuration_object = iso19115_2_standard_configs_v3[config_label]
-        configuration_v3 = ISO19115_2_MetadataRecordConfigV3(**configuration_object)
-        configuration_v4 = ISO19115_2_MetadataRecordConfigV4()
-        configuration_v4.upgrade_from_v3_config(v3_config=configuration_v3)
-        record = ISO19115_2_MetadataRecord(configuration_v4)
-        return Response(record.generate_xml_document(), mimetype="text/xml")
-
     if config_label in iso19115_2_standard_configs_v4:
         configuration_object = iso19115_2_standard_configs_v4[config_label]
         configuration = ISO19115_2_MetadataRecordConfigV4(**configuration_object)
         record = ISO19115_2_MetadataRecord(configuration)
         return Response(record.generate_xml_document(), mimetype="text/xml")
 
-    return Response(
-        f"Invalid configuration, valid options: "
-        f"[{', '.join(list(list(iso19115_2_standard_configs_v3.keys()) + list(iso19115_2_standard_configs_v4.keys())))}]"
-    )
+    return Response(f"Invalid configuration, valid options: [{', '.join(list(iso19115_2_standard_configs_v4.keys()))}]")
 
 
 def _standard_ice_pas_61174_0(config_label: str) -> Response:
@@ -169,8 +127,6 @@ def _generate_schemas() -> None:
     schemas = [
         {"id": "iec_pas_61174_0_v1", "resolve": False},
         {"id": "iec_pas_61174_1_v1", "resolve": True},
-        {"id": "iso_19115_1_v3", "resolve": False},
-        {"id": "iso_19115_2_v3", "resolve": True},
         {"id": "iso_19115_0_v4", "copy": False},
         {"id": "iso_19115_2_v4", "copy": True},
     ]
@@ -180,6 +136,7 @@ def _generate_schemas() -> None:
         print(f"Generating schema for [{schema['id']}]")
         src_schema_path = Path(f"./src/bas_metadata_library/schemas/src/{schema['id']}.json")
         dest_schema_path = Path(f"./src/bas_metadata_library/schemas/dist/{schema['id']}.json")
+        dest_schema_path.parent.mkdir(exist_ok=True, parents=True)
         with src_schema_path.open() as src_schema_file, dest_schema_path.open(mode="w") as dist_schema_file:
             src_schema_data = json.load(src_schema_file)
             dist_schema_data = src_schema_data
@@ -218,17 +175,7 @@ def _capture_json_test_configs() -> None:
                 "config_class": ISO19115_0_MetadataRecordConfigV4,
             },
         ],
-        "iso-19115-1": [
-            {
-                "configs": iso19115_1_standard_configs_v3,
-                "config_class": ISO19115_1_MetadataRecordConfigV3,
-            },
-        ],
         "iso-19115-2": [
-            {
-                "configs": iso19115_2_standard_configs_v3,
-                "config_class": ISO19115_2_MetadataRecordConfigV3,
-            },
             {
                 "configs": iso19115_2_standard_configs_v4,
                 "config_class": ISO19115_2_MetadataRecordConfigV4,
@@ -312,12 +259,7 @@ def _capture_test_records() -> None:
     standards = {
         "test-standard": {"configurations": list(test_metadata_standard_configs.keys())},
         "iso-19115-0": {"configurations": list(iso19115_0_standard_configs_v4.keys())},
-        "iso-19115-1": {"configurations": list(iso19115_1_standard_configs_v3.keys())},
-        "iso-19115-2": {
-            "configurations": list(
-                list(iso19115_2_standard_configs_v3.keys()) + list(iso19115_2_standard_configs_v4.keys())
-            )
-        },
+        "iso-19115-2": {"configurations": list(iso19115_2_standard_configs_v4.keys())},
         "iec-pas-61174-0": {"configurations": list(iec_pas_61174_0_standard_configs_v1.keys())},
         "iec-pas-61174-1": {"configurations": list(iec_pas_61174_1_standard_configs_v1.keys())},
     }
@@ -348,7 +290,7 @@ def _capture_test_records() -> None:
         _update_rtzp_artefact_if_changed(rtzp_standard=rtzp_standard, rtzp_record=rtzp_record)
 
 
-def create_app() -> Flask:  # noqa: C901
+def create_app() -> Flask:
     """Create internal Flask app."""
     app = Flask(__name__)
 
@@ -366,11 +308,6 @@ def create_app() -> Flask:  # noqa: C901
     def standard_iso_19115_0(configuration: str) -> Response:
         """Generate a record from a configuration using the ISO 19115 standard."""
         return _generate_record_iso_19115_0(config_label=configuration)
-
-    @app.route("/standards/iso-19115-1/<configuration>")
-    def standard_iso_19115_1(configuration: str) -> Response:
-        """Generate a record from a configuration using the ISO 19115 standard."""
-        return _generate_record_iso_19115_1(config_label=configuration)
 
     @app.route("/standards/iso-19115-2/<configuration>")
     def standard_iso_19115_2(configuration: str) -> Response:
