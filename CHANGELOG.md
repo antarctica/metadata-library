@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.12.0 - 2024-09-09
+
 ### Removed [BREAKING!]
 
 * Version 2 configurations for ISO 19115-0 and ISO 19115-2
