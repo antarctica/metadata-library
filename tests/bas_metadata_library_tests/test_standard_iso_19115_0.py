@@ -901,46 +901,46 @@ def test_identification_geographic_extent_bounding_box(get_record_response: Elem
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v4_all[config_name]
 
-    if (
-        "identification" not in config
-        or "extent" not in config["identification"]
-        or "geographic" not in config["identification"]["extent"]
-        or "bounding_box" not in config["identification"]["extent"]["geographic"]
-    ):
-        pytest.skip("record does not contain a geographic extent bounding box")
+    for index, extent in enumerate(config["identification"]["extents"]):
+        if 'geographic' not in extent or 'bounding_box' not in extent["geographic"]:
+            continue
 
-    bounding_box_xpath = (
-        "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
-        "gmd:geographicElement/gmd:EX_GeographicBoundingBox[@id = 'boundingGeographicExtent']"
-    )
+        id_ = f"[{index}]"
+        if 'identifier' in extent:
+            id_ = f"[@id = '{extent['identifier']}']"
 
-    west_bounding_box_value = record.xpath(
-        f"{bounding_box_xpath}/gmd:westBoundLongitude/gco:Decimal/text() = "
-        f"'{config['identification']['extent']['geographic']['bounding_box']['west_longitude']}'",
-        namespaces=namespaces.nsmap(),
-    )
-    assert west_bounding_box_value is True
+        bounding_box_xpath = (
+            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent{id_}/"
+            f"gmd:geographicElement/gmd:EX_GeographicBoundingBox"
+        )
 
-    east_bounding_box_value = record.xpath(
-        f"{bounding_box_xpath}/gmd:eastBoundLongitude/gco:Decimal/text() = "
-        f"'{config['identification']['extent']['geographic']['bounding_box']['east_longitude']}'",
-        namespaces=namespaces.nsmap(),
-    )
-    assert east_bounding_box_value is True
+        west_bounding_box_value = record.xpath(
+            f"{bounding_box_xpath}/gmd:westBoundLongitude/gco:Decimal/text() = "
+            f"'{extent['geographic']['bounding_box']['west_longitude']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert west_bounding_box_value is True
 
-    south_bounding_box_value = record.xpath(
-        f"{bounding_box_xpath}/gmd:southBoundLatitude/gco:Decimal/text() = "
-        f"'{config['identification']['extent']['geographic']['bounding_box']['south_latitude']}'",
-        namespaces=namespaces.nsmap(),
-    )
-    assert south_bounding_box_value is True
+        east_bounding_box_value = record.xpath(
+            f"{bounding_box_xpath}/gmd:eastBoundLongitude/gco:Decimal/text() = "
+            f"'{extent['geographic']['bounding_box']['east_longitude']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert east_bounding_box_value is True
 
-    north_bounding_box_value = record.xpath(
-        f"{bounding_box_xpath}/gmd:northBoundLatitude/gco:Decimal/text() = "
-        f"'{config['identification']['extent']['geographic']['bounding_box']['north_latitude']}'",
-        namespaces=namespaces.nsmap(),
-    )
-    assert north_bounding_box_value is True
+        south_bounding_box_value = record.xpath(
+            f"{bounding_box_xpath}/gmd:southBoundLatitude/gco:Decimal/text() = "
+            f"'{extent['geographic']['bounding_box']['south_latitude']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert south_bounding_box_value is True
+
+        north_bounding_box_value = record.xpath(
+            f"{bounding_box_xpath}/gmd:northBoundLatitude/gco:Decimal/text() = "
+            f"'{extent['geographic']['bounding_box']['north_latitude']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert north_bounding_box_value is True
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
@@ -948,25 +948,24 @@ def test_identification_geographic_extent_identifier(get_record_response: Elemen
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v4_all[config_name]
 
-    if (
-        "identification" not in config
-        or "extent" not in config["identification"]
-        or "geographic" not in config["identification"]["extent"]
-        or "identifier" not in config["identification"]["extent"]["geographic"]
-    ):
-        pytest.skip("record does not contain a geographic extent identifier")
+    for index, extent in enumerate(config["identification"]["extents"]):
+        if 'geographic' not in extent or 'identifier' not in extent["geographic"]:
+            continue
 
-    geographic_extent_identifier_elements = record.xpath(
-        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription",
-        namespaces=namespaces.nsmap(),
-    )
-    assert len(geographic_extent_identifier_elements) == 1
-    assert_identifier(
-        element=geographic_extent_identifier_elements[0],
-        config=config["identification"]["extent"]["geographic"]["identifier"],
-        identifier_container="gmd:geographicIdentifier",
-    )
+        id_ = f"[{index}]"
+        if 'identifier' in extent:
+            id_ = f"[@id = '{extent['identifier']}']"
 
+        geographic_extent_identifier_elements = record.xpath(
+            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent{id_}/gmd:geographicElement/gmd:EX_GeographicDescription",
+            namespaces=namespaces.nsmap(),
+        )
+        assert len(geographic_extent_identifier_elements) == 1
+        assert_identifier(
+            element=geographic_extent_identifier_elements[0],
+            config=extent["geographic"]["identifier"],
+            identifier_container="gmd:geographicIdentifier",
+        )
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
@@ -974,43 +973,52 @@ def test_identification_temporal_extent(get_record_response: Element, config_nam
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v4_all[config_name]
 
-    if (
-        "identification" not in config
-        or "extent" not in config["identification"]
-        or "temporal" not in config["identification"]["extent"]
-        or "period" not in config["identification"]["extent"]["temporal"]
-    ):
-        pytest.skip("record does not contain a temporal period extent")
+    for index, extent in enumerate(config["identification"]["extents"]):
+        if 'temporal' not in extent:
+            continue
 
-    _date_precision = None
-    if "date_precision" in config["identification"]["extent"]["temporal"]["period"]["start"]:
-        _date_precision = config["identification"]["extent"]["temporal"]["period"]["start"]["date_precision"]
-    _start_value = encode_date_string(
-        date_datetime=config["identification"]["extent"]["temporal"]["period"]["start"]["date"],
-        date_precision=_date_precision,
-    )
-    temporal_period_start_value = record.xpath(
-        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
-        f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[@gml:id = 'boundingTemporalExtent']/"
-        f"gml:beginPosition/text() = '{_start_value}'",
-        namespaces=namespaces.nsmap(),
-    )
-    assert temporal_period_start_value is True
+        id_ = f"[{index}]"
+        if 'identifier' in extent:
+            id_ = f"[@id = '{extent['identifier']}']"
 
-    _date_precision = None
-    if "date_precision" in config["identification"]["extent"]["temporal"]["period"]["end"]:
-        _date_precision = config["identification"]["extent"]["temporal"]["period"]["end"]["date_precision"]
-    _end_value = encode_date_string(
-        date_datetime=config["identification"]["extent"]["temporal"]["period"]["end"]["date"],
-        date_precision=_date_precision,
-    )
-    temporal_period_end_value = record.xpath(
-        f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/"
-        f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod[@gml:id = 'boundingTemporalExtent']/"
-        f"gml:endPosition/text() = '{_end_value}'",
-        namespaces=namespaces.nsmap(),
-    )
-    assert temporal_period_end_value is True
+        _date_precision = None
+        if "date_precision" in extent["temporal"]["period"]["start"]:
+            _date_precision = extent["temporal"]["period"]["start"]["date_precision"]
+        _start_value = encode_date_string(
+            date_datetime=extent["temporal"]["period"]["start"]["date"],
+            date_precision=_date_precision,
+        )
+        temporal_period_start_value = record.xpath(
+            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent{id_}/"
+            f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition/text() = "
+            f"'{_start_value}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert temporal_period_start_value is True
+
+        if 'end' in extent["temporal"]["period"]:
+            _date_precision = None
+            if "date_precision" in extent["temporal"]["period"]["end"]:
+                _date_precision = extent["temporal"]["period"]["end"]["date_precision"]
+            _end_value = encode_date_string(
+                date_datetime=extent["temporal"]["period"]["end"]["date"],
+                date_precision=_date_precision,
+            )
+            temporal_period_end_value = record.xpath(
+                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent{id_}/"
+                f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition/text() = "
+                f"'{_end_value}'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert temporal_period_end_value is True
+        else:
+            temporal_period_end_value = record.xpath(
+                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent{id_}/"
+                f"gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/"
+                f"gml:endPosition/@indeterminatePosition = 'unknown'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert temporal_period_end_value is True
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
