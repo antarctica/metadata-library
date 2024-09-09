@@ -222,12 +222,7 @@ base_complex_record_v4 = {
                         "namespace": "gcmd-keywords-location",
                     },
                 },
-                "temporal": {
-                    "period": {
-                        "start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
-                        "end": {"date": datetime.datetime(2018, 9, 15, 0, 0, tzinfo=datetime.timezone.utc)},
-                    }
-                },
+                "temporal": {"period": {"start": {"date": datetime.date(2018, 1, 1), "date_precision": "year"}}},
             },
         ],
         "credit": "No credit.",

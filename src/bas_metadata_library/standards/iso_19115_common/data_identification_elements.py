@@ -1622,14 +1622,17 @@ class TemporalExtent(MetadataRecordElement):
                 date_precision=_date_precision,
             )
 
-            _date_precision = None
-            if "date_precision" in self.element_attributes["period"]["end"]:
-                _date_precision = self.element_attributes["period"]["end"]["date_precision"]
             end_position_element = SubElement(time_period_element, f"{{{self.ns.gml}}}endPosition")
-            end_position_element.text = encode_date_string(
-                date_datetime=self.element_attributes["period"]["end"]["date"],
-                date_precision=_date_precision,
-            )
+            if "end" in self.element_attributes["period"]:
+                _date_precision = None
+                if "date_precision" in self.element_attributes["period"]["end"]:
+                    _date_precision = self.element_attributes["period"]["end"]["date_precision"]
+                end_position_element.text = encode_date_string(
+                    date_datetime=self.element_attributes["period"]["end"]["date"],
+                    date_precision=_date_precision,
+                )
+            else:
+                end_position_element.attrib["indeterminatePosition"] = "unknown"
 
 
 class ResourceFormat(MetadataRecordElement):
