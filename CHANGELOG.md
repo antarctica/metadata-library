@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+* Relaxing requirements for non-mandatory ISO config properties
+  [#236](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/236)
+* Changing constraint composition rule in ISO config from 'oneOf' to 'anyOf' as multiple options may match
+  [#237](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/237)
+
 ## 0.12.0 - 2024-09-09
 
 ### Removed [BREAKING!]
