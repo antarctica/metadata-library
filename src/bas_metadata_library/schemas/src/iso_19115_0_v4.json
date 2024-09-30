@@ -144,7 +144,7 @@
       "title": "Constraint",
       "description": "Access/usage constraint describing a limitation on accessing or using the resource",
       "type": "object",
-      "oneOf": [
+      "anyOf": [
         {
           "required": [
             "type",
