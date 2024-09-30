@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* 'Reverseof' custom aggregation association type code list item for two side map products
+  [#239](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/239)
+
 ### Fixed
 
 * Relaxing requirements for non-mandatory ISO config properties
