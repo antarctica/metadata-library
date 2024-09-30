@@ -39,6 +39,8 @@ class ISOMetadataRecord(MetadataRecordElement):
         )
         _character_set = character_set.make_config()
         if _character_set != "":
+            if "metadata" not in _:
+                _["metadata"] = {}
             _["metadata"]["character_set"] = _character_set
 
         hierarchy_level = HierarchyLevel(
@@ -46,6 +48,8 @@ class ISOMetadataRecord(MetadataRecordElement):
         )
         _hierarchy_level = hierarchy_level.make_config()
         if _hierarchy_level != "":
+            if "metadata" not in _:
+                _["metadata"] = {}
             _["hierarchy_level"] = _hierarchy_level
 
         _contacts = []
@@ -63,6 +67,8 @@ class ISOMetadataRecord(MetadataRecordElement):
             if bool(_contact):
                 _contacts.append(_contact)
         if len(_contacts) > 0:
+            if "metadata" not in _:
+                _["metadata"] = {}
             _["metadata"]["contacts"] = _contacts
 
         date_stamp = DateStamp(record=self.record, attributes=self.attributes, xpath=f"{self.xpath}")

@@ -820,10 +820,7 @@
         "title",
         "dates",
         "abstract",
-        "language",
-        "character_set",
-        "topics",
-        "extents"
+        "language"
       ],
       "additionalProperties": false,
       "properties": {
@@ -1105,10 +1102,8 @@
       "description": "Information about the metadata record describing the resource.",
       "type": "object",
       "required": [
-        "character_set",
         "contacts",
-        "date_stamp",
-        "language"
+        "date_stamp"
       ],
       "additionalProperties": false,
       "properties": {
@@ -1829,7 +1824,6 @@
   "type": "object",
   "required": [
     "$schema",
-    "hierarchy_level",
     "metadata",
     "identification"
   ],

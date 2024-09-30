@@ -442,13 +442,14 @@ class DataIdentification(MetadataRecordElement):
         )
         language.make_element()
 
-        character_set = CharacterSet(
-            record=self.record,
-            attributes=self.attributes,
-            parent_element=data_identification_element,
-            element_attributes=self.attributes["identification"],
-        )
-        character_set.make_element()
+        if "character_set" in self.attributes["identification"]:
+            character_set = CharacterSet(
+                record=self.record,
+                attributes=self.attributes,
+                parent_element=data_identification_element,
+                element_attributes=self.attributes["identification"],
+            )
+            character_set.make_element()
 
         if "topics" in self.attributes["identification"]:
             for topic_attribute in self.attributes["identification"]["topics"]:

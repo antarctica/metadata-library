@@ -2,10 +2,7 @@ import datetime
 
 minimal_record_v4 = {
     "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
-    "hierarchy_level": "dataset",
     "metadata": {
-        "language": "eng",
-        "character_set": "utf8",
         "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
         "date_stamp": datetime.date(2018, 10, 18),
     },
@@ -13,22 +10,7 @@ minimal_record_v4 = {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": datetime.date(2018, 1, 1), "date_precision": "year"}},
         "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
-        "character_set": "utf8",
         "language": "eng",
-        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extents": [
-            {
-                "identifier": "bounding",
-                "geographic": {
-                    "bounding_box": {
-                        "west_longitude": -45.61521,
-                        "east_longitude": -27.04976,
-                        "south_latitude": -68.1511,
-                        "north_latitude": -54.30761,
-                    }
-                },
-            },
-        ],
     },
 }
 

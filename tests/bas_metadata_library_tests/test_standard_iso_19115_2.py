@@ -26,7 +26,7 @@ def test_invalid_configuration_v4():
     with pytest.raises(ValidationError) as e:
         configuration = MetadataRecordConfigV4(**config)
         configuration.validate()
-    assert "'hierarchy_level' is a required property" in str(e.value)
+    assert "'metadata' is a required property" in str(e.value)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
