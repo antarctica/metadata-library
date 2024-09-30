@@ -36,7 +36,7 @@ def test_invalid_configuration_v4():
     with pytest.raises(ValidationError) as e:
         configuration = MetadataRecordConfigV4(**config)
         configuration.validate()
-    assert "'hierarchy_level' is a required property" in str(e.value)
+    assert "'metadata' is a required property" in str(e.value)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
@@ -901,6 +901,9 @@ def test_identification_geographic_extent_bounding_box(get_record_response: Elem
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v4_all[config_name]
 
+    if "identification" not in config or "extents" not in config["identification"]:
+        pytest.skip("record does not contain any extents")
+
     for index, extent in enumerate(config["identification"]["extents"]):
         if 'geographic' not in extent or 'bounding_box' not in extent["geographic"]:
             continue
@@ -948,6 +951,9 @@ def test_identification_geographic_extent_identifier(get_record_response: Elemen
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v4_all[config_name]
 
+    if "identification" not in config or "extents" not in config["identification"]:
+        pytest.skip("record does not contain any extents")
+
     for index, extent in enumerate(config["identification"]["extents"]):
         if 'geographic' not in extent or 'identifier' not in extent["geographic"]:
             continue
@@ -972,6 +978,9 @@ def test_identification_geographic_extent_identifier(get_record_response: Elemen
 def test_identification_temporal_extent(get_record_response: Element, config_name: str):
     record = get_record_response(standard=standard, config=config_name)
     config = configs_v4_all[config_name]
+
+    if "identification" not in config or "extents" not in config["identification"]:
+        pytest.skip("record does not contain any extents")
 
     for index, extent in enumerate(config["identification"]["extents"]):
         if 'temporal' not in extent:
@@ -1353,8 +1362,8 @@ def test_edge_case_temporal_extent_begin_invalid_date():
     record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
     record_data = record_data.replace(
-        "</gmd:EX_Extent>",
-        '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:beginPosition>?NotADate?</gml:beginPosition><gml:endPosition>2018-03</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
+        "</gmd:language>",
+        '</gmd:language><gmd:extent><gmd:EX_Extent id="bounding"><gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:beginPosition>?NotADate?</gml:beginPosition><gml:endPosition>2018-03</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent></gmd:extent>',
     )
     record = MetadataRecord(record=record_data)
     with pytest.raises(RuntimeError) as e:
@@ -1370,8 +1379,8 @@ def test_edge_case_temporal_extent_end_invalid_date():
     record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
     record_data = record_data.replace(
-        "</gmd:EX_Extent>",
-        '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:beginPosition>2018-03-15T00:00:00</gml:beginPosition><gml:endPosition>?NotADate?</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
+        "</gmd:language>",
+        '</gmd:language><gmd:extent><gmd:EX_Extent id="bounding"><gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:beginPosition>2018-03-15T00:00:00</gml:beginPosition><gml:endPosition>?NotADate?</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent></gmd:extent>',
     )
     record = MetadataRecord(record=record_data)
     with pytest.raises(RuntimeError) as e:
@@ -1387,8 +1396,8 @@ def test_edge_case_temporal_extent_begin_missing_date():
     record_element = XML(record_data.encode(), parser=XMLParser(remove_blank_text=True))
     record_data = tostring(record_element).decode()
     record_data = record_data.replace(
-        "</gmd:EX_Extent>",
-        '<gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:endPosition>2018-03</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent>',
+        "</gmd:language>",
+        '</gmd:language><gmd:extent><gmd:EX_Extent id="bounding"><gmd:temporalElement><gmd:EX_TemporalExtent><gmd:extent><gml:TimePeriod gml:id="boundingExtent"><gml:endPosition>2018-03</gml:endPosition></gml:TimePeriod></gmd:extent></gmd:EX_TemporalExtent></gmd:temporalElement></gmd:EX_Extent></gmd:extent>',
     )
     record = MetadataRecord(record=record_data)
     config = record.make_config().config
