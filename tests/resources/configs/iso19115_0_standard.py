@@ -601,6 +601,15 @@ complete_record_v4 = {
                     "namespace": "doi",
                 },
             },
+            {
+                "association_type": "physicalReverseOf",
+                "initiative_type": "collection",
+                "identifier": {
+                    "identifier": "25e16d6d-718c-4f33-b33b-480fefc12eac",
+                    "href": "https://data.bas.ac.uk/items/25e16d6d-718c-4f33-b33b-480fefc12eac",
+                    "namespace": "data.bas.ac.uk",
+                },
+            },
         ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",

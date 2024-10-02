@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+* Incomplete addition of 'physicalReverseOf' custom aggregation association type code list value
+  [#239](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/239)
+
 ## 0.13.0 - 2024-10-02
 
 ### Added
