@@ -1235,6 +1235,41 @@ def test_data_quality_lineage_sources(get_record_response: Element, config_name:
         assert len(sources_elements) == 1
         assert_source(sources_elements[0], source_config)
 
+@pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
+def test_data_quality_domain_consistency(get_record_response: Element, config_name: str):
+    record = get_record_response(standard=standard, config=config_name)
+    config = configs_v4_all[config_name]
+
+    if "identification" not in config or "domain_consistency" not in config["identification"]:
+        pytest.skip("record does not contain any lineage domain consistency items")
+
+    for domain_consistency_config in config["identification"]['domain_consistency']:
+        domain_consistency_elements = record.xpath(
+            f"/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult[gmd:specification[gmd:CI_Citation[gmd:title[gco:CharacterString[text() = '{domain_consistency_config['specification']['title']['value']}']]]]] |"
+            f"/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult[gmd:specification[gmd:CI_Citation[gmd:title[gmx:Anchor[text() = '{domain_consistency_config['specification']['title']['value']}']]]]]",
+            namespaces=namespaces.nsmap(),
+        )
+        assert len(domain_consistency_elements) == 1
+
+        specification_elements = domain_consistency_elements[0].xpath(
+            f"./gmd:specification/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:organisationName/gco:CharacterString/text() = '{domain_consistency_config['specification']['contact']['organisation']['name']}'] | "
+            f"./gmd:specification/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:organisationName/gmx:Anchor/text() = '{domain_consistency_config['specification']['contact']['organisation']['name']}']",
+            namespaces=namespaces.nsmap(),
+        )
+        assert len(specification_elements) == 1
+        assert_responsible_party(element=specification_elements[0], config=domain_consistency_config['specification']['contact'])
+
+        explanation_value = domain_consistency_elements[0].xpath(
+            f"./gmd:explanation/gco:CharacterString/text() = '{domain_consistency_config['explanation']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert explanation_value is True
+
+        pass_value = domain_consistency_elements[0].xpath(
+            f"./gmd:pass/gco:Boolean/text() = '{str(domain_consistency_config['result']).lower()}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert pass_value is True
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
 def test_metadata_maintenance(get_record_response: Element, config_name: str):
@@ -1742,7 +1777,7 @@ class MockResponse:
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_parse_existing_record_v3(config_name: str):
+def test_parse_existing_record_v4(config_name: str):
     with open(
         Path().resolve().parent.joinpath(f"resources/records/{standard}/{config_name}-record.xml"), mode="r"
     ) as record_file:
@@ -1755,7 +1790,7 @@ def test_parse_existing_record_v3(config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_lossless_conversion_v3(get_record_response: Element, config_name: str):
+def test_lossless_conversion_v4(get_record_response: Element, config_name: str):
     _record = tostring(
         get_record_response(standard=standard, config=config_name),
         pretty_print=True,
