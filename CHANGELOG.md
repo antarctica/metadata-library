@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.13.1 - 2024-10-02
+
 ### Fixed
 
 * Incomplete addition of 'physicalReverseOf' custom aggregation association type code list value
@@ -16,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* 'Reverseof' custom aggregation association type code list item for two side map products
+* 'physicalReverseOf' custom aggregation association type code list item for two side map products
   [#239](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/239)
 * Re-adding domain conformance data quality element
   [#238](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/238)
