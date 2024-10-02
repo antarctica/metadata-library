@@ -1087,6 +1087,7 @@ class AssociationType(CodeListElement):
             "revisionOf",
             "series",
             "stereoMate",
+            "physicalReverseOf",
         ]
         self.code_list = (
             "https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode"
