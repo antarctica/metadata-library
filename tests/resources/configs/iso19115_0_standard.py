@@ -301,6 +301,42 @@ base_complex_record_v4 = {
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
         "lineage": {"statement": "Example lineage statement"},
+        "domain_consistency": [
+            {
+                "specification": {
+                    "title": {
+                        "value": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile"
+                    },
+                    "dates": {"publication": {"date": datetime.date(2024, 10, 1)}},
+                    "edition": "1",
+                    "contact": {
+                        "organisation": {
+                            "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
+                            "href": "https://ror.org/01rhff309",
+                            "title": "ror",
+                        },
+                        "phone": "+44 (0)1223 221400",
+                        "address": {
+                            "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                            "city": "Cambridge",
+                            "administrative_area": "Cambridgeshire",
+                            "postal_code": "CB3 0ET",
+                            "country": "United Kingdom",
+                        },
+                        "email": "magic@bas.ac.uk",
+                        "online_resource": {
+                            "href": "https://www.bas.ac.uk/team/magic",
+                            "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
+                            "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
+                            "function": "information",
+                        },
+                        "role": ["publisher"],
+                    },
+                },
+                "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile.",
+                "result": True,
+            }
+        ],
     },
     "distribution": [
         {
@@ -384,108 +420,35 @@ complete_record_v4 = {
     },
     "identification": {
         "title": {"value": "Test Record"},
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with properties that could typically be included in a record. This does not mean all properties permitted the standard are included, as these are too numerous. Values in this record are complex, meaning they use anchors where relevant rather than simple character strings. Authorities are included in elements that support citations. Identifiers in this record are fake.",
+        "purpose": "Fictitious test record (ISO 19115, no profile, complete).",
+        "credit": "No credit.",
+        "status": "completed",
         "dates": {
             "creation": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
             "revision": {"date": datetime.date(2018, 1, 1), "date_precision": "year"},
             "publication": {"date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc)},
             "released": {"date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc)},
         },
-        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with properties that could typically be included in a record. This does not mean all properties permitted the standard are included, as these are too numerous. Values in this record are complex, meaning they use anchors where relevant rather than simple character strings. Authorities are included in elements that support citations. Identifiers in this record are fake.",
-        "purpose": "Fictitious test record (ISO 19115, no profile, complete).",
-        "character_set": "utf8",
-        "language": "eng",
-        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
-        "extents": [
+        "edition": "2",
+        "series": {"name": "Test Records", "edition": "2024 Series"},
+        "other_citation_details": "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi",
+        "identifiers": [
             {
-                "identifier": "extent1",
-                "geographic": {
-                    "bounding_box": {
-                        "west_longitude": -45.61521,
-                        "east_longitude": -27.04976,
-                        "south_latitude": -68.1511,
-                        "north_latitude": -54.30761,
-                    }
-                },
-                "temporal": {
-                    "period": {
-                        "start": {"date": datetime.datetime(2018, 3, 15, 0, 0, tzinfo=datetime.timezone.utc)},
-                        "end": {"date": datetime.date(2018, 3, 1), "date_precision": "month"},
-                    }
-                },
-                "vertical": {
-                    "minimum": 20.0,
-                    "maximum": 40.0,
-                    "identifier": "ogp-crs-5714_1",
-                    "code": "urn:ogc:def:crs:EPSG::5714",
-                    "name": "MSL height",
-                    "remarks": "Not specific to any location or epoch.",
-                    "scope": "Hydrography.",
-                    "domain_of_validity": {"href": "urn:ogc:def:area:EPSG::1262"},
-                    "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
-                    "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
-                },
+                "identifier": "https://doi.org/10.5072/r3qz22k64",
+                "href": "https://doi.org/10.5072/r3qz22k64",
+                "namespace": "doi",
             },
             {
-                "identifier": "extent2",
-                "geographic": {
-                    "bounding_box": {
-                        "west_longitude": -73.06,
-                        "east_longitude": -73.04,
-                        "south_latitude": -74.33,
-                        "north_latitude": -74.31,
-                    }
-                },
-                "temporal": {
-                    "period": {
-                        "start": {"date": datetime.date(1992, 1, 1), "date_precision": "year"},
-                        "end": {"date": datetime.date(2019, 1, 1), "date_precision": "year"},
-                    }
-                },
-                "vertical": {
-                    "minimum": 0.0,
-                    "maximum": 1139.0,
-                    "identifier": "ogp-crs-5714_2",
-                    "code": "urn:ogc:def:crs:EPSG::5714",
-                    "name": "MSL height",
-                    "remarks": "Not specific to any location or epoch.",
-                    "scope": "Hydrography.",
-                    "domain_of_validity": {"href": "urn:ogc:def:area:EPSG::1262"},
-                    "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
-                    "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
-                },
+                "identifier": "NE/E007895/1",
+                "href": "https://gtr.ukri.org/projects?ref=NE%2FE007895%2F1",
+                "namespace": "award",
             },
             {
-                "identifier": "bounding",
-                "geographic": {
-                    "bounding_box": {
-                        "west_longitude": -73.06,
-                        "east_longitude": -27.04976,
-                        "south_latitude": -74.33,
-                        "north_latitude": -54.30761,
-                    }
-                },
-                "temporal": {
-                    "period": {
-                        "start": {"date": datetime.date(1992, 1, 1), "date_precision": "year"},
-                        "end": {"date": datetime.date(2019, 1, 1), "date_precision": "year"},
-                    }
-                },
-                "vertical": {
-                    "minimum": 0.0,
-                    "maximum": 1139.0,
-                    "identifier": "ogp-crs-5714_bounding",
-                    "code": "urn:ogc:def:crs:EPSG::5714",
-                    "name": "MSL height",
-                    "remarks": "Not specific to any location or epoch.",
-                    "scope": "Hydrography.",
-                    "domain_of_validity": {"href": "urn:ogc:def:area:EPSG::1262"},
-                    "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
-                    "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
-                },
+                "identifier": "978-3-16-148410-0",
+                "namespace": "isbn",
             },
         ],
-        "credit": "No credit.",
-        "status": "completed",
         "contacts": [
             {
                 "individual": {
@@ -642,6 +605,98 @@ complete_record_v4 = {
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
         "spatial_representation_type": "textTable",
         "spatial_resolution": 1000000,
+        "character_set": "utf8",
+        "language": "eng",
+        "topics": ["environment", "climatologyMeteorologyAtmosphere"],
+        "extents": [
+            {
+                "identifier": "extent1",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                },
+                "temporal": {
+                    "period": {
+                        "start": {"date": datetime.datetime(2018, 3, 15, 0, 0, tzinfo=datetime.timezone.utc)},
+                        "end": {"date": datetime.date(2018, 3, 1), "date_precision": "month"},
+                    }
+                },
+                "vertical": {
+                    "minimum": 20.0,
+                    "maximum": 40.0,
+                    "identifier": "ogp-crs-5714_1",
+                    "code": "urn:ogc:def:crs:EPSG::5714",
+                    "name": "MSL height",
+                    "remarks": "Not specific to any location or epoch.",
+                    "scope": "Hydrography.",
+                    "domain_of_validity": {"href": "urn:ogc:def:area:EPSG::1262"},
+                    "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
+                    "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
+                },
+            },
+            {
+                "identifier": "extent2",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -73.06,
+                        "east_longitude": -73.04,
+                        "south_latitude": -74.33,
+                        "north_latitude": -74.31,
+                    }
+                },
+                "temporal": {
+                    "period": {
+                        "start": {"date": datetime.date(1992, 1, 1), "date_precision": "year"},
+                        "end": {"date": datetime.date(2019, 1, 1), "date_precision": "year"},
+                    }
+                },
+                "vertical": {
+                    "minimum": 0.0,
+                    "maximum": 1139.0,
+                    "identifier": "ogp-crs-5714_2",
+                    "code": "urn:ogc:def:crs:EPSG::5714",
+                    "name": "MSL height",
+                    "remarks": "Not specific to any location or epoch.",
+                    "scope": "Hydrography.",
+                    "domain_of_validity": {"href": "urn:ogc:def:area:EPSG::1262"},
+                    "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
+                    "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
+                },
+            },
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -73.06,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -74.33,
+                        "north_latitude": -54.30761,
+                    }
+                },
+                "temporal": {
+                    "period": {
+                        "start": {"date": datetime.date(1992, 1, 1), "date_precision": "year"},
+                        "end": {"date": datetime.date(2019, 1, 1), "date_precision": "year"},
+                    }
+                },
+                "vertical": {
+                    "minimum": 0.0,
+                    "maximum": 1139.0,
+                    "identifier": "ogp-crs-5714_bounding",
+                    "code": "urn:ogc:def:crs:EPSG::5714",
+                    "name": "MSL height",
+                    "remarks": "Not specific to any location or epoch.",
+                    "scope": "Hydrography.",
+                    "domain_of_validity": {"href": "urn:ogc:def:area:EPSG::1262"},
+                    "vertical_cs": {"href": "urn:ogc:def:cs:EPSG::6498"},
+                    "vertical_datum": {"href": "urn:ogc:def:datum:EPSG::5100"},
+                },
+            },
+        ],
         "lineage": {
             "statement": "Example lineage statement",
             "process_steps": [
@@ -718,24 +773,42 @@ complete_record_v4 = {
                 }
             ],
         },
-        "edition": "2",
-        "series": {"name": "Test Records", "edition": "2024 Series"},
-        "other_citation_details": "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi",
-        "identifiers": [
+        "domain_consistency": [
             {
-                "identifier": "https://doi.org/10.5072/r3qz22k64",
-                "href": "https://doi.org/10.5072/r3qz22k64",
-                "namespace": "doi",
-            },
-            {
-                "identifier": "NE/E007895/1",
-                "href": "https://gtr.ukri.org/projects?ref=NE%2FE007895%2F1",
-                "namespace": "award",
-            },
-            {
-                "identifier": "978-3-16-148410-0",
-                "namespace": "isbn",
-            },
+                "specification": {
+                    "title": {
+                        "value": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile",
+                        "href": "https://metadata-standards.data.bas.ac.uk/profile/magic-discovery-v1/",
+                    },
+                    "dates": {"publication": {"date": datetime.date(2024, 10, 1)}},
+                    "edition": "1",
+                    "contact": {
+                        "organisation": {
+                            "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
+                            "href": "https://ror.org/01rhff309",
+                            "title": "ror",
+                        },
+                        "phone": "+44 (0)1223 221400",
+                        "address": {
+                            "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+                            "city": "Cambridge",
+                            "administrative_area": "Cambridgeshire",
+                            "postal_code": "CB3 0ET",
+                            "country": "United Kingdom",
+                        },
+                        "email": "magic@bas.ac.uk",
+                        "online_resource": {
+                            "href": "https://www.bas.ac.uk/team/magic",
+                            "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
+                            "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
+                            "function": "information",
+                        },
+                        "role": ["publisher"],
+                    },
+                },
+                "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile.",
+                "result": True,
+            }
         ],
     },
     "distribution": [

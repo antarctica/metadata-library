@@ -521,6 +521,39 @@
         }
       }
     },
+    "domain_consistency_measure": {
+      "title": "Domain consistency measure",
+      "description": "A measure used to gauge data quality of the resource against rules defined by an external entity.",
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "specification": {
+          "$ref": "#/definitions/specification"
+        },
+        "explanation": {
+          "title": "Explanation",
+          "description": "Context surrounding applying the consistency measure against the resource.",
+          "type": "string",
+          "examples": [
+            "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile."
+          ]
+        },
+        "result": {
+          "title": "Result",
+          "description": "Result of applying the consistency measure against the resource.",
+          "type": "boolean"
+        }
+      }
+    },
+    "domain_consistency": {
+      "title": "Domain consistency measures",
+      "description": "A series of domain consistency measures used to gauge data quality of the resource against rules defined by an external entity.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/domain_consistency_measure"
+      }
+    },
     "edition": {
       "title": "Edition",
       "description": "Version or edition of the resource, or element related to the resource.",
@@ -899,6 +932,9 @@
         },
         "lineage": {
           "$ref": "#/definitions/lineage"
+        },
+        "domain_consistency": {
+          "$ref": "#/definitions/domain_consistency"
         }
       }
     },
@@ -1531,6 +1567,47 @@
         null
       ]
     },
+    "specification": {
+      "title": "Specification",
+      "description": "Name, version and provider of a data quality conformance test.",
+      "type": "object",
+      "required": [
+        "title",
+        "dates"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/title"
+            },
+            {
+              "properties": {
+                "href": {
+                  "title": "URL",
+                  "description": "URL identifying the thesaurus.",
+                  "type": "string",
+                  "format": "uri",
+                  "examples": [
+                    "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "dates": {
+          "$ref": "#/definitions/dates"
+        },
+        "edition": {
+          "$ref": "#/definitions/edition"
+        },
+        "contact": {
+          "$ref": "#/definitions/contact"
+        }
+      }
+    },
     "status": {
       "allOf": [
         {
@@ -1578,7 +1655,10 @@
       "title": "Thesaurus",
       "description": "Name, version and provider of a keyword set.",
       "type": "object",
-      "required": [],
+      "required": [
+        "title",
+        "dates"
+      ],
       "additionalProperties": false,
       "properties": {
         "title": {
@@ -1624,7 +1704,12 @@
         "value": {
           "title": "Value",
           "description": "Title.",
-          "type": "string"
+          "type": "string",
+          "examples": [
+            "Map of Antarctica",
+            "NASA Global Change Master Directory (GCMD) Science Keywords",
+            "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) profile for ISO 19915-2:2009 (discovery metadata)"
+          ]
         }
       }
     },

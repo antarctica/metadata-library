@@ -17,6 +17,25 @@ class DataQuality(MetadataRecordElement):
         """Decode to Python."""
         _ = {}
 
+        _domain_consistency = []
+        domains_length = int(
+            self.record.xpath(
+                f"count({self.xpath}/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency)",
+                namespaces=self.ns.nsmap(),
+            )
+        )
+        for domain_index in range(1, domains_length + 1):
+            domain_consistency = DomainConsistency(
+                record=self.record,
+                attributes=self.attributes,
+                xpath=f"({self.xpath}/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report[gmd:DQ_DomainConsistency])[{domain_index}]",
+            )
+            _domain = domain_consistency.make_config()
+            if bool(_domain):
+                _domain_consistency.append(_domain)
+        if len(_domain_consistency) > 0:
+            _["domain_consistency"] = _domain_consistency
+
         lineage = Lineage(
             record=self.record,
             attributes=self.attributes,
@@ -35,6 +54,16 @@ class DataQuality(MetadataRecordElement):
 
         scope = Scope(record=self.record, attributes=self.attributes, parent_element=data_quality_element)
         scope.make_element()
+
+        if "domain_consistency" in self.element_attributes["identification"]:
+            for domain_consistency_attributes in self.element_attributes["identification"]["domain_consistency"]:
+                domain_consistency = DomainConsistency(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=data_quality_element,
+                    element_attributes=domain_consistency_attributes,
+                )
+                domain_consistency.make_element()
 
         if "lineage" in self.element_attributes["identification"]:
             lineage = Lineage(
@@ -335,3 +364,53 @@ class Source(MetadataRecordElement):
                     element_attributes=step_attributes,
                 )
                 step.make_element()
+
+
+class DomainConsistency(MetadataRecordElement):
+    """gmd:DQ_DomainConsistency."""
+
+    def make_config(self) -> dict:
+        """Decode to Python."""
+        _ = {}
+        xpath = f"{self.xpath}/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult"
+
+        specification = Citation(record=self.record, attributes=self.attributes, xpath=f"({xpath}/gmd:specification)")
+        _specification = specification.make_config()
+        if bool(_specification):
+            _["specification"] = _specification
+
+        explanation_value = self.record.xpath(
+            f"{xpath}/gmd:explanation/gco:CharacterString/text()", namespaces=self.ns.nsmap()
+        )
+        if len(explanation_value) == 1:
+            _["explanation"] = explanation_value[0]
+
+        result_value = self.record.xpath(f"{xpath}/gmd:pass/gco:Boolean/text()", namespaces=self.ns.nsmap())
+        if len(result_value) == 1:
+            _["result"] = bool(result_value[0])
+
+        return _
+
+    def make_element(self) -> None:
+        """Encode as XML."""
+        domain_conformance_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}report")
+        domain_conformance_element = SubElement(domain_conformance_wrapper, f"{{{self.ns.gmd}}}DQ_DomainConsistency")
+        result_wrapper = SubElement(domain_conformance_element, f"{{{self.ns.gmd}}}result")
+        result_element = SubElement(result_wrapper, f"{{{self.ns.gmd}}}DQ_ConformanceResult")
+
+        specification_element = SubElement(result_element, f"{{{self.ns.gmd}}}specification")
+        citation = Citation(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=specification_element,
+            element_attributes=self.element_attributes["specification"],
+        )
+        citation.make_element()
+
+        explanation_element = SubElement(result_element, f"{{{self.ns.gmd}}}explanation")
+        explanation_value = SubElement(explanation_element, f"{{{self.ns.gco}}}CharacterString")
+        explanation_value.text = self.element_attributes["explanation"]
+
+        pass_element = SubElement(result_element, f"{{{self.ns.gmd}}}pass")
+        pass_value = SubElement(pass_element, f"{{{self.ns.gco}}}Boolean")
+        pass_value.text = str(self.element_attributes["result"]).lower()
