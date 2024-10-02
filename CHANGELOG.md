@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.13.0 - 2024-10-02
+
 ### Added
 
 * 'Reverseof' custom aggregation association type code list item for two side map products
