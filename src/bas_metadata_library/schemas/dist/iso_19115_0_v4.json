@@ -414,10 +414,11 @@
         "date": {
             "title": "Date",
             "description": "A literal (partial) date or date time, including time zone which should be UTC.",
-            "oneOf": [
+            "minLength": 4,
+            "anyOf": [
                 {
                     "type": "string",
-                    "pattern": "^(\\d{4}(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?)$"
+                    "pattern": "^\\d{4}(-((0[1-9]|1[0-2])(-([0-2][0-9]|3[01]))?)?)?$"
                 },
                 {
                     "type": "string",
