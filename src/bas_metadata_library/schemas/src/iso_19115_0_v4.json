@@ -1494,7 +1494,7 @@
       "description": "Information about a series this resource belongs to, such as a published map series.",
       "type": "object",
       "required": [],
-      "additionalItems": false,
+      "additionalProperties": false,
       "properties": {
         "name": {
           "title": "Name",
@@ -1518,7 +1518,7 @@
         "title",
         "dates"
       ],
-      "additionalItems": false,
+      "additionalProperties": false,
       "properties": {
         "description": {
           "$ref": "#/definitions/description"
