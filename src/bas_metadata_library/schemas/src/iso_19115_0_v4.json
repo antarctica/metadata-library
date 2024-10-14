@@ -187,7 +187,7 @@
               "title": "URL",
               "description": "URL identifying, or relating to, the constraint.",
               "type": "string",
-              "format": "uri"
+              "format": "uri-reference"
             },
             "permissions": false
           }
@@ -211,7 +211,7 @@
               "title": "URL",
               "description": "URL identifying, or relating to, the constraint.",
               "type": "string",
-              "format": "uri"
+              "format": "uri-reference"
             },
             "permissions": false
           }
@@ -377,7 +377,7 @@
           "title": "URL",
           "description": "URL identifying, or relating to, the individual or organisation. Identifiers are restricted to ORCID iDs (for individuals) and Research Organisation Registry (ROR) or International Standard Name Identifier (ISNI) identifiers (for organisations).",
           "type": "string",
-          "format": "uri",
+          "format": "uri-reference",
           "examples": [
             "https://ror.org/01rhff309",
             "https://sandbox.orcid.org/0000-0001-8373-6934"
@@ -414,13 +414,21 @@
     "date": {
       "title": "Date",
       "description": "A literal (partial) date or date time, including time zone which should be UTC.",
-      "type": "string",
-      "format": "date-time",
-      "minLength": 4,
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^(\\d{4}(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?)$"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ],
       "examples": [
         "2010",
         "2010-04",
         "2010-04-20",
+        "2010-04-20T14:39:45",
         "2010-04-20T14:39:45+00:00"
       ]
     },
@@ -488,8 +496,10 @@
           "$ref": "#/definitions/contact"
         },
         {
+          "type": "object",
           "properties": {
             "role": {
+              "type": "array",
               "items": {
                 "enum": [
                   "distributor"
@@ -631,7 +641,7 @@
           "title": "URL",
           "description": "URL identifying the data format.",
           "type": "string",
-          "format": "uri",
+          "format": "uri-reference",
           "examples": [
             "https://www.iana.org/assignments/media-types/application/geopackage+sqlite3"
           ]
@@ -695,7 +705,7 @@
             "title": "URL",
             "description": "URL to the graphic overview file.",
             "type": "string",
-            "format": "uri",
+            "format": "uri-reference",
             "examples": [
               "https://example.com/thumbnail.png"
             ]
@@ -959,7 +969,7 @@
           "title": "URL",
           "description": "URL identifying, or relating to, the identifier. Identifiers are restricted to DOIs and grant references iDs (for resources related to grant funded projects) (for organisations).",
           "type": "string",
-          "format": "uri",
+          "format": "uri-reference",
           "examples": [
             "https://doi.org/10.5285/86BD7A1A-845D-48A9-8D71-59FDF7290556"
           ]
@@ -1020,7 +1030,7 @@
                   "title": "URL",
                   "description": "URL identifying, or relating to, the term.",
                   "type": "string",
-                  "format": "uri",
+                  "format": "uri-reference",
                   "examples": [
                     "https://gcmd.earthdata.nasa.gov/kms/concept/c58320e6-3f1d-4c36-9bee-6bad73404c21"
                   ]
@@ -1202,7 +1212,7 @@
           "title": "URL",
           "description": "URL to the external website or page.",
           "type": "string",
-          "format": "uri",
+          "format": "uri-reference",
           "examples": [
             "https://www.epsg-registry.org/"
           ]
@@ -1377,7 +1387,7 @@
               "title": "URL",
               "description": "URL identifying the code.",
               "type": "string",
-              "format": "uri",
+              "format": "uri-reference",
               "examples": [
                 "http://www.opengis.net/def/crs/EPSG/0/3031"
               ]
@@ -1474,7 +1484,7 @@
       "title": "JSON Schema",
       "description": "JSON Schema keyword indicating the schema a document complies with.",
       "type": "string",
-      "format": "uri",
+      "format": "uri-reference",
       "examples": [
         "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json"
       ]
@@ -1588,7 +1598,7 @@
                   "title": "URL",
                   "description": "URL identifying the thesaurus.",
                   "type": "string",
-                  "format": "uri",
+                  "format": "uri-reference",
                   "examples": [
                     "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords"
                   ]
@@ -1667,12 +1677,13 @@
               "$ref": "#/definitions/title"
             },
             {
+              "type": "object",
               "properties": {
                 "href": {
                   "title": "URL",
                   "description": "URL identifying the thesaurus.",
                   "type": "string",
-                  "format": "uri",
+                  "format": "uri-reference",
                   "examples": [
                     "https://earthdata.nasa.gov/about/gcmd/global-change-master-directory-gcmd-keywords"
                   ]
@@ -1861,7 +1872,7 @@
               "title": "URL",
               "description": "URL or URN for a resource that defines the domain of validity.",
               "type": "string",
-              "format": "uri",
+              "format": "uri-reference",
               "examples": [
                 "urn:ogc:def:area:EPSG::1262"
               ]
@@ -1879,7 +1890,7 @@
               "title": "URL",
               "description": "URL or URN for a resource that defines the coordinate system.",
               "type": "string",
-              "format": "uri",
+              "format": "uri-reference",
               "examples": [
                 "urn:ogc:def:cs:EPSG::6498"
               ]
@@ -1897,7 +1908,7 @@
               "title": "URL",
               "description": "URL or URN for a resource that defines the datum.",
               "type": "string",
-              "format": "uri",
+              "format": "uri-reference",
               "examples": [
                 "urn:ogc:def:datum:EPSG::5100"
               ]
