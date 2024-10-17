@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* Minimum length requirements for mandatory fields in the ISO 19115 schema
+  [#248](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/248)
+
 ### Fixed
 
 * Incompatibilities in the ISO 19115 JSON Schema between JavaScript and Python validation libraries
