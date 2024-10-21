@@ -48,3 +48,14 @@ def get_record_response(app_client: FlaskClient) -> ElementTree():
         return fromstring(response.data)  # noqa: S320
 
     return _get_record_response_for_config
+
+
+@pytest.fixture
+def fx_get_record_response(app_client: FlaskClient) -> ElementTree():
+    """Get a generated record for a given standard/profile and config."""
+
+    def _get_record_response_for_config(kind: str, standard_profile: str, config: str) -> etree:
+        response = app_client.get(f"/{kind}/{standard_profile}/{config}")
+        return fromstring(response.data)  # noqa: S320
+
+    return _get_record_response_for_config
