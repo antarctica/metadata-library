@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Incompatibilities in the ISO 19115 JSON Schema between JavaScript and Python validation libraries
   [#243](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/243)
+* Inconsistencies in function names for generating test records
+  [#249](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/249)
 
 ## 0.13.1 - 2024-10-02
 
