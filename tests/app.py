@@ -84,7 +84,7 @@ def _generate_record_iso_19115_2(config_label: str) -> Response:
     return Response(f"Invalid configuration, valid options: [{', '.join(list(iso19115_2_standard_configs_v4.keys()))}]")
 
 
-def _standard_ice_pas_61174_0(config_label: str) -> Response:
+def _generate_record_ice_pas_61174_0(config_label: str) -> Response:
     """Generate a record from a configuration using the IEC PAS 61174-0 standard."""
     if config_label in iec_pas_61174_0_standard_configs_v1:
         configuration_object = iec_pas_61174_0_standard_configs_v1[config_label]
@@ -97,7 +97,7 @@ def _standard_ice_pas_61174_0(config_label: str) -> Response:
     )
 
 
-def _standard_ice_pas_61174_1(config_label: str) -> Response:
+def _generate_record_ice_pas_61174_1(config_label: str) -> Response:
     """Generate a record from a configuration using the IEC PAS 61174-1 standard."""
     if config_label in iec_pas_61174_1_standard_configs_v1:
         configuration_object = iec_pas_61174_1_standard_configs_v1[config_label]
@@ -317,12 +317,12 @@ def create_app() -> Flask:
     @app.route("/standards/iec-pas-61174-0/<configuration>")
     def standard_ice_pas_61174_0(configuration: str) -> Response:
         """Generate a record from a configuration using the IEC PAS 61174-0 standard."""
-        return _standard_ice_pas_61174_0(configuration)
+        return _generate_record_ice_pas_61174_0(configuration)
 
     @app.route("/standards/iec-pas-61174-1/<configuration>")
     def standard_ice_pas_61174_1(configuration: str) -> Response:
         """Generate a record from a configuration using the IEC PAS 61174-1 standard."""
-        return _standard_ice_pas_61174_1(configuration)
+        return _generate_record_ice_pas_61174_1(configuration)
 
     @app.cli.command()
     def generate_schemas() -> None:
