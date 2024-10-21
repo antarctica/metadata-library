@@ -8,7 +8,7 @@ stages:
   - 🧪 test
   - 📋 lint
   - 🏗 build
-  - 📦 publish
+  - 🚚 publish
   - 📣 release
 
 variables:
@@ -132,7 +132,7 @@ build:
       if: '$CI_COMMIT_BRANCH != "main" || $CI_COMMIT_TAG != null'
 
 publish:
-  stage: 📦 publish
+  stage: 🚚 publish
   needs:
     - job: build
       artifacts: true
@@ -146,7 +146,7 @@ publish:
     - if: $CI_COMMIT_TAG
 
 publish-schemas-stage:
-  stage: 📦 publish
+  stage: 🚚 publish
   needs: []
   image:
     name: governmentpaas/awscli:latest
@@ -161,7 +161,7 @@ publish-schemas-stage:
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG == null'
 
 publish-schemas-prod:
-  stage: 📦 publish
+  stage: 🚚 publish
   needs: []
   image:
     name: governmentpaas/awscli:latest
