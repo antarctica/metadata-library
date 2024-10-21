@@ -8,6 +8,7 @@
             "title": "Abstract",
             "description": "Resource description.",
             "type": "string",
+            "minLength": 1,
             "examples": [
                 "This abstract, and the record to which it belongs, is fictitious."
             ]
@@ -1074,6 +1075,7 @@
             "title": "Language",
             "description": "Code for the spoken/written language used (typically 'eng' for English)'.",
             "type": "string",
+            "minLength": 1,
             "examples": [
                 "eng"
             ]
@@ -1719,6 +1721,7 @@
                     "title": "Value",
                     "description": "Title.",
                     "type": "string",
+                    "minLength": 1,
                     "examples": [
                         "Map of Antarctica",
                         "NASA Global Change Master Directory (GCMD) Science Keywords",
