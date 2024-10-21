@@ -122,23 +122,23 @@ def test_xml_declaration(app_client: FlaskClient, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_xml_namespaces(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_xml_namespaces(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_root_element(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_root_element(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
 
     metadata_records = record.xpath("/gmd:MD_Metadata", namespaces=namespaces.nsmap())
     assert len(metadata_records) == 1
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_file_identifier(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_file_identifier(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "file_identifier" not in config:
@@ -152,8 +152,8 @@ def test_file_identifier(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_language(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_language(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "metadata" not in config or "language" not in config["metadata"]:
@@ -170,8 +170,8 @@ def test_language(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_character_set(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_character_set(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "metadata" not in config or "character_set" not in config["metadata"]:
@@ -189,8 +189,8 @@ def test_character_set(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_hierarchy_level(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_hierarchy_level(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "hierarchy_level" not in config:
@@ -206,8 +206,8 @@ def test_hierarchy_level(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_hierarchy_level_name(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_hierarchy_level_name(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "hierarchy_level" not in config:
@@ -221,8 +221,8 @@ def test_hierarchy_level_name(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_contact(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_contact(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "metadata" not in config or "contacts" not in config["metadata"]:
@@ -243,8 +243,8 @@ def test_contact(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_datestamp(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_datestamp(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "metadata" not in config or "date_stamp" not in config["metadata"]:
@@ -256,8 +256,8 @@ def test_datestamp(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_metadata_standard(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_metadata_standard(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if (
@@ -276,8 +276,8 @@ def test_metadata_standard(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_metadata_standard_version(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_metadata_standard_version(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if (
@@ -296,8 +296,8 @@ def test_metadata_standard_version(get_record_response: Element, config_name: st
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_reference_system_info(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_reference_system_info(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "reference_system_info" not in config:
@@ -352,8 +352,8 @@ def test_reference_system_info(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_citation(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_citation(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config:
@@ -368,8 +368,8 @@ def test_identification_citation(get_record_response: Element, config_name: str)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_abstract(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_abstract(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "abstract" not in config["identification"]:
@@ -384,8 +384,8 @@ def test_identification_abstract(get_record_response: Element, config_name: str)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_purpose(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_purpose(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "purpose" not in config["identification"]:
@@ -400,8 +400,8 @@ def test_identification_purpose(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_credit(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_credit(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "credit" not in config["identification"]:
@@ -416,8 +416,8 @@ def test_identification_credit(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_status(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_status(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "status" not in config["identification"]:
@@ -475,8 +475,8 @@ def _resolve_points_of_contact_xpaths(point_of_contact_type, config):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_points_of_contact(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_points_of_contact(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "contacts" not in config["identification"]:
@@ -502,8 +502,8 @@ def test_identification_points_of_contact(get_record_response: Element, config_n
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_maintenance(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_maintenance(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "maintenance" not in config["identification"]:
@@ -519,8 +519,8 @@ def test_identification_maintenance(get_record_response: Element, config_name: s
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_graphic_overviews(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_graphic_overviews(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "graphic_overviews" not in config["identification"]:
@@ -555,8 +555,8 @@ def test_graphic_overviews(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_resource_formats(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_resource_formats(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "resource_formats" not in config["identification"]:
@@ -633,8 +633,8 @@ def _resolve_descriptive_keywords_xpaths(config) -> list[dict]:
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_descriptive_keywords(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_descriptive_keywords(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "keywords" not in config["identification"]:
@@ -799,8 +799,8 @@ def test_identification_aggregations(app_client: FlaskClient, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_spatial_representation_type(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_spatial_representation_type(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "spatial_representation_type" not in config["identification"]:
@@ -839,15 +839,15 @@ def _test_identification_spatial_resolution(record, config):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_spatial_resolution(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_spatial_resolution(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
     _test_identification_spatial_resolution(record=record, config=config)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_character_set(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_character_set(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "character_set" not in config["identification"]:
@@ -862,8 +862,8 @@ def test_identification_character_set(get_record_response: Element, config_name:
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_language(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_language(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "language" not in config["identification"]:
@@ -880,8 +880,8 @@ def test_identification_language(get_record_response: Element, config_name: str)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_topics(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_topics(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "topics" not in config["identification"]:
@@ -897,8 +897,8 @@ def test_identification_topics(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_geographic_extent_bounding_box(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_geographic_extent_bounding_box(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "extents" not in config["identification"]:
@@ -947,8 +947,8 @@ def test_identification_geographic_extent_bounding_box(get_record_response: Elem
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_geographic_extent_identifier(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_geographic_extent_identifier(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "extents" not in config["identification"]:
@@ -975,8 +975,8 @@ def test_identification_geographic_extent_identifier(get_record_response: Elemen
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_temporal_extent(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_temporal_extent(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "extents" not in config["identification"]:
@@ -1031,8 +1031,8 @@ def test_identification_temporal_extent(get_record_response: Element, config_nam
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_vertical_extent(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_vertical_extent(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if (
@@ -1075,8 +1075,8 @@ def test_identification_vertical_extent(get_record_response: Element, config_nam
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_supplemental_info(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_identification_supplemental_info(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "supplemental_information" not in config["identification"]:
@@ -1091,8 +1091,8 @@ def test_identification_supplemental_info(get_record_response: Element, config_n
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_distributions(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_distributions(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
     xpath_base = "/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor"
 
@@ -1168,8 +1168,8 @@ def test_distributions(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_scope(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_data_quality_scope(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "hierarchy_level" not in config:
@@ -1185,8 +1185,8 @@ def test_data_quality_scope(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_lineage_statement(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_data_quality_lineage_statement(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "lineage" not in config["identification" or "statement" not in config["identification"]["lineage"]]:
@@ -1203,8 +1203,8 @@ def test_data_quality_lineage_statement(get_record_response: Element, config_nam
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_lineage_process_steps(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_data_quality_lineage_process_steps(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "lineage" not in config["identification"] or "process_steps" not in config["identification"]["lineage"]:
@@ -1220,8 +1220,8 @@ def test_data_quality_lineage_process_steps(get_record_response: Element, config
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_lineage_sources(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_data_quality_lineage_sources(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "lineage" not in config["identification"] or "sources" not in config["identification"]["lineage"]:
@@ -1236,8 +1236,8 @@ def test_data_quality_lineage_sources(get_record_response: Element, config_name:
         assert_source(sources_elements[0], source_config)
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_domain_consistency(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_data_quality_domain_consistency(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "identification" not in config or "domain_consistency" not in config["identification"]:
@@ -1272,8 +1272,8 @@ def test_data_quality_domain_consistency(get_record_response: Element, config_na
         assert pass_value is True
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_metadata_maintenance(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_metadata_maintenance(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
     if "metadata" not in config or "maintenance" not in config["metadata"]:
@@ -1790,9 +1790,9 @@ def test_parse_existing_record_v4(config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_lossless_conversion_v4(get_record_response: Element, config_name: str):
+def test_lossless_conversion_v4(fx_get_record_response: Element, config_name: str):
     _record = tostring(
-        get_record_response(standard=standard, config=config_name),
+        fx_get_record_response(kind="standards", standard_profile=standard, config=config_name),
         pretty_print=True,
         xml_declaration=True,
         encoding="utf-8",

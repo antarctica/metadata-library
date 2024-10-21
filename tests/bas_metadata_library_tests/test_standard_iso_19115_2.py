@@ -76,7 +76,6 @@ def test_configuration_v4_json_round_trip(config_name: str):
     _config.loads(config)
     assert configuration.config == _config.config
 
-# edit past here
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
 def test_response(app_client: FlaskClient, config_name: str):
@@ -103,15 +102,15 @@ def test_xml_declaration(app_client: FlaskClient, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_xml_namespaces(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_xml_namespaces(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_root_element(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_root_element(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
 
     metadata_records = record.xpath("/gmi:MI_Metadata", namespaces=namespaces.nsmap())
     assert len(metadata_records) == 1
@@ -129,9 +128,9 @@ def test_parse_existing_record_v4(config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_lossless_conversion_v4(get_record_response: Element, config_name: str):
+def test_lossless_conversion_v4(fx_get_record_response: Element, config_name: str):
     _record = tostring(
-        get_record_response(standard=standard, config=config_name),
+        fx_get_record_response(kind="standards", standard_profile=standard, config=config_name),
         pretty_print=True,
         xml_declaration=True,
         encoding="utf-8",
