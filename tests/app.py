@@ -8,6 +8,7 @@ from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
 from flask import Flask, Response, current_app, jsonify
+from flask.testing import FlaskClient
 from jsonref import JsonRef
 
 from bas_metadata_library import MetadataRecordConfig
@@ -162,6 +163,17 @@ def _generate_schemas() -> None:
             dist_schema_file.write("\n")
 
 
+def _capture_json_test_config(standard_profile: str, config_name: str, config: dict, parameters: dict) -> None:
+    print(f"Saving JSON encoding of '{standard_profile}/{config_name}' test configuration")
+    configuration: MetadataRecordConfig = parameters["config_class"](**config)
+    json_config_path = Path(f"./tests/resources/configs/{standard_profile}/{config_name}.json")
+    json_config_path.parent.mkdir(exist_ok=True, parents=True)
+    configuration.dump(file=json_config_path)
+    # add newline to file (for compatibility with pre-commit hook)
+    with json_config_path.open(mode="a") as json_config_file:
+        json_config_file.write("\n")
+
+
 def _capture_json_test_configs() -> None:
     standards = {
         "test-standard": [
@@ -195,17 +207,14 @@ def _capture_json_test_configs() -> None:
             }
         ],
     }
-    for standard, parameter_sets in standards.items():
+    profiles = {}
+
+    for standard_profile, parameter_sets in {**standards, **profiles}.items():
         for parameters in parameter_sets:
             for config_name, config in parameters["configs"].items():
-                print(f"Saving JSON encoding of '{standard}/{config_name}' test configuration")
-                configuration: MetadataRecordConfig = parameters["config_class"](**config)
-                json_config_path = Path(f"./tests/resources/configs/{standard}/{config_name}.json")
-                json_config_path.parent.mkdir(exist_ok=True, parents=True)
-                configuration.dump(file=json_config_path)
-                # add newline to file (for compatibility with pre-commit hook)
-                with json_config_path.open(mode="a") as json_config_file:
-                    json_config_file.write("\n")
+                _capture_json_test_config(
+                    standard_profile=standard_profile, config_name=config_name, config=config, parameters=parameters
+                )
 
 
 def _update_rtzp_artefact_if_changed(
@@ -256,6 +265,20 @@ def _update_rtzp_artefact_if_changed(
             print(f"saving RTZP archive for 'standards/{rtzp_standard}/minimal-v1' - skipped, no change")
 
 
+def _capture_test_record(internal_client: FlaskClient, kind: str, standard_profile_name: str, config_name: str) -> None:
+    print(f"saving record for '{kind}/{standard_profile_name}/{config_name}'")
+
+    response = internal_client.get(f"http://localhost:5000/{kind}/{standard_profile_name}/{config_name}")
+    if response.status_code != 200:
+        msg = f"Failed to generate response for '{kind}/{standard_profile_name}/{config_name}'"
+        raise RuntimeError(msg)
+
+    response_file_path = Path(f"./tests/resources/records/{standard_profile_name}/{config_name}-record.xml")
+    response_file_path.parent.mkdir(parents=True, exist_ok=True)
+    with response_file_path.open(mode="w") as response_file:
+        response_file.write(response.data.decode())
+
+
 def _capture_test_records() -> None:
     standards = {
         "test-standard": {"configurations": list(test_metadata_standard_configs.keys())},
@@ -264,22 +287,20 @@ def _capture_test_records() -> None:
         "iec-pas-61174-0": {"configurations": list(iec_pas_61174_0_standard_configs_v1.keys())},
         "iec-pas-61174-1": {"configurations": list(iec_pas_61174_1_standard_configs_v1.keys())},
     }
+    profiles = {}
 
     internal_client = current_app.test_client()
 
     for standard, options in standards.items():
         for config in options["configurations"]:
-            print(f"saving record for 'standards/{standard}/{config}'")
-
-            response = internal_client.get(f"http://localhost:5000/standards/{standard}/{config}")
-            if response.status_code != 200:
-                msg = f"Failed to generate response for 'standards/{standard}/{config}'"
-                raise RuntimeError(msg)
-
-            response_file_path = Path(f"./tests/resources/records/{standard}/{config}-record.xml")
-            response_file_path.parent.mkdir(parents=True, exist_ok=True)
-            with response_file_path.open(mode="w") as response_file:
-                response_file.write(response.data.decode())
+            _capture_test_record(
+                internal_client=internal_client, kind="standards", standard_profile_name=standard, config_name=config
+            )
+    for profile, options in profiles.items():
+        for config in options["configurations"]:
+            _capture_test_record(
+                internal_client=internal_client, kind="profiles", standard_profile_name=profile, config_name=config
+            )
 
     # Capture RTZP files separately for IEC PAS 61174 standard
     rtz_0_config = IECPAS61174_0_MetadataRecordConfigV1(**iec_pas_61174_0_standard_configs_v1["minimal_v1"])
