@@ -8,6 +8,7 @@ from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
 from flask import Flask, Response, current_app, jsonify
+from flask.testing import FlaskClient
 from jsonref import JsonRef
 
 from bas_metadata_library import MetadataRecordConfig
@@ -43,6 +44,7 @@ from tests.resources.configs.iso19115_0_standard import (
 from tests.resources.configs.iso19115_2_standard import (
     configs_v4_all as iso19115_2_standard_configs_v4,
 )
+from tests.resources.configs.magic_discovery_profile import configs_v1_all as magic_discovery_profile_configs_v1
 from tests.resources.configs.test_metadata_standard import configs_all as test_metadata_standard_configs
 from tests.standards.test_standard import (
     MetadataRecord as TestStandardMetadataRecord,
@@ -82,6 +84,18 @@ def _generate_record_iso_19115_2(config_label: str) -> Response:
         return Response(record.generate_xml_document(), mimetype="text/xml")
 
     return Response(f"Invalid configuration, valid options: [{', '.join(list(iso19115_2_standard_configs_v4.keys()))}]")
+
+
+def _generate_record_magic_discovery(config_label: str) -> Response:
+    if config_label in magic_discovery_profile_configs_v1:
+        configuration_object = magic_discovery_profile_configs_v1[config_label]
+        configuration = ISO19115_2_MetadataRecordConfigV4(**configuration_object)
+        record = ISO19115_2_MetadataRecord(configuration)
+        return Response(record.generate_xml_document(), mimetype="text/xml")
+
+    return Response(
+        f"Invalid configuration, valid options: [{', '.join(list(magic_discovery_profile_configs_v1.keys()))}]"
+    )
 
 
 def _generate_record_ice_pas_61174_0(config_label: str) -> Response:
@@ -129,6 +143,7 @@ def _generate_schemas() -> None:
         {"id": "iec_pas_61174_1_v1", "resolve": True},
         {"id": "iso_19115_0_v4", "copy": False},
         {"id": "iso_19115_2_v4", "copy": True},
+        {"id": "magic_discovery_v1", "copy": False},
     ]
     copy_properties = ["definitions", "type", "required", "additionalProperties", "properties"]
 
@@ -159,6 +174,17 @@ def _generate_schemas() -> None:
         # add newline to file (for compatibility with pre-commit hook)
         with dest_schema_path.open(mode="a") as dist_schema_file:
             dist_schema_file.write("\n")
+
+
+def _capture_json_test_config(standard_profile: str, config_name: str, config: dict, parameters: dict) -> None:
+    print(f"Saving JSON encoding of '{standard_profile}/{config_name}' test configuration")
+    configuration: MetadataRecordConfig = parameters["config_class"](**config)
+    json_config_path = Path(f"./tests/resources/configs/{standard_profile}/{config_name}.json")
+    json_config_path.parent.mkdir(exist_ok=True, parents=True)
+    configuration.dump(file=json_config_path)
+    # add newline to file (for compatibility with pre-commit hook)
+    with json_config_path.open(mode="a") as json_config_file:
+        json_config_file.write("\n")
 
 
 def _capture_json_test_configs() -> None:
@@ -194,17 +220,21 @@ def _capture_json_test_configs() -> None:
             }
         ],
     }
-    for standard, parameter_sets in standards.items():
+    profiles = {
+        "magic-discovery-profile": [
+            {
+                "configs": magic_discovery_profile_configs_v1,
+                "config_class": ISO19115_2_MetadataRecordConfigV4,
+            }
+        ],
+    }
+
+    for standard_profile, parameter_sets in {**standards, **profiles}.items():
         for parameters in parameter_sets:
             for config_name, config in parameters["configs"].items():
-                print(f"Saving JSON encoding of '{standard}/{config_name}' test configuration")
-                configuration: MetadataRecordConfig = parameters["config_class"](**config)
-                json_config_path = Path(f"./tests/resources/configs/{standard}/{config_name}.json")
-                json_config_path.parent.mkdir(exist_ok=True, parents=True)
-                configuration.dump(file=json_config_path)
-                # add newline to file (for compatibility with pre-commit hook)
-                with json_config_path.open(mode="a") as json_config_file:
-                    json_config_file.write("\n")
+                _capture_json_test_config(
+                    standard_profile=standard_profile, config_name=config_name, config=config, parameters=parameters
+                )
 
 
 def _update_rtzp_artefact_if_changed(
@@ -255,6 +285,20 @@ def _update_rtzp_artefact_if_changed(
             print(f"saving RTZP archive for 'standards/{rtzp_standard}/minimal-v1' - skipped, no change")
 
 
+def _capture_test_record(internal_client: FlaskClient, kind: str, standard_profile_name: str, config_name: str) -> None:
+    print(f"saving record for '{kind}/{standard_profile_name}/{config_name}'")
+
+    response = internal_client.get(f"http://localhost:5000/{kind}/{standard_profile_name}/{config_name}")
+    if response.status_code != 200:
+        msg = f"Failed to generate response for '{kind}/{standard_profile_name}/{config_name}'"
+        raise RuntimeError(msg)
+
+    response_file_path = Path(f"./tests/resources/records/{standard_profile_name}/{config_name}-record.xml")
+    response_file_path.parent.mkdir(parents=True, exist_ok=True)
+    with response_file_path.open(mode="w") as response_file:
+        response_file.write(response.data.decode())
+
+
 def _capture_test_records() -> None:
     standards = {
         "test-standard": {"configurations": list(test_metadata_standard_configs.keys())},
@@ -263,22 +307,22 @@ def _capture_test_records() -> None:
         "iec-pas-61174-0": {"configurations": list(iec_pas_61174_0_standard_configs_v1.keys())},
         "iec-pas-61174-1": {"configurations": list(iec_pas_61174_1_standard_configs_v1.keys())},
     }
+    profiles = {
+        "magic-discovery": {"configurations": list(magic_discovery_profile_configs_v1.keys())},
+    }
 
     internal_client = current_app.test_client()
 
     for standard, options in standards.items():
         for config in options["configurations"]:
-            print(f"saving record for 'standards/{standard}/{config}'")
-
-            response = internal_client.get(f"http://localhost:5000/standards/{standard}/{config}")
-            if response.status_code != 200:
-                msg = f"Failed to generate response for 'standards/{standard}/{config}'"
-                raise RuntimeError(msg)
-
-            response_file_path = Path(f"./tests/resources/records/{standard}/{config}-record.xml")
-            response_file_path.parent.mkdir(parents=True, exist_ok=True)
-            with response_file_path.open(mode="w") as response_file:
-                response_file.write(response.data.decode())
+            _capture_test_record(
+                internal_client=internal_client, kind="standards", standard_profile_name=standard, config_name=config
+            )
+    for profile, options in profiles.items():
+        for config in options["configurations"]:
+            _capture_test_record(
+                internal_client=internal_client, kind="profiles", standard_profile_name=profile, config_name=config
+            )
 
     # Capture RTZP files separately for IEC PAS 61174 standard
     rtz_0_config = IECPAS61174_0_MetadataRecordConfigV1(**iec_pas_61174_0_standard_configs_v1["minimal_v1"])
@@ -290,7 +334,7 @@ def _capture_test_records() -> None:
         _update_rtzp_artefact_if_changed(rtzp_standard=rtzp_standard, rtzp_record=rtzp_record)
 
 
-def create_app() -> Flask:
+def create_app() -> Flask:  # noqa: C901
     """Create internal Flask app."""
     app = Flask(__name__)
 
@@ -323,6 +367,11 @@ def create_app() -> Flask:
     def standard_ice_pas_61174_1(configuration: str) -> Response:
         """Generate a record from a configuration using the IEC PAS 61174-1 standard."""
         return _generate_record_ice_pas_61174_1(configuration)
+
+    @app.route("/profiles/magic-discovery/<configuration>")
+    def profile_magic_discovery_v1(configuration: str) -> Response:
+        """Generate a record from a configuration using the MAGIC Discovery Profile for ISO 19115-2."""
+        return _generate_record_magic_discovery(config_label=configuration)
 
     @app.cli.command()
     def generate_schemas() -> None:

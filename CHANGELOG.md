@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Minimum length requirements for mandatory fields in the ISO 19115 schema
   [#248](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/248)
+* MAGIC Discovery Metadata profile v1
+  [#250](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/250)
 
 ### Fixed
 

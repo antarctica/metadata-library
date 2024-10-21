@@ -34,12 +34,9 @@ referred to as *ISO-19115-3* (`iso_19115_3`).
 
 ### Supported profiles
 
-| Standard | Profile | Implementation | Library Namespace | Introduced In |
-|----------|---------|----------------|-------------------|---------------|
-| -        | -       | -              | -                 | -             |
-
-**Note:** Support for profiles has been removed to allow underlying standards to be implemented more easily, and to
-wait until a stable profile for UK PDC Discovery metadata has been developed and approved.
+| Standard  | Profile                     | Introduced In                                                                                    |
+|-----------|-----------------------------|--------------------------------------------------------------------------------------------------|
+| ISO 19115 | MAGIC Discovery Metadata V1 | [#250](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/250) |
 
 ### Supported configuration versions
 
