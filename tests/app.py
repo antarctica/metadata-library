@@ -44,6 +44,7 @@ from tests.resources.configs.iso19115_0_standard import (
 from tests.resources.configs.iso19115_2_standard import (
     configs_v4_all as iso19115_2_standard_configs_v4,
 )
+from tests.resources.configs.magic_discovery_profile import configs_v1_all as magic_discovery_profile_configs_v1
 from tests.resources.configs.test_metadata_standard import configs_all as test_metadata_standard_configs
 from tests.standards.test_standard import (
     MetadataRecord as TestStandardMetadataRecord,
@@ -83,6 +84,18 @@ def _generate_record_iso_19115_2(config_label: str) -> Response:
         return Response(record.generate_xml_document(), mimetype="text/xml")
 
     return Response(f"Invalid configuration, valid options: [{', '.join(list(iso19115_2_standard_configs_v4.keys()))}]")
+
+
+def _generate_record_magic_discovery(config_label: str) -> Response:
+    if config_label in magic_discovery_profile_configs_v1:
+        configuration_object = magic_discovery_profile_configs_v1[config_label]
+        configuration = ISO19115_2_MetadataRecordConfigV4(**configuration_object)
+        record = ISO19115_2_MetadataRecord(configuration)
+        return Response(record.generate_xml_document(), mimetype="text/xml")
+
+    return Response(
+        f"Invalid configuration, valid options: [{', '.join(list(magic_discovery_profile_configs_v1.keys()))}]"
+    )
 
 
 def _generate_record_ice_pas_61174_0(config_label: str) -> Response:
@@ -207,7 +220,14 @@ def _capture_json_test_configs() -> None:
             }
         ],
     }
-    profiles = {}
+    profiles = {
+        "magic-discovery-profile": [
+            {
+                "configs": magic_discovery_profile_configs_v1,
+                "config_class": ISO19115_2_MetadataRecordConfigV4,
+            }
+        ],
+    }
 
     for standard_profile, parameter_sets in {**standards, **profiles}.items():
         for parameters in parameter_sets:
@@ -287,7 +307,9 @@ def _capture_test_records() -> None:
         "iec-pas-61174-0": {"configurations": list(iec_pas_61174_0_standard_configs_v1.keys())},
         "iec-pas-61174-1": {"configurations": list(iec_pas_61174_1_standard_configs_v1.keys())},
     }
-    profiles = {}
+    profiles = {
+        "magic-discovery": {"configurations": list(magic_discovery_profile_configs_v1.keys())},
+    }
 
     internal_client = current_app.test_client()
 
@@ -312,7 +334,7 @@ def _capture_test_records() -> None:
         _update_rtzp_artefact_if_changed(rtzp_standard=rtzp_standard, rtzp_record=rtzp_record)
 
 
-def create_app() -> Flask:
+def create_app() -> Flask:  # noqa: C901
     """Create internal Flask app."""
     app = Flask(__name__)
 
@@ -345,6 +367,11 @@ def create_app() -> Flask:
     def standard_ice_pas_61174_1(configuration: str) -> Response:
         """Generate a record from a configuration using the IEC PAS 61174-1 standard."""
         return _generate_record_ice_pas_61174_1(configuration)
+
+    @app.route("/profiles/magic-discovery/<configuration>")
+    def profile_magic_discovery_v1(configuration: str) -> Response:
+        """Generate a record from a configuration using the MAGIC Discovery Profile for ISO 19115-2."""
+        return _generate_record_magic_discovery(config_label=configuration)
 
     @app.cli.command()
     def generate_schemas() -> None:

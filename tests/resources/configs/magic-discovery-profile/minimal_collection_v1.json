@@ -1,0 +1,152 @@
+{
+  "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
+  "file_identifier": "0c553abe-5cfa-4208-8354-8cbdafb064d4",
+  "metadata": {
+    "contacts": [
+      {
+        "organisation": {
+          "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
+          "href": "https://ror.org/01rhff309",
+          "title": "ror"
+        },
+        "phone": "+44 (0)1223 221400",
+        "address": {
+          "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+          "city": "Cambridge",
+          "administrative_area": "Cambridgeshire",
+          "postal_code": "CB3 0ET",
+          "country": "United Kingdom"
+        },
+        "email": "magic@bas.ac.uk",
+        "online_resource": {
+          "href": "https://www.bas.ac.uk/teams/magic",
+          "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
+          "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
+          "function": "information"
+        },
+        "role": [
+          "pointOfContact"
+        ]
+      }
+    ],
+    "date_stamp": "2024-10-03"
+  },
+  "hierarchy_level": "collection",
+  "identification": {
+    "title": {
+      "value": "Test collection with minimal MAGIC Discovery Profile properties"
+    },
+    "dates": {
+      "creation": "2024-09-14",
+      "released": "2024-09-14T16:43:56+00:00",
+      "publication": "2024-09-14T16:43:56+00:00"
+    },
+    "edition": "1",
+    "identifiers": [
+      {
+        "identifier": "0c553abe-5cfa-4208-8354-8cbdafb064d4",
+        "href": "https://data.bas.ac.uk/items/0c553abe-5cfa-4208-8354-8cbdafb064d4",
+        "namespace": "data.bas.ac.uk"
+      }
+    ],
+    "abstract": "An example collection to verify a record with the minimal set of properties required by the MAGIC Discovery Profile is handled correctly.",
+    "contacts": [
+      {
+        "organisation": {
+          "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
+          "href": "https://ror.org/01rhff309",
+          "title": "ror"
+        },
+        "phone": "+44 (0)1223 221400",
+        "address": {
+          "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+          "city": "Cambridge",
+          "administrative_area": "Cambridgeshire",
+          "postal_code": "CB3 0ET",
+          "country": "United Kingdom"
+        },
+        "email": "magic@bas.ac.uk",
+        "online_resource": {
+          "href": "https://www.bas.ac.uk/teams/magic",
+          "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
+          "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
+          "function": "information"
+        },
+        "role": [
+          "pointOfContact"
+        ]
+      }
+    ],
+    "maintenance": {
+      "maintenance_frequency": "asNeeded",
+      "progress": "completed"
+    },
+    "constraints": [
+      {
+        "type": "access",
+        "restriction_code": "unrestricted"
+      },
+      {
+        "type": "usage",
+        "restriction_code": "license",
+        "statement": "This information is licensed under the Open Government Licence (OGL 3.0). To view this licence, visit https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/.",
+        "href": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+      }
+    ],
+    "language": "eng",
+    "extents": [
+      {
+        "identifier": "bounding",
+        "geographic": {
+          "bounding_box": {
+            "west_longitude": -180.0,
+            "east_longitude": 180.0,
+            "south_latitude": -90.0,
+            "north_latitude": -60.0
+          }
+        }
+      }
+    ],
+    "domain_consistency": [
+      {
+        "specification": {
+          "title": {
+            "value": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile",
+            "href": "https://metadata-standards.data.bas.ac.uk/profile/magic-discovery-v1/"
+          },
+          "dates": {
+            "publication": "2024-10-01"
+          },
+          "edition": "1",
+          "contact": {
+            "organisation": {
+              "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
+              "href": "https://ror.org/01rhff309",
+              "title": "ror"
+            },
+            "phone": "+44 (0)1223 221400",
+            "address": {
+              "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+              "city": "Cambridge",
+              "administrative_area": "Cambridgeshire",
+              "postal_code": "CB3 0ET",
+              "country": "United Kingdom"
+            },
+            "email": "magic@bas.ac.uk",
+            "online_resource": {
+              "href": "https://www.bas.ac.uk/teams/magic",
+              "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
+              "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
+              "function": "information"
+            },
+            "role": [
+              "publisher"
+            ]
+          }
+        },
+        "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile.",
+        "result": true
+      }
+    ]
+  }
+}
