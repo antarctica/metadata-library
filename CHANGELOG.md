@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Inconsistencies in function names for generating test records
   [#249](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/249)
 
+### Changed
+
+* Upgrading `get_record_response` test fixture to account for profiles
+  [#251](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/251)
+
 ## 0.13.1 - 2024-10-02
 
 ### Fixed

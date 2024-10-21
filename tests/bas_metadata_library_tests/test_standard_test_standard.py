@@ -92,15 +92,15 @@ def test_xml_declaration_enabled():
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_xml_namespaces(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_xml_namespaces(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind='standards', standard_profile=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_root_element(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_root_element(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind='standards', standard_profile=standard, config=config_name)
     config = configs[config_name]
 
     if "resource" not in config:
@@ -111,8 +111,8 @@ def test_root_element(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_resource_title(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_resource_title(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind='standards', standard_profile=standard, config=config_name)
     config = configs[config_name]
 
     if "resource" not in config or "title" not in config["resource"]:
@@ -142,11 +142,10 @@ def test_parse_existing_record(config_name: str):
     assert config == configs[config_name]
 
 
-@pytest.mark.usefixtures("get_record_response")
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_lossless_conversion(get_record_response: Element, config_name: str):
+def test_lossless_conversion(fx_get_record_response: Element, config_name: str):
     _record = tostring(
-        get_record_response(standard=standard, config=config_name),
+        fx_get_record_response(kind='standards', standard_profile=standard, config=config_name),
         pretty_print=True,
         xml_declaration=True,
         encoding="utf-8",

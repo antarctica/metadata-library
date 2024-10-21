@@ -93,8 +93,8 @@ def test_xml_declaration(app_client: FlaskClient, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_xml_namespaces(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_xml_namespaces(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
     # `None` is used as a key as the RTZ namespace is the root namespace
@@ -102,8 +102,8 @@ def test_xml_namespaces(get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_root_element(get_record_response: Element, config_name: str):
-    record = get_record_response(standard=standard, config=config_name)
+def test_root_element(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
 
     metadata_records = record.xpath("/rtz:route", namespaces=namespaces.nsmap(suppress_root_namespace=True))
     assert len(metadata_records) == 1
@@ -135,9 +135,9 @@ def test_parse_existing_record_v1(config_name):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1.keys()))
-def test_lossless_conversion_v1(get_record_response: Element, config_name: str):
+def test_lossless_conversion_v1(fx_get_record_response: Element, config_name: str):
     _record = tostring(
-        get_record_response(standard=standard, config=config_name),
+        fx_get_record_response(kind="standards", standard_profile=standard, config=config_name),
         pretty_print=True,
         xml_declaration=True,
         encoding="utf-8",
