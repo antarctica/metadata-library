@@ -1,0 +1,394 @@
+{
+    "$id": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-discovery-v1.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "BAS MAGIC v1 discovery metadata profile configuration schema",
+    "description": "Metadata record configuration schema for the BAS MAGIC discovery metadata profile (version 1)",
+    "definitions": {
+        "point_of_contact": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/magic"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "role"
+                    ],
+                    "properties": {
+                        "role": {
+                            "type": "array",
+                            "contains": {
+                                "type": "string",
+                                "const": "pointOfContact"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "magic": {
+            "type": "object",
+            "required": [
+                "organisation",
+                "phone",
+                "address",
+                "email",
+                "online_resource"
+            ],
+            "properties": {
+                "organisation": {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "href",
+                        "title"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "const": "Mapping and Geographic Information Centre, British Antarctic Survey"
+                        },
+                        "href": {
+                            "type": "string",
+                            "const": "https://ror.org/01rhff309"
+                        },
+                        "title": {
+                            "type": "string",
+                            "const": "ror"
+                        }
+                    }
+                },
+                "phone": {
+                    "type": "string",
+                    "const": "+44 (0)1223 221400"
+                },
+                "address": {
+                    "type": "object",
+                    "required": [
+                        "delivery_point",
+                        "city",
+                        "administrative_area",
+                        "postal_code",
+                        "country"
+                    ],
+                    "properties": {
+                        "delivery_point": {
+                            "type": "string",
+                            "const": "British Antarctic Survey, High Cross, Madingley Road"
+                        },
+                        "city": {
+                            "type": "string",
+                            "const": "Cambridge"
+                        },
+                        "administrative_area": {
+                            "type": "string",
+                            "const": "Cambridgeshire"
+                        },
+                        "postal_code": {
+                            "type": "string",
+                            "const": "CB3 0ET"
+                        },
+                        "country": {
+                            "type": "string",
+                            "const": "United Kingdom"
+                        }
+                    }
+                },
+                "email": {
+                    "type": "string",
+                    "const": "magic@bas.ac.uk"
+                },
+                "online_resource": {
+                    "type": "object",
+                    "required": [
+                        "href",
+                        "title",
+                        "description",
+                        "function"
+                    ],
+                    "properties": {
+                        "href": {
+                            "type": "string",
+                            "const": "https://www.bas.ac.uk/teams/magic"
+                        },
+                        "title": {
+                            "type": "string",
+                            "const": "Mapping and Geographic Information Centre (MAGIC) - BAS public website"
+                        },
+                        "description": {
+                            "type": "string",
+                            "const": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website."
+                        },
+                        "function": {
+                            "type": "string",
+                            "const": "information"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "type": "object",
+    "required": [
+        "file_identifier",
+        "hierarchy_level",
+        "metadata",
+        "identification"
+    ],
+    "properties": {
+        "hierarchy_level": {
+            "type": "string",
+            "enum": [
+                "collection",
+                "dataset",
+                "product",
+                "series"
+            ]
+        },
+        "metadata": {
+            "type": "object",
+            "required": [
+                "contacts",
+                "date_stamp"
+            ],
+            "properties": {
+                "contacts": {
+                    "object": {
+                        "type": "array"
+                    },
+                    "contains": {
+                        "$ref": "#/definitions/point_of_contact"
+                    }
+                }
+            }
+        },
+        "identification": {
+            "type": "object",
+            "required": [
+                "dates",
+                "edition",
+                "identifiers",
+                "contacts",
+                "maintenance",
+                "constraints",
+                "extents",
+                "domain_consistency"
+            ],
+            "properties": {
+                "dates": {
+                    "type": "object",
+                    "required": [
+                        "publication",
+                        "released"
+                    ]
+                },
+                "identifiers": {
+                    "type": "array",
+                    "contains": {
+                        "type": "object",
+                        "required": [
+                            "identifier",
+                            "href",
+                            "namespace"
+                        ],
+                        "properties": {
+                            "identifier": {
+                                "type": "string"
+                            },
+                            "href": {
+                                "type": "string",
+                                "pattern": "^https://data\\.bas\\.ac\\.uk/items/.+"
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "const": "data.bas.ac.uk"
+                            }
+                        }
+                    }
+                },
+                "contacts": {
+                    "object": {
+                        "type": "array"
+                    },
+                    "contains": {
+                        "$ref": "#/definitions/point_of_contact"
+                    }
+                },
+                "maintenance": {
+                    "type": "object",
+                    "required": [
+                        "maintenance_frequency",
+                        "progress"
+                    ]
+                },
+                "constraints": {
+                    "type": "array",
+                    "allOf": [
+                        {
+                            "contains": {
+                                "type": "object",
+                                "required": [
+                                    "type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "const": "access"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "contains": {
+                                "type": "object",
+                                "required": [
+                                    "type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "const": "usage"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "extents": {
+                    "type": "array",
+                    "contains": {
+                        "type": "object",
+                        "required": [
+                            "identifier"
+                        ],
+                        "properties": {
+                            "identifier": {
+                                "type": "string",
+                                "const": "bounding"
+                            }
+                        }
+                    }
+                },
+                "lineage": {
+                    "type": "object",
+                    "required": [
+                        "statement"
+                    ]
+                },
+                "domain_consistency": {
+                    "type": "array",
+                    "contains": {
+                        "type": "object",
+                        "required": [
+                            "specification",
+                            "explanation",
+                            "result"
+                        ],
+                        "properties": {
+                            "specification": {
+                                "type": "object",
+                                "required": [
+                                    "title",
+                                    "dates",
+                                    "edition",
+                                    "contact"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "object",
+                                        "required": [
+                                            "value",
+                                            "href"
+                                        ],
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "const": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile"
+                                            },
+                                            "href": {
+                                                "type": "string",
+                                                "const": "https://metadata-standards.data.bas.ac.uk/profile/magic-discovery-v1/"
+                                            }
+                                        }
+                                    },
+                                    "dates": {
+                                        "type": "object",
+                                        "required": [
+                                            "publication"
+                                        ],
+                                        "properties": {
+                                            "publication": {
+                                                "type": "string",
+                                                "const": "2024-10-01"
+                                            }
+                                        }
+                                    },
+                                    "edition": {
+                                        "type": "string",
+                                        "const": "1"
+                                    },
+                                    "contact": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/definitions/magic"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "required": [
+                                                    "role"
+                                                ],
+                                                "properties": {
+                                                    "role": {
+                                                        "type": "array",
+                                                        "contains": {
+                                                            "type": "string",
+                                                            "const": "publisher"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "explanation": {
+                                "type": "string",
+                                "const": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile."
+                            },
+                            "result": {
+                                "type": "boolean",
+                                "const": true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "if": {
+        "properties": {
+            "hierarchy_level": {
+                "type": "string",
+                "const": "collection"
+            }
+        }
+    },
+    "then": {},
+    "else": {
+        "properties": {
+            "identification": {
+                "required": [
+                    "dates",
+                    "edition",
+                    "identifiers",
+                    "contacts",
+                    "maintenance",
+                    "constraints",
+                    "extents",
+                    "lineage",
+                    "domain_consistency"
+                ]
+            }
+        }
+    }
+}

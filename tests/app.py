@@ -129,6 +129,7 @@ def _generate_schemas() -> None:
         {"id": "iec_pas_61174_1_v1", "resolve": True},
         {"id": "iso_19115_0_v4", "copy": False},
         {"id": "iso_19115_2_v4", "copy": True},
+        {"id": "magic_discovery_v1", "copy": False},
     ]
     copy_properties = ["definitions", "type", "required", "additionalProperties", "properties"]
 
