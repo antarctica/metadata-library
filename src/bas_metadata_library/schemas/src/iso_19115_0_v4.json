@@ -1758,7 +1758,6 @@
           "disaster"
         ]
       },
-      "minItems": 1,
       "examples": [
         "environment"
       ]
