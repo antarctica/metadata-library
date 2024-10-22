@@ -153,9 +153,7 @@
       ],
       "properties": {
         "contacts": {
-          "object": {
-            "type": "array"
-          },
+          "type": "array",
           "contains": {
             "$ref": "#/definitions/point_of_contact"
           }
@@ -165,7 +163,6 @@
     "identification": {
       "type": "object",
       "required": [
-        "dates",
         "edition",
         "identifiers",
         "contacts",
@@ -175,13 +172,6 @@
         "domain_consistency"
       ],
       "properties": {
-        "dates": {
-          "type": "object",
-          "required": [
-            "publication",
-            "released"
-          ]
-        },
         "identifiers": {
           "type": "array",
           "contains": {
@@ -203,9 +193,7 @@
           }
         },
         "contacts": {
-          "object": {
-            "type": "array"
-          },
+          "type": "array",
           "contains": {
             "$ref": "#/definitions/point_of_contact"
           }
@@ -372,7 +360,6 @@
     "properties": {
       "identification": {
         "required": [
-          "dates",
           "edition",
           "identifiers",
           "contacts",
