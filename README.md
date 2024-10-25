@@ -34,9 +34,9 @@ referred to as *ISO-19115-3* (`iso_19115_3`).
 
 ### Supported profiles
 
-| Standard  | Profile                     | Introduced In                                                                                    |
-|-----------|-----------------------------|--------------------------------------------------------------------------------------------------|
-| ISO 19115 | MAGIC Discovery Metadata V1 | [#250](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/250) |
+| Standard  | Profile                                                                                              | Introduced In                                                                                    |
+|-----------|------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| ISO 19115 | [MAGIC Discovery Metadata V1](https://metadata-standards.data.bas.ac.uk/profile/magic-discovery-v1/) | [#250](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/250) |
 
 ### Supported configuration versions
 
@@ -404,7 +404,10 @@ See the [Record Schemas](#record-schemas) section for more information on how va
 
 **The example below is for the ISO 19115 standard but this applies to all standards.**
 
-Record configurations will be validated automatically using a JSON Schema relevant to each metadata or data standard.
+Record configurations will be automatically validated using a JSON Schema for the metadata or data standard used.
+
+Where a record configuration states compliance with one or more [Supported Profiles](#supported-profiles) applicable to
+the metadata or data standard, it will also be automatically validated using a JSON Schema for each profile.
 
 To explicitly validate a record configuration:
 
@@ -457,6 +460,8 @@ except ValidationError as e:
 Where the contents of the record is invalid, a
 [`ValidationError`](https://python-jsonschema.readthedocs.io/en/stable/errors/#jsonschema.exceptions.ValidationError)
 exception will be raised by the underlying JSON Schema library. Printing this exception will return validation errors.
+
+**Note:** The first validation error encountered will stop further validation.
 
 See the [Record Configuration Schemas](#configuration-schemas) section for more information.
 
@@ -566,7 +571,7 @@ sub-elements (which themselves may contain sub-elements as needed).
 
 ### Record schemas
 
-Allowed elements, attributes and values for each [supported Standard](#supported-standards) and
+Allowed elements, attributes and values for each [supported Standard](#supported-standards), and if applicable,
 [Supported Profile](#supported-profiles) are defined using one or more [XML Schemas](https://www.w3.org/XML/Schema).
 These schemas define any required entities, and any entities with enumerated values. Schemas are usually published by
 standards organisations to facilitate record validation.
@@ -577,11 +582,10 @@ Definition (XSD) files in the `bas_metadata_library.schemas.xsd` module, and loa
 validation.
 
 **Note:** To support local validation, imported or included schema locations in local versions of XML schemas, have
-been modified. These changes do not materially change the contents of any schema.
+been modified. These changes do not usually change the substance of any schema.
 
 **Note:** In some cases, material changes *have* been made to local versions of schemas, in order to workaround
-specific issues. These changes will be documented and explained, to allow users to understand the effect they will
-have, and why they have been made.
+specific issues. These changes are documented and explained below.
 
 #### Altered Metadata Schema - Geographic Metadata (GMD)
 
@@ -597,7 +601,7 @@ The ISO *Geographic Metadata (GMD)* schema (used directly for the ISO 19115-0 st
 The configuration of each metadata record is held in a Python dictionary, within a `MetadataRecordConfig` class. This
 class includes methods to validate its configuration against a relevant [Configuration Schema](#configuration-schemas).
 
-Configuration classes are defined at the root of each standard or profile, alongside its root
+Configuration classes are defined at the root of each standard, alongside its root
 [Metadata Element](#record-element-classes) and XML namespaces.
 
 A configuration class will exist for each supported configuration schema with methods to convert from one version to
