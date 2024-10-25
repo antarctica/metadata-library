@@ -420,15 +420,3 @@ def encode_config_for_json(config: dict) -> dict:
     return _encode_date_properties(dictionary=config)
 
 
-iso_19115_0_v3 = (
-    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json"
-)
-iso_19115_2_v3 = (
-    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json"
-)
-iso_19115_0_v4 = (
-    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json"
-)
-iso_19115_2_v4 = (
-    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
-)
