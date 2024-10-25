@@ -221,6 +221,14 @@ the basis these methods will be relatively short-lived.
 See [33b7509c 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/commit/33b7509cdb73525b79b1a81f7038b805769e0057)
 for an example of removing a schema version.
 
+## Adding a new profile [WIP]
+
+**Note:** This section is a work in progress. If future profiles are added to this library, this section should be
+formalised.
+
+See https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/250 for an example of adding
+a new profile.
+
 ## Generating configuration schemas
 
 The `generate-schemas` command in the [Flask Test App](#testing-flask-app) generates
