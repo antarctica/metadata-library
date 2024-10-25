@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.13.1 - 2024-10-25
+
 ### Added
 
 * Minimum length requirements for mandatory fields in the ISO 19115 schema
