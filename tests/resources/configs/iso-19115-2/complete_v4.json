@@ -524,40 +524,23 @@
       {
         "specification": {
           "title": {
-            "value": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile",
-            "href": "https://metadata-standards.data.bas.ac.uk/profile/magic-discovery-v1/"
+            "value": "Fake profile",
+            "href": "https://example.com/profile/fake-v1/"
           },
           "dates": {
-            "publication": "2024-10-01"
+            "publication": "2024-10-30"
           },
           "edition": "1",
           "contact": {
             "organisation": {
-              "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
-              "href": "https://ror.org/01rhff309",
-              "title": "ror"
-            },
-            "phone": "+44 (0)1223 221400",
-            "address": {
-              "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
-              "city": "Cambridge",
-              "administrative_area": "Cambridgeshire",
-              "postal_code": "CB3 0ET",
-              "country": "United Kingdom"
-            },
-            "email": "magic@bas.ac.uk",
-            "online_resource": {
-              "href": "https://www.bas.ac.uk/team/magic",
-              "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
-              "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
-              "function": "information"
+              "name": "Example"
             },
             "role": [
               "publisher"
             ]
           }
         },
-        "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile.",
+        "explanation": "Example usage.",
         "result": true
       }
     ]
