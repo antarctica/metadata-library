@@ -5,7 +5,6 @@ from copy import deepcopy
 from pathlib import Path
 
 from importlib_resources import files as resource_file
-from jsonschema.validators import validate
 from lxml.etree import Element, fromstring
 
 from bas_metadata_library import MetadataRecord as _MetadataRecord
@@ -15,6 +14,7 @@ from bas_metadata_library.standards.iso_19115_common.root_element import ISOMeta
 from bas_metadata_library.standards.iso_19115_common.utils import (
     decode_config_from_json,
     encode_config_for_json,
+    validate_config,
 )
 
 
@@ -36,8 +36,7 @@ class MetadataRecordConfigV4(_MetadataRecordConfig):
         self.config = {"$schema": self.schema_uri, **kwargs}
 
     def validate(self) -> None:
-        _config = encode_config_for_json(config=deepcopy(self.config))
-        return validate(instance=_config, schema=self.schema)
+        validate_config(config=self.config, schema=self.schema)
 
     def load(self, file: Path) -> None:
         with file.open() as file:

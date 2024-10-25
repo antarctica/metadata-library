@@ -5,6 +5,8 @@ from copy import deepcopy
 from datetime import date, datetime
 from itertools import groupby
 
+from jsonschema.validators import validate
+
 
 def _sort_dict_by_keys(dictionary: dict) -> dict:
     """
@@ -420,3 +422,11 @@ def encode_config_for_json(config: dict) -> dict:
     return _encode_date_properties(dictionary=config)
 
 
+def validate_config(config: dict, schema: dict) -> None:
+    """
+    Validate a record configuration against a schema.
+
+    The record config is first encoded as a JSON document so that dates are strings rather than datetimes for example.
+    """
+    config_ = encode_config_for_json(config=deepcopy(config))
+    validate(instance=config_, schema=schema)
