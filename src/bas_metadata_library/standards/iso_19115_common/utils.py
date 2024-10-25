@@ -5,7 +5,15 @@ from copy import deepcopy
 from datetime import date, datetime
 from itertools import groupby
 
+from importlib_resources import files as resource_file
+from importlib_resources.abc import Traversable
 from jsonschema.validators import validate
+
+profiles: dict[str, Traversable] = {
+    "https://metadata-standards.data.bas.ac.uk/profile/magic-discovery-v1/": resource_file(
+        "bas_metadata_library.schemas.dist"
+    ).joinpath("magic_discovery_v1.json"),
+}
 
 
 def _sort_dict_by_keys(dictionary: dict) -> dict:
@@ -422,11 +430,57 @@ def encode_config_for_json(config: dict) -> dict:
     return _encode_date_properties(dictionary=config)
 
 
+def _get_profile_keys(config: dict) -> list[str]:
+    """
+    Determine whether a record configuration contains any supported profiles.
+
+    Profiles are indicated via domain consistency data quality elements, which include a CI citation element. Where
+    these include a title href, each is checked against a list of supported profiles and any overlaps returned.
+    """
+    if "domain_consistency" not in config["identification"]:
+        return []
+
+    profile_keys = []
+    for domain_consistency in config["identification"]["domain_consistency"]:
+        if "href" not in domain_consistency["specification"]["title"]:
+            continue
+
+        title_href = domain_consistency["specification"]["title"]["href"]
+        if title_href in profiles:
+            profile_keys.append(title_href)
+
+    return profile_keys
+
+
+def validate_profiles(config: dict) -> None:
+    """
+    Validate a record configuration against any supported profiles it indicates compliance with.
+
+    Profiles are indicated via domain consistency data quality elements. Supported profiles are defined locally within
+    this module.
+
+    Where a record includes an element with a reference matching a supported profile, the record is validated against
+    the schema for that profile, loaded locally from this package.
+
+    Note: the first profile to fail validation will raise an exception, and stop further validation of other profiles.
+    """
+    profile_keys = _get_profile_keys(config)
+    for profile_key in profile_keys:
+        profile_schema_path = profiles[profile_key]
+        with profile_schema_path.open() as schema_file:
+            schema_data = json.load(schema_file)
+        validate(instance=config, schema=schema_data)
+
+
 def validate_config(config: dict, schema: dict) -> None:
     """
-    Validate a record configuration against a schema.
+    Validate a record configuration against a schema and any profiles it indicates compliance with.
 
     The record config is first encoded as a JSON document so that dates are strings rather than datetimes for example.
+
+    Note: Records which fail to validate against the schema for the base standard will raise an exception, and stop
+    further validation against any possible profiles.
     """
     config_ = encode_config_for_json(config=deepcopy(config))
     validate(instance=config_, schema=schema)
+    validate_profiles(config=config_)
