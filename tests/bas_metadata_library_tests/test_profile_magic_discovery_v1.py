@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 from flask.testing import FlaskClient
+from jsonschema.exceptions import ValidationError
 from lxml.etree import tostring, Element
 
 from bas_metadata_library import RecordValidationError
@@ -19,20 +20,18 @@ namespaces = Namespaces()
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1_all.keys()))
-def test_record_schema_validation_valid(config_name: str):
+def test_config_schema_validation_valid(config_name: str):
     config = MetadataRecordConfigV4(**configs_v1_all[config_name])
-    record = MetadataRecord(configuration=config)
-    record.validate()
+    config.validate()
     assert True is True
 
 
-def test_record_schema_validation_invalid():
+def test_config_schema_validation_invalid_profile():
     config = deepcopy(MetadataRecordConfigV4(**configs_v1_all["minimal_product_v1"]))
-    record = MetadataRecord(configuration=config)
-    with pytest.raises(RecordValidationError) as e:
-        record.attributes["identification"]["spatial_resolution"] = "invalid"
-        record.validate()
-    assert "Record validation failed:" in str(e.value)
+    with pytest.raises(ValidationError) as e:
+        del config.config["file_identifier"]
+        config.validate()
+    assert "'file_identifier' is a required property" in str(e.value)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v1_all.keys()))
