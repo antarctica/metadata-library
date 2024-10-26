@@ -34,9 +34,9 @@ referred to as *ISO-19115-3* (`iso_19115_3`).
 
 ### Supported profiles
 
-| Standard  | Profile                                                                                              | Introduced In                                                                                    |
-|-----------|------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
-| ISO 19115 | [MAGIC Discovery Metadata V1](https://metadata-standards.data.bas.ac.uk/profile/magic-discovery-v1/) | [#250](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/250) |
+| Standard  | Profile                                                                                               | Introduced In                                                                                    |
+|-----------|-------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| ISO 19115 | [MAGIC Discovery Metadata V1](https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery-v1/) | [#250](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/250) |
 
 ### Supported configuration versions
 
