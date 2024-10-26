@@ -253,12 +253,12 @@
               <gmd:specification>
                 <gmd:CI_Citation>
                   <gmd:title>
-                    <gmx:Anchor xlink:href="https://metadata-standards.data.bas.ac.uk/profile/magic-discovery-v1/" xlink:actuate="onRequest">British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile</gmx:Anchor>
+                    <gmx:Anchor xlink:href="https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery-v1/" xlink:actuate="onRequest">British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile</gmx:Anchor>
                   </gmd:title>
                   <gmd:date>
                     <gmd:CI_Date>
                       <gmd:date>
-                        <gco:Date>2024-10-01</gco:Date>
+                        <gco:Date>2024-11-01</gco:Date>
                       </gmd:date>
                       <gmd:dateType>
                         <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
@@ -330,7 +330,7 @@
                 </gmd:CI_Citation>
               </gmd:specification>
               <gmd:explanation>
-                <gco:CharacterString>Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile.</gco:CharacterString>
+                <gco:CharacterString>Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile.</gco:CharacterString>
               </gmd:explanation>
               <gmd:pass>
                 <gco:Boolean>true</gco:Boolean>

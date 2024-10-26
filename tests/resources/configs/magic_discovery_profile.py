@@ -25,14 +25,14 @@ _appendix_2 = {
 _appendix_1 = {
     "specification": {
         "title": {
-            "value": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile",
-            "href": "https://metadata-standards.data.bas.ac.uk/profile/magic-discovery-v1/",
+            "value": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile",
+            "href": "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery-v1/",
         },
-        "dates": {"publication": {"date": datetime.date(2024, 10, 1)}},
+        "dates": {"publication": {"date": datetime.date(2024, 11, 1)}},
         "edition": "1",
         "contact": {**_appendix_2, "role": ["publisher"]},
     },
-    "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) discovery metadata profile.",
+    "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile.",
     "result": True,
 }
 
