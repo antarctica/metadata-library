@@ -1,5 +1,5 @@
 {
-    "$id": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-discovery-v1.json",
+    "$id": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-discovery-v1.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "BAS MAGIC v1 Discovery Metadata Profile configuration schema",
     "description": "Metadata record configuration schema for the BAS MAGIC Discovery Metadata Profile (version 1)",
@@ -295,7 +295,7 @@
                                             },
                                             "href": {
                                                 "type": "string",
-                                                "const": "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery-v1/"
+                                                "const": "https://metadata-resources.data.bas.ac.uk/profiles/magic-discovery-v1/"
                                             }
                                         }
                                     },

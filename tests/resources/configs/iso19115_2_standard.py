@@ -7,22 +7,22 @@ from tests.resources.configs.iso19115_0_standard import minimal_record_v4 as _mi
 
 minimal_record_v4 = deepcopy(_minimal_record_v4)  # type: dict
 minimal_record_v4["$schema"] = (
-    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
+    "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
 )
 
 base_simple_record_v4 = deepcopy(_base_simple_record_v4)  # type: dict
 base_simple_record_v4["$schema"] = (
-    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
+    "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
 )
 
 base_complex_record_v4 = deepcopy(_base_complex_record_v4)  # type: dict
 base_complex_record_v4["$schema"] = (
-    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
+    "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
 )
 
 complete_record_v4 = deepcopy(_complete_record_v4)  # type: dict
 complete_record_v4["$schema"] = (
-    "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
+    "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
 )
 
 configs_v4_all = {
