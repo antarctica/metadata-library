@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.15.0 - 2024-10-31
+
 ### Changed
 
 * Adopting new `metadata-resources.data.bas.ac.uk` site for schemas
