@@ -10,7 +10,7 @@ from importlib_resources.abc import Traversable
 from jsonschema.validators import validate
 
 profiles: dict[str, Traversable] = {
-    "https://metadata-resources.data.bas.ac.uk/profiles/magic-discovery-v1/": resource_file(
+    "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery-v1/": resource_file(
         "bas_metadata_library.schemas.dist"
     ).joinpath("magic_discovery_v1.json"),
 }

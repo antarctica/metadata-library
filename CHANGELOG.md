@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.15.1 - 2024-10-31
+
+### Fixed
+
+* Incorrect href for MAGIC Discovery profile schema
+  [#258](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/258)
+
 ## 0.15.0 - 2024-10-31
 
 ### Changed

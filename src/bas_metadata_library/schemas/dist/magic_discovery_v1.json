@@ -295,7 +295,7 @@
                                             },
                                             "href": {
                                                 "type": "string",
-                                                "const": "https://metadata-resources.data.bas.ac.uk/profiles/magic-discovery-v1/"
+                                                "const": "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery-v1/"
                                             }
                                         }
                                     },
