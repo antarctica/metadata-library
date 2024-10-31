@@ -1,7 +1,7 @@
 import datetime
 
 minimal_record_v4 = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
     "metadata": {
         "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
         "date_stamp": datetime.date(2018, 10, 18),
@@ -15,7 +15,7 @@ minimal_record_v4 = {
 }
 
 base_simple_record_v4 = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
     "hierarchy_level": "dataset",
     "metadata": {
@@ -140,7 +140,7 @@ base_simple_record_v4 = {
 }
 
 base_complex_record_v4 = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
     "hierarchy_level": "dataset",
     "metadata": {
@@ -375,7 +375,7 @@ base_complex_record_v4 = {
 }
 
 complete_record_v4 = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
     "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
     "hierarchy_level": "dataset",
     "metadata": {

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
+  "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json",
   "file_identifier": "b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
   "hierarchy_level": "dataset",
   "metadata": {

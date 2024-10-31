@@ -253,7 +253,7 @@
               <gmd:specification>
                 <gmd:CI_Citation>
                   <gmd:title>
-                    <gmx:Anchor xlink:href="https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery-v1/" xlink:actuate="onRequest">British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile</gmx:Anchor>
+                    <gmx:Anchor xlink:href="https://metadata-resources.data.bas.ac.uk/profiles/magic-discovery-v1/" xlink:actuate="onRequest">British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile</gmx:Anchor>
                   </gmd:title>
                   <gmd:date>
                     <gmd:CI_Date>

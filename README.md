@@ -36,22 +36,22 @@ referred to as *ISO-19115-3* (`iso_19115_3`).
 
 | Standard  | Profile                                                                                               | Introduced In                                                                                    |
 |-----------|-------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
-| ISO 19115 | [MAGIC Discovery Metadata V1](https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery-v1/) | [#250](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/250) |
+| ISO 19115 | [MAGIC Discovery Metadata V1](https://metadata-resources.data.bas.ac.uk/profiles/magic-discovery-v1/) | [#250](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/250) |
 
 ### Supported configuration versions
 
 | Standard           | Profile | Configuration Version                                                                                                     | Status  | Notes                                 |
 |--------------------|---------|---------------------------------------------------------------------------------------------------------------------------|---------|---------------------------------------|
-| ISO 19115:2003     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired | Replaced by `v2`, no longer supported |
-| ISO 19115:2003     | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Retired | Replaced by `v3`, no longer supported |
-| ISO 19115:2003     | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-1-v3.json)     | Retired | Replaced by `v4`, no longer supported |
-| ISO 19115:2003     | -       | [`v4`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-0-v4.json)     | Stable  | Currently supported version           |
-| ISO 19115-2:2009   | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Retired | Replaced by `v2`, no longer supported |
-| ISO 19115-2:2009   | -       | [`v2`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Retired | Replaced by `v3`, no longer supported |
-| ISO 19115-2:2009   | -       | [`v3`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json)     | Retired | Replaced by `v4`, no longer supported |
-| ISO 19115-2:2009   | -       | [`v4`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json)     | Stable  | Currently supported version           |
-| IEC 61174:2015     | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Stable  | Currently supported version           |
-| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Stable  | Currently supported version           |
+| ISO 19115:2003     | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired | Replaced by `v2`, no longer supported |
+| ISO 19115:2003     | -       | [`v2`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Retired | Replaced by `v3`, no longer supported |
+| ISO 19115:2003     | -       | [`v3`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-1-v3.json)     | Retired | Replaced by `v4`, no longer supported |
+| ISO 19115:2003     | -       | [`v4`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v3/iso-19115-0-v4.json)     | Stable  | Currently supported version           |
+| ISO 19115-2:2009   | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Retired | Replaced by `v2`, no longer supported |
+| ISO 19115-2:2009   | -       | [`v2`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Retired | Replaced by `v3`, no longer supported |
+| ISO 19115-2:2009   | -       | [`v3`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json)     | Retired | Replaced by `v4`, no longer supported |
+| ISO 19115-2:2009   | -       | [`v4`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json)     | Stable  | Currently supported version           |
+| IEC 61174:2015     | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Stable  | Currently supported version           |
+| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Stable  | Currently supported version           |
 
 ### Supported standards coverage
 
@@ -133,7 +133,7 @@ from datetime import date
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4, MetadataRecord
 
 minimal_record_config = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -305,7 +305,7 @@ from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4
 output_path = str('/path/to/file.json')
 
 minimal_record_config = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -353,7 +353,7 @@ from bas_metadata_library import RecordValidationError
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4, MetadataRecord
 
 minimal_record_config = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -418,7 +418,7 @@ from jsonschema import ValidationError
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4
 
 minimal_record_config = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
     "hierarchy_level": "dataset",
     "metadata": {
         "language": "eng",
@@ -615,12 +615,13 @@ define any required properties, and any properties with enumerated values.
 
 Configuration schemas are stored as JSON files in the `bas_metadata_library.schemas` module, and loaded as resource
 files from within this package to validate record configurations. Schemas are also made available externally through
-the BAS Metadata Standards website, [metadata-standards.data.bas.ac.uk](https://metadata-standards.data.bas.ac.uk), to
-allow:
+the BAS Metadata Standards Resources website, `https://metadata-resources.data.bas.ac.uk`, to allow:
 
 1. other applications to ensure their output will be compatible with this library - where they can't, or don't want to,
    use this library directly
 2. schema inheritance/extension - for standards that inherit from other standards (such as extensions or profiles)
+
+**Note:** These schemas used to be available at `https://metadata-standards.data.bas.ac.uk`, these URLs no longer work.
 
 Configuration schemas are versioned (e.g. `v1`, `v2`) to allow for backwards incompatible changes to be made.
 Upgrade/Downgrade methods will be provided for a limited time to assist migrating record configurations between schema

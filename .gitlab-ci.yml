@@ -25,8 +25,8 @@ variables:
   #   - AWS_SECRET_ACCESS_KEY: "[Sensitive]"
 
   # Publishing
-  S3_SCHEMA_BUCKET_STAGE: metadata-standards-testing.data.bas.ac.uk
-  S3_SCHEMA_BUCKET_PROD: metadata-standards.data.bas.ac.uk
+  S3_SCHEMA_BUCKET_STAGE: metadata-resources-testing.data.bas.ac.uk
+  S3_SCHEMA_BUCKET_PROD: metadata-resources.data.bas.ac.uk
 
 cache:
   paths:

@@ -26,7 +26,7 @@ _appendix_1 = {
     "specification": {
         "title": {
             "value": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile",
-            "href": "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery-v1/",
+            "href": "https://metadata-resources.data.bas.ac.uk/profiles/magic-discovery-v1/",
         },
         "dates": {"publication": {"date": datetime.date(2024, 11, 1)}},
         "edition": "1",
@@ -38,7 +38,7 @@ _appendix_1 = {
 
 _minimal_product_v1_id = "f866c298-3b9a-4624-ac31-cd6b97c146fa"
 minimal_product_v1 = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
     "file_identifier": _minimal_product_v1_id,
     "metadata": {
         "contacts": [{**_appendix_2, "role": ["pointOfContact"]}],
@@ -93,7 +93,7 @@ minimal_product_v1 = {
 
 _minimal_collection_v1_id = "0c553abe-5cfa-4208-8354-8cbdafb064d4"
 minimal_collection_v1 = {
-    "$schema": "https://metadata-standards.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
     "file_identifier": _minimal_collection_v1_id,
     "metadata": {
         "contacts": [{**_appendix_2, "role": ["pointOfContact"]}],
