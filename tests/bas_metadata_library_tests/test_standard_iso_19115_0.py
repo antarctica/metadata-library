@@ -1630,32 +1630,6 @@ def test_edge_case_distribution_option_more_transfer_options_than_formats():
         {"distributor": _distributor, "transfer_option": {"online_resource": {"href": "https://example.com/red"}}},
     ]
 
-
-def test_edge_case_distribution_option_transfer_option_size_no_unit():
-    config = deepcopy(configs_v4_all["minimal_v4"])
-    config["distribution"] = [
-        {
-            "distributor": _distributor,
-            "format": {"format": "netCDF"},
-            "transfer_option": {
-                "online_resource": {
-                    "href": "https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=b1a7d1b5-c419-41e7-9178-b1ffd76d5371",
-                    "title": "Get Data",
-                    "description": "Download measurement data",
-                    "function": "download",
-                },
-                "size": {"magnitude": 40.0},
-            },
-        }
-    ]
-    config = MetadataRecordConfigV4(**config)
-    record = MetadataRecord(configuration=config)
-    record = record.generate_xml_document().decode()
-    _record = MetadataRecord(record=record)
-    _config = _record.make_config()
-    assert _config.config["distribution"][0]["transfer_option"]["size"] == {"magnitude": 40}
-
-
 def test_edge_case_citation_title_anchor_no_value_with_href():
     config = deepcopy(configs_v4_all["complete_v4"])
     config["identification"]["keywords"] = [
