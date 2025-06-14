@@ -1776,18 +1776,18 @@
           "description": "Size of the transfer option if it uses files for example.",
           "type": "object",
           "additionalProperties": false,
-          "required": [],
+          "required": ["unit", "magnitude"],
           "properties": {
             "unit": {
               "title": "unit",
-              "description": "Abbreviation for the unit the size is measured in (e.g. 'MB' for megabytes).",
+              "description": "Unit the size is measured in, typically a conventional abbreviation (e.g. 'MB' for megabytes).",
               "type": "string",
               "examples": [
                 "MB"
               ]
             },
             "magnitude": {
-              "title": "unit",
+              "title": "magnitude",
               "description": "Size of the transfer option in a given unit.",
               "type": "number",
               "examples": [
