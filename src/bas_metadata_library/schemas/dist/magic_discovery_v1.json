@@ -142,6 +142,7 @@
                 "collection",
                 "dataset",
                 "product",
+                "paperMapProduct",
                 "series"
             ]
         },
