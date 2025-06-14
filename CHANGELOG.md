@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.15.3 - 2025-06-14
+
+### Fixed
+
+* Local code list values for physical map products in MAGIC Discovery profile
+  [#260](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/260)
+
 ## 0.15.2 - 2025-06-14
 
 ### Added
