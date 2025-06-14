@@ -1510,6 +1510,15 @@
             "Geomap"
           ]
         },
+        "page": {
+            "title": "Page",
+            "description": "Page within the series.",
+            "type": "string",
+            "examples": [
+                "2",
+                "Part 3"
+            ]
+        },
         "edition": {
           "$ref": "#/definitions/edition"
         }
