@@ -123,7 +123,8 @@
                         "trial",
                         "dataDictionary",
                         "sciencePaper",
-                        "userGuide"
+                        "userGuide",
+                        "paperMap"
                     ],
                     "examples": [
                         "collection"
@@ -852,7 +853,8 @@
                 "series",
                 "service",
                 "software",
-                "tile"
+                "tile",
+                "paperMapProduct"
             ],
             "examples": [
                 "dataset"
