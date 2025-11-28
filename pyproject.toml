@@ -1,25 +1,27 @@
 [project]
 name = "bas-metadata-library"
 version = "0.15.3"
-license = "MIT"
 description = "Python library for generating metadata records"
+readme = "README.md"
+license = "MIT"
 authors = [
   { name = "Felix Fennell", email = "felnne@bas.ac.uk" },
   { name = "Luke McDonald", email = "ludona@bas.ac.uk" },
   { name = "Jason White", email = "jasite@bas.ac.uk" },
   { name = "Paul Breen", email = "pbree@bas.ac.uk" }
 ]
-readme = "README.md"
-homepage = "https://github.com/antarctica/metadata-library"
-repository = "https://github.com/antarctica/metadata-library"
+maintainers = [
+  { name = "Felix Fennell", email = "felnne@bas.ac.uk" }
+]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Science/Research",
-    "Topic :: Software Development :: Libraries"
+  "Programming Language :: Python :: 3",
+  "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Topic :: Software Development :: Libraries"
+]
 requires-python = ">=3.9"
 dependencies = [
   "importlib-resources>=6.5.2", # python-version backport
@@ -47,11 +49,10 @@ test = [
 src = ["src"]
 line-length = 120
 target-version = "py39"
-# tests/bas_metadata_library_tests/* excluded as too much effort to retrofit and largely unnecessary (stylistic)
+# tests/bas_metadata_library_tests/* | excluded as too much effort to retrofit and largely unnecessary (stylistic)
 extend-exclude = ["tests/bas_metadata_library_tests"]
 
 [tool.ruff.lint]
-select = ["A", "ANN", "B", "B9", "C90", "C4", "D", "DTZ", "E", "EM", "ERA", "F", "FA", "I", "N", "PT", "PTH", "RET", "RUF", "S", "SIM", "TD", "TRY", "UP", "W"]
 #   A | builtins (variables named after builtin names)
 # ANN | annotations (type hints)
 #   B | bug-bear (bad code)
@@ -77,8 +78,8 @@ select = ["A", "ANN", "B", "B9", "C90", "C4", "D", "DTZ", "E", "EM", "ERA", "F",
 # TRY | tryceratops (exceptions)
 #  UP | pyupgrade (old syntax)
 #   W | pycodestyle warnings (PEP8)
+select = ["A", "ANN", "B", "B9", "C90", "C4", "D", "DTZ", "E", "EM", "ERA", "F", "FA", "I", "N", "PT", "PTH", "RET", "RUF", "S", "SIM", "TD", "TRY", "UP", "W"]
 
-ignore = ["ANN101", "ANN204", "D100", "D101", "D102", "D104", "D107", "D203", "D212", "D401", "D402", "E501", "TD002"]
 # ANN101 | ignore missing self type (can't be used in Python 3.9)
 # ANN204 | ignore docstring for magic methods (unecessary)
 #   D100 | for avoding module level docstrings (unecessary)
@@ -91,18 +92,19 @@ ignore = ["ANN101", "ANN204", "D100", "D101", "D102", "D104", "D107", "D203", "D
 #   D402 | for docstring that can't resemble their signatures (despite them being completely different)
 #   E501 | for bug-bear compatibility (as B905 overrides line length checks)
 #  TD002 | for allowing TODOs without an author (as an issue should assign ownership)
+ignore = ["ANN101", "ANN204", "D100", "D101", "D102", "D104", "D107", "D203", "D212", "D401", "D402", "E501", "TD002"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["ANN201", "S101"]
 #   tests/* | ANN201 | ignore missing type annotations from test functions
 #   tests/* |   S101 | ignore use of assert
+"tests/*" = ["ANN201", "S101"]
 
 [tool.pytest.ini_options]
-addopts = "--strict-markers --random-order -x --ff"
 # --strict-markers | fail if unknown markers are used
 # --random-order   | run tests in random order
 # -x               | stop after first failure [Overriden in CI]
 # --ff             | run failed tests first
+addopts = "--strict-markers --random-order -x --ff"
 markers = [
   "cov: coverage checks (deselect with '-m \"not cov\"')"
 ]
@@ -111,6 +113,10 @@ markers = [
 skip_empty = true
 show_missing = false
 fail_under = 95  # lowered because we didn't initially consider branching, which would take significant effort to retrofit
+exclude_lines = [
+  "pragma: no cover",
+  "@abstractmethod",
+]
 
 [tool.coverage.html]
 directory = "htmlcov"
@@ -118,6 +124,7 @@ directory = "htmlcov"
 [tool.coverage.run]
 branch = true
 source = ["src"]
+omit = []
 
 [build-system]
 requires = ["uv_build>=0.8.18,<0.9.0"]
