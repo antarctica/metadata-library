@@ -236,7 +236,7 @@ The `generate-schemas` command in the [Flask Test App](#testing-flask-app) gener
 `src/bas_metadata_library/schemas/dist`.
 
 ```shell
-$ FLASK_APP=tests.app poetry run flask generate-schemas
+$ FLASK_APP=tests.app uv run flask generate-schemas
 ```
 
 [`jsonref`](https://jsonref.readthedocs.io/en/latest/) is used to resolve any references in source schemas.
@@ -302,7 +302,7 @@ permissions to remote state are enforced.
 Requirements:
 
 * Python 3.9 ([pyenv](https://github.com/pyenv/pyenv) recommended)
-* [Poetry](https://python-poetry.org/docs/#installation)
+* UV (`brew install uv`)
 * Git (`brew install git`)
 * Pre-commit (`pipx install pre-commit`)
 
@@ -316,7 +316,7 @@ $ cd metadata-library
 Install project:
 
 ```
-$ poetry install
+$ uv sync --all-groups
 ```
 
 Install pre-commit hooks:
@@ -337,7 +337,7 @@ In particular this is using the free vulnerability database, which is updated le
 Checks are run automatically in [Continuous Integration](#continuous-integration). To check locally:
 
 ```
-$ poetry run safety scan
+$ uv run safety scan
 ```
 
 #### `lxml` dependency safety
@@ -365,14 +365,14 @@ set in [`pyproject.toml`](./pyproject.toml). Linting checks are run automaticall
 To check linting locally:
 
 ```
-$ poetry run ruff check src/ tests/
+$ uv run ruff check src/ tests/
 ```
 
 To run and check formatting locally:
 
 ```
-$ poetry run ruff format src/ tests/
-$ poetry run ruff format --check src/ tests/
+$ uv run ruff format src/ tests/
+$ uv run ruff format --check src/ tests/
 ```
 
 ### Static security analysis
@@ -411,7 +411,7 @@ therefore not exhaustive, nor a substitute for formal metadata validation.
 To run tests locally:
 
 ```
-$ poetry run pytest
+$ uv run pytest
 ```
 
 Tests are ran against an internal Flask app defined in [`tests/app.py`](./tests/app.py).
@@ -442,7 +442,7 @@ justification:
 To run tests with coverage locally:
 
 ```
-$ poetry run pytest --cov --cov-report=html
+$ uv run pytest --cov --cov-report=html
 ```
 
 Where tests are added to ensure coverage, use the `cov` [mark](https://docs.pytest.org/en/7.1.x/how-to/mark.html), e.g:
@@ -470,7 +470,7 @@ For generating and capturing test records, record configurations and schemas, an
 Available routes and commands can be used listed using:
 
 ```shell
-$ FLASK_APP=tests.app poetry run flask --help
+$ FLASK_APP=tests.app uv run flask --help
 ```
 
 ### Test records
@@ -485,7 +485,7 @@ The `capture-test-records` command in the [Flask Test App](#testing-flask-app) g
 encoded as JSON files in `tests/resources/records`:
 
 ```shell
-$ FLASK_APP=tests.app poetry run flask capture-test-records
+$ FLASK_APP=tests.app uv run flask capture-test-records
 ```
 
 **Note:** These files will be used in tests to automatically verify element classes dump/load (encode/decode)
@@ -500,7 +500,7 @@ The `capture-json-test-configs` command in the [Flask Test App](#testing-flask-a
 configurations for standards encoded as JSON files in `/tests/resources/configs/`:
 
 ```shell
-$ FLASK_APP=tests.app poetry run flask capture-json-test-configs
+$ FLASK_APP=tests.app uv run flask capture-json-test-configs
 ```
 
 **Note:** These files will be used in tests to automatically verify configuration classes dump/load (encode/decode)
@@ -540,14 +540,14 @@ This project is distributed as a Python (Pip) package available from [PyPi](http
 The package can also be built manually if needed:
 
 ```
-$ poetry build
+$ uv build
 ```
 
 ### Deployment workflow
 
 [Continuous Deployment](#continuous-deployment) will:
 
-- build this package using Poetry
+- build this package using UV
 - upload it to [PyPi](https://pypi.org/project/flask-entra-auth/)
 
 ### Continuous Deployment
