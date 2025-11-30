@@ -18,6 +18,9 @@ variables:
   PYTHON_VERSION: "3.9"
   BASE_LAYER: "bookworm-slim"
 
+  # Task runner
+  TASK_BIN: "uv run task"
+
   # Publishing
   S3_SCHEMA_BUCKET_STAGE: metadata-resources-testing.data.bas.ac.uk
   S3_SCHEMA_BUCKET_PROD: metadata-resources.data.bas.ac.uk
@@ -30,7 +33,6 @@ variables:
   # - AWS IAM id/secret key for 'bas-gitlab-ci-bas-metadata-generator' user
   #   - AWS_ACCESS_KEY_ID: "[Sensitive]"
   #   - AWS_SECRET_ACCESS_KEY: "[Sensitive]"
-
 
 image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYER
 
@@ -58,8 +60,7 @@ pytest:
   before_script:
     - *before_script_testing
   script:
-    - uv run pytest -o junit_family=xunit2 --junitxml=test-results.xml --cov --cov-report=html --continue-on-collection-errors
-    # --continue-on-collection-errors counteracts `-x` flag set in pyproject.toml
+    - $TASK_BIN ci-test
   coverage: '/Total coverage: \d+\.\d+/'
   artifacts:
     when: always
@@ -83,8 +84,8 @@ ruff:
   before_script:
     - *before_script_testing
   script:
-    - uv run ruff check src/ tests/
-    - uv run ruff format --check src/ tests/
+    - $TASK_BIN lint
+    - $TASK_BIN format --check
   rules:
     -
       changes:
@@ -97,7 +98,7 @@ safety:
   before_script:
     - *before_script_testing
   script:
-    - uv run safety --stage cicd scan --detailed-output
+    - $TASK_BIN ci-safety
   rules:
     -
       changes:
@@ -126,7 +127,7 @@ build:
   before_script:
     - *before_script_python
   script:
-    - uv build
+    - $TASK_BIN build
   artifacts:
     paths:
       - dist/
@@ -147,7 +148,7 @@ publish:
   before_script:
     - *before_script_python
   script:
-    - uv publish --token $PYPI_TOKEN
+    - $TASK_BIN publish --token $PYPI_TOKEN
   rules:
     - if: $CI_COMMIT_TAG
 
