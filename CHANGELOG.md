@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - switching from Poetry to UV
   [#261](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/261)
+* Updating to latest Ruff ruleset
+  [#263](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/263)
 
 ## 0.15.3 - 2025-06-14
 

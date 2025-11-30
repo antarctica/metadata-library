@@ -175,7 +175,7 @@ class MetadataRecord:
             self.attributes = configuration.config
 
         if record is not None:
-            self.record = fromstring(record.encode())  # noqa: S320 (see '`lxml` package (security)' README section)
+            self.record = fromstring(record.encode())
 
     def make_config(self) -> MetadataRecordConfig:
         """

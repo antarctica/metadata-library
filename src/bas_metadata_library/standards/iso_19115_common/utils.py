@@ -71,16 +71,12 @@ def _decode_date_properties(dictionary: dict, parent_keys: list[str] | None = No
             and key == "date"
         ):
             dictionary[key] = decode_date_string(date_datetime=value)["date"]  # unwrap date value
-        elif (
+        elif (isinstance(value, str) and "dates" in parent_keys) or (
             isinstance(value, str)
-            and "dates" in parent_keys
-            or (
-                isinstance(value, str)
-                and "identification" in parent_keys
-                and ("extent" in parent_keys or "extents" in parent_keys)
-                and "temporal" in parent_keys
-                and "period" in parent_keys
-            )
+            and "identification" in parent_keys
+            and ("extent" in parent_keys or "extents" in parent_keys)
+            and "temporal" in parent_keys
+            and "period" in parent_keys
         ):
             dictionary[key] = decode_date_string(date_datetime=value)
 
