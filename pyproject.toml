@@ -67,6 +67,10 @@ ci-test = { cmd = "pytest {cov_options} -o junit_family=xunit2 --junitxml=test-r
 ci-safety = { cmd = "safety --stage cicd scan --detailed-output", help = "Called by CI" }
 # app dev
 release = { cmd = "python -m tasks.release", help = "Prepapre app release" }
+# app CLI
+generate-schemas = { cmd = "flask --app tasks.flask_app generate-schemas", help="Generate JSON schemas via Flask app" }
+capture-test-records = { cmd = "flask --app tests.app capture-test-records", help="Catpure test metadata records via Flask app" }
+capture-json-test-configs = { cmd = "flask --app tests.app capture-json-test-configs", help="Capture test JSON configs via Flask app" }
 
 [tool.ruff]
 src = ["src"]
