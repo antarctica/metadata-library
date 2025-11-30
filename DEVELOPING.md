@@ -320,8 +320,8 @@ for an example of removing a schema version.
 > [!CAUTION]
 > This section is Work in Progress (WIP) and may not be complete/accurate.
 
-See https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/250 for an example of adding
-a profile.
+See [#250 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/250) for an
+example of adding a profile.
 
 ### Generating configuration schemas
 

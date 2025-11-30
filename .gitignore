@@ -1,8 +1,24 @@
-__pycache__
+# Python generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# UV generated files
+.venv
+
+# Ruff generated files
+.ruff_cache/
+
+# PyCharm generated files
+.idea/
+
+# Pytest generated files
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Terraform generated files
 /provisioning/terraform/.terraform
-/htmlcov/
-/.coverage
-/.venv/
-/.idea/
-/dist/
-.python-version
