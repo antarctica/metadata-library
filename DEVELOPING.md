@@ -339,6 +339,14 @@ To add a schema for a new standard/profile:
 - this should be true by default, and is only relevant to schemas that do not contain any references, as this will
   cause an error if resolved
 
+### Removing a standard
+
+> [!CAUTION]
+> This section is Work in Progress (WIP) and may not be complete/accurate.
+
+See [#266 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/266) for an
+example of removing a standard.
+
 ### Adding development tasks
 
 See the [Taskipy](https://github.com/taskipy/taskipy?tab=readme-ov-file#adding-tasks) documentation.
