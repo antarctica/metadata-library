@@ -103,6 +103,7 @@ To add a new standard:
 1. create a suitable metadata configuration JSON schema in `bas_metadata_library.schemas.src`,
    e.g. `bas_metadata_library.schemas.src.foo_v1.json`
 1. update the `generate_schemas` method in `app.py` to generate distribution schemas
+1. update the `validate_schemas` method in the [Test App](#testing-flask-app) to check source and distribution schemas
 1. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
    the distribution schema within the BAS Metadata Standards website
 1. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
@@ -206,6 +207,8 @@ and new configurations.
 1. change the `make_config()` method of the `MetadataRecord` class to return the new configuration class
 1. update the `_generate_schemas()` method in the [Test App](#testing-flask-app) to generate distribution schemas for
    the new schema version
+1. update the `_validate_schemas()` method in the [Test App](#testing-flask-app) to generate distribution schemas for
+   the new schema version
 1. [Generate configuration schemas](#generating-configuration-schemas)
 1. add a line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
    the distribution schema for the new schema version within the BAS Metadata Standards website
@@ -264,6 +267,9 @@ the basis these methods will be relatively short-lived.
   conversion
 
 #### Step 3: Release as experimental version
+
+> [!CAUTION]
+> This subsection is a Work in Progress (WIP) and may not be complete/accurate.
 
 ... release the new configuration version as experimental for the standard ...
 
@@ -338,6 +344,20 @@ To add a schema for a new standard/profile:
   the schema JSON file), and whether the source schema should be resolved (true) or simply copied (false)
 - this should be true by default, and is only relevant to schemas that do not contain any references, as this will
   cause an error if resolved
+
+### Validating configuration schemas
+
+> [!CAUTION]
+> This section is a Work in Progress (WIP) and may not be complete/accurate.
+
+To check source and distribution JSON Schemas comply with the JSON Schema specification, run the `validate-schemas`
+[Development Task](#development-tasks), which uses the internal [Flask Test App](#testing-flask-app).
+
+To add a schema for a new standard/profile:
+
+- adjust the `schemas` list in the `_validate_schemas()` method in the [Flask Test App](#testing-flask-app)
+- this list should contain dictionaries with a key for the common name of the schema (based on the common file name of
+  the schema JSON file)
 
 ### Removing a standard
 
@@ -564,6 +584,10 @@ Available routes and commands can be used listed using:
 ```shell
 $ FLASK_APP=tests.app uv run flask --help
 ```
+
+### Configuration schema testing
+
+Pytest will automatically trigger [Configuration Schemas Validation](#validating-configuration-schemas).
 
 ### Test records
 

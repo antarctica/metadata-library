@@ -50,7 +50,7 @@ image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYER
   - apt-get install -y libxml2-utils
 
   # setup app deps
-  - uv sync --all-groups --python $PYTHON_VERSION
+  - uv sync --all-groups
 
 # Jobs
 

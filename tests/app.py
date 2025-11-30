@@ -5,7 +5,9 @@ from pathlib import Path
 
 from flask import Flask, Response, current_app, jsonify
 from flask.testing import FlaskClient
+from importlib_resources import files as resource_file
 from jsonref import JsonRef
+from jsonschema.validators import validate
 
 from bas_metadata_library import MetadataRecordConfig
 from bas_metadata_library.standards.iso_19115_0 import (
@@ -130,6 +132,34 @@ def _generate_schemas() -> None:
             dist_schema_file.write("\n")
 
 
+def _validate_schemas() -> None:
+    """
+    Validate source and distribution schemas against the JSON Schema specification.
+
+    Ensures schemas are valid as both JSON documents and JSON Schemas (meta-validation).
+    """
+    schemas = [
+        {"id": "iso_19115_0_v4"},
+        {"id": "iso_19115_2_v4"},
+        {"id": "magic_discovery_v1"},
+    ]
+
+    json_schema_path = resource_file("bas_metadata_library.schemas.src").joinpath("json_schema_draft_7.json")
+    with json_schema_path.open() as json_schema_file:
+        json_schema_data = json.load(json_schema_file)
+
+    for schema in schemas:
+        print(f"Validating schema for [{schema['id']}]")
+        src_schema_path = resource_file("bas_metadata_library.schemas.src").joinpath(f"{schema['id']}.json")
+        dst_schema_path = resource_file("bas_metadata_library.schemas.dist").joinpath(f"{schema['id']}.json")
+
+        with src_schema_path.open() as src_schema_file, dst_schema_path.open() as dist_schema_file:
+            src_schema_data = json.load(src_schema_file)
+            dist_schema_data = json.load(dist_schema_file)
+        for instance in [src_schema_data, dist_schema_data]:
+            validate(instance=instance, schema=json_schema_data)
+
+
 def _capture_json_test_config(standard_profile: str, config_name: str, config: dict, parameters: dict) -> None:
     print(f"Saving JSON encoding of '{standard_profile}/{config_name}' test configuration")
     configuration: MetadataRecordConfig = parameters["config_class"](**config)
@@ -250,6 +280,11 @@ def create_app() -> Flask:
     def generate_schemas() -> None:
         """Inline JSON Schema references in configuration schemas."""
         _generate_schemas()
+
+    @app.cli.command()
+    def validate_schemas() -> None:
+        """Validate JSON schemas against JSON Schema specification."""
+        _validate_schemas()
 
     @app.cli.command()
     def capture_json_test_configs() -> None:
