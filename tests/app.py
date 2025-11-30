@@ -1,29 +1,13 @@
 from __future__ import annotations
 
 import json
-from hashlib import sha1
 from pathlib import Path
-from shutil import copy
-from tempfile import TemporaryDirectory
-from zipfile import ZipFile
 
 from flask import Flask, Response, current_app, jsonify
 from flask.testing import FlaskClient
 from jsonref import JsonRef
 
 from bas_metadata_library import MetadataRecordConfig
-from bas_metadata_library.standards.iec_pas_61174_0_v1 import (
-    MetadataRecord as IECPAS61174_0_MetadataRecord,
-)
-from bas_metadata_library.standards.iec_pas_61174_0_v1 import (
-    MetadataRecordConfigV1 as IECPAS61174_0_MetadataRecordConfigV1,
-)
-from bas_metadata_library.standards.iec_pas_61174_1_v1 import (
-    MetadataRecord as IECPAS61174_1_MetadataRecord,
-)
-from bas_metadata_library.standards.iec_pas_61174_1_v1 import (
-    MetadataRecordConfigV1 as IECPAS61174_1_MetadataRecordConfigV1,
-)
 from bas_metadata_library.standards.iso_19115_0 import (
     MetadataRecord as ISO19115_0_MetadataRecord,
 )
@@ -36,8 +20,6 @@ from bas_metadata_library.standards.iso_19115_2 import (
 from bas_metadata_library.standards.iso_19115_2 import (
     MetadataRecordConfigV4 as ISO19115_2_MetadataRecordConfigV4,
 )
-from tests.resources.configs.iec_pas_61174_0_standard import configs_v1 as iec_pas_61174_0_standard_configs_v1
-from tests.resources.configs.iec_pas_61174_1_standard import configs_v1 as iec_pas_61174_1_standard_configs_v1
 from tests.resources.configs.iso19115_0_standard import (
     configs_v4_all as iso19115_0_standard_configs_v4,
 )
@@ -98,32 +80,6 @@ def _generate_record_magic_discovery(config_label: str) -> Response:
     )
 
 
-def _generate_record_ice_pas_61174_0(config_label: str) -> Response:
-    """Generate a record from a configuration using the IEC PAS 61174-0 standard."""
-    if config_label in iec_pas_61174_0_standard_configs_v1:
-        configuration_object = iec_pas_61174_0_standard_configs_v1[config_label]
-        config_label = IECPAS61174_0_MetadataRecordConfigV1(**configuration_object)
-        record = IECPAS61174_0_MetadataRecord(config_label)
-        return Response(record.generate_xml_document(), mimetype="text/xml")
-
-    return Response(
-        f"Invalid configuration, valid options: [{', '.join(list(iec_pas_61174_0_standard_configs_v1.keys()))}]"
-    )
-
-
-def _generate_record_ice_pas_61174_1(config_label: str) -> Response:
-    """Generate a record from a configuration using the IEC PAS 61174-1 standard."""
-    if config_label in iec_pas_61174_1_standard_configs_v1:
-        configuration_object = iec_pas_61174_1_standard_configs_v1[config_label]
-        config_label = IECPAS61174_1_MetadataRecordConfigV1(**configuration_object)
-        record = IECPAS61174_1_MetadataRecord(config_label)
-        return Response(record.generate_xml_document(), mimetype="text/xml")
-
-    return Response(
-        f"Invalid configuration, valid options: [{', '.join(list(iec_pas_61174_1_standard_configs_v1.keys()))}]"
-    )
-
-
 def _generate_schemas() -> None:
     """
     Generate distribution schemas without references to any external resources.
@@ -139,8 +95,6 @@ def _generate_schemas() -> None:
     Note: The ISO 19115 V3 schemas do not use copy to prevent any accidental changes to a published schema.
     """
     schemas = [
-        {"id": "iec_pas_61174_0_v1", "resolve": False},
-        {"id": "iec_pas_61174_1_v1", "resolve": True},
         {"id": "iso_19115_0_v4", "copy": False},
         {"id": "iso_19115_2_v4", "copy": True},
         {"id": "magic_discovery_v1", "copy": False},
@@ -207,18 +161,6 @@ def _capture_json_test_configs() -> None:
                 "config_class": ISO19115_2_MetadataRecordConfigV4,
             },
         ],
-        "iec-pas-61174-0": [
-            {
-                "configs": iec_pas_61174_0_standard_configs_v1,
-                "config_class": IECPAS61174_0_MetadataRecordConfigV1,
-            }
-        ],
-        "iec-pas-61174-1": [
-            {
-                "configs": iec_pas_61174_1_standard_configs_v1,
-                "config_class": IECPAS61174_1_MetadataRecordConfigV1,
-            }
-        ],
     }
     profiles = {
         "magic-discovery-profile": [
@@ -235,54 +177,6 @@ def _capture_json_test_configs() -> None:
                 _capture_json_test_config(
                     standard_profile=standard_profile, config_name=config_name, config=config, parameters=parameters
                 )
-
-
-def _update_rtzp_artefact_if_changed(
-    rtzp_standard: str, rtzp_record: IECPAS61174_0_MetadataRecord | IECPAS61174_1_MetadataRecord
-) -> None:
-    """
-    Checks whether a RTZP archive created for an IEC PAS 61174 based record differs compared to an earlier archive.
-
-    In essence, this method checks whether the inner RTZ file of a RTZP package has changed, rather than checking
-    the package itself.
-
-    This is needed because:
-    - RTZP files are binary, so Git can't accurately determine what has changed, or store changes efficiently
-    - RTZP files are Zip files, which are non-reproducible by default due to embedded creation dates etc.
-
-    This method is used to prevent updating RTZP test artefacts unless they have changed in terms of their contents.
-    The contents of an RTZP file is assumed to only change when the configuration it is based on changes (i.e. when
-    a new attribute is added or changed). If these contents have changed, the previous/existing file will be
-    replaced with the new file.
-
-    Without this method, capturing or generating test records/artefacts would always result in new RTZP artefacts
-    being created, potentially giving the impression they have meaningfully changed - which in most cases would be
-    misleading.
-
-    It is assumed by this method that RTZP artefacts contain a single file, specifically the inner RTZ file. This is
-    extracted using the `ZipFile.namelist()` method, which returns an index of files within a Zip archive.
-
-    The SHA1 hash algorithm is used as this method is not used in a security related context (i.e. it isn't used for
-    hashing passwords etc.)
-    """
-    with TemporaryDirectory() as tmp_dir_name:
-        new_rtzp_path = Path(tmp_dir_name).joinpath("minimal-v1-record.rtzp")
-        existing_rtzp_path = Path(f"./tests/resources/records/{rtzp_standard}/minimal-v1-record.rtzp")
-
-        rtzp_record.generate_rtzp_archive(new_rtzp_path)
-
-        with ZipFile(str(new_rtzp_path)) as new_rtzp_file:
-            new_rtzp_hash = sha1(new_rtzp_file.read(new_rtzp_file.namelist()[0])).hexdigest()  # noqa: S324
-        with ZipFile(str(new_rtzp_path)) as existing_rtzp_file:
-            existing_rtzp_hash = sha1(  # noqa: S324
-                existing_rtzp_file.read(existing_rtzp_file.namelist()[0])
-            ).hexdigest()
-
-        if new_rtzp_hash != existing_rtzp_hash:
-            print(f"saving RTZP archive for 'standards/{rtzp_standard}/minimal-v1'")
-            copy(src=new_rtzp_path, dst=existing_rtzp_path)
-        else:
-            print(f"saving RTZP archive for 'standards/{rtzp_standard}/minimal-v1' - skipped, no change")
 
 
 def _capture_test_record(internal_client: FlaskClient, kind: str, standard_profile_name: str, config_name: str) -> None:
@@ -304,8 +198,6 @@ def _capture_test_records() -> None:
         "test-standard": {"configurations": list(test_metadata_standard_configs.keys())},
         "iso-19115-0": {"configurations": list(iso19115_0_standard_configs_v4.keys())},
         "iso-19115-2": {"configurations": list(iso19115_2_standard_configs_v4.keys())},
-        "iec-pas-61174-0": {"configurations": list(iec_pas_61174_0_standard_configs_v1.keys())},
-        "iec-pas-61174-1": {"configurations": list(iec_pas_61174_1_standard_configs_v1.keys())},
     }
     profiles = {
         "magic-discovery": {"configurations": list(magic_discovery_profile_configs_v1.keys())},
@@ -324,17 +216,8 @@ def _capture_test_records() -> None:
                 internal_client=internal_client, kind="profiles", standard_profile_name=profile, config_name=config
             )
 
-    # Capture RTZP files separately for IEC PAS 61174 standard
-    rtz_0_config = IECPAS61174_0_MetadataRecordConfigV1(**iec_pas_61174_0_standard_configs_v1["minimal_v1"])
-    rtz_0_record = IECPAS61174_0_MetadataRecord(configuration=rtz_0_config)
-    rtz_1_config = IECPAS61174_1_MetadataRecordConfigV1(**iec_pas_61174_1_standard_configs_v1["minimal_v1"])
-    rtz_1_record = IECPAS61174_1_MetadataRecord(configuration=rtz_1_config)
-    rtzp_records = {"iec-pas-61174-0": rtz_0_record, "iec-pas-61174-1": rtz_1_record}
-    for rtzp_standard, rtzp_record in rtzp_records.items():
-        _update_rtzp_artefact_if_changed(rtzp_standard=rtzp_standard, rtzp_record=rtzp_record)
 
-
-def create_app() -> Flask:  # noqa: C901
+def create_app() -> Flask:
     """Create internal Flask app."""
     app = Flask(__name__)
 
@@ -357,16 +240,6 @@ def create_app() -> Flask:  # noqa: C901
     def standard_iso_19115_2(configuration: str) -> Response:
         """Generate a record from a configuration using the ISO 19115-2 standard."""
         return _generate_record_iso_19115_2(config_label=configuration)
-
-    @app.route("/standards/iec-pas-61174-0/<configuration>")
-    def standard_ice_pas_61174_0(configuration: str) -> Response:
-        """Generate a record from a configuration using the IEC PAS 61174-0 standard."""
-        return _generate_record_ice_pas_61174_0(configuration)
-
-    @app.route("/standards/iec-pas-61174-1/<configuration>")
-    def standard_ice_pas_61174_1(configuration: str) -> Response:
-        """Generate a record from a configuration using the IEC PAS 61174-1 standard."""
-        return _generate_record_ice_pas_61174_1(configuration)
 
     @app.route("/profiles/magic-discovery/<configuration>")
     def profile_magic_discovery_v1(configuration: str) -> Response:

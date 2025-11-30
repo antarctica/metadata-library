@@ -1,17 +1,19 @@
 # BAS Metadata Library
 
-Python library for generating metadata and data records.
+Python library for generating metadata records.
 
 ## Overview
 
 The BAS Metadata Library is an underpinning library for other tools and applications to generate discovery level
-metadata (describing products, services and other resources) and data records. It is intended to avoid duplicating
-complex and verbose encode/decoding logic.
+metadata records (describing products, services and other resources). It is intended to avoid duplicating complex and
+verbose encode/decoding logic across projects.
 
-It supports a lossless, two-way, conversion between a python dict, representing the fields/structure of a standard,
-into its formal representation (typically using XML) to support processing and manipulation of information between and
-within systems. It also supports validation of both python dicts (via JSON Schemas) and formal representations
-(typically via XML XSDs).
+It supports a lossless, two-way, conversion between a [Configuration Object](#configuration-classes) (a python dict
+representing the fields/structure of a record for a standard) into its formal representation (typically an XML document)
+to support processing and manipulation of information between and within systems.
+
+The library also supports validating record configurations (via JSON Schemas) and formal representations (typically via
+XML XSDs).
 
 > [!NOTE]
 > This project is focused on needs within the British Antarctic Survey. It has been open-sourced in case parts are of
@@ -21,12 +23,12 @@ within systems. It also supports validation of both python dicts (via JSON Schem
 ### Supported standards
 
 <!-- pyml disable md013 -->
-| Standard                                                        | Implementation                                                  | Library Namespace                                   | Introduced In                                                                                        |
-|-----------------------------------------------------------------|-----------------------------------------------------------------|-----------------------------------------------------|------------------------------------------------------------------------------------------------------|
-| [ISO 19115:2003](https://www.iso.org/standard/26020.html)       | [ISO 19139:2007](https://www.iso.org/standard/32557.html)       | `bas_metadata_library.standards.iso_19115_0_v1`     | [#46 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/46)   |
-| [ISO 19115-2:2009](https://www.iso.org/standard/39229.html)     | [ISO 19139-2:2012](https://www.iso.org/standard/57104.html)     | `bas_metadata_library.standards.iso_19115_2_v1`     | [#50 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/50)   |
-| [IEC 61174:2015](https://webstore.iec.ch/publication/23128)     | [IEC 61174:2015](https://webstore.iec.ch/publication/23128)     | `bas_metadata_library.standards.iec_pas_61174_0_v1` | [#139 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/139) |
-| [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | `bas_metadata_library.standards.iec_pas_61174_1_v1` | [#139 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/144) |
+| Standard                                                        | Implementation                                                  | Status    | Library Namespace                               | Introduced In                                                                                        | Retired In                                                                                           |
+|-----------------------------------------------------------------|-----------------------------------------------------------------|-----------|-------------------------------------------------|------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
+| [ISO 19115:2003](https://www.iso.org/standard/26020.html)       | [ISO 19139:2007](https://www.iso.org/standard/32557.html)       | Supported | `bas_metadata_library.standards.iso_19115_0_v1` | [#46 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/46)   | -                                                                                                    |
+| [ISO 19115-2:2009](https://www.iso.org/standard/39229.html)     | [ISO 19139-2:2012](https://www.iso.org/standard/57104.html)     | Supported | `bas_metadata_library.standards.iso_19115_2_v1` | [#50 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/50)   | -                                                                                                    |
+| [IEC 61174:2015](https://webstore.iec.ch/publication/23128)     | [IEC 61174:2015](https://webstore.iec.ch/publication/23128)     | Retired   | -                                               | [#139 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/139) | [#266 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/266) |
+| [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) | Retired   | -                                               | [#139 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/144) | [#266 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/266) |                                                                                                     |
 <!-- pyml enable md013 -->
 
 > [!NOTE]
@@ -57,8 +59,8 @@ within systems. It also supports validation of both python dicts (via JSON Schem
 | ISO 19115-2:2009   | -       | [`v2`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Retired | Replaced by `v3`, no longer supported |
 | ISO 19115-2:2009   | -       | [`v3`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json)     | Retired | Replaced by `v4`, no longer supported |
 | ISO 19115-2:2009   | -       | [`v4`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json)     | Stable  | Currently supported version           |
-| IEC 61174:2015     | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Stable  | Currently supported version           |
-| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Stable  | Currently supported version           |
+| IEC 61174:2015     | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Retired | No longer supported                   |
+| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Retired | No longer supported                   |
 <!-- pyml enable md013 -->
 
 ### Supported standards coverage
@@ -75,40 +77,10 @@ within the British Antarctic Survey (BAS) and the NERC Polar Data Centre (UK PDC
 |--------------------|----------|------------------------------------------------------------------------------------------------------|
 | ISO 19115:2003     | Good     | All mandatory elements are supported with a good number of commonly used additional elements         |
 | ISO 19115-2:2009   | Minimal  | No elements from this extension are supported, with the exception of the root element                |
-| IEC 61174:2015     | Minimal  | All mandatory elements are supported, plus a limited number of optional route information attributes |
-| IEC PAS 61174:2021 | Minimal  | All mandatory elements are supported, plus a limited number of optional route information attributes |
 <!-- pyml enable md013 -->
 
 > [!NOTE]
 > ISO 19115 extensions (i.e. `gmd:metadataExtensionInfo` elements) are not supported.
-
-#### Coverage for IEC 61174
-
-As required by the IEC 61174 standard, this library supports the following properties within this standard:
-
-<!-- pyml disable md013 -->
-| Element                                        | Reference | Obligation |
-|------------------------------------------------|-----------|------------|
-| `route`                                        | *4.5.2*   | Mandatory  |
-| `route.routeInfo.routeAuthor`                  | *4.5.3*   | Optional   |
-| `route.routeInfo.routeName`                    | *4.5.3*   | Mandatory  |
-| `route.routeInfo.routeStatus`                  | *4.5.3*   | Optional   |
-| `route.waypoints`                              | *4.5.4*   | Mandatory  |
-| `route.waypoints.*.waypoint.id`                | *4.5.6*   | Mandatory  |
-| `route.waypoints.*.waypoint.revision`          | *4.5.6*   | Mandatory  |
-| `route.waypoints.*.waypoint.position.lat`      | *4.5.6*   | Mandatory  |
-| `route.waypoints.*.waypoint.position.lon`      | *4.5.6*   | Mandatory  |
-| `route.waypoints.*.waypoint.position.geometry` | *4.5.6*   | Optional   |
-<!-- pyml enable md013 -->
-
-> [!NOTE]
-> This listing is exhaustive. No extensions are supported.
-
-References in the above table relate to the [IEC PAS 61174:2021](https://webstore.iec.ch/publication/67774) standards
-document. Full reference:
-
-> IEC 61174:2015, Maritime navigation and radiocommunication equipment and systems – Electronic chart display and
-> information system (ECDIS) – Operational and performance requirements, methods of testing and required test results
 
 ## Installation
 
@@ -207,89 +179,7 @@ config = configuration.config
 print(config)
 ```
 
-### Encode an IEC 61174 route information record
-
-To encode to a RTZ file:
-
-```python
-from bas_metadata_library.standards.iec_pas_61174_0_v1 import MetadataRecordConfigV1, MetadataRecord
-
-minimal_record_config = {"route_name": "minimal-test-route",
-    "waypoints": [
-        {"id": 1001, "revision": 0, "position": {"lat": 5, "lon": 50}},
-        {"id": 1002, "revision": 0, "position": {"lat": 5, "lon": 50}},
-        {"id": 1003, "revision": 0, "position": {"lat": 5, "lon": 50}},
-    ],
-}
-configuration = MetadataRecordConfigV1(**minimal_record_config)
-record = MetadataRecord(configuration=configuration)
-document = record.generate_xml_document()
-
-# output document
-print(document.decode())
-```
-
-To encode to a RTZP package:
-
-```python
-from pathlib import Path
-
-from bas_metadata_library.standards.iec_pas_61174_0_v1 import MetadataRecordConfigV1, MetadataRecord
-
-output_path = str('/path/to/file.rtzp')
-
-minimal_record_config = {"route_name": "minimal-test-route",
-    "waypoints": [
-        {"id": 1001, "revision": 0, "position": {"lat": 5, "lon": 50}},
-        {"id": 1002, "revision": 0, "position": {"lat": 5, "lon": 50}},
-        {"id": 1003, "revision": 0, "position": {"lat": 5, "lon": 50}},
-    ],
-}
-configuration = MetadataRecordConfigV1(**minimal_record_config)
-record = MetadataRecord(configuration=configuration)
-record.generate_rtzp_archive(file=Path(output_path))
-```
-
-### Decode an IEC 61174 route information record
-
-To decode from a RTZ file:
-
-```python
-from bas_metadata_library.standards.iec_pas_61174_0_v1 import MetadataRecord
-
-with open(f"minimal-record.rtz") as record_file:
-    record_data = record_file.read()
-
-record = MetadataRecord(record=record_data)
-configuration = record.make_config()
-minimal_record_config = configuration.config
-
-# output configuration
-print(minimal_record_config)
-```
-
-To decode from a RTZP package:
-
-```python
-from pathlib import Path
-
-from bas_metadata_library.standards.iec_pas_61174_0_v1 import MetadataRecord
-
-input_path = str('/path/to/file.rtzp')
-
-record = MetadataRecord()
-record.load_from_rtzp_archive(file=Path(input_path))
-configuration = record.make_config()
-minimal_record_config = configuration.config
-
-# output configuration
-print(minimal_record_config)
-```
-
 ### Loading a record configuration from JSON
-
-> [!TIP]
-> The example below is for the ISO 19115 standard but this applies to all standards.
 
 The `load()` and `loads()` methods on the relevant configuration class can load a record configuration encoded as a
 JSON file or JSON string respectively:
@@ -306,9 +196,6 @@ configuration.load(file=Path(input_path))
 ```
 
 ### Dumping a record configuration to JSON
-
-> [!TIP]
-> The example below is for the ISO 19115 standard but this applies to all standards.
 
 The `dump()` and `dumps()` methods on the relevant configuration class can dump a record configuration to a JSON
 encoded file or string respectively:
@@ -354,9 +241,6 @@ configuration.dump(file=Path(output_path))
 ```
 
 ### Validating a record
-
-> [!TIP]
-> The example below is for the ISO 19115 standard but this applies to all standards.
 
 The formal encoding of a record can be validated against one or more XML schemas relevant to each metadata or data
 standard. Records are not validated automatically, and so must be validated explicitly:
@@ -414,11 +298,8 @@ See the [Record Schemas](#record-schemas) section for more information on how va
 
 ### Validating a record configuration
 
-> [!TIP]
-> The example below is for the ISO 19115 standard but this applies to all standards.
-
-[Record configurations](#configuration-classes) will be automatically validated using a JSON Schema for the metadata or
-data standard used.
+[Record configurations](#configuration-classes) will be automatically validated using a JSON Schema for the metadata
+standard used.
 
 Where a record configuration states compliance with one or more [Supported Profiles](#supported-profiles), it will also
 be automatically validated using a JSON Schema for each profile.
@@ -550,8 +431,8 @@ implementation details.
 
 ## Implementation
 
-This library is implemented in Python and consists of a set of classes to generate XML metadata and data records
-from a configuration object (Python dict), or to generate such an object from an XML record.
+This library is implemented in Python and consists of a set of classes to generate XML metadata records from a
+configuration object (Python dict), or to generate such an object from an XML record.
 
 Each [Supported Standard](#supported-standards) is implemented as a module under `bas_metadata_library.standards`. Each
 [Supported Profile](#supported-profiles) is implemented as modules under their respective standard.

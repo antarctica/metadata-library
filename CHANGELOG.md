@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Switching from Poetry to UV
   [#261](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/261)
 
+### Removed [BREAKING!]
+
+* IEC 61174:2015 & IEC PAS 61174:2021 standards support (RTZ)
+  [#266](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/266)
+
 ### Added
 
 * `taskipy` dev task runner
