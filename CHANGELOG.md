@@ -7,17 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed [BREAKING!]
+
+* Switching from Poetry to UV
+  [#261](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/261)
+
 ### Added
 
 * `taskipy` dev task runner
   [#262](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/262)
 
-### Changed [BREAKING!]
+### Changed
 
-- switching from Poetry to UV
-  [#261](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/261)
 * Updating to latest Ruff ruleset
   [#263](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/263)
+* Rewriting documentation
+  [#264](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/264)
 * Refactored internal Flask CLI commands to run through task runner
   [#265](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/265)
 
