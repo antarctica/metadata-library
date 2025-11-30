@@ -33,9 +33,11 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "dunamai>=1.25.0",
     "jsonref>=1.1.0",
     "ruff>=0.14.6",
     "safety>=3.7.0",
+    "taskipy>=1.14.1",
 ]
 
 test = [
@@ -44,6 +46,27 @@ test = [
     "pytest-cov>=7.0.0",
     "pytest-random-order>=1.2.0",
 ]
+
+[tool.taskipy.variables]
+targets = "src/ tasks/ tests/"
+cov_options = "--cov --cov-report=html"
+
+[tool.taskipy.tasks]
+# generic dev
+build = { cmd = "uv build", help = "Build app package" }
+publish = { cmd = "uv publish", help = "Publish built app package" }
+format = { cmd = "ruff format {targets}", help = "Format app", use_vars = true }
+lint = { cmd = "ruff check {targets}", help = "Lint app", use_vars = true }
+pre-commit = { cmd = "pre-commit run --all-files", help = "Run pre-commit hooks on all files" }
+test = { cmd = "pytest", help = "Run tests" }
+test-cov = { cmd = "pytest {cov_options}", help = "Run tests with coverage", use_vars = true }
+test-reset = { cmd = "pytest --cache-clear", help = "Reset pytest cache and run tests" }
+safety = { cmd = "safety scan --detailed-output", help = "Check for insecure dependencies" }
+# CI
+ci-test = { cmd = "pytest {cov_options} -o junit_family=xunit2 --junitxml=test-results.xml --continue-on-collection-errors", help = "Called by CI", use_vars = true }
+ci-safety = { cmd = "safety --stage cicd scan --detailed-output", help = "Called by CI" }
+# app dev
+release = { cmd = "python -m tasks.release", help = "Prepapre app release" }
 
 [tool.ruff]
 src = ["src"]
