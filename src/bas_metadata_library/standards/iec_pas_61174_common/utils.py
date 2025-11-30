@@ -31,4 +31,4 @@ def load_record_from_rtzp_archive(file: Path) -> Element:
     :returns Parsed RTZ record as an XML element
     """
     with ZipFile(str(file)) as rtzp_file:
-        return fromstring(rtzp_file.read(rtzp_file.namelist()[0]))  # noqa: S320 (see '`lxml` package (security)' README section)
+        return fromstring(rtzp_file.read(rtzp_file.namelist()[0]))

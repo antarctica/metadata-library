@@ -10,7 +10,7 @@ complete_record["resource"]["title"]["title"] = "Test Record"
 
 record_with_entities = deepcopy(minimal_record)
 record_with_entities["resource"]["title"]["value"] = (
-    "Test Record with entities: '>' (greater than), " "'å' (accent [a-ring]) and 'µ' (micro)"
+    "Test Record with entities: '>' (greater than), 'å' (accent [a-ring]) and 'µ' (micro)"
 )
 
 configs_all = {

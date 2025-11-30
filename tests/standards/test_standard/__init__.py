@@ -76,7 +76,7 @@ class MetadataRecord(_MetadataRecord):
             self.attributes = configuration.config
 
         if record is not None:
-            self.record = fromstring(record.encode())  # noqa: S320 (see '`lxml` package (security)' README section)
+            self.record = fromstring(record.encode())
 
     def make_config(self) -> MetadataRecordConfig:
         resource = ResourceElement(record=self.record, attributes=self.attributes)
@@ -88,7 +88,7 @@ class MetadataRecord(_MetadataRecord):
     def make_element(self) -> Element:
         metadata_record = Element(
             "MetadataRecord",
-            attrib={f"{{{ self.ns.xsi }}}schemaLocation": self.ns.schema_locations()},
+            attrib={f"{{{self.ns.xsi}}}schemaLocation": self.ns.schema_locations()},
             nsmap=self.ns.nsmap(),
         )
 

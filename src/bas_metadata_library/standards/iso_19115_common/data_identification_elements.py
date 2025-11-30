@@ -274,7 +274,7 @@ class DataIdentification(MetadataRecordElement):
             extent = Extent(
                 record=self.record,
                 attributes=self.attributes,
-                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent)" f"[{extent_index}]",
+                xpath=f"({self.xpath}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent)[{extent_index}]",
             )
             _extent = extent.make_config()
             if _extent != "":
@@ -1267,7 +1267,7 @@ class Extent(MetadataRecordElement):
         vertical_extent = VerticalExtent(
             record=self.record,
             attributes=self.attributes,
-            xpath=f"{self.xpath}/gmd:EX_Extent/" f"gmd:verticalElement",
+            xpath=f"{self.xpath}/gmd:EX_Extent/gmd:verticalElement",
         )
         _vertical_extent = vertical_extent.make_config()
         if bool(_vertical_extent):

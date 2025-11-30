@@ -111,7 +111,7 @@ class MetadataRecord(_MetadataRecord):
             self.attributes = configuration.config
 
         if record is not None:
-            self.record = fromstring(record.encode())  # noqa: S320 (see '`lxml` package (security)' README section)
+            self.record = fromstring(record.encode())
 
         self.metadata_record = Route(record=self.record, attributes=self.attributes, xpath=self.xpath)
 

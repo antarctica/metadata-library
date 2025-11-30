@@ -45,6 +45,6 @@ def fx_get_record_response(app_client: FlaskClient) -> ElementTree():
 
     def _get_record_response_for_config(kind: str, standard_profile: str, config: str) -> etree:
         response = app_client.get(f"/{kind}/{standard_profile}/{config}")
-        return fromstring(response.data)  # noqa: S320
+        return fromstring(response.data)
 
     return _get_record_response_for_config

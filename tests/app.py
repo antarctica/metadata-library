@@ -62,7 +62,7 @@ def _generate_record_test_standard_v1(config_label: str) -> Response:
         return Response(record.generate_xml_document(), mimetype="text/xml")
     except KeyError:
         return Response(
-            f"Invalid configuration, valid options: " f"[{', '.join(list(test_metadata_standard_configs.keys()))}]"
+            f"Invalid configuration, valid options: [{', '.join(list(test_metadata_standard_configs.keys()))}]"
         )
 
 
@@ -107,7 +107,7 @@ def _generate_record_ice_pas_61174_0(config_label: str) -> Response:
         return Response(record.generate_xml_document(), mimetype="text/xml")
 
     return Response(
-        f"Invalid configuration, valid options: " f"[{', '.join(list(iec_pas_61174_0_standard_configs_v1.keys()))}]"
+        f"Invalid configuration, valid options: [{', '.join(list(iec_pas_61174_0_standard_configs_v1.keys()))}]"
     )
 
 
@@ -120,7 +120,7 @@ def _generate_record_ice_pas_61174_1(config_label: str) -> Response:
         return Response(record.generate_xml_document(), mimetype="text/xml")
 
     return Response(
-        f"Invalid configuration, valid options: " f"[{', '.join(list(iec_pas_61174_1_standard_configs_v1.keys()))}]"
+        f"Invalid configuration, valid options: [{', '.join(list(iec_pas_61174_1_standard_configs_v1.keys()))}]"
     )
 
 

@@ -77,8 +77,8 @@ class ResponsibleParty(MetadataRecordElement):
         _ = {}
 
         individual_name = self.record.xpath(
-            f"{ self.xpath }/gmd:CI_ResponsibleParty/gmd:individualName/gmx:Anchor/text() | "
-            f"{ self.xpath }/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString/text()",
+            f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:individualName/gmx:Anchor/text() | "
+            f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(individual_name) > 0:
@@ -87,7 +87,7 @@ class ResponsibleParty(MetadataRecordElement):
             _["individual"]["name"] = individual_name[0]
 
         individual_href = self.record.xpath(
-            f"{ self.xpath }/gmd:CI_ResponsibleParty/gmd:individualName/gmx:Anchor/@xlink:href",
+            f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:individualName/gmx:Anchor/@xlink:href",
             namespaces=self.ns.nsmap(),
         )
         if len(individual_href) > 0:
@@ -96,15 +96,15 @@ class ResponsibleParty(MetadataRecordElement):
             _["individual"]["href"] = individual_href[0]
 
         individual_title = self.record.xpath(
-            f"{ self.xpath }/gmd:CI_ResponsibleParty/gmd:individualName/gmx:Anchor/@xlink:title",
+            f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:individualName/gmx:Anchor/@xlink:title",
             namespaces=self.ns.nsmap(),
         )
         if len(individual_title) > 0:
             _["individual"]["title"] = individual_title[0]
 
         organisation_name = self.record.xpath(
-            f"{ self.xpath }/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor/text() | "
-            f"{ self.xpath }/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString/text()",
+            f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor/text() | "
+            f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(organisation_name) > 0:
@@ -113,7 +113,7 @@ class ResponsibleParty(MetadataRecordElement):
             _["organisation"]["name"] = organisation_name[0]
 
         organisation_href = self.record.xpath(
-            f"{ self.xpath }/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor/@xlink:href",
+            f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor/@xlink:href",
             namespaces=self.ns.nsmap(),
         )
         if len(organisation_href) > 0:
@@ -122,7 +122,7 @@ class ResponsibleParty(MetadataRecordElement):
             _["organisation"]["href"] = organisation_href[0]
 
         organisation_title = self.record.xpath(
-            f"{ self.xpath }/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor/@xlink:title",
+            f"{self.xpath}/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor/@xlink:title",
             namespaces=self.ns.nsmap(),
         )
         if len(organisation_title) > 0:
@@ -341,7 +341,7 @@ class OnlineResource(MetadataRecordElement):
         linkage = Linkage(
             record=self.record,
             attributes=self.attributes,
-            xpath=f"{ self.xpath }/gmd:CI_OnlineResource/gmd:linkage",
+            xpath=f"{self.xpath}/gmd:CI_OnlineResource/gmd:linkage",
         )
         _linkage = linkage.make_config()
         if "href" in _linkage:
@@ -1046,7 +1046,7 @@ class Format(MetadataRecordElement):
             _["_id"] = _id
 
         format_name = self.record.xpath(
-            f"{self.xpath}/gmd:name/gco:CharacterString/text() | " f"{self.xpath}/gmd:name/gmx:Anchor/text()",
+            f"{self.xpath}/gmd:name/gco:CharacterString/text() | {self.xpath}/gmd:name/gmx:Anchor/text()",
             namespaces=self.ns.nsmap(),
         )
         if len(format_name) == 1:
