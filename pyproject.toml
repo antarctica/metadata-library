@@ -35,6 +35,7 @@ dependencies = [
 dev = [
     "dunamai>=1.25.0",
     "jsonref>=1.1.0",
+    "pymarkdownlnt>=0.9.33",
     "ruff>=0.14.6",
     "safety>=3.7.0",
     "taskipy>=1.14.1",
@@ -48,6 +49,7 @@ test = [
 ]
 
 [tool.taskipy.variables]
+docs_targets = "DEVELOPING.md README.md CHANGELOG.md"
 targets = "src/ tasks/ tests/"
 cov_options = "--cov --cov-report=html"
 
@@ -57,6 +59,7 @@ build = { cmd = "uv build", help = "Build app package" }
 publish = { cmd = "uv publish", help = "Publish built app package" }
 format = { cmd = "ruff format {targets}", help = "Format app", use_vars = true }
 lint = { cmd = "ruff check {targets}", help = "Lint app", use_vars = true }
+markdown = { cmd = "pymarkdown scan --recurse {docs_targets}", help = "Lint docs", use_vars = true }
 pre-commit = { cmd = "pre-commit run --all-files", help = "Run pre-commit hooks on all files" }
 test = { cmd = "pytest", help = "Run tests" }
 test-cov = { cmd = "pytest {cov_options}", help = "Run tests with coverage", use_vars = true }
@@ -124,6 +127,12 @@ ignore = ["ANN204", "D100", "D101", "D102", "D104", "D107", "D203", "D212", "D40
 #   tests/* | ANN201 | ignore missing type annotations from test functions
 #   tests/* |   S101 | ignore use of assert
 "tests/*" = ["ANN201", "S101"]
+
+[tool.pymarkdown]
+plugins.md013.line_length = 120
+plugins.md013.code_blocks = false
+plugins.md014.enabled = false
+extensions.markdown-extended-autolinks.enabled = true
 
 [tool.pytest.ini_options]
 # --strict-markers | fail if unknown markers are used
