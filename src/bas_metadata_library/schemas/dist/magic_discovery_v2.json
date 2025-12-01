@@ -1,0 +1,481 @@
+{
+  "$id": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-discovery-v2.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BAS MAGIC Discovery Metadata Profile v2 configuration schema",
+  "description": "Metadata record configuration schema for the BAS MAGIC Discovery Metadata profile (version 2)\n\nThis schema does not fully validate reqs. 06 & 07 (Released Date & Publication Date) due to limitations in property names and overlaying schemas.",
+  "definitions": {
+    "catalogue_identifier": {
+      "title": "Req. 04 - Data Catalogue Identifier",
+      "type": "object",
+      "required": [
+        "identifier",
+        "href",
+        "namespace"
+      ],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string",
+          "pattern": "^https://data\\.bas\\.ac\\.uk/items/.+"
+        },
+        "namespace": {
+          "type": "string",
+          "const": "data.bas.ac.uk"
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "allOf": [
+        {
+          "contains": {
+            "title": "Req. 09 - Access Constraint",
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "access"
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "title": "Req. 10 - Usage Constraint (Licence)",
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "usage"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "contacts": {
+      "type": "array",
+      "allOf": [
+        {
+          "contains": {
+            "$ref": "#/definitions/point_of_contact"
+          }
+        },
+        {
+          "contains": {
+            "$ref": "#/definitions/copyright_holder"
+          }
+        }
+      ]
+    },
+    "copyright_holder": {
+      "title": "Req. 16 - Copyright Holder",
+      "type": "object",
+      "required": [
+        "role"
+      ],
+      "properties": {
+        "role": {
+          "type": "array",
+          "contains": {
+            "type": "string",
+            "const": "rightsHolder"
+          }
+        }
+      }
+    },
+    "domain_conformance": {
+      "title": "Req. 02 - Domain Consistency/Conformance",
+      "type": "object",
+      "required": [
+        "specification",
+        "explanation",
+        "result"
+      ],
+      "properties": {
+        "specification": {
+          "type": "object",
+          "required": [
+            "title",
+            "dates",
+            "edition",
+            "contact"
+          ],
+          "properties": {
+            "title": {
+              "type": "object",
+              "required": [
+                "value",
+                "href"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "const": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile"
+                },
+                "href": {
+                  "type": "string",
+                  "const": "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery/v2/"
+                }
+              }
+            },
+            "dates": {
+              "type": "object",
+              "required": [
+                "publication"
+              ],
+              "properties": {
+                "publication": {
+                  "type": "string",
+                  "const": "2025-11-24"
+                }
+              }
+            },
+            "edition": {
+              "type": "string",
+              "const": "2"
+            },
+            "contact": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/magic"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "role"
+                  ],
+                  "properties": {
+                    "role": {
+                      "type": "array",
+                      "contains": {
+                        "type": "string",
+                        "const": "publisher"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "explanation": {
+          "type": "string",
+          "const": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile."
+        },
+        "result": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "domain_consistency": {
+      "type": "array",
+      "contains": {
+        "$ref": "#/definitions/domain_conformance"
+      }
+    },
+    "extents": {
+      "title": "Req. 14 - Geographic Extent",
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "required": [
+          "identifier"
+        ],
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "const": "bounding"
+          }
+        }
+      }
+    },
+    "hierarchy_level": {
+      "title": "Req. 03 - Hierarchy Level",
+      "type": "string",
+      "enum": [
+        "collection",
+        "dataset",
+        "feature",
+        "fieldSession",
+        "initiative",
+        "product",
+        "paperMapProduct",
+        "series"
+      ]
+    },
+    "identification": {
+      "title": "Req. 05 - Edition & Req. 06. Released Date & Req. 07 - Publication Date",
+      "type": "object",
+      "required": [
+        "dates",
+        "edition",
+        "identifiers",
+        "contacts",
+        "maintenance",
+        "constraints",
+        "extents",
+        "domain_consistency"
+      ],
+      "properties": {
+        "identifiers": {
+          "$ref": "#/definitions/identifiers"
+        },
+        "contacts": {
+          "$ref": "#/definitions/contacts"
+        },
+        "maintenance": {
+          "$ref": "#/definitions/maintenance"
+        },
+        "constraints": {
+          "$ref": "#/definitions/constraints"
+        },
+        "extents": {
+          "$ref": "#/definitions/extents"
+        },
+        "lineage": {
+          "$ref": "#/definitions/lineage"
+        },
+        "domain_consistency": {
+          "$ref": "#/definitions/domain_consistency"
+        }
+      }
+    },
+    "identifiers": {
+      "type": "array",
+      "contains": {
+        "$ref": "#/definitions/catalogue_identifier"
+      }
+    },
+    "lineage": {
+      "title": "Req. 13 - Lineage statement",
+      "type": "object",
+      "required": [
+        "statement"
+      ]
+    },
+    "maintenance": {
+      "title": "Req. 12 - Update Frequency Code",
+      "type": "object",
+      "required": [
+        "maintenance_frequency",
+        "progress"
+      ],
+      "properties": {
+        "progress": {
+          "$ref": "#/definitions/progress"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "contacts",
+        "date_stamp"
+      ],
+      "properties": {
+        "contacts": {
+          "type": "array",
+          "contains": {
+            "$ref": "#/definitions/point_of_contact"
+          }
+        }
+      }
+    },
+    "progress": {
+      "title": "Req. 11 - Progress Code (Status)",
+      "type": "string",
+      "enum": [
+        "completed",
+        "underDevelopment"
+      ]
+    },
+    "point_of_contact": {
+      "title": "Req. 08 - Point of contact",
+      "allOf": [
+        {
+          "$ref": "#/definitions/magic"
+        },
+        {
+          "type": "object",
+          "required": [
+            "role"
+          ],
+          "properties": {
+            "role": {
+              "type": "array",
+              "contains": {
+                "type": "string",
+                "const": "pointOfContact"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "magic": {
+      "type": "object",
+      "required": [
+        "organisation",
+        "phone",
+        "address",
+        "email",
+        "online_resource"
+      ],
+      "properties": {
+        "organisation": {
+          "type": "object",
+          "required": [
+            "name",
+            "href",
+            "title"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "const": "Mapping and Geographic Information Centre, British Antarctic Survey"
+            },
+            "href": {
+              "type": "string",
+              "const": "https://ror.org/01rhff309"
+            },
+            "title": {
+              "type": "string",
+              "const": "ror"
+            }
+          }
+        },
+        "phone": {
+          "type": "string",
+          "const": "+44 (0)1223 221400"
+        },
+        "address": {
+          "type": "object",
+          "required": [
+            "delivery_point",
+            "city",
+            "administrative_area",
+            "postal_code",
+            "country"
+          ],
+          "properties": {
+            "delivery_point": {
+              "type": "string",
+              "const": "British Antarctic Survey, High Cross, Madingley Road"
+            },
+            "city": {
+              "type": "string",
+              "const": "Cambridge"
+            },
+            "administrative_area": {
+              "type": "string",
+              "const": "Cambridgeshire"
+            },
+            "postal_code": {
+              "type": "string",
+              "const": "CB3 0ET"
+            },
+            "country": {
+              "type": "string",
+              "const": "United Kingdom"
+            }
+          }
+        },
+        "email": {
+          "type": "string",
+          "const": "magic@bas.ac.uk"
+        },
+        "online_resource": {
+          "type": "object",
+          "required": [
+            "href",
+            "title",
+            "description",
+            "function"
+          ],
+          "properties": {
+            "href": {
+              "type": "string",
+              "const": "https://www.bas.ac.uk/teams/magic"
+            },
+            "title": {
+              "type": "string",
+              "const": "Mapping and Geographic Information Centre (MAGIC) - BAS public website"
+            },
+            "description": {
+              "type": "string",
+              "const": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website."
+            },
+            "function": {
+              "type": "string",
+              "const": "information"
+            }
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "required": [
+    "file_identifier",
+    "hierarchy_level",
+    "metadata",
+    "identification"
+  ],
+  "properties": {
+    "file_identifier": {
+      "title": "Req. 01 - File Identifier",
+      "type": "string"
+    },
+    "hierarchy_level": {
+      "$ref": "#/definitions/hierarchy_level"
+    },
+    "metadata": {
+      "$ref": "#/definitions/metadata"
+    },
+    "identification": {
+      "$ref": "#/definitions/identification"
+    }
+  },
+  "if": {
+    "properties": {
+      "hierarchy_level": {
+        "type": "string",
+        "enum": [
+          "collection",
+          "fieldSession",
+          "initiative"
+        ]
+      }
+    }
+  },
+  "then": {
+  },
+  "else": {
+    "properties": {
+      "identification": {
+        "title": "Req. 05 - Edition & Req. 06. Released Date & Req. 07 - Publication Date & Req. 15 - Citation",
+        "required": [
+          "edition",
+          "other_citation_details",
+          "identifiers",
+          "contacts",
+          "maintenance",
+          "constraints",
+          "extents",
+          "lineage",
+          "domain_consistency"
+        ]
+      }
+    }
+  }
+}

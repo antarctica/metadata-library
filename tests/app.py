@@ -28,7 +28,7 @@ from tests.resources.configs.iso19115_0_standard import (
 from tests.resources.configs.iso19115_2_standard import (
     configs_v4_all as iso19115_2_standard_configs_v4,
 )
-from tests.resources.configs.magic_discovery_profile import configs_v1_all as magic_discovery_profile_configs_v1
+from tests.resources.configs.magic_discovery_profile import configs_all as magic_discovery_profile_configs_all
 from tests.resources.configs.test_metadata_standard import configs_all as test_metadata_standard_configs
 from tests.standards.test_standard import (
     MetadataRecord as TestStandardMetadataRecord,
@@ -71,14 +71,14 @@ def _generate_record_iso_19115_2(config_label: str) -> Response:
 
 
 def _generate_record_magic_discovery(config_label: str) -> Response:
-    if config_label in magic_discovery_profile_configs_v1:
-        configuration_object = magic_discovery_profile_configs_v1[config_label]
+    if config_label in magic_discovery_profile_configs_all:
+        configuration_object = magic_discovery_profile_configs_all[config_label]
         configuration = ISO19115_2_MetadataRecordConfigV4(**configuration_object)
         record = ISO19115_2_MetadataRecord(configuration)
         return Response(record.generate_xml_document(), mimetype="text/xml")
 
     return Response(
-        f"Invalid configuration, valid options: [{', '.join(list(magic_discovery_profile_configs_v1.keys()))}]"
+        f"Invalid configuration, valid options: [{', '.join(list(magic_discovery_profile_configs_all.keys()))}]"
     )
 
 
@@ -100,11 +100,13 @@ def _generate_schemas() -> None:
         {"id": "iso_19115_0_v4", "copy": False},
         {"id": "iso_19115_2_v4", "copy": True},
         {"id": "magic_discovery_v1", "copy": False},
+        {"id": "magic_discovery_v2", "copy": False},
     ]
     copy_properties = ["definitions", "type", "required", "additionalProperties", "properties"]
 
     for schema in schemas:
         print(f"Generating schema for [{schema['id']}]")
+        # can't use resource files as absolute path needed for src schema and need to write to a new file for dest.
         src_schema_path = Path(f"./src/bas_metadata_library/schemas/src/{schema['id']}.json")
         dest_schema_path = Path(f"./src/bas_metadata_library/schemas/dist/{schema['id']}.json")
         dest_schema_path.parent.mkdir(exist_ok=True, parents=True)
@@ -119,7 +121,8 @@ def _generate_schemas() -> None:
 
             if schema.get("copy"):
                 copy_schema_name = src_schema_data["allOf"][0]["$ref"]
-                copy_schema_path = Path(f"./src/bas_metadata_library/schemas/src/{copy_schema_name}")
+                copy_schema_path = resource_file("bas_metadata_library.schemas.src").joinpath(copy_schema_name)
+
                 with copy_schema_path.open() as copy_schema_file:
                     copy_schema_data = json.load(copy_schema_file)
                 for prop in copy_properties:
@@ -142,6 +145,7 @@ def _validate_schemas() -> None:
         {"id": "iso_19115_0_v4"},
         {"id": "iso_19115_2_v4"},
         {"id": "magic_discovery_v1"},
+        {"id": "magic_discovery_v2"},
     ]
 
     json_schema_path = resource_file("bas_metadata_library.schemas.src").joinpath("json_schema_draft_7.json")
@@ -195,7 +199,7 @@ def _capture_json_test_configs() -> None:
     profiles = {
         "magic-discovery-profile": [
             {
-                "configs": magic_discovery_profile_configs_v1,
+                "configs": magic_discovery_profile_configs_all,
                 "config_class": ISO19115_2_MetadataRecordConfigV4,
             }
         ],
@@ -230,7 +234,7 @@ def _capture_test_records() -> None:
         "iso-19115-2": {"configurations": list(iso19115_2_standard_configs_v4.keys())},
     }
     profiles = {
-        "magic-discovery": {"configurations": list(magic_discovery_profile_configs_v1.keys())},
+        "magic-discovery": {"configurations": list(magic_discovery_profile_configs_all.keys())},
     }
 
     internal_client = current_app.test_client()
@@ -272,7 +276,7 @@ def create_app() -> Flask:
         return _generate_record_iso_19115_2(config_label=configuration)
 
     @app.route("/profiles/magic-discovery/<configuration>")
-    def profile_magic_discovery_v1(configuration: str) -> Response:
+    def profile_magic_discovery(configuration: str) -> Response:
         """Generate a record from a configuration using the MAGIC Discovery Profile for ISO 19115-2."""
         return _generate_record_magic_discovery(config_label=configuration)
 
