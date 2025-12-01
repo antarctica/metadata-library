@@ -33,6 +33,15 @@ def test_config_schema_validation_invalid_profile():
         config.validate()
     assert "'file_identifier' is a required property" in str(e.value)
 
+@pytest.mark.cov()
+def test_config_schema_validation_invalid_profile_alt():
+    """Check records with alt domain consistency URL are correctly picked up as well."""
+    config = deepcopy(MetadataRecordConfigV4(**configs_v1_all["minimal_product_v1_alt"]))
+    with pytest.raises(ValidationError) as e:
+        del config.config["file_identifier"]
+        config.validate()
+    assert "'file_identifier' is a required property" in str(e.value)
+
 
 @pytest.mark.parametrize("config_name", list(configs_v1_all.keys()))
 def test_response(app_client: FlaskClient, config_name: str):
