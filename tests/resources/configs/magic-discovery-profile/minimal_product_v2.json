@@ -1,0 +1,166 @@
+{
+  "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
+  "file_identifier": "f9557951-30c7-4ab1-bb25-79a552d2c53d",
+  "metadata": {
+    "contacts": [
+      {
+        "organisation": {
+          "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
+          "href": "https://ror.org/01rhff309",
+          "title": "ror"
+        },
+        "phone": "+44 (0)1223 221400",
+        "address": {
+          "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+          "city": "Cambridge",
+          "administrative_area": "Cambridgeshire",
+          "postal_code": "CB3 0ET",
+          "country": "United Kingdom"
+        },
+        "email": "magic@bas.ac.uk",
+        "online_resource": {
+          "href": "https://www.bas.ac.uk/teams/magic",
+          "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
+          "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
+          "function": "information"
+        },
+        "role": [
+          "pointOfContact"
+        ]
+      }
+    ],
+    "date_stamp": "2024-10-03"
+  },
+  "hierarchy_level": "product",
+  "identification": {
+    "title": {
+      "value": "Test product with minimal MAGIC Discovery Profile properties"
+    },
+    "dates": {
+      "creation": "2024-09-14",
+      "released": "2024-09-14T11:16:22+00:00",
+      "publication": "2024-09-14T11:16:22+00:00"
+    },
+    "edition": "1",
+    "identifiers": [
+      {
+        "identifier": "f9557951-30c7-4ab1-bb25-79a552d2c53d",
+        "href": "https://data.bas.ac.uk/items/f9557951-30c7-4ab1-bb25-79a552d2c53d",
+        "namespace": "data.bas.ac.uk"
+      }
+    ],
+    "abstract": "An example product to verify a record with the minimal set of properties required by the MAGIC Discovery Profile is handled correctly.",
+    "contacts": [
+      {
+        "organisation": {
+          "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
+          "href": "https://ror.org/01rhff309",
+          "title": "ror"
+        },
+        "phone": "+44 (0)1223 221400",
+        "address": {
+          "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+          "city": "Cambridge",
+          "administrative_area": "Cambridgeshire",
+          "postal_code": "CB3 0ET",
+          "country": "United Kingdom"
+        },
+        "email": "magic@bas.ac.uk",
+        "online_resource": {
+          "href": "https://www.bas.ac.uk/teams/magic",
+          "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
+          "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
+          "function": "information"
+        },
+        "role": [
+          "pointOfContact"
+        ]
+      },
+      {
+        "organisation": {
+          "name": "UK Research and Innovation",
+          "href": "https://ror.org/001aqnf71",
+          "title": "ror"
+        },
+        "role": [
+          "rightsHolder"
+        ]
+      }
+    ],
+    "maintenance": {
+      "maintenance_frequency": "asNeeded",
+      "progress": "completed"
+    },
+    "constraints": [
+      {
+        "type": "access",
+        "restriction_code": "unrestricted"
+      },
+      {
+        "type": "usage",
+        "restriction_code": "license",
+        "statement": "This information is licensed under the Open Government Licence (OGL 3.0). To view this licence, visit https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/.",
+        "href": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+      }
+    ],
+    "language": "eng",
+    "extents": [
+      {
+        "identifier": "bounding",
+        "geographic": {
+          "bounding_box": {
+            "west_longitude": -180.0,
+            "east_longitude": 180.0,
+            "south_latitude": -90.0,
+            "north_latitude": -60.0
+          }
+        }
+      }
+    ],
+    "other_citation_details": "Fictitious citation",
+    "lineage": {
+      "statement": "This is a fictitious record and has no real origin."
+    },
+    "domain_consistency": [
+      {
+        "specification": {
+          "title": {
+            "value": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile",
+            "href": "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery/v2/"
+          },
+          "dates": {
+            "publication": "2025-11-24"
+          },
+          "edition": "2",
+          "contact": {
+            "organisation": {
+              "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
+              "href": "https://ror.org/01rhff309",
+              "title": "ror"
+            },
+            "phone": "+44 (0)1223 221400",
+            "address": {
+              "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+              "city": "Cambridge",
+              "administrative_area": "Cambridgeshire",
+              "postal_code": "CB3 0ET",
+              "country": "United Kingdom"
+            },
+            "email": "magic@bas.ac.uk",
+            "online_resource": {
+              "href": "https://www.bas.ac.uk/teams/magic",
+              "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
+              "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
+              "function": "information"
+            },
+            "role": [
+              "publisher"
+            ]
+          }
+        },
+        "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile.",
+        "result": true
+      }
+    ]
+  }
+}

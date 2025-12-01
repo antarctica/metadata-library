@@ -329,6 +329,66 @@ for an example of removing a schema version.
 See [#250 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/250) for an
 example of adding a profile.
 
+### Adding a new profile version
+
+<!-- pyml disable md028 -->
+> [!CAUTION]
+> This section is a Work in Progress (WIP) and may not be complete/accurate.
+>
+> [!TIP]
+> In these instructions, `v1` refers to the current/previous profile version. `v2` refers to the new version.
+<!-- pyml enable md028 -->
+
+#### Step 1: Add new version (profile)
+
+First, create a new profile version that is identical to the current/previous version, but that sets up the schema,
+tests, documentation and other information needed for the new profile.
+
+1. create an issue referencing the development of the new profile version (i.e. agreed abstract changes)
+1. copy the current/previous profile JSON schema from `bas_metadata_library.schemas.src`
+   e.g. `bas_metadata_library.schemas.src.foo_v1.json` to `bas_metadata_library.schemas.src.foo_v2.json`
+   1. change the version in:
+      - the `$id` property
+      - the `title` property
+      - the `description` property
+1. update the `_generate_schemas()` method in the [Test App](#testing-flask-app) to generate distribution schemas for
+   the new profile version
+1. update the `_validate_schemas()` method in the [Test App](#testing-flask-app) to generate distribution schemas for
+   the new profile version
+1. [Generate configuration schemas](#generating-configuration-schemas)
+1. add a line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
+   the distribution schema for the new schema version within the BAS Metadata Standards website
+1. update the profile's standards validate method to support the new profile version
+1. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
+    `tests.resources.configs/` e.g. `tests.resources.configs.foo_profile`
+   - new config objects will be made within this file that relate to the new profile version
+1. update the relevant profile in the `profiles` dict in the `_capture_json_test_configs()` method in the
+   [Test App](#testing-flask-app) to generate JSON test configurations for both v1 and v2 profile versions
+1. [Capture test JSON record configurations](#capturing-test-configurations-as-json)
+1. update the route for the profile in the [Test App](#testing-flask-app) (e.g. `_generate_record_foo`) to target
+    configurations for both v1 and v2 profile versions
+1. update the relevant profile in the `profiles` dict in the `capture_test_records()` method in the
+    [Test App](#testing-flask-app) to capture test records for both the v1 and v2 profile versions
+1. [Capture test XML records](#capturing-test-records)
+1. copy the tests module for the v1 profile to create a v2 profile under `tests.bas_metadata_library`
+1. update the configuration import and tests to target the v2 profile version
+1. add the new profile version to the `README.md` [Supported Profiles](/README.md#supported-profiles) section
+1. update the `README.md` [Supported Configuration Versions](/README.md#supported-configuration-versions) section to:
+   - add the new profile version, with a status of 'experimental'
+1. Update the change log to reference the creation of the new profile version, referencing the summary issue
+
+#### Step 2: Make changes (profile)
+
+Second, implement the changes from the agreed new abstract profile into the new schema.
+
+1. [Generate configuration schemas](#generating-configuration-schemas) when the schema is updated
+1. Update the test configurations to comply with and demonstrate the new scheme
+1. [Re-capture test JSON record configurations](#capturing-test-configurations-as-json)
+1. [Re-capture test XML records](#capturing-test-records)
+
+> [!TIP]
+> The generated records (XML) and record configurations (JSON) SHOULD be used as examples in the abstract profile.
+
 ### Generating configuration schemas
 
 To generate [distribution schemas from source schemas](/README.md#source-and-distribution-schemas), run the

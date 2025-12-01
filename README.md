@@ -44,23 +44,25 @@ XML XSDs).
 | Standard  | Profile                                                                                               | Introduced In                                                                                    |
 |-----------|-------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
 | ISO 19115 | [MAGIC Discovery Metadata V1](https://metadata-resources.data.bas.ac.uk/profiles/magic-discovery-v1/) | [#250](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/250) |
+| ISO 19115 | [MAGIC Discovery Metadata V2](https://metadata-resources.data.bas.ac.uk/profiles/magic-discovery/v2/) | [#250](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/issues/268) |
 <!-- pyml enable md013 -->
 
 ### Supported configuration versions
 
 <!-- pyml disable md013 -->
-| Standard           | Profile | Configuration Version                                                                                                     | Status  | Notes                                 |
-|--------------------|---------|---------------------------------------------------------------------------------------------------------------------------|---------|---------------------------------------|
-| ISO 19115:2003     | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired | Replaced by `v2`, no longer supported |
-| ISO 19115:2003     | -       | [`v2`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Retired | Replaced by `v3`, no longer supported |
-| ISO 19115:2003     | -       | [`v3`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json)     | Retired | Replaced by `v4`, no longer supported |
-| ISO 19115:2003     | -       | [`v4`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json)     | Stable  | Currently supported version           |
-| ISO 19115-2:2009   | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Retired | Replaced by `v2`, no longer supported |
-| ISO 19115-2:2009   | -       | [`v2`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Retired | Replaced by `v3`, no longer supported |
-| ISO 19115-2:2009   | -       | [`v3`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json)     | Retired | Replaced by `v4`, no longer supported |
-| ISO 19115-2:2009   | -       | [`v4`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json)     | Stable  | Currently supported version           |
 | IEC 61174:2015     | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Retired | No longer supported                   |
 | IEC PAS 61174:2021 | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Retired | No longer supported                   |
+| Standard           | Profile                     | Configuration Version                                                                                                     | Status       | Notes                                 |
+|--------------------|-----------------------------|---------------------------------------------------------------------------------------------------------------------------|--------------|---------------------------------------|
+| ISO 19115:2003     | -                           | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired      | Replaced by `v2`, no longer supported |
+| ISO 19115:2003     | -                           | [`v2`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Retired      | Replaced by `v3`, no longer supported |
+| ISO 19115:2003     | -                           | [`v3`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json)     | Retired      | Replaced by `v4`, no longer supported |
+| ISO 19115:2003     | -                           | [`v4`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json)     | Stable       | Currently supported version           |
+| ISO 19115-2:2009   | -                           | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v1.json)     | Retired      | Replaced by `v2`, no longer supported |
+| ISO 19115-2:2009   | -                           | [`v2`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v2.json)     | Retired      | Replaced by `v3`, no longer supported |
+| ISO 19115-2:2009   | -                           | [`v3`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v3.json)     | Retired      | Replaced by `v4`, no longer supported |
+| ISO 19115-2:2009   | -                           | [`v4`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json)     | Stable       | Currently supported version           |
+| ISO 19115-2:2009   | MAGIC Discovery Metadata V2 | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-discovery-v2.json) | Experimental | Next supported version                |
 <!-- pyml enable md013 -->
 
 ### Supported standards coverage

@@ -163,6 +163,7 @@ publish-schemas-stage:
     - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_0_v4.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json"
     - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_2_v4.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
     - "aws s3 cp src/bas_metadata_library/schemas/dist/magic_discovery_v1.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/magic-discovery-v1.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/magic_discovery_v2.json s3://$S3_SCHEMA_BUCKET_STAGE/bas-metadata-generator-configuration-schemas/v2/magic-discovery-v2.json"
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG == null'
 
@@ -177,6 +178,7 @@ publish-schemas-prod:
     - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_0_v4.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-0-v4.json"
     - "aws s3 cp src/bas_metadata_library/schemas/dist/iso_19115_2_v4.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json"
     - "aws s3 cp src/bas_metadata_library/schemas/dist/magic_discovery_v1.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/magic-discovery-v1.json"
+    - "aws s3 cp src/bas_metadata_library/schemas/dist/magic_discovery_v2.json s3://$S3_SCHEMA_BUCKET_PROD/bas-metadata-generator-configuration-schemas/v2/magic-discovery-v2.json"
   rules:
     - if: $CI_COMMIT_TAG
 
