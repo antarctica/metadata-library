@@ -13,6 +13,9 @@ profiles: dict[str, Traversable] = {
     "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery-v1/": resource_file(
         "bas_metadata_library.schemas.dist"
     ).joinpath("magic_discovery_v1.json"),
+    "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery/v1/": resource_file(
+        "bas_metadata_library.schemas.dist"
+    ).joinpath("magic_discovery_v1.json"),
     "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery/v2/": resource_file(
         "bas_metadata_library.schemas.dist"
     ).joinpath("magic_discovery_v2.json"),

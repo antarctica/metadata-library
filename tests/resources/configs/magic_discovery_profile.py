@@ -37,6 +37,11 @@ _appendix_1_v1 = {
     "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile.",
     "result": True,
 }
+_appendix_1_v1_alt = deepcopy(_appendix_1_v1)
+_appendix_1_v1_alt["specification"]["title"]["href"] = (
+    "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery/v1/"
+)
+
 _appendix_1_v2 = deepcopy(_appendix_1_v1)
 _appendix_1_v2["specification"]["title"]["href"] = (
     "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery/v2/"
@@ -153,7 +158,21 @@ minimal_collection_v1 = {
     },
 }
 
-configs_v1_all = {"minimal_product_v1": minimal_product_v1, "minimal_collection_v1": minimal_collection_v1}
+_minimal_product_v1_alt_id = "4308fc21-5999-48ea-918e-9a4c855fa944"
+minimal_product_v1_alt = deepcopy(minimal_product_v1)
+minimal_product_v1_alt["file_identifier"] = _minimal_product_v1_alt_id
+minimal_product_v1_alt["identification"]["identifiers"][0]["identifier"] = _minimal_product_v1_alt_id
+minimal_product_v1_alt["identification"]["identifiers"][0]["href"] = (
+    f"https://data.bas.ac.uk/items/{_minimal_product_v1_alt_id}"
+)
+minimal_product_v1_alt["identification"]["domain_consistency"][0] = _appendix_1_v1_alt
+
+configs_v1_all = {
+    "minimal_product_v1": minimal_product_v1,
+    "minimal_collection_v1": minimal_collection_v1,
+    "minimal_product_v1_alt": minimal_product_v1_alt,
+}
+
 _minimal_product_v2_id = "f9557951-30c7-4ab1-bb25-79a552d2c53d"
 minimal_product_v2 = {
     "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",

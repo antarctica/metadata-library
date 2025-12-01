@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   [#264](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/264)
 * Refactored internal Flask CLI commands to run through task runner
   [#265](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/265)
+* Refactored MAGIC Discovery metadata profile v1 schema and supporting alternate domain consistency URL
+  [#269](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/269)
 
 ## 0.15.3 - 2025-06-14
 
