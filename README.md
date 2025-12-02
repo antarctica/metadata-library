@@ -50,10 +50,10 @@ XML XSDs).
 ### Supported configuration versions
 
 <!-- pyml disable md013 -->
-| IEC 61174:2015     | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Retired | No longer supported                   |
-| IEC PAS 61174:2021 | -       | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Retired | No longer supported                   |
 | Standard           | Profile                     | Configuration Version                                                                                                     | Status       | Notes                                 |
 |--------------------|-----------------------------|---------------------------------------------------------------------------------------------------------------------------|--------------|---------------------------------------|
+| IEC 61174:2015     | -                           | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-0-v1.json) | Retired      | No longer supported                   |
+| IEC PAS 61174:2021 | -                           | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iec-pas-61174-1-v1.json) | Retired      | No longer supported                   |
 | ISO 19115:2003     | -                           | [`v1`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v1.json)     | Retired      | Replaced by `v2`, no longer supported |
 | ISO 19115:2003     | -                           | [`v2`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v2.json)     | Retired      | Replaced by `v3`, no longer supported |
 | ISO 19115:2003     | -                           | [`v3`](https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v3.json)     | Retired      | Replaced by `v4`, no longer supported |
@@ -123,15 +123,15 @@ from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4, M
 # define a minimalish record configuration
 minimalish_config = {
     "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
-    "hierarchy_level": "dataset",
+    "hierarchy_level": "product",
     "metadata": {
-        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "contacts": [{"organisation": {"name": "Mapping and Geographic Information Centre, British Antarctic Survey"}, "role": ["pointOfContact"]}],
         "date_stamp": date(2018, 10, 18),
     },
     "identification": {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
-        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with minimal (but not minimal) fields.",
         "character_set": "utf8",
         "language": "eng",
         "extents": [
@@ -213,15 +213,15 @@ output_path = str('/path/to/file.json')
 
 minimalish_config = {
     "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
-    "hierarchy_level": "dataset",
+    "hierarchy_level": "product",
     "metadata": {
-        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "contacts": [{"organisation": {"name": "Mapping and Geographic Information Centre, British Antarctic Survey"}, "role": ["pointOfContact"]}],
         "date_stamp": date(2018, 10, 18),
     },
     "identification": {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
-        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with minimal (but not minimal) fields.",
         "character_set": "utf8",
         "language": "eng",
         "extents": [
@@ -256,15 +256,15 @@ from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4, M
 
 minimalish_config = {
     "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
-    "hierarchy_level": "dataset",
+    "hierarchy_level": "product",
     "metadata": {
-        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "contacts": [{"organisation": {"name": "Mapping and Geographic Information Centre, British Antarctic Survey"}, "role": ["pointOfContact"]}],
         "date_stamp": date(2018, 10, 18),
     },
     "identification": {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
-        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with minimal (but not minimal) fields.",
         "character_set": "utf8",
         "language": "eng",
         "extents": [
@@ -304,8 +304,11 @@ See the [Record Schemas](#record-schemas) section for more information on how va
 [Record configurations](#configuration-classes) will be automatically validated using a JSON Schema for the metadata
 standard used.
 
-Where a record configuration states compliance with one or more [Supported Profiles](#supported-profiles), it will also
-be automatically validated using a JSON Schema for each profile.
+> [!TIP]
+> Where a record configuration states compliance with one or more [Supported Profiles](#supported-profiles), it will
+> also be automatically validated using a JSON Schema for each profile.
+>
+> For ISO 19115, profile compliance is indicated via a domain consistency data quality element.
 
 To explicitly validate a record configuration:
 
@@ -317,15 +320,15 @@ from bas_metadata_library.standards.iso_19115_2 import MetadataRecordConfigV4
 
 minimalish_config = {
     "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
-    "hierarchy_level": "dataset",
+    "hierarchy_level": "product",
     "metadata": {
-        "contacts": [{"organisation": {"name": "UK Polar Data Centre"}, "role": ["pointOfContact"]}],
+        "contacts": [{"organisation": {"name": "Mapping and Geographic Information Centre, British Antarctic Survey"}, "role": ["pointOfContact"]}],
         "date_stamp": date(2018, 10, 18),
     },
     "identification": {
         "title": {"value": "Test Record"},
         "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
-        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with required properties only.",
+        "abstract": "Test Record for ISO 19115 metadata standard (no profile) with minimal (but not minimal) fields.",
         "character_set": "utf8",
         "language": "eng",
         "extents": [

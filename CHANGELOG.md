@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * `taskipy` dev task runner
   [#262](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/262)
-* meta-validation for record configuration JSON Schemas
+* Meta-validation for record configuration JSON Schemas
   [#172](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/172)
 * Support for MAGIC Discovery metadata profile v2
   [#268](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/268)
