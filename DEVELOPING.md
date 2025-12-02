@@ -102,14 +102,14 @@ To add a new standard:
    - version the `MetadataRecordConfig` class, e.g. `MetadataRecordConfigV1`
 1. create a suitable metadata configuration JSON schema in `bas_metadata_library.schemas.src`,
    e.g. `bas_metadata_library.schemas.src.foo_v1.json`
-1. update the `generate_schemas` method in `app.py` to generate distribution schemas
+1. update the `generate_schemas` method in the [Test App](#testing-flask-app) to generate distribution schemas
 1. update the `validate_schemas` method in the [Test App](#testing-flask-app) to check source and distribution schemas
 1. add a script line to the `publish-schemas-stage` and `publish-schemas-prod` jobs in `.gitlab-ci.yml`, to publish
    the distribution schema within the BAS Metadata Standards website
 1. define a series of test configurations (e.g. minimal, typical and complete) for generating test records in
    `tests.resources.configs` e.g. `tests.resources.configs.foo_v1_standard`
-1. add a route in `app.py` for generating test records for the new standard
-1. update the `capture_test_records` method in `app.py` to generate and save test records
+1. add a route in the [Test App](#testing-flask-app) for generating test records for the new standard
+1. update the `capture_test_records` method in the [Test App](#testing-flask-app) to generate and save test records
 1. add relevant [Tests](#testing) with methods to test each metadata element class and test records
 
 ### Adding a new element
@@ -176,7 +176,7 @@ To add a new standard:
 
 <!-- pyml disable md028 -->
 > [!CAUTION]
-> This section is Work in Progress (WIP) and may not be complete/accurate.
+> This section is a Work in Progress (WIP) and may not be complete/accurate.
 
 > [!NOTE]
 > This task requires significant work. It should be reserved for breaking or major changes to a schema.
@@ -185,7 +185,7 @@ To add a new standard:
 > In these instructions, `v1` refers to the current/previous configuration version. `v2` refers to the new version.
 <!-- pyml enable md028 -->
 
-#### Step 1: Add new version
+#### Step 1: Add new version (standard)
 
 First, create a new configuration version that is identical to the current/previous version, but that sets up the
 schema, objects, methods, tests and documentation needed for the new configuration, and to convert between the old
@@ -253,7 +253,7 @@ and new configurations.
     configuration between the old and new versions
 1. Update the change log to reference the creation of the new schema version, referencing the summary issue
 
-#### Step 2: Make changes
+#### Step 2: Make changes (standard)
 
 Second, iteratively introduce changes to the new configuration, adding logic to convert between the old and new
 configurations as needed. This logic will likely be messy and may target specific known use-cases. This is acceptable on
@@ -266,7 +266,7 @@ the basis these methods will be relatively short-lived.
 1. if circumstances where data can't be mapped between schemas, consider raising exception in methods for manual
   conversion
 
-#### Step 3: Release as experimental version
+#### Step 3: Release as experimental version (standard)
 
 > [!CAUTION]
 > This subsection is a Work in Progress (WIP) and may not be complete/accurate.
@@ -276,13 +276,16 @@ the basis these methods will be relatively short-lived.
 1. update the [Supported configuration versions](/README.md#supported-configuration-versions) section of the README
    - add the new/current schema version with a status of 'experimental'
 
-#### Step 4: Mark as stable version
+#### Step 4: Mark as a stable version (standard)
 
-1. update the [Supported configuration versions](/README.md#supported-configuration-versions) section of the README
+Once confirmed as working, and the new schema version is agreed for release:
+
+1. update the `README.md` [Supported Configuration Versions](/README.md#supported-configuration-versions) section to:
    - update the new/current schema version with a status of 'stable'
-   - update the old schema version with a status of 'deprecated'
+   - update the old/previous schema version with a status of 'deprecated'
+2. create a new production [Release](#release-workflow) of the package
 
-#### Step 5: Retire previous version
+#### Step 5: Retire previous version (standard)
 
 1. create an issue for retiring the old schema version
 1. delete the previous metadata configuration JSON schema from `bas_metadata_library.schemas.src`
@@ -296,6 +299,7 @@ the basis these methods will be relatively short-lived.
 1. delete corresponding test records from `tests.resources.records` (e.g. in `tests.resources.records.foo_v1`)
 1. update the relevant `_generate_record_*()` method in the [Test App](#testing-flask-app)
 1. update the `_generate_schemas()` method in the [Test App](#testing-flask-app) to remove the old schema version
+1. update the `_validate_schemas()` method in the [Test App](#testing-flask-app) to remove the old schema version
 1. update the `_capture_json_test_configs()` method in the [Test App](#testing-flask-app) to remove the old schema
     version
 1. update the `_capture_test_records()` method in the [Test App](#testing-flask-app) to remove the old schema version
@@ -318,13 +322,14 @@ the basis these methods will be relatively short-lived.
 1. Update the change log to reference the removal of the new schema version, referencing the summary issue, as a
     breaking change
 
-See [33b7509c 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/commit/33b7509cdb73525b79b1a81f7038b805769e0057)
-for an example of removing a schema version.
+> [!TIP]
+> See [33b7509c 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/commit/33b7509cdb73525b79b1a81f7038b805769e0057)
+> for an example of removing a schema version.
 
 ### Adding a new profile
 
 > [!CAUTION]
-> This section is Work in Progress (WIP) and may not be complete/accurate.
+> This section is a Work in Progress (WIP) and may not be complete/accurate.
 
 See [#250 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/250) for an
 example of adding a profile.
@@ -422,7 +427,7 @@ To add a schema for a new standard/profile:
 ### Removing a standard
 
 > [!CAUTION]
-> This section is Work in Progress (WIP) and may not be complete/accurate.
+> This section is a Work in Progress (WIP) and may not be complete/accurate.
 
 See [#266 🛡️](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/266) for an
 example of removing a standard.
@@ -461,20 +466,6 @@ Checks are run automatically in [Continuous Integration](#continuous-integration
 - commit changes
 
 ## Linting
-
-### Ty
-
-[Ty](https://docs.astral.sh/ty/) is used for static type checking in library classes (not tests, etc.) with default
-options. Type checks are run automatically in [Continuous Integration](#continuous-integration) and
-the [Pre-Commit Hook](#pre-commit-hook).
-
-<!-- pyml disable md028 -->
-> [!NOTE]
-> Ty is an experimental tool and may report false positives. Type checking may be removed if it becomes a burden.
-
-> [!TIP]
-> To check types manually run the `types` [Development Task](#development-tasks).
-<!-- pyml enable md028 -->
 
 ### Ruff
 
@@ -628,9 +619,8 @@ def test_foo():
 
 ### Testing Flask app
 
-An internal Flask app is used to generate and capture test records, record configurations and schemas.
-
-It is defined in `tests/app` and has:
+An internal Flask app (`tests.app`) is used to generate, validate and capture test records, record configurations and
+record configuration schemas. It consists of:
 
 - routes for:
   - calling the Metadata Library to generate records from a given configuration for a standard
@@ -642,7 +632,7 @@ It is defined in `tests/app` and has:
 Available routes and commands can be used listed using:
 
 ```shell
-$ FLASK_APP=tests.app uv run flask --help
+$ uv run flask --app tests.app --help
 ```
 
 ### Configuration schema testing
