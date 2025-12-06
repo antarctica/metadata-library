@@ -189,13 +189,15 @@ release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   before_script:
     - apk add --no-cache curl jq
-
+    # for a string 'v0.8.13a1', strip the leading 'v' (e.g. 0.8.13a1)
     - export TAG_NO_PREFIX=$(echo $CI_COMMIT_TAG | cut -c 2-)
-    # for a string v0.8.13, replace last digit to always be 0
-    - export TAG_NO_PATCH=$(echo $CI_COMMIT_TAG | sed 's/[0-9]$/0/')
+    # for a string 'v0.8.13a1', strip any modifiers (e.g. v0.8.13)
+    - export TAG_NO_SUFFIX=$(echo $CI_COMMIT_TAG | sed 's/[a-zA-Z].*$//')
+    # for a string 'v0.8.13', replace the patch component with '0' (e.g. v0.8.0)
+    - export TAG_MINOR=$(echo $TAG_NO_SUFFIX | sed 's/[0-9]$/0/')
 
     - 'curl -s -H "Authorization: Bearer $PROJECT_ACCESS_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/milestones?title=$CI_COMMIT_TAG" > milestone_exact.json'
-    - 'curl -s -H "Authorization: Bearer $PROJECT_ACCESS_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/milestones?title=$TAG_NO_PATCH" > milestone-minor.json'
+    - 'curl -s -H "Authorization: Bearer $PROJECT_ACCESS_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/milestones?title=$TAG_MINOR" > milestone-minor.json'
     - export MILESTONE_TITLE_EXACT=$(cat milestone_exact.json | jq -r ".[0] | .title") && rm milestone_exact.json
     - export MILESTONE_TITLE_MINOR=$(cat milestone-minor.json | jq -r ".[0] | .title") && rm milestone-minor.json
     - >
@@ -207,9 +209,14 @@ release:
           export MILESTONE_TITLE=""
       fi
 
-    - curl -s -L -O https://github.com/taiki-e/parse-changelog/releases/download/v0.6.8/parse-changelog-x86_64-unknown-linux-musl.tar.gz
-    - tar -xzf parse-changelog-x86_64-unknown-linux-musl.tar.gz -C /usr/local/bin/
-    - parse-changelog CHANGELOG.md "$TAG_NO_PREFIX" > changelog.txt
+    - >
+      if echo "$CI_COMMIT_TAG" | grep -Eq 'a|b|rc'; then
+        echo "Prerelease." > changelog.txt
+      else
+        curl -s -L -O https://github.com/taiki-e/parse-changelog/releases/download/v0.6.8/parse-changelog-x86_64-unknown-linux-musl.tar.gz
+        tar -xzf parse-changelog-x86_64-unknown-linux-musl.tar.gz -C /usr/local/bin/
+        parse-changelog CHANGELOG.md "$TAG_NO_PREFIX" > changelog.txt
+      fi
 
     # the release section cannot access variables defined in a script but can read from a file :|
     - echo "$TAG_NO_PREFIX" > tag_no_prefix.txt
