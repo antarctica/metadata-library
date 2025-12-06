@@ -690,6 +690,26 @@ Creating a tag will automatically trigger a [Deployment](#deployment), which wil
 - a package artefact link
 - a `README.md` link at the relevant tag
 
+### Prereleases
+
+> [!CAUTION]
+> This section is a Work in Progress (WIP) and may not be complete/accurate.
+
+To create an initial pre-release for an upcoming minor version:
+
+```text
+% uv version --bump minor --bump alpha
+```
+
+To create additional pre-releases for the same minor version:
+
+```text
+% uv version --bump alpha
+```
+
+> [!NOTE]
+> Do not reflect pre-releases in the change log. Do track they contain in the floating 'unreleased' release.
+
 ## Deployment
 
 ### Python package
