@@ -69,8 +69,6 @@ safety = { cmd = "safety scan --detailed-output", help = "Check for insecure dep
 ci-test = { cmd = "pytest {cov_options} -o junit_family=xunit2 --junitxml=test-results.xml --continue-on-collection-errors", help = "Called by CI", use_vars = true }
 ci-safety = { cmd = "safety --stage cicd scan --detailed-output", help = "Called by CI" }
 # app dev
-release = { cmd = "python -m tasks.release", help = "Prepapre app release" }
-# app CLI
 generate-schemas = { cmd = "flask --app tests.app generate-schemas", help="Generate JSON schemas via Flask app" }
 validate-schemas = { cmd = "flask --app tests.app validate-schemas", help="Validate JSON schemas via Flask app" }
 capture-test-records = { cmd = "flask --app tests.app capture-test-records", help="Catpure test metadata records via Flask app" }
