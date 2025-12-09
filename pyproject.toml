@@ -49,8 +49,8 @@ test = [
 ]
 
 [tool.taskipy.variables]
-docs_targets = "DEVELOPING.md README.md CHANGELOG.md"
-targets = "src/ tasks/ tests/"
+docs_targets = "README.md CHANGELOG.md docs/"
+targets = "src/ tests/"
 cov_options = "--cov --cov-report=html"
 
 [tool.taskipy.tasks]
