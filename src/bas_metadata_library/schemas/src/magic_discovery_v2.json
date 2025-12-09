@@ -263,65 +263,6 @@
         "statement"
       ]
     },
-    "maintenance": {
-      "title": "Req. 12 - Update Frequency Code",
-      "type": "object",
-      "required": [
-        "maintenance_frequency",
-        "progress"
-      ],
-      "properties": {
-        "progress": {
-          "$ref": "#/definitions/progress"
-        }
-      }
-    },
-    "metadata": {
-      "type": "object",
-      "required": [
-        "contacts",
-        "date_stamp"
-      ],
-      "properties": {
-        "contacts": {
-          "type": "array",
-          "contains": {
-            "$ref": "#/definitions/point_of_contact"
-          }
-        }
-      }
-    },
-    "progress": {
-      "title": "Req. 11 - Progress Code (Status)",
-      "type": "string",
-      "enum": [
-        "completed",
-        "underDevelopment"
-      ]
-    },
-    "point_of_contact": {
-      "title": "Req. 08 - Point of contact",
-      "allOf": [
-        {
-          "$ref": "#/definitions/magic"
-        },
-        {
-          "type": "object",
-          "required": [
-            "role"
-          ],
-          "properties": {
-            "role": {
-              "type": "array",
-              "contains": {
-                "type": "string",
-                "const": "pointOfContact"
-              }
-            }
-          }
-        }
-      ]
-    },
     "magic": {
       "type": "object",
       "required": [
@@ -422,6 +363,65 @@
           }
         }
       }
+    },
+    "maintenance": {
+      "title": "Req. 12 - Update Frequency Code",
+      "type": "object",
+      "required": [
+        "maintenance_frequency",
+        "progress"
+      ],
+      "properties": {
+        "progress": {
+          "$ref": "#/definitions/progress"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "contacts",
+        "date_stamp"
+      ],
+      "properties": {
+        "contacts": {
+          "type": "array",
+          "contains": {
+            "$ref": "#/definitions/point_of_contact"
+          }
+        }
+      }
+    },
+    "point_of_contact": {
+      "title": "Req. 08 - Point of contact",
+      "allOf": [
+        {
+          "$ref": "#/definitions/magic"
+        },
+        {
+          "type": "object",
+          "required": [
+            "role"
+          ],
+          "properties": {
+            "role": {
+              "type": "array",
+              "contains": {
+                "type": "string",
+                "const": "pointOfContact"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "progress": {
+      "title": "Req. 11 - Progress Code (Status)",
+      "type": "string",
+      "enum": [
+        "completed",
+        "underDevelopment"
+      ]
     }
   },
   "type": "object",

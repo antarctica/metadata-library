@@ -237,49 +237,6 @@
                 "statement"
             ]
         },
-        "maintenance": {
-            "title": "Req. 11 - Progress Code (Status) & Req. 12 - Update Frequency Code",
-            "type": "object",
-            "required": [
-                "maintenance_frequency",
-                "progress"
-            ]
-        },
-        "metadata": {
-            "type": "object",
-            "required": [
-                "contacts",
-                "date_stamp"
-            ],
-            "properties": {
-                "contacts": {
-                    "$ref": "#/definitions/contacts"
-                }
-            }
-        },
-        "point_of_contact": {
-            "title": "Req. 08 - Point of contact",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/magic"
-                },
-                {
-                    "type": "object",
-                    "required": [
-                        "role"
-                    ],
-                    "properties": {
-                        "role": {
-                            "type": "array",
-                            "contains": {
-                                "type": "string",
-                                "const": "pointOfContact"
-                            }
-                        }
-                    }
-                }
-            ]
-        },
         "magic": {
             "type": "object",
             "required": [
@@ -380,6 +337,49 @@
                     }
                 }
             }
+        },
+        "maintenance": {
+            "title": "Req. 11 - Progress Code (Status) & Req. 12 - Update Frequency Code",
+            "type": "object",
+            "required": [
+                "maintenance_frequency",
+                "progress"
+            ]
+        },
+        "metadata": {
+            "type": "object",
+            "required": [
+                "contacts",
+                "date_stamp"
+            ],
+            "properties": {
+                "contacts": {
+                    "$ref": "#/definitions/contacts"
+                }
+            }
+        },
+        "point_of_contact": {
+            "title": "Req. 08 - Point of contact",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/magic"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "role"
+                    ],
+                    "properties": {
+                        "role": {
+                            "type": "array",
+                            "contains": {
+                                "type": "string",
+                                "const": "pointOfContact"
+                            }
+                        }
+                    }
+                }
+            ]
         }
     },
     "type": "object",
