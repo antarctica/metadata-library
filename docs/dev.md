@@ -1,11 +1,11 @@
-# BAS Metadata Library - Development Documentation
+# BAS Metadata Library - Development
 
 ## Setup
 
 ### Terraform
 
-Terraform is used to provision IAM resources needed to host [Configuration schemas](/README.md#configuration-schemas)
-for external access.
+Terraform is used to provision IAM resources needed to host
+[Configuration schemas](/docs/implementation.md#configuration-schemas) for external access.
 
 Access to the [BAS AWS Account 🛡️](https://gitlab.data.bas.ac.uk/WSF/bas-aws) is needed to provision these resources.
 
@@ -117,7 +117,7 @@ To add a new standard:
 > [!NOTE]
 > These instructions are specific to the ISO 19115 metadata standards family.
 
-1. [amend configuration schema](/README.md#configuration-schemas):
+1. [amend configuration schema](/docs/implementation.md#configuration-schemas):
    - new or changed properties should be added to the configuration for the relevant standard (e.g. ISO 19115-1)
    - typically, this involves adding new elements to the `definitions` property and referencing these in the relevant
      parent element (e.g. to the `identification` property)
@@ -136,7 +136,7 @@ To add a new standard:
    - values used for identifiers and other external references should use the correct form/structure but do not need
      to exist or relate to the resource described by each configuration (i.e. DOIs should be valid URLs but could be
      a DOI for another resource for example)
-1. add relevant [element class](/README.md#record-element-classes):
+1. add relevant [element class](/docs/implementation.md#record-element-classes):
    - new or changed elements should be added to the configuration for the relevant package for each standard
    - for the ISO 19115 family of standards, element classes should be added to the `iso_19115_common` package
    - the exact module to use within this package will depend on the nature of the element being added, but in general,
@@ -245,10 +245,10 @@ and new configurations.
 1. update the encode/decode subsections in the [Usage](/README.md#usage) section of the README to use the new
     `RecordConfig` class and `$schema` URI
 1. if the lead standard (ISO 19115) is being updated also update these [Usage](/README.md#usage) subsections:
-   - [Loading a record configuration from JSON](/README.md#loading-a-record-configuration-from-json)
-   - [Dumping a record configuration to JSON](/README.md#dumping-a-record-configuration-to-json)
-   - [Validating a record](/README.md#validating-a-record)
-   - [Validating a record configuration](/README.md#validating-a-record-configuration)
+   - [Loading a record configuration from JSON](/docs/usage.md#loading-a-record-configuration-from-json)
+   - [Dumping a record configuration to JSON](/docs/usage.md#dumping-a-record-configuration-to-json)
+   - [Validating a record](/docs/usage.md#validating-a-record)
+   - [Validating a record configuration](/docs/usage.md#validating-a-record-configuration)
 1. add a subsection to the [Usage](/README.md#usage) section of the README explaining how to upgrade and downgrade a
     configuration between the old and new versions
 1. Update the change log to reference the creation of the new schema version, referencing the summary issue
@@ -394,9 +394,14 @@ Second, implement the changes from the agreed new abstract profile into the new 
 > [!TIP]
 > The generated records (XML) and record configurations (JSON) SHOULD be used as examples in the abstract profile.
 
+#### Step 3: Release as experimental version (profile)
+
+1. merge the new profile changes into `main` and create a [Prerelease](#prereleases) for testing
+2. test the package to check it works as expected
+
 ### Generating configuration schemas
 
-To generate [distribution schemas from source schemas](/README.md#source-and-distribution-schemas), run the
+To generate [distribution schemas from source schemas](/docs/implementation.md#source-and-distribution-schemas), run the
 `generate-schemas` [Development Task](#development-tasks), which uses the internal [Flask Test App](#testing-flask-app).
 
 > [!TIP]
@@ -676,7 +681,7 @@ All commits will trigger Continuous Integration using GitLab's CI/CD platform, c
 
 ## Releases
 
-See [README](./README.md#releases) for available releases.
+See [README](/README.md#releases) for available releases.
 
 ### Release workflow
 
@@ -701,11 +706,10 @@ To create an initial pre-release for an upcoming minor version:
 % uv version --bump minor --bump alpha
 ```
 
-To create additional pre-releases for the same minor version:
+> [!TIP]
+> To create additional pre-releases use `% uv version --bump alpha`.
 
-```text
-% uv version --bump alpha
-```
+Then follow the [Release Workflow](#release-workflow) using the alpha version (e.g. `0.16.0a1`).
 
 > [!NOTE]
 > Do not reflect pre-releases in the change log. Do track they contain in the floating 'unreleased' release.
@@ -729,4 +733,4 @@ Follow the [Release Workflow](#release-workflow) to trigger a deployment, which 
 ### Continuous Deployment
 
 Tagged commits created for [Releases](#releases) will trigger Continuous Deployment using GitLab's
-CI/CD platform configured in [`.gitlab-ci.yml`](./.gitlab-ci.yml).
+CI/CD platform configured in `.gitlab-ci.yml`.
