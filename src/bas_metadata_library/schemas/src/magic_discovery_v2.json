@@ -420,6 +420,10 @@
       "type": "string",
       "enum": [
         "completed",
+        "deprecated",
+        "onGoing",
+        "retired",
+        "superseded",
         "underDevelopment"
       ]
     }
