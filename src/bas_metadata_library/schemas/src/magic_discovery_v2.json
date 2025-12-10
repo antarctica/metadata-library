@@ -486,6 +486,34 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "description": "Conditional logic for released date if published",
+        "properties": {
+          "identification": {
+            "required": ["dates"],
+            "properties": {
+              "dates": {
+                "title": "Req. 07 - Publication Date",
+                "required": ["publication"]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "identification": {
+            "properties": {
+              "dates": {
+                "title": "Req. 06 - Released Date",
+                "required": ["released"]
+              }
+            }
+          }
+        }
+      }
     }
   ]
 }

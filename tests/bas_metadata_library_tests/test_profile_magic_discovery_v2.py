@@ -96,3 +96,11 @@ def test_config_schema_cond_supertype():
     with pytest.raises(ValidationError) as e:
         config.validate()
     assert "'other_citation_details' is a required property" in str(e.value)
+
+def test_config_schema_cond_released():
+    """Check conditional schema for required released date when publication date set."""
+    config = deepcopy(MetadataRecordConfigV4(**configs_v2_all["minimal_container_v2"]))
+    del config.config["identification"]['dates']['released']
+    with pytest.raises(ValidationError) as e:
+        config.validate()
+    assert "'released' is a required property" in str(e.value)
