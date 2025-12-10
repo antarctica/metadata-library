@@ -33,7 +33,7 @@ def test_config_schema_validation_invalid_profile():
     This is a basic test, to check the schema is loaded and the main, mandatory, parts of the schema work as expected.
     Conditional parts of the schema are tested elsewhere.
     """
-    config = deepcopy(MetadataRecordConfigV4(**configs_v2_all["minimal_product_v2"]))
+    config = deepcopy(MetadataRecordConfigV4(**configs_v2_all["minimal_resource_v2"]))
     del config.config["file_identifier"]
     with pytest.raises(ValidationError) as e:
         config.validate()
@@ -90,7 +90,7 @@ def test_lossless_conversion(fx_get_record_response: Element, config_name: str):
     assert _config == config_
 
 def test_config_schema_cond_supertype():
-    """Check conditional schema for different additional properties required for container super-type applies."""
+    """Check conditional schema for additional required properties for resource super-type."""
     config = deepcopy(MetadataRecordConfigV4(**configs_v2_all["minimal_resource_v2"]))
     del config.config["identification"]['other_citation_details']
     with pytest.raises(ValidationError) as e:
