@@ -34,12 +34,10 @@
   "hierarchy_level": "product",
   "identification": {
     "title": {
-      "value": "Test product with minimal MAGIC Discovery Profile properties"
+      "value": "Test resource record super-type with minimal MAGIC Discovery Profile properties"
     },
     "dates": {
-      "creation": "2024-09-14",
-      "released": "2024-09-14T11:16:22+00:00",
-      "publication": "2024-09-14T11:16:22+00:00"
+      "creation": "2024-09-14"
     },
     "edition": "1",
     "identifiers": [
@@ -49,7 +47,7 @@
         "namespace": "data.bas.ac.uk"
       }
     ],
-    "abstract": "An example product to verify a record with the minimal set of properties required by the MAGIC Discovery Profile is handled correctly.",
+    "abstract": "An example product to verify resource super-type records with the minimal set of properties required by the MAGIC Discovery Profile is handled correctly.\n\nThis record does not include a publication date to test the 'false' branch of the released date conditional schema.",
     "contacts": [
       {
         "organisation": {

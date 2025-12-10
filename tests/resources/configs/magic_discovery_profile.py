@@ -42,12 +42,19 @@ _appendix_1_v1_alt["specification"]["title"]["href"] = (
     "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery/v1/"
 )
 
-_appendix_1_v2 = deepcopy(_appendix_1_v1)
-_appendix_1_v2["specification"]["title"]["href"] = (
-    "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery/v2/"
-)
-_appendix_1_v2["specification"]["dates"]["publication"]["date"] = datetime.date(2025, 11, 24)
-_appendix_1_v2["specification"]["edition"] = "2"
+_appendix_1_v2 = {
+    "specification": {
+        "title": {
+            "value": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile",
+            "href": "https://metadata-standards.data.bas.ac.uk/profiles/magic-discovery/v2/",
+        },
+        "dates": {"publication": {"date": datetime.date(2025, 11, 24)}},
+        "edition": "2",
+        "contact": {**_appendix_2, "role": ["publisher"]},
+    },
+    "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile.",
+    "result": True,
+}
 
 _minimal_product_v1_id = "f866c298-3b9a-4624-ac31-cd6b97c146fa"
 minimal_product_v1 = {
@@ -173,31 +180,29 @@ configs_v1_all = {
     "minimal_product_v1_alt": minimal_product_v1_alt,
 }
 
-_minimal_product_v2_id = "f9557951-30c7-4ab1-bb25-79a552d2c53d"
-minimal_product_v2 = {
+_minimal_resource_v2_id = "f9557951-30c7-4ab1-bb25-79a552d2c53d"
+minimal_resource_v2 = {
     "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
-    "file_identifier": _minimal_product_v2_id,
+    "file_identifier": _minimal_resource_v2_id,
     "metadata": {
         "contacts": [{**_appendix_2, "role": ["pointOfContact"]}],
         "date_stamp": datetime.date(2024, 10, 3),
     },
     "hierarchy_level": "product",
     "identification": {
-        "title": {"value": "Test product with minimal MAGIC Discovery Profile properties"},
+        "title": {"value": "Test resource record super-type with minimal MAGIC Discovery Profile properties"},
         "dates": {
             "creation": {"date": datetime.date(2024, 9, 14)},
-            "released": {"date": datetime.datetime(2024, 9, 14, 11, 16, 22, tzinfo=datetime.timezone.utc)},
-            "publication": {"date": datetime.datetime(2024, 9, 14, 11, 16, 22, tzinfo=datetime.timezone.utc)},
         },
         "edition": "1",
         "identifiers": [
             {
-                "identifier": _minimal_product_v2_id,
-                "href": f"https://data.bas.ac.uk/items/{_minimal_product_v2_id}",
+                "identifier": _minimal_resource_v2_id,
+                "href": f"https://data.bas.ac.uk/items/{_minimal_resource_v2_id}",
                 "namespace": "data.bas.ac.uk",
             }
         ],
-        "abstract": "An example product to verify a record with the minimal set of properties required by the MAGIC Discovery Profile is handled correctly.",
+        "abstract": "An example product to verify resource super-type records with the minimal set of properties required by the MAGIC Discovery Profile is handled correctly.\n\nThis record does not include a publication date to test the 'false' branch of the released date conditional schema.",
         "contacts": [
             {**_appendix_2, "role": ["pointOfContact"]},
             {
@@ -239,17 +244,17 @@ minimal_product_v2 = {
     },
 }
 
-_minimal_collection_v2_id = "ccb0dd38-29cd-4973-be7a-2db494db6e99"
-minimal_collection_v2 = {
+_minimal_container_v2_id = "ccb0dd38-29cd-4973-be7a-2db494db6e99"
+minimal_container_v2 = {
     "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
-    "file_identifier": _minimal_collection_v2_id,
+    "file_identifier": _minimal_container_v2_id,
     "metadata": {
         "contacts": [{**_appendix_2, "role": ["pointOfContact"]}],
         "date_stamp": datetime.date(2024, 10, 3),
     },
     "hierarchy_level": "collection",
     "identification": {
-        "title": {"value": "Test collection with minimal MAGIC Discovery Profile properties"},
+        "title": {"value": "Test container record super-type with minimal MAGIC Discovery Profile properties"},
         "dates": {
             "creation": {"date": datetime.date(2024, 9, 14)},
             "released": {"date": datetime.datetime(2024, 9, 14, 16, 43, 56, tzinfo=datetime.timezone.utc)},
@@ -258,12 +263,12 @@ minimal_collection_v2 = {
         "edition": "1",
         "identifiers": [
             {
-                "identifier": _minimal_collection_v2_id,
-                "href": f"https://data.bas.ac.uk/items/{_minimal_collection_v2_id}",
+                "identifier": _minimal_container_v2_id,
+                "href": f"https://data.bas.ac.uk/items/{_minimal_container_v2_id}",
                 "namespace": "data.bas.ac.uk",
             }
         ],
-        "abstract": "An example collection to verify a record with the minimal set of properties required by the MAGIC Discovery Profile is handled correctly.",
+        "abstract": "An example collection to verify container super-type records with the minimal set of properties required by the MAGIC Discovery Profile is handled correctly.\n\nThis record does include a publication date to test the 'true' branch of the released date conditional schema.",
         "contacts": [
             {**_appendix_2, "role": ["pointOfContact"]},
             {
@@ -299,11 +304,10 @@ minimal_collection_v2 = {
                 },
             }
         ],
-        "other_citation_details": "Fictitious citation",
         "domain_consistency": [_appendix_1_v2],
     },
 }
 
-configs_v2_all = {"minimal_product_v2": minimal_product_v2, "minimal_collection_v2": minimal_collection_v2}
+configs_v2_all = {"minimal_resource_v2": minimal_resource_v2, "minimal_container_v2": minimal_container_v2}
 
 configs_all = {**configs_v1_all, **configs_v2_all}

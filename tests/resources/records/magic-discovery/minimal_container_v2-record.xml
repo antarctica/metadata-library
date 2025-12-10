@@ -76,7 +76,7 @@
       <gmd:citation>
         <gmd:CI_Citation>
           <gmd:title>
-            <gco:CharacterString>Test collection with minimal MAGIC Discovery Profile properties</gco:CharacterString>
+            <gco:CharacterString>Test container record super-type with minimal MAGIC Discovery Profile properties</gco:CharacterString>
           </gmd:title>
           <gmd:date>
             <gmd:CI_Date>
@@ -121,13 +121,12 @@
               </gmd:codeSpace>
             </gmd:RS_Identifier>
           </gmd:identifier>
-          <gmd:otherCitationDetails>
-            <gco:CharacterString>Fictitious citation</gco:CharacterString>
-          </gmd:otherCitationDetails>
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract>
-        <gco:CharacterString>An example collection to verify a record with the minimal set of properties required by the MAGIC Discovery Profile is handled correctly.</gco:CharacterString>
+        <gco:CharacterString>An example collection to verify container super-type records with the minimal set of properties required by the MAGIC Discovery Profile is handled correctly.
+
+This record does include a publication date to test the 'true' branch of the released date conditional schema.</gco:CharacterString>
       </gmd:abstract>
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>

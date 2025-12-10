@@ -214,7 +214,7 @@
       ]
     },
     "identification": {
-      "title": "Req. 05 - Edition & Req. 06. Released Date & Req. 07 - Publication Date",
+      "title": "Req. 05 - Edition",
       "type": "object",
       "required": [
         "dates",
@@ -420,6 +420,10 @@
       "type": "string",
       "enum": [
         "completed",
+        "deprecated",
+        "onGoing",
+        "retired",
+        "superseded",
         "underDevelopment"
       ]
     }
@@ -446,36 +450,70 @@
       "$ref": "#/definitions/identification"
     }
   },
-  "if": {
-    "properties": {
-      "hierarchy_level": {
-        "type": "string",
-        "enum": [
-          "collection",
-          "fieldSession",
-          "initiative"
-        ]
+  "allOf": [
+    {
+      "if": {
+        "description": "Conditional logic for container vs resource record super-types",
+        "properties": {
+          "hierarchy_level": {
+            "type": "string",
+            "enum": [
+              "dataset",
+              "feature",
+              "fieldSession",
+              "product",
+              "paperMapProduct",
+              "series"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "identification": {
+            "title": "Req. 05 - Edition & Req. 13 - Lineage statement & Req. 15 - Citation",
+            "required": [
+              "edition",
+              "other_citation_details",
+              "identifiers",
+              "contacts",
+              "maintenance",
+              "constraints",
+              "extents",
+              "lineage",
+              "domain_consistency"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "description": "Conditional logic for released date if published",
+        "properties": {
+          "identification": {
+            "required": ["dates"],
+            "properties": {
+              "dates": {
+                "title": "Req. 07 - Publication Date",
+                "required": ["publication"]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "identification": {
+            "properties": {
+              "dates": {
+                "title": "Req. 06 - Released Date",
+                "required": ["released"]
+              }
+            }
+          }
+        }
       }
     }
-  },
-  "then": {
-  },
-  "else": {
-    "properties": {
-      "identification": {
-        "title": "Req. 05 - Edition & Req. 06. Released Date & Req. 07 - Publication Date & Req. 15 - Citation",
-        "required": [
-          "edition",
-          "other_citation_details",
-          "identifiers",
-          "contacts",
-          "maintenance",
-          "constraints",
-          "extents",
-          "lineage",
-          "domain_consistency"
-        ]
-      }
-    }
-  }
+  ]
 }
