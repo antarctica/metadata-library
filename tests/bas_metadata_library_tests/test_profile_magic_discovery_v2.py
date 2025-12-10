@@ -88,3 +88,11 @@ def test_lossless_conversion(fx_get_record_response: Element, config_name: str):
     record_ = MetadataRecord(configuration=config).generate_xml_document().decode()
     assert _record == record_
     assert _config == config_
+
+def test_config_schema_cond_supertype():
+    """Check conditional schema for different additional properties required for container super-type applies."""
+    config = deepcopy(MetadataRecordConfigV4(**configs_v2_all["minimal_resource_v2"]))
+    del config.config["identification"]['other_citation_details']
+    with pytest.raises(ValidationError) as e:
+        config.validate()
+    assert "'other_citation_details' is a required property" in str(e.value)
