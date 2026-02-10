@@ -1165,6 +1165,12 @@ class Series(MetadataRecordElement):
         if len(issue_value) == 1:
             _["edition"] = issue_value[0]
 
+        page_value = self.record.xpath(
+            f"{self.xpath}/gmd:CI_Series/gmd:page/gco:CharacterString/text()", namespaces=self.ns.nsmap()
+        )
+        if len(page_value) == 1:
+            _["page"] = page_value[0]
+
         return _
 
     def make_element(self) -> None:
@@ -1181,3 +1187,8 @@ class Series(MetadataRecordElement):
             issue_element = SubElement(series_element, f"{{{self.ns.gmd}}}issueIdentification")
             issue_value = SubElement(issue_element, f"{{{self.ns.gco}}}CharacterString")
             issue_value.text = self.element_attributes["edition"]
+
+        if "page" in self.element_attributes:
+            issue_element = SubElement(series_element, f"{{{self.ns.gmd}}}page")
+            issue_value = SubElement(issue_element, f"{{{self.ns.gco}}}CharacterString")
+            issue_value.text = self.element_attributes["page"]
