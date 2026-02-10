@@ -431,7 +431,7 @@ complete_record_v4 = {
             "released": {"date": datetime.datetime(2018, 10, 8, 14, 40, 44, tzinfo=datetime.timezone.utc)},
         },
         "edition": "2",
-        "series": {"name": "Test Records", "edition": "2024 Series"},
+        "series": {"name": "Test Records", "edition": "2024 Series", "page": "7"},
         "other_citation_details": "Author, A., Author, B., & Author, C. (2022). The title (Version 1.0) [Data set]. Publisher. https://doi.org/the-doi",
         "identifiers": [
             {

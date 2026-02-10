@@ -305,6 +305,13 @@ def assert_citation(element: Element, config: dict):
             )
             assert identification_element is True
 
+        if "page" in config['series']:
+            page_element = series_elements[0].xpath(
+                f"./gmd:page/gco:CharacterString/text() = '{config['series']['page']}'",
+                namespaces=namespaces.nsmap(),
+            )
+            assert page_element is True
+
 
 def assert_source(element: Element, config: dict) -> None:
     """assert gmd:LI_Source."""

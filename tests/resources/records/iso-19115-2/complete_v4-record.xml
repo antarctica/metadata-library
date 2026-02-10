@@ -227,6 +227,9 @@
               <gmd:issueIdentification>
                 <gco:CharacterString>2024 Series</gco:CharacterString>
               </gmd:issueIdentification>
+              <gmd:page>
+                <gco:CharacterString>7</gco:CharacterString>
+              </gmd:page>
             </gmd:CI_Series>
           </gmd:series>
           <gmd:otherCitationDetails>
