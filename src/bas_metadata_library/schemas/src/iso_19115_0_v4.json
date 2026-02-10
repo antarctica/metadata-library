@@ -854,7 +854,9 @@
         "service",
         "software",
         "tile",
-        "paperMapProduct"
+        "mapProduct",
+        "paperMapProduct",
+        "webMapProduct"
       ],
       "examples": [
         "dataset"
