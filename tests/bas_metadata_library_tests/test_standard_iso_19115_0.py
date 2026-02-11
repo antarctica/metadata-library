@@ -1225,6 +1225,18 @@ def test_metadata_maintenance(fx_get_record_response: Element, config_name: str)
     assert len(metadata_maintenance_elements) == 1
     assert_maintenance(element=metadata_maintenance_elements[0], config=config["metadata"]["maintenance"])
 
+@pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
+def test_identification_metadata_constraints(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
+    config = configs_v4_all[config_name]
+
+    if "metadata" not in config or "constraints" not in config["metadata"]:
+        pytest.skip("record does not contain metadata constraints")
+
+    record_root = record.xpath("/gmd:MD_Metadata", namespaces=namespaces.nsmap())[0]
+
+    for constraint in config["metadata"]["constraints"]:
+        assert_legal_constraint(element=record_root, config=constraint, constraints_container="gmd:metadataConstraints")
 
 def test_edge_case_contact_without_email_address():
     config = deepcopy(configs_v4_all["minimal_v4"])

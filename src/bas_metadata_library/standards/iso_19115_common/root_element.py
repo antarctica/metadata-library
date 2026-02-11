@@ -4,6 +4,7 @@ from bas_metadata_library.standards.iso_19115_common.base_elements import (
     DateStamp,
     FileIdentifier,
     HierarchyLevel,
+    MetadataConstraint,
     MetadataMaintenance,
     MetadataStandard,
     ReferenceSystemInfo,
@@ -106,6 +107,25 @@ class ISOMetadataRecord(MetadataRecordElement):
         if bool(_data_quality):
             _["identification"] = {**_["identification"], **_data_quality}
 
+        _metadata_constraints = []
+        constraints_length = int(
+            self.record.xpath(
+                f"count({self.xpath}/gmd:metadataConstraints)",
+                namespaces=self.ns.nsmap(),
+            )
+        )
+        for constraint_index in range(1, constraints_length + 1):
+            constraint = MetadataConstraint(
+                record=self.record,
+                attributes=self.attributes,
+                xpath=f"({self.xpath}/gmd:metadataConstraints)[{constraint_index}]",
+            )
+            _constraint = constraint.make_config()
+            if bool(_constraint):
+                _metadata_constraints.append(_constraint)
+        if len(_metadata_constraints) > 0:
+            _["metadata"]["constraints"] = _metadata_constraints
+
         metadata_maintenance = MetadataMaintenance(
             record=self.record, attributes=self.attributes, xpath=f"{self.xpath}"
         )
@@ -189,6 +209,16 @@ class ISOMetadataRecord(MetadataRecordElement):
         ):
             data_quality = DataQuality(record=self.record, attributes=self.attributes)
             data_quality.make_element()
+
+        if "metadata" in self.attributes and "constraints" in self.attributes["metadata"]:
+            for constraint_attributes in self.attributes["metadata"]["constraints"]:
+                metadata_constraints = MetadataConstraint(
+                    record=self.record,
+                    attributes=self.attributes,
+                    parent_element=self.record,
+                    element_attributes=constraint_attributes,
+                )
+                metadata_constraints.make_element()
 
         if "metadata" in self.attributes and "maintenance" in self.attributes["metadata"]:
             metadata_maintenance = MetadataMaintenance(

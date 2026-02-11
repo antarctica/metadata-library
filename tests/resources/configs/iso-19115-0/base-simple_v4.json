@@ -29,6 +29,13 @@
       "maintenance_frequency": "asNeeded",
       "progress": "completed"
     },
+    "constraints": [
+      {
+        "type": "usage",
+        "restriction_code": "license",
+        "statement": "This information is licensed under the Create Commons Attribution-NoDerivatives 4.0 International Licence (CC BY-ND 4.0). To view this licence, visit https://creativecommons.org/licenses/by-nd/4.0/"
+      }
+    ],
     "metadata_standard": {
       "name": "ISO 19115",
       "version": "1.0"

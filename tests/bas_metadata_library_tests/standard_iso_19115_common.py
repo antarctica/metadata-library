@@ -399,6 +399,7 @@ def assert_source(element: Element, config: dict) -> None:
             assert len(source_step_elements) == 1
             assert_process_step(source_step_elements[0], source_step_config)
 
+
 def assert_process_step(element: Element, config: dict) -> None:
     """assert gmd:LI_ProcessStep."""
     description_element = element.xpath(
