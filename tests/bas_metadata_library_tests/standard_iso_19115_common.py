@@ -1,3 +1,4 @@
+import json
 from copy import deepcopy
 from datetime import date as _date
 from datetime import datetime as _datetime
@@ -194,6 +195,67 @@ def assert_maintenance(element: Element, config: dict):
             namespaces=namespaces.nsmap(),
         )
         assert maintenance_progress_element is True
+
+
+def assert_legal_constraint(element: Element, config: dict, constraints_container: str):
+    constraint_element = "gmd:accessConstraints"
+    if config["type"] == "usage":
+        constraint_element = "gmd:useConstraints"
+
+    restriction_code_elements = element.xpath(
+        f"./{constraints_container}/gmd:MD_LegalConstraints/{constraint_element}/gmd:MD_RestrictionCode[@codeList = "
+        f"'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode' "
+        f"and @codeListValue = '{config['restriction_code']}']/text() = '{config['restriction_code']}'",
+        namespaces=namespaces.nsmap(),
+    )
+    assert restriction_code_elements is True
+
+    if "statement" not in config and "href" not in config and "permissions" not in config:
+        return
+
+    if "statement" in config and "href" not in config and "permissions" not in config:
+        other_constraint_statement = element.xpath(
+            f"./{constraints_container}/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString/text() = '{config['statement']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert other_constraint_statement is True
+
+    if "statement" in config and "href" in config and "permissions" not in config:
+        other_constraint_statement = element.xpath(
+            f"./{constraints_container}/gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor/text() = '{config['statement']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert other_constraint_statement is True
+
+        other_constraint_href = element.xpath(
+            f"./{constraints_container}/gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor/@xlink:href = '{config['href']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert other_constraint_href is True
+
+    if "statement" not in config and "href" in config and "permissions" not in config:
+        other_constraint_href = element.xpath(
+            f"./{constraints_container}/gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor/@xlink:href = '{config['href']}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert other_constraint_href is True
+
+    if "statement" not in config and "href" not in config and "permissions" in config:
+        legal_constraint_id_elements = element.xpath(
+            f"./{constraints_container}/gmd:MD_LegalConstraints[contains(@id,'permissions')]",
+            namespaces=namespaces.nsmap(),
+        )
+        assert len(legal_constraint_id_elements) >= 1
+
+        _statement = config["permissions"]
+        if not isinstance(_statement, str):
+            _statement = json.dumps(_statement)
+
+        other_constraint_statement = element.xpath(
+            f"./{constraints_container}/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString/text() = '{_statement}'",
+            namespaces=namespaces.nsmap(),
+        )
+        assert other_constraint_statement is True
 
 
 def assert_date(element: Element, config: dict):
