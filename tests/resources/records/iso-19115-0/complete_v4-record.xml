@@ -592,7 +592,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gmx:Anchor xlink:href="http://www.eionet.europa.eu/gemet/inspire_themes" xlink:actuate="onRequest">General Multilingual Environmental Thesaurus - INSPIRE themes</gmx:Anchor>
+                <gmx:Anchor xlink:href="https://www.eionet.europa.eu/gemet/inspire_themes" xlink:actuate="onRequest">General Multilingual Environmental Thesaurus - INSPIRE themes</gmx:Anchor>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
@@ -651,7 +651,7 @@
             <gmd:MD_RestrictionCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="license">license</gmd:MD_RestrictionCode>
           </gmd:useConstraints>
           <gmd:otherConstraints>
-            <gmx:Anchor xlink:href="http://www.nationalarchives.gov.uk/doc/open-government-licence/" xlink:actuate="onRequest">This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/</gmx:Anchor>
+            <gmx:Anchor xlink:href="https://www.nationalarchives.gov.uk/doc/open-government-licence/" xlink:actuate="onRequest">This information is licensed under the Open Government Licence v3.0. To view this licence, visit https://www.nationalarchives.gov.uk/doc/open-government-licence/</gmx:Anchor>
           </gmd:otherConstraints>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>

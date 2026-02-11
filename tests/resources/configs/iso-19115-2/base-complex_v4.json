@@ -181,7 +181,7 @@
         "thesaurus": {
           "title": {
             "value": "General Multilingual Environmental Thesaurus - INSPIRE themes",
-            "href": "http://www.eionet.europa.eu/gemet/inspire_themes"
+            "href": "https://www.eionet.europa.eu/gemet/inspire_themes"
           },
           "dates": {
             "publication": "2018-08-16"
@@ -208,8 +208,8 @@
       {
         "type": "usage",
         "restriction_code": "license",
-        "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
-        "href": "http://www.nationalarchives.gov.uk/doc/open-government-licence/"
+        "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit https://www.nationalarchives.gov.uk/doc/open-government-licence/",
+        "href": "https://www.nationalarchives.gov.uk/doc/open-government-licence/"
       }
     ],
     "aggregations": [

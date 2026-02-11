@@ -226,7 +226,7 @@ A Data Protection Impact Assessment (DPIA) does not apply to this project.
 
 ## License
 
-Copyright (c) 2019-2025 UK Research and Innovation (UKRI), British Antarctic Survey (BAS).
+Copyright (c) 2019-2026 UK Research and Innovation (UKRI), British Antarctic Survey (BAS).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
