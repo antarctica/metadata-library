@@ -110,7 +110,7 @@ base_simple_record_v4 = {
             {
                 "type": "usage",
                 "restriction_code": "license",
-                "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
+                "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit https://www.nationalarchives.gov.uk/doc/open-government-licence/",
             }
         ],
         "supplemental_information": "It is recommended that careful attention be paid to the contents of any data, and that the author be contacted with any questions regarding appropriate use. If you find any errors or omissions, please report them to polardatacentre@bas.ac.uk.",
@@ -276,7 +276,7 @@ base_complex_record_v4 = {
                 "thesaurus": {
                     "title": {
                         "value": "General Multilingual Environmental Thesaurus - INSPIRE themes",
-                        "href": "http://www.eionet.europa.eu/gemet/inspire_themes",
+                        "href": "https://www.eionet.europa.eu/gemet/inspire_themes",
                     },
                     "dates": {"publication": {"date": datetime.date(2018, 8, 16)}},
                     "edition": "4.1.2",
@@ -299,8 +299,8 @@ base_complex_record_v4 = {
             {
                 "type": "usage",
                 "restriction_code": "license",
-                "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
-                "href": "http://www.nationalarchives.gov.uk/doc/open-government-licence/",
+                "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit https://www.nationalarchives.gov.uk/doc/open-government-licence/",
+                "href": "https://www.nationalarchives.gov.uk/doc/open-government-licence/",
             }
         ],
         "aggregations": [
@@ -577,7 +577,7 @@ complete_record_v4 = {
                 "thesaurus": {
                     "title": {
                         "value": "General Multilingual Environmental Thesaurus - INSPIRE themes",
-                        "href": "http://www.eionet.europa.eu/gemet/inspire_themes",
+                        "href": "https://www.eionet.europa.eu/gemet/inspire_themes",
                     },
                     "dates": {"publication": {"date": datetime.date(2018, 8, 16)}},
                     "edition": "4.1.2",
@@ -600,8 +600,8 @@ complete_record_v4 = {
             {
                 "type": "usage",
                 "restriction_code": "license",
-                "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit http://www.nationalarchives.gov.uk/doc/open-government-licence/",
-                "href": "http://www.nationalarchives.gov.uk/doc/open-government-licence/",
+                "statement": "This information is licensed under the Open Government Licence v3.0. To view this licence, visit https://www.nationalarchives.gov.uk/doc/open-government-licence/",
+                "href": "https://www.nationalarchives.gov.uk/doc/open-government-licence/",
             },
             {"type": "access", "restriction_code": "otherRestrictions", "statement": "constraint without href"},
             {
