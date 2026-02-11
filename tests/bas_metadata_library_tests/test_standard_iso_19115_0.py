@@ -23,7 +23,7 @@ from tests.bas_metadata_library_tests.standard_iso_19115_common import (
     assert_identifier,
     assert_maintenance,
     assert_online_resource,
-    assert_responsible_party, assert_source, assert_process_step,
+    assert_responsible_party, assert_source, assert_process_step, assert_legal_constraint,
 )
 from tests.resources.configs.iso19115_0_standard import configs_v4_all
 
@@ -687,73 +687,13 @@ def test_identification_resource_constraints(app_client: FlaskClient, config_nam
     if "identification" not in config or "constraints" not in config["identification"]:
         pytest.skip("record does not contain identification resource constraints")
 
+    resource_identification = record.xpath(
+        "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification",
+        namespaces=namespaces.nsmap(),
+    )[0]
+
     for constraint in config["identification"]["constraints"]:
-        constraint_element = "gmd:accessConstraints"
-        if constraint["type"] == "usage":
-            constraint_element = "gmd:useConstraints"
-
-        restriction_code_elements = record.xpath(
-            f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-            f"gmd:MD_LegalConstraints/{constraint_element}/gmd:MD_RestrictionCode[@codeList = "
-            f"'https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode' "
-            f"and @codeListValue = '{constraint['restriction_code']}']/text() = '{constraint['restriction_code']}'",
-            namespaces=namespaces.nsmap(),
-        )
-        assert restriction_code_elements is True
-
-        if "statement" not in constraint and "href" not in constraint and "permissions" not in constraint:
-            continue
-
-        if "statement" in constraint and "href" not in constraint and "permissions" not in constraint:
-            other_constraint_statement = record.xpath(
-                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                f"gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString/text() = '{constraint['statement']}'",
-                namespaces=namespaces.nsmap(),
-            )
-            assert other_constraint_statement is True
-
-        if "statement" in constraint and "href" in constraint and "permissions" not in constraint:
-            other_constraint_statement = record.xpath(
-                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                f"gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor/text() = '{constraint['statement']}'",
-                namespaces=namespaces.nsmap(),
-            )
-            assert other_constraint_statement is True
-
-            other_constraint_href = record.xpath(
-                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                f"gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor/@xlink:href = '{constraint['href']}'",
-                namespaces=namespaces.nsmap(),
-            )
-            assert other_constraint_href is True
-
-        if "statement" not in constraint and "href" in constraint and "permissions" not in constraint:
-            other_constraint_href = record.xpath(
-                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                f"gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor/@xlink:href = '{constraint['href']}'",
-                namespaces=namespaces.nsmap(),
-            )
-            assert other_constraint_href is True
-
-        if "statement" not in constraint and "href" not in constraint and "permissions" in constraint:
-            legal_constraint_id_elements = record.xpath(
-                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                f"gmd:MD_LegalConstraints[contains(@id,'permissions')]",
-                namespaces=namespaces.nsmap(),
-            )
-            assert len(legal_constraint_id_elements) >= 1
-
-            _statement = constraint["permissions"]
-            if not isinstance(_statement, str):
-                _statement = json.dumps(_statement)
-
-            other_constraint_statement = record.xpath(
-                f"/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
-                f"gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString/text() = '{_statement}'",
-                namespaces=namespaces.nsmap(),
-            )
-            assert other_constraint_statement is True
-
+        assert_legal_constraint(element=resource_identification, config=constraint, constraints_container="gmd:resourceConstraints")
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
 def test_identification_aggregations(app_client: FlaskClient, config_name: str):
@@ -1285,6 +1225,18 @@ def test_metadata_maintenance(fx_get_record_response: Element, config_name: str)
     assert len(metadata_maintenance_elements) == 1
     assert_maintenance(element=metadata_maintenance_elements[0], config=config["metadata"]["maintenance"])
 
+@pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
+def test_identification_metadata_constraints(fx_get_record_response: Element, config_name: str):
+    record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
+    config = configs_v4_all[config_name]
+
+    if "metadata" not in config or "constraints" not in config["metadata"]:
+        pytest.skip("record does not contain metadata constraints")
+
+    record_root = record.xpath("/gmd:MD_Metadata", namespaces=namespaces.nsmap())[0]
+
+    for constraint in config["metadata"]["constraints"]:
+        assert_legal_constraint(element=record_root, config=constraint, constraints_container="gmd:metadataConstraints")
 
 def test_edge_case_contact_without_email_address():
     config = deepcopy(configs_v4_all["minimal_v4"])

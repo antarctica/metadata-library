@@ -1176,6 +1176,9 @@
                 "maintenance": {
                     "$ref": "#/definitions/maintenance"
                 },
+                "constraints": {
+                    "$ref": "#/definitions/constraints"
+                },
                 "metadata_standard": {
                     "$ref": "#/definitions/metadata_standard"
                 }

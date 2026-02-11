@@ -1,10 +1,5 @@
 from __future__ import annotations
 
-import contextlib
-import json
-from hashlib import sha1
-from json import JSONDecodeError
-
 from lxml.etree import Element, SubElement
 
 from bas_metadata_library import MetadataRecord
@@ -16,6 +11,7 @@ from bas_metadata_library.standards.iso_19115_common.common_elements import (
     Format,
     Identifier,
     Language,
+    LegalConstraint,
     MaintenanceInformation,
     ResponsibleParty,
 )
@@ -780,221 +776,23 @@ class Thesaurus(MetadataRecordElement):
 
 class ResourceConstraint(MetadataRecordElement):
     def make_config(self) -> dict:
-        _ = {}
-
-        access_constraint = AccessConstraint(
+        legal_constraint = LegalConstraint(
             record=self.record,
             attributes=self.attributes,
-            xpath=f"{self.xpath}/gmd:MD_LegalConstraints/gmd:accessConstraints",
+            xpath=self.xpath,
         )
-        _access_constraint = access_constraint.make_config()
-        if _access_constraint != "":
-            _["type"] = "access"
-            _["restriction_code"] = _access_constraint
-
-        use_constraint = UseConstraint(
-            record=self.record,
-            attributes=self.attributes,
-            xpath=f"{self.xpath}/gmd:MD_LegalConstraints/gmd:useConstraints",
-        )
-        _use_constraint = use_constraint.make_config()
-        if _use_constraint != "":
-            _["type"] = "usage"
-            _["restriction_code"] = _use_constraint
-
-        other_constraint = OtherConstraints(
-            record=self.record, attributes=self.attributes, xpath=f"{self.xpath}/gmd:MD_LegalConstraints"
-        )
-        _other_constraint = other_constraint.make_config()
-        if len(_other_constraint) > 0:
-            _ = {**_, **_other_constraint}
-
-        # detect permissions statements
-        constraint_id = self.record.xpath(f"{self.xpath}/gmd:MD_LegalConstraints/@id", namespaces=self.ns.nsmap())
-        if len(constraint_id) == 1 and "permissions" in constraint_id[0] and "statement" in _:
-            _["permissions"] = _["statement"]
-            del _["statement"]
-            with contextlib.suppress(JSONDecodeError):
-                _["permissions"] = json.loads(_["permissions"])
-
-        return _
+        return legal_constraint.make_config()
 
     def make_element(self) -> None:
         constraints_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}resourceConstraints")
-        constraints_element = SubElement(constraints_wrapper, f"{{{self.ns.gmd}}}MD_LegalConstraints")
 
-        if self.element_attributes["type"] == "access":
-            access_constraint = AccessConstraint(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=constraints_element,
-                element_attributes=self.element_attributes,
-            )
-            access_constraint.make_element()
-
-        if self.element_attributes["type"] == "usage":
-            usage_constraint = UseConstraint(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=constraints_element,
-                element_attributes=self.element_attributes,
-            )
-            usage_constraint.make_element()
-
-        if "statement" in self.element_attributes or "href" in self.element_attributes:
-            other_constraint = OtherConstraints(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=constraints_element,
-                element_attributes=self.element_attributes,
-            )
-            other_constraint.make_element()
-
-        if "permissions" in self.element_attributes:
-            # Bandit S324 warning is exempted as these hashes are not used for any security related purposes
-            _id = sha1(json.dumps(self.element_attributes["permissions"]).encode()).hexdigest()  # noqa: S324
-            constraints_element.attrib["id"] = f"bml-permissions-{_id}"
-
-            _statement = self.element_attributes["permissions"]
-            if not isinstance(_statement, str):
-                _statement = json.dumps(_statement)
-
-            other_constraint = OtherConstraints(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=constraints_element,
-                element_attributes={"statement": _statement},
-            )
-            other_constraint.make_element()
-
-
-class AccessConstraint(CodeListElement):
-    def __init__(
-        self,
-        record: MetadataRecord,
-        attributes: dict,
-        parent_element: Element = None,
-        element_attributes: dict | None = None,
-        xpath: str | None = None,
-    ):
-        super().__init__(
-            record=record,
-            attributes=attributes,
-            parent_element=parent_element,
-            element_attributes=element_attributes,
-            xpath=f"{xpath}/gmd:MD_RestrictionCode",
+        legal_constraint = LegalConstraint(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=constraints_wrapper,
+            element_attributes=self.element_attributes,
         )
-        self.code_list_values = [
-            "confidential",
-            "copyright",
-            "inConfidence",
-            "intellectualPropertyRights",
-            "licenceDistributor",
-            "licenceEndUser",
-            "licenceUnrestricted",
-            "license",
-            "otherRestrictions",
-            "patent",
-            "patentPending",
-            "private",
-            "restricted",
-            "SBU",
-            "statutory",
-            "trademark",
-            "unrestricted",
-        ]
-        self.code_list = "https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"
-        self.element = f"{{{self.ns.gmd}}}accessConstraints"
-        self.element_code = f"{{{self.ns.gmd}}}MD_RestrictionCode"
-        self.attribute = "restriction_code"
-
-
-class UseConstraint(CodeListElement):
-    def __init__(
-        self,
-        record: MetadataRecord,
-        attributes: dict,
-        parent_element: Element = None,
-        element_attributes: dict | None = None,
-        xpath: str | None = None,
-    ):
-        super().__init__(
-            record=record,
-            attributes=attributes,
-            parent_element=parent_element,
-            element_attributes=element_attributes,
-            xpath=f"{xpath}/gmd:MD_RestrictionCode",
-        )
-        self.code_list_values = [
-            "confidential",
-            "copyright",
-            "inConfidence",
-            "intellectualPropertyRights",
-            "licenceDistributor",
-            "licenceEndUser",
-            "licenceUnrestricted",
-            "license",
-            "otherRestrictions",
-            "patent",
-            "patentPending",
-            "private",
-            "restricted",
-            "SBU",
-            "statutory",
-            "trademark",
-            "unrestricted",
-        ]
-        self.code_list = "https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"
-        self.element = f"{{{self.ns.gmd}}}useConstraints"
-        self.element_code = f"{{{self.ns.gmd}}}MD_RestrictionCode"
-        self.attribute = "restriction_code"
-
-
-class OtherConstraints(MetadataRecordElement):
-    def make_config(self) -> dict:
-        _ = {}
-
-        other_constraint_value = self.record.xpath(
-            f"{self.xpath}/gmd:otherConstraints/gco:CharacterString/text() | "
-            f"{self.xpath}/gmd:otherConstraints/gmx:Anchor/text()",
-            namespaces=self.ns.nsmap(),
-        )
-        if len(other_constraint_value) == 1:
-            _["statement"] = other_constraint_value[0]
-
-        other_constraint_href = self.record.xpath(
-            f"{self.xpath}/gmd:otherConstraints/gmx:Anchor/@xlink:href", namespaces=self.ns.nsmap()
-        )
-        if len(other_constraint_href) == 1:
-            _["href"] = other_constraint_href[0]
-            # account for constraints that use a URL only,
-            # as the text value will repeat the URL, so it can encoded properly
-            if "statement" in _ and _["statement"] == _["href"]:
-                del _["statement"]
-
-        return _
-
-    def make_element(self) -> None:
-        other_constraints_element = SubElement(self.parent_element, f"{{{self.ns.gmd}}}otherConstraints")
-
-        if "href" in self.element_attributes:
-            # where a constraint only has a URL, use this as a text value as well
-            # when decoded, this fake value/statement value will be removed
-            element_value = self.element_attributes["href"]
-            if "statement" in self.element_attributes:
-                element_value = self.element_attributes["statement"]
-
-            anchor = AnchorElement(
-                record=self.record,
-                attributes=self.attributes,
-                parent_element=other_constraints_element,
-                element_attributes=self.element_attributes,
-                element_value=element_value,
-            )
-            anchor.make_element()
-        else:
-            other_constraints_value = SubElement(other_constraints_element, f"{{{self.ns.gco}}}CharacterString")
-            other_constraints_value.text = self.element_attributes["statement"]
+        legal_constraint.make_element()
 
 
 class Aggregation(MetadataRecordElement):

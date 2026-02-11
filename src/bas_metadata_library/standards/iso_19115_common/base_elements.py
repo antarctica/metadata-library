@@ -9,6 +9,7 @@ from bas_metadata_library.standards.iso_19115_common import CodeListElement, Met
 from bas_metadata_library.standards.iso_19115_common.common_elements import (
     AnchorElement,
     Citation,
+    LegalConstraint,
     MaintenanceInformation,
     ResponsibleParty,
 )
@@ -166,6 +167,27 @@ class MetadataMaintenance(MetadataRecordElement):
                 element_attributes=self.attributes["metadata"]["maintenance"],
             )
             maintenance_information.make_element()
+
+
+class MetadataConstraint(MetadataRecordElement):
+    def make_config(self) -> dict:
+        legal_constraint = LegalConstraint(
+            record=self.record,
+            attributes=self.attributes,
+            xpath=self.xpath,
+        )
+        return legal_constraint.make_config()
+
+    def make_element(self) -> None:
+        constraints_wrapper = SubElement(self.parent_element, f"{{{self.ns.gmd}}}metadataConstraints")
+
+        legal_constraint = LegalConstraint(
+            record=self.record,
+            attributes=self.attributes,
+            parent_element=constraints_wrapper,
+            element_attributes=self.element_attributes,
+        )
+        legal_constraint.make_element()
 
 
 class MetadataStandard(MetadataRecordElement):

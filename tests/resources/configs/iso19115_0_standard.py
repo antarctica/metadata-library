@@ -38,6 +38,13 @@ base_simple_record_v4 = {
         ],
         "date_stamp": datetime.date(2018, 10, 18),
         "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"},
+        "constraints": [
+            {
+                "type": "usage",
+                "restriction_code": "license",
+                "statement": "This information is licensed under the Create Commons Attribution-NoDerivatives 4.0 International Licence (CC BY-ND 4.0). To view this licence, visit https://creativecommons.org/licenses/by-nd/4.0/",
+            }
+        ],
         "metadata_standard": {"name": "ISO 19115", "version": "1.0"},
     },
     "reference_system_info": {"code": {"value": "urn:ogc:def:crs:EPSG::4326"}},
@@ -167,6 +174,14 @@ base_complex_record_v4 = {
         ],
         "date_stamp": datetime.date(2018, 10, 18),
         "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"},
+        "constraints": [
+            {
+                "type": "usage",
+                "restriction_code": "license",
+                "statement": "This information is licensed under the Create Commons Attribution-NoDerivatives 4.0 International Licence (CC BY-ND 4.0). To view this licence, visit https://creativecommons.org/licenses/by-nd/4.0/",
+                "href": "https://creativecommons.org/licenses/by-nd/4.0/",
+            }
+        ],
         "metadata_standard": {"name": "ISO 19115", "version": "1.0"},
     },
     "reference_system_info": {
@@ -402,6 +417,20 @@ complete_record_v4 = {
         ],
         "date_stamp": datetime.date(2018, 10, 18),
         "maintenance": {"maintenance_frequency": "asNeeded", "progress": "completed"},
+        "constraints": [
+            {
+                "type": "usage",
+                "restriction_code": "license",
+                "statement": "This information is licensed under the Create Commons Attribution-NoDerivatives 4.0 International Licence (CC BY-ND 4.0). To view this licence, visit https://creativecommons.org/licenses/by-nd/4.0/",
+                "href": "https://creativecommons.org/licenses/by-nd/4.0/",
+            },
+            {"type": "access", "restriction_code": "otherRestrictions", "statement": "constraint without href"},
+            {
+                "type": "access",
+                "restriction_code": "otherRestrictions",
+                "href": "http://example.com/#constraint-without-statement",
+            },
+        ],
         "metadata_standard": {"name": "ISO 19115", "version": "1.0"},
     },
     "reference_system_info": {
