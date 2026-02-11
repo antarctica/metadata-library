@@ -706,13 +706,10 @@ To create an initial pre-release for an upcoming minor version:
 % uv version --bump minor --bump alpha
 ```
 
-> [!TIP]
-> To create additional pre-releases use `% uv version --bump alpha`.
-
-Then follow the [Release Workflow](#release-workflow) using the alpha version (e.g. `0.16.0a1`).
+Then follow the [Release Workflow](#release-workflow) using `uv version --bump alpha` to create additional pre-releases.
 
 > [!NOTE]
-> Do not reflect pre-releases in the change log. Do track they contain in the floating 'unreleased' release.
+> Do not reflect pre-releases in the change log. Do track changes they contain in the floating 'unreleased' release.
 
 ## Deployment
 
