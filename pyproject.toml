@@ -1,6 +1,6 @@
 [project]
 name = "bas-metadata-library"
-version = "0.16.0a4"
+version = "0.16.0a5"
 description = "Python library for generating metadata records"
 readme = "README.md"
 license = "MIT"
