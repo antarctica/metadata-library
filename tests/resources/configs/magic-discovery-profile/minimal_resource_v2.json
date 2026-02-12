@@ -29,7 +29,19 @@
         ]
       }
     ],
-    "date_stamp": "2024-10-03"
+    "date_stamp": "2024-10-03",
+    "constraints": [
+      {
+        "type": "access",
+        "restriction_code": "unrestricted"
+      },
+      {
+        "type": "usage",
+        "restriction_code": "license",
+        "statement": "This information is licensed under the Create Commons Attribution-NoDerivatives 4.0 International Licence (CC BY-ND 4.0). To view this licence, visit https://creativecommons.org/licenses/by-nd/4.0/",
+        "href": "https://creativecommons.org/licenses/by-nd/4.0/"
+      }
+    ]
   },
   "hierarchy_level": "product",
   "identification": {

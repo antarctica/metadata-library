@@ -102,7 +102,7 @@ def _generate_schemas() -> None:
         {"id": "magic_discovery_v1", "copy": False},
         {"id": "magic_discovery_v2", "copy": False},
     ]
-    copy_properties = ["definitions", "type", "required", "additionalProperties", "properties"]
+    copy_properties = ["$defs", "definitions", "type", "required", "additionalProperties", "properties"]
 
     for schema in schemas:
         print(f"Generating schema for [{schema['id']}]")
@@ -126,6 +126,9 @@ def _generate_schemas() -> None:
                 with copy_schema_path.open() as copy_schema_file:
                     copy_schema_data = json.load(copy_schema_file)
                 for prop in copy_properties:
+                    # Only one of 'definitions' or '$defs' will be defined
+                    if prop not in copy_schema_data:
+                        continue
                     dist_schema_data[prop] = copy_schema_data[prop]
                 del src_schema_data["allOf"]
 

@@ -187,6 +187,15 @@ minimal_resource_v2 = {
     "metadata": {
         "contacts": [{**_appendix_2, "role": ["pointOfContact"]}],
         "date_stamp": datetime.date(2024, 10, 3),
+        "constraints": [
+            {"type": "access", "restriction_code": "unrestricted"},
+            {
+                "type": "usage",
+                "restriction_code": "license",
+                "statement": "This information is licensed under the Create Commons Attribution-NoDerivatives 4.0 International Licence (CC BY-ND 4.0). To view this licence, visit https://creativecommons.org/licenses/by-nd/4.0/",
+                "href": "https://creativecommons.org/licenses/by-nd/4.0/",
+            },
+        ],
     },
     "hierarchy_level": "product",
     "identification": {
@@ -251,6 +260,15 @@ minimal_container_v2 = {
     "metadata": {
         "contacts": [{**_appendix_2, "role": ["pointOfContact"]}],
         "date_stamp": datetime.date(2024, 10, 3),
+        "constraints": [
+            {"type": "access", "restriction_code": "unrestricted"},
+            {
+                "type": "usage",
+                "restriction_code": "license",
+                "statement": "This information is licensed under the Create Commons Attribution-NoDerivatives 4.0 International Licence (CC BY-ND 4.0). To view this licence, visit https://creativecommons.org/licenses/by-nd/4.0/",
+                "href": "https://creativecommons.org/licenses/by-nd/4.0/",
+            },
+        ],
     },
     "hierarchy_level": "collection",
     "identification": {

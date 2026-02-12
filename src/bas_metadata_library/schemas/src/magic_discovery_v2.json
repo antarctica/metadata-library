@@ -3,7 +3,25 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "BAS MAGIC Discovery Metadata Profile v2 configuration schema",
   "description": "Metadata record configuration schema for the BAS MAGIC Discovery Metadata profile (version 2)\n\nThis schema does not fully validate reqs. 06 & 07 (Released Date & Publication Date) due to limitations in property names and overlaying schemas.",
-  "definitions": {
+  "$defs": {
+    "_container_types": {
+      "enum": [
+        "collection",
+        "fieldSession",
+        "initiative"
+      ]
+    } ,
+    "_resource_types": {
+      "enum": [
+        "dataset",
+        "feature",
+        "product",
+        "mapProduct",
+        "paperMapProduct",
+        "webMapProduct",
+        "series"
+      ]
+    },
     "catalogue_identifier": {
       "title": "Req. 04 - Data Catalogue Identifier",
       "type": "object",
@@ -66,12 +84,12 @@
       "allOf": [
         {
           "contains": {
-            "$ref": "#/definitions/point_of_contact"
+            "$ref": "#/$defs/point_of_contact"
           }
         },
         {
           "contains": {
-            "$ref": "#/definitions/copyright_holder"
+            "$ref": "#/$defs/copyright_holder"
           }
         }
       ]
@@ -146,7 +164,7 @@
             "contact": {
               "allOf": [
                 {
-                  "$ref": "#/definitions/magic"
+                  "$ref": "#/$defs/magic"
                 },
                 {
                   "type": "object",
@@ -180,7 +198,7 @@
     "domain_consistency": {
       "type": "array",
       "contains": {
-        "$ref": "#/definitions/domain_conformance"
+        "$ref": "#/$defs/domain_conformance"
       }
     },
     "extents": {
@@ -201,16 +219,9 @@
     },
     "hierarchy_level": {
       "title": "Req. 03 - Hierarchy Level",
-      "type": "string",
-      "enum": [
-        "collection",
-        "dataset",
-        "feature",
-        "fieldSession",
-        "initiative",
-        "product",
-        "paperMapProduct",
-        "series"
+      "oneOf": [
+        {"$ref": "#/$defs/_container_types"},
+        {"$ref": "#/$defs/_resource_types"}
       ]
     },
     "identification": {
@@ -228,32 +239,32 @@
       ],
       "properties": {
         "identifiers": {
-          "$ref": "#/definitions/identifiers"
+          "$ref": "#/$defs/identifiers"
         },
         "contacts": {
-          "$ref": "#/definitions/contacts"
+          "$ref": "#/$defs/contacts"
         },
         "maintenance": {
-          "$ref": "#/definitions/maintenance"
+          "$ref": "#/$defs/maintenance"
         },
         "constraints": {
-          "$ref": "#/definitions/constraints"
+          "$ref": "#/$defs/constraints"
         },
         "extents": {
-          "$ref": "#/definitions/extents"
+          "$ref": "#/$defs/extents"
         },
         "lineage": {
-          "$ref": "#/definitions/lineage"
+          "$ref": "#/$defs/lineage"
         },
         "domain_consistency": {
-          "$ref": "#/definitions/domain_consistency"
+          "$ref": "#/$defs/domain_consistency"
         }
       }
     },
     "identifiers": {
       "type": "array",
       "contains": {
-        "$ref": "#/definitions/catalogue_identifier"
+        "$ref": "#/$defs/catalogue_identifier"
       }
     },
     "lineage": {
@@ -373,7 +384,7 @@
       ],
       "properties": {
         "progress": {
-          "$ref": "#/definitions/progress"
+          "$ref": "#/$defs/progress"
         }
       }
     },
@@ -381,14 +392,18 @@
       "type": "object",
       "required": [
         "contacts",
-        "date_stamp"
+        "date_stamp",
+        "constraints"
       ],
       "properties": {
         "contacts": {
           "type": "array",
           "contains": {
-            "$ref": "#/definitions/point_of_contact"
+            "$ref": "#/$defs/point_of_contact"
           }
+        },
+        "constraints": {
+          "$ref": "#/$defs/constraints"
         }
       }
     },
@@ -396,7 +411,7 @@
       "title": "Req. 08 - Point of contact",
       "allOf": [
         {
-          "$ref": "#/definitions/magic"
+          "$ref": "#/$defs/magic"
         },
         {
           "type": "object",
@@ -441,13 +456,13 @@
       "type": "string"
     },
     "hierarchy_level": {
-      "$ref": "#/definitions/hierarchy_level"
+      "$ref": "#/$defs/hierarchy_level"
     },
     "metadata": {
-      "$ref": "#/definitions/metadata"
+      "$ref": "#/$defs/metadata"
     },
     "identification": {
-      "$ref": "#/definitions/identification"
+      "$ref": "#/$defs/identification"
     }
   },
   "allOf": [
@@ -455,17 +470,7 @@
       "if": {
         "description": "Conditional logic for container vs resource record super-types",
         "properties": {
-          "hierarchy_level": {
-            "type": "string",
-            "enum": [
-              "dataset",
-              "feature",
-              "fieldSession",
-              "product",
-              "paperMapProduct",
-              "series"
-            ]
-          }
+          "hierarchy_level": {"$ref": "#/$defs/_resource_types"}
         }
       },
       "then": {
