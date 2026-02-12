@@ -396,7 +396,8 @@
             "type": "object",
             "required": [
                 "contacts",
-                "date_stamp"
+                "date_stamp",
+                "constraints"
             ],
             "properties": {
                 "contacts": {
@@ -404,6 +405,9 @@
                     "contains": {
                         "$ref": "#/$defs/point_of_contact"
                     }
+                },
+                "constraints": {
+                    "$ref": "#/$defs/constraints"
                 }
             }
         },
