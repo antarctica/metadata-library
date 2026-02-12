@@ -16,7 +16,9 @@
         "dataset",
         "feature",
         "product",
+        "mapProduct",
         "paperMapProduct",
+        "webMapProduct",
         "series"
       ]
     },
