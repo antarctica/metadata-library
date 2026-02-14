@@ -1,0 +1,35 @@
+{
+  "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-administration-content-v1.json",
+  "id": "1ddf0fa2-3dab-456b-baed-09803260a4e2",
+  "gitlab_issues": [
+    "https://gitlab.data.bas.ac.uk/MAGIC/example/-/issues/123"
+  ],
+  "metadata_permissions": [
+    {
+      "directory": "*",
+      "group": "*",
+      "expiry": "2099-12-31T23:59:59+00:00",
+      "comment": null
+    },
+    {
+      "directory": "123",
+      "group": "~bas-staff",
+      "expiry": "2099-12-31T23:59:59+00:00",
+      "comment": "..."
+    }
+  ],
+  "resource_permissions": [
+    {
+      "directory": "*",
+      "group": "*",
+      "expiry": "2099-12-31T23:59:59+00:00",
+      "comment": null
+    },
+    {
+      "directory": "123",
+      "group": "~bas-staff",
+      "expiry": "2099-12-31T23:59:59+00:00",
+      "comment": "..."
+    }
+  ]
+}

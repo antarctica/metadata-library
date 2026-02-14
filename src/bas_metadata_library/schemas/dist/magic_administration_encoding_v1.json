@@ -1,0 +1,241 @@
+{
+    "$id": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-administration-encoding-v1.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "BAS MAGIC Administration Metadata Profile v1 discovery metadata encoding schema",
+    "description": "Metadata record configuration schema for encoding BAS MAGIC Administration Metadata profile (version 1) content within ISO 19115 discovery metadata.",
+    "$defs": {
+        "domain_conformance": {
+            "title": "Domain Consistency/Conformance",
+            "type": "object",
+            "required": [
+                "specification",
+                "explanation",
+                "result"
+            ],
+            "properties": {
+                "specification": {
+                    "type": "object",
+                    "required": [
+                        "title",
+                        "dates",
+                        "edition",
+                        "contact"
+                    ],
+                    "properties": {
+                        "title": {
+                            "type": "object",
+                            "required": [
+                                "value",
+                                "href"
+                            ],
+                            "properties": {
+                                "value": {
+                                    "type": "string",
+                                    "const": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Administration Metadata Profile"
+                                },
+                                "href": {
+                                    "type": "string",
+                                    "const": "https://metadata-standards.data.bas.ac.uk/profiles/magic-administration/v1/"
+                                }
+                            }
+                        },
+                        "dates": {
+                            "type": "object",
+                            "required": [
+                                "publication"
+                            ],
+                            "properties": {
+                                "publication": {
+                                    "type": "string",
+                                    "const": "2025-10-22"
+                                }
+                            }
+                        },
+                        "edition": {
+                            "type": "string",
+                            "const": "1"
+                        },
+                        "contact": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/$defs/magic"
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "role"
+                                    ],
+                                    "properties": {
+                                        "role": {
+                                            "type": "array",
+                                            "contains": {
+                                                "type": "string",
+                                                "const": "publisher"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "explanation": {
+                    "type": "string",
+                    "const": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Administration Metadata Profile."
+                },
+                "result": {
+                    "type": "boolean",
+                    "const": true
+                }
+            }
+        },
+        "domain_consistency": {
+            "type": "array",
+            "contains": {
+                "$ref": "#/$defs/domain_conformance"
+            }
+        },
+        "file_identifier": {
+            "title": "File Identifier",
+            "type": "string"
+        },
+        "identification": {
+            "title": "Identification",
+            "type": "object",
+            "required": [
+                "supplemental_information",
+                "domain_consistency"
+            ],
+            "properties": {
+                "supplemental_information": {
+                    "$ref": "#/$defs/supplemental_information"
+                },
+                "domain_consistency": {
+                    "$ref": "#/$defs/domain_consistency"
+                }
+            }
+        },
+        "magic": {
+            "type": "object",
+            "required": [
+                "organisation",
+                "phone",
+                "address",
+                "email",
+                "online_resource"
+            ],
+            "properties": {
+                "organisation": {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "href",
+                        "title"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "const": "Mapping and Geographic Information Centre, British Antarctic Survey"
+                        },
+                        "href": {
+                            "type": "string",
+                            "const": "https://ror.org/01rhff309"
+                        },
+                        "title": {
+                            "type": "string",
+                            "const": "ror"
+                        }
+                    }
+                },
+                "phone": {
+                    "type": "string",
+                    "const": "+44 (0)1223 221400"
+                },
+                "address": {
+                    "type": "object",
+                    "required": [
+                        "delivery_point",
+                        "city",
+                        "administrative_area",
+                        "postal_code",
+                        "country"
+                    ],
+                    "properties": {
+                        "delivery_point": {
+                            "type": "string",
+                            "const": "British Antarctic Survey, High Cross, Madingley Road"
+                        },
+                        "city": {
+                            "type": "string",
+                            "const": "Cambridge"
+                        },
+                        "administrative_area": {
+                            "type": "string",
+                            "const": "Cambridgeshire"
+                        },
+                        "postal_code": {
+                            "type": "string",
+                            "const": "CB3 0ET"
+                        },
+                        "country": {
+                            "type": "string",
+                            "const": "United Kingdom"
+                        }
+                    }
+                },
+                "email": {
+                    "type": "string",
+                    "const": "magic@bas.ac.uk"
+                },
+                "online_resource": {
+                    "type": "object",
+                    "required": [
+                        "href",
+                        "title",
+                        "description",
+                        "function"
+                    ],
+                    "properties": {
+                        "href": {
+                            "type": "string",
+                            "const": "https://www.bas.ac.uk/teams/magic"
+                        },
+                        "title": {
+                            "type": "string",
+                            "const": "Mapping and Geographic Information Centre (MAGIC) - BAS public website"
+                        },
+                        "description": {
+                            "type": "string",
+                            "const": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website."
+                        },
+                        "function": {
+                            "type": "string",
+                            "const": "information"
+                        }
+                    }
+                }
+            }
+        },
+        "supplemental_information": {
+            "title": "Supplemental information",
+            "description": "Any additional information. May include structured data as a JSON encoded string.",
+            "type": "string",
+            "examples": [
+                "{\"foo\": \"bar\"}"
+            ]
+        }
+    },
+    "type": "object",
+    "required": [
+        "file_identifier",
+        "identification"
+    ],
+    "properties": {
+        "file_identifier": {
+            "$ref": "#/$defs/file_identifier"
+        },
+        "identification": {
+            "$ref": "#/$defs/identification"
+        }
+    }
+}

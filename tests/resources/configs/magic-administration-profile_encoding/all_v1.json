@@ -1,0 +1,86 @@
+{
+  "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
+  "file_identifier": "1ddf0fa2-3dab-456b-baed-09803260a4e2",
+  "metadata": {
+    "contacts": [
+      {
+        "organisation": {
+          "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
+          "href": "https://ror.org/01rhff309",
+          "title": "ror"
+        },
+        "phone": "+44 (0)1223 221400",
+        "address": {
+          "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+          "city": "Cambridge",
+          "administrative_area": "Cambridgeshire",
+          "postal_code": "CB3 0ET",
+          "country": "United Kingdom"
+        },
+        "email": "magic@bas.ac.uk",
+        "online_resource": {
+          "href": "https://www.bas.ac.uk/teams/magic",
+          "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
+          "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
+          "function": "information"
+        },
+        "role": [
+          "pointOfContact"
+        ]
+      }
+    ],
+    "date_stamp": "2024-10-03"
+  },
+  "identification": {
+    "title": {
+      "value": "Test Record with minimal MAGIC Administration Profile properties (all_v1)"
+    },
+    "dates": {
+      "creation": "2024-09-14"
+    },
+    "abstract": "Test Record for ISO 19115 metadata standard (MAGIC Administration v1 profile) with required properties only and a all administration metadata instance.",
+    "language": "eng",
+    "supplemental_information": "{\"admin_metadata\": \"...\"}",
+    "domain_consistency": [
+      {
+        "specification": {
+          "title": {
+            "value": "British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Administration Metadata Profile",
+            "href": "https://metadata-standards.data.bas.ac.uk/profiles/magic-administration/v1/"
+          },
+          "dates": {
+            "publication": "2025-10-22"
+          },
+          "edition": "1",
+          "contact": {
+            "organisation": {
+              "name": "Mapping and Geographic Information Centre, British Antarctic Survey",
+              "href": "https://ror.org/01rhff309",
+              "title": "ror"
+            },
+            "phone": "+44 (0)1223 221400",
+            "address": {
+              "delivery_point": "British Antarctic Survey, High Cross, Madingley Road",
+              "city": "Cambridge",
+              "administrative_area": "Cambridgeshire",
+              "postal_code": "CB3 0ET",
+              "country": "United Kingdom"
+            },
+            "email": "magic@bas.ac.uk",
+            "online_resource": {
+              "href": "https://www.bas.ac.uk/teams/magic",
+              "title": "Mapping and Geographic Information Centre (MAGIC) - BAS public website",
+              "description": "General information about the BAS Mapping and Geographic Information Centre (MAGIC) from the British Antarctic Survey (BAS) public website.",
+              "function": "information"
+            },
+            "role": [
+              "publisher"
+            ]
+          }
+        },
+        "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Administration Metadata Profile.",
+        "result": true
+      }
+    ]
+  }
+}
