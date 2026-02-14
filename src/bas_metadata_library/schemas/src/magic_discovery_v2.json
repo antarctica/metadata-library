@@ -2,7 +2,7 @@
   "$id": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-discovery-v2.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "BAS MAGIC Discovery Metadata Profile v2 configuration schema",
-  "description": "Metadata record configuration schema for the BAS MAGIC Discovery Metadata profile (version 2)\n\nThis schema does not fully validate reqs. 06 & 07 (Released Date & Publication Date) due to limitations in property names and overlaying schemas.",
+  "description": "Metadata record configuration schema for the BAS MAGIC Discovery Metadata profile (version 2).\n\nThis schema does not fully validate reqs. 06 & 07 (Released Date & Publication Date) due to limitations in property names and overlaying schemas.",
   "$defs": {
     "_container_types": {
       "enum": [
@@ -10,7 +10,7 @@
         "fieldSession",
         "initiative"
       ]
-    } ,
+    },
     "_resource_types": {
       "enum": [
         "dataset",
@@ -220,8 +220,12 @@
     "hierarchy_level": {
       "title": "Req. 03 - Hierarchy Level",
       "oneOf": [
-        {"$ref": "#/$defs/_container_types"},
-        {"$ref": "#/$defs/_resource_types"}
+        {
+          "$ref": "#/$defs/_container_types"
+        },
+        {
+          "$ref": "#/$defs/_resource_types"
+        }
       ]
     },
     "identification": {
@@ -470,7 +474,9 @@
       "if": {
         "description": "Conditional logic for container vs resource record super-types",
         "properties": {
-          "hierarchy_level": {"$ref": "#/$defs/_resource_types"}
+          "hierarchy_level": {
+            "$ref": "#/$defs/_resource_types"
+          }
         }
       },
       "then": {
@@ -497,11 +503,15 @@
         "description": "Conditional logic for released date if published",
         "properties": {
           "identification": {
-            "required": ["dates"],
+            "required": [
+              "dates"
+            ],
             "properties": {
               "dates": {
                 "title": "Req. 07 - Publication Date",
-                "required": ["publication"]
+                "required": [
+                  "publication"
+                ]
               }
             }
           }
@@ -513,7 +523,9 @@
             "properties": {
               "dates": {
                 "title": "Req. 06 - Released Date",
-                "required": ["released"]
+                "required": [
+                  "released"
+                ]
               }
             }
           }
