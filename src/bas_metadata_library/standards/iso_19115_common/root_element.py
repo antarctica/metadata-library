@@ -205,7 +205,10 @@ class ISOMetadataRecord(MetadataRecordElement):
 
         if ("hierarchy_level" in self.attributes) or (
             "identification" in self.attributes
-            and ("measures" in self.attributes["identification"] or "lineage" in self.attributes["identification"])
+            and (
+                "domain_consistency" in self.attributes["identification"]
+                or "lineage" in self.attributes["identification"]
+            )
         ):
             data_quality = DataQuality(record=self.record, attributes=self.attributes)
             data_quality.make_element()

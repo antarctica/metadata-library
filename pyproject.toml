@@ -24,6 +24,7 @@ classifiers = [
 ]
 requires-python = ">=3.9"
 dependencies = [
+  "cattrs>=25.3.0",
   "importlib-resources>=6.5.2", # python-version backport
   "jsonschema>=4.25.1",
   "lxml>=6.0.2",
@@ -94,7 +95,7 @@ extend-exclude = ["tests/bas_metadata_library_tests"]
 #  EM | errmsg (exceptions)
 # ERA | eraticate (comments)
 #   F | pyflakes (invalid/bad code)
-#  FA | uture-annotations (type hints)
+#  FA | future-annotations (type hints) - DISABLED
 #   I | isort (import ordering)
 #   N | pep8-naming (PEP8)
 #  PT | pytest-style (tests)
@@ -105,9 +106,9 @@ extend-exclude = ["tests/bas_metadata_library_tests"]
 # SIM | simplicity (code complexity)
 #  TD | todos (comments)
 # TRY | tryceratops (exceptions)
-#  UP | pyupgrade (old syntax)
+#  UP | pyupgrade (old syntax)  - DISABLED
 #   W | pycodestyle warnings (PEP8)
-select = ["A", "ANN", "B", "B9", "C90", "C4", "D", "DTZ", "E", "EM", "ERA", "F", "FA", "I", "N", "PT", "PTH", "RET", "RUF", "S", "SIM", "TD", "TRY", "UP", "W"]
+select = ["A", "ANN", "B", "B9", "C90", "C4", "D", "DTZ", "E", "EM", "ERA", "F", "I", "N", "PT", "PTH", "RET", "RUF", "S", "SIM", "TD", "TRY", "W"]
 
 # ANN204 | ignore docstring for magic methods (unecessary)
 #   D100 | for avoding module level docstrings (unecessary)

@@ -1,3 +1,5 @@
+from typing import Optional, Union
+
 import pytest
 from _pytest.fixtures import FixtureRequest
 from _pytest.monkeypatch import MonkeyPatch
@@ -48,3 +50,22 @@ def fx_get_record_response(app_client: FlaskClient) -> ElementTree():
         return fromstring(response.data)
 
     return _get_record_response_for_config
+
+
+def _clean_val(value: Union[dict, list, str, float]) -> Optional[Union[dict, list, str, int, float]]:
+    if isinstance(value, dict):
+        cleaned_dict = {k: _clean_val(v) for k, v in value.items() if v not in (None, [], {})}
+        return {k: v for k, v in cleaned_dict.items() if v not in (None, [], {})}
+    if isinstance(value, list):
+        cleaned_list = [_clean_val(v) for v in value if v not in (None, [], {})]
+        return cleaned_list if cleaned_list else None
+    return value
+
+
+def clean_dict(d: dict) -> dict:
+    """Remove any None or empty list/dict values from a dict."""
+    cleaned = _clean_val(d)
+    if not isinstance(cleaned, dict):
+        msg = "Value must be a dict"
+        raise TypeError(msg) from None
+    return {k: v for k, v in cleaned.items() if v not in (None, [], {})}

@@ -1,0 +1,129 @@
+{
+    "$id": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-administration-content-v1.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "BAS MAGIC Administration Metadata Profile v1 encoding schema",
+    "description": "Metadata record configuration schema for encoding the BAS MAGIC Administration Metadata profile (version 1) content schema within ISO 19115 discovery metadata.",
+    "$defs": {
+        "access_permission": {
+            "title": "Access permission",
+            "description": "Permission for a group of principles to access a resource or resource description.",
+            "type": "object",
+            "required": [
+                "directory",
+                "group",
+                "expiry"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "directory": {
+                    "title": "Directory",
+                    "description": "Distinguishing name, tenancy, realm, etc. of the identity provider the permission group relates to. May use '*' alias if globally applicable and mutually agreed.",
+                    "type": "string",
+                    "minLength": 1,
+                    "examples": [
+                        "d93c3564-d237-43db-9839-4a1c80f565db",
+                        "example.com"
+                    ]
+                },
+                "group": {
+                    "title": "Group",
+                    "description": "Identifier for a group within the directory the permission applies to. May use aliases prefixed with '~' if mutually agreed.",
+                    "type": "string",
+                    "minLength": 1,
+                    "examples": [
+                        "3f20c39ff-b178-47e1-a1dd-17550676e6c",
+                        "example"
+                    ]
+                },
+                "expiry": {
+                    "title": "Expiry",
+                    "description": "Time instant at which access lapses.",
+                    "type": "string",
+                    "format": "datetime",
+                    "examples": [
+                        "2024-12-31T23:59:59+00:00"
+                    ]
+                },
+                "comment": {
+                    "title": "Comment",
+                    "description": "Free-text comment explaining why permission has been granted",
+                    "type": "string",
+                    "examples": [
+                        "Authorised as per ..."
+                    ]
+                }
+            }
+        },
+        "gitlab_issues": {
+            "title": "GitLab issues",
+            "description": "Information, history and/or other context captured in GitLab issues about the resource.",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "format": "uri-reference",
+                "pattern": "./-/issues/\\d+(?:[/?#].)?$",
+                "minLength": 1,
+                "examples": [
+                    "https://gitlab.data.bas.ac.uk/MAGIC/example/-/issues/123"
+                ]
+            }
+        },
+        "metadata_permissions": {
+            "title": "Metadata permissions",
+            "description": "Access permissions for resource metadata (who can access information describing the resource).",
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/access_permission"
+            }
+        },
+        "resource_identifier": {
+            "title": "Resource Identifier",
+            "description": "Distinguishes administration metadata instances. Value must equal the file identifier from parent discovery metadata.",
+            "type": "string",
+            "minLength": 1,
+            "examples": [
+                "a0269e49-74e0-4503-a525-9f22a3c04c5e"
+            ]
+        },
+        "resource_permissions": {
+            "title": "Resource permissions",
+            "description": "Access permissions for resources (who can access the resource itself).",
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/access_permission"
+            }
+        },
+        "_schema": {
+            "title": "JSON Schema",
+            "description": "JSON Schema keyword indicating the schema a document complies with.",
+            "type": "string",
+            "format": "uri-reference",
+            "const": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-administration-content-v1.json",
+            "examples": [
+                "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/magic-administration-content-v1.json"
+            ]
+        }
+    },
+    "type": "object",
+    "required": [
+        "$schema",
+        "id"
+    ],
+    "properties": {
+        "$schema": {
+            "$ref": "#/$defs/_schema"
+        },
+        "id": {
+            "$ref": "#/$defs/resource_identifier"
+        },
+        "gitlab_issues": {
+            "$ref": "#/$defs/gitlab_issues"
+        },
+        "metadata_permissions": {
+            "$ref": "#/$defs/metadata_permissions"
+        },
+        "resource_permissions": {
+            "$ref": "#/$defs/resource_permissions"
+        }
+    }
+}
