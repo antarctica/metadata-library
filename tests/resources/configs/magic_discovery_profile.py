@@ -52,7 +52,7 @@ _appendix_1_v2 = {
         "edition": "2",
         "contact": {**_appendix_2, "role": ["publisher"]},
     },
-    "explanation": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile.",
+    "explanation": "Resource within scope of the British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile.",
     "result": True,
 }
 
