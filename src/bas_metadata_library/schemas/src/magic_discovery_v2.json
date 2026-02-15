@@ -187,7 +187,7 @@
         },
         "explanation": {
           "type": "string",
-          "const": "Resource within scope of British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile."
+          "const": "Resource within scope of the British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Discovery Metadata Profile."
         },
         "result": {
           "type": "boolean",
