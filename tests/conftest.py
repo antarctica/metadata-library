@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import Optional, Union
 
 import pytest
@@ -8,7 +9,10 @@ from flask.testing import FlaskClient
 from lxml import etree
 from lxml.etree import ElementTree, fromstring
 
+from bas_metadata_library.standards.magic_administration.v1 import AdministrationMetadata
+from bas_metadata_library.standards.magic_administration.v1.utils import AdministrationKeys, AdministrationWrapper
 from tests.app import create_app
+from tests.resources.keys import load_keys
 
 
 @pytest.fixture(autouse=True)
@@ -69,3 +73,33 @@ def clean_dict(d: dict) -> dict:
         msg = "Value must be a dict"
         raise TypeError(msg) from None
     return {k: v for k, v in cleaned.items() if v not in (None, [], {})}
+
+
+@lru_cache(maxsize=1)
+def _admin_meta_keys() -> AdministrationKeys:
+    """
+    Administration keys for signing and encrypting administrative metadata.
+
+    Standalone method to allow use outside of fixtures in test parametrisation.
+
+    Cached for better performance.
+    """
+    return load_keys()
+
+
+@pytest.fixture
+def fx_admin_meta_keys() -> AdministrationKeys:
+    """Administration keys for signing and encrypting administrative metadata."""
+    return _admin_meta_keys()
+
+
+@pytest.fixture
+def fx_admin_meta_element() -> AdministrationMetadata:
+    """Administrative metadata element."""
+    return AdministrationMetadata(id="x")
+
+
+@pytest.fixture
+def fx_admin_wrapper(fx_admin_meta_keys: AdministrationKeys):
+    """Administrative metadata wrapper."""
+    return AdministrationWrapper(fx_admin_meta_keys)
