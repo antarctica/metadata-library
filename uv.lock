@@ -119,6 +119,7 @@ dependencies = [
     { name = "cattrs" },
     { name = "importlib-resources" },
     { name = "jsonschema" },
+    { name = "jwskate" },
     { name = "lxml" },
     { name = "rfc3987" },
     { name = "strict-rfc3339" },
@@ -146,6 +147,7 @@ requires-dist = [
     { name = "cattrs", specifier = ">=25.3.0" },
     { name = "importlib-resources", specifier = ">=6.5.2" },
     { name = "jsonschema", specifier = ">=4.25.1" },
+    { name = "jwskate", specifier = ">=0.12.2" },
     { name = "lxml", specifier = ">=6.0.2" },
     { name = "rfc3987", specifier = ">=1.3.8" },
     { name = "strict-rfc3339", specifier = ">=0.7" },
@@ -165,6 +167,18 @@ test = [
     { name = "pytest", specifier = ">=8.4.2" },
     { name = "pytest-cov", specifier = ">=7.0.0" },
     { name = "pytest-random-order", specifier = ">=1.2.0" },
+]
+
+[[package]]
+name = "binapy"
+version = "0.8.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/bb/12/64a6df32e9bf0eea5dd2a448d37bbfe49b4aae0acb20b46381bf76304a0a/binapy-0.8.0.tar.gz", hash = "sha256:570c5098d42f037ffb3d2e563998f3cff69ad25ca1f43f9c3815432dccd08233", size = 20315, upload-time = "2024-01-19T11:57:20.096Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/94/50/a2ca5609cffc918a339be4ec5070c6d1d9fab600e6d9164df18040137383/binapy-0.8.0-py3-none-any.whl", hash = "sha256:8af1e1e856900ef8b79ef32236e296127c9cf26414ec355982ff7ce5f173504d", size = 16993, upload-time = "2024-01-19T11:57:18.876Z" },
 ]
 
 [[package]]
@@ -966,6 +980,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/19/74/a633ee74eb36c44aa6d1095e7cc5569bebf04342ee146178e2d36600708b/jsonschema_specifications-2025.9.1.tar.gz", hash = "sha256:b540987f239e745613c7a9176f3edb72b832a4ac465cf02712288397832b5e8d", size = 32855, upload-time = "2025-09-08T01:34:59.186Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/41/45/1a4ed80516f02155c51f51e8cedb3c1902296743db0bbc66608a0db2814f/jsonschema_specifications-2025.9.1-py3-none-any.whl", hash = "sha256:98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe", size = 18437, upload-time = "2025-09-08T01:34:57.871Z" },
+]
+
+[[package]]
+name = "jwskate"
+version = "0.12.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "binapy" },
+    { name = "cryptography" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f5/45/85a545c824439ba37aa61bed6c10ddf89dc51915d28b937931de8cca2eef/jwskate-0.12.2.tar.gz", hash = "sha256:7c38b036b633d689b31c89b358823dbc8c439e4c74596cb1fceb0dfe4cf9efce", size = 128629, upload-time = "2025-04-02T10:06:46.539Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/80/21/4252ccb378deb49f9e38635731b30d43aee03c2238d2fe0100011242af62/jwskate-0.12.2-py3-none-any.whl", hash = "sha256:fd10271bd651db8da7df256f7b5bcface84bf165a203b991ae05fb728f3d3aef", size = 88775, upload-time = "2025-04-02T10:06:45.021Z" },
 ]
 
 [[package]]
