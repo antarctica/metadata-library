@@ -10,7 +10,7 @@ import cattrs
 import pytest
 from flask.testing import FlaskClient
 from jsonschema.exceptions import ValidationError
-from lxml.etree import tostring, Element
+from lxml.etree import tostring, Element, fromstring
 from cryptography.hazmat.primitives.keywrap import InvalidUnwrap
 from jwskate import InvalidClaim, InvalidSignature, Jwk, JwtSigner
 
@@ -223,25 +223,47 @@ class TestMagicAdministrationProfileEncoding:
         assert response.status_code == HTTPStatus.OK
         assert response.mimetype == "text/xml"
 
-    @pytest.mark.parametrize("config_name", list(encoding_configs_v1_all.keys()))
-    def test_complete_record(self, app_client: FlaskClient, config_name: str):
-        """Check encoded records match known good examples."""
-        with Path().resolve().parent.joinpath(f"resources/records/{profile}/{config_name}-record.xml").open() as expected_contents_file:
-            expected_contents = expected_contents_file.read()
+    @staticmethod
+    def _normalise_record(record: str) -> str:
+        xpath = ("/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:supplementalInformation"
+                 "/gco:CharacterString/text()")
+        record = fromstring(record.encode())
+        sup_element = record.xpath(xpath[:-len("/text()")], namespaces=namespaces.nsmap())[0]
+        sup_element.text = "..."
+        record_normalised = tostring(record, xml_declaration=True, encoding="utf-8").decode()
+        return record_normalised
 
-        response = app_client.get(f"/profiles/{profile}/{config_name}")
-        assert response.data.decode() == expected_contents
+
+    @pytest.mark.parametrize("config_name", list(encoding_configs_v1_all.keys()))
+    def test_complete_record(self, app_client: FlaskClient, fx_admin_meta_keys: AdministrationKeys, config_name: str):
+        """
+        Check encoded records match known good examples.
+
+        Normalises admin metadata in records as each are unique.
+        """
+        with Path().resolve().parent.joinpath(f"resources/records/{profile}/{config_name}-record.xml").open() as expected_contents_file:
+            reference_raw = expected_contents_file.read()
+        candidate_raw = app_client.get(f"/profiles/{profile}/{config_name}")
+        reference_normalised = self._normalise_record(reference_raw)
+        candidate_normalised = self._normalise_record(candidate_raw.data.decode())
+
+        assert reference_normalised == candidate_normalised
 
     @pytest.mark.parametrize("config_name", list(encoding_configs_v1_all.keys()))
     def test_parse_existing_record(self, config_name: str):
         """Can decode a record to a record config."""
+        reference_config = encoding_configs_v1_all[config_name]
         with Path().resolve().parent.joinpath(f"resources/records/{profile}/{config_name}-record.xml").open() as record_file:
             record_data = record_file.read()
-
         record = MetadataRecord(record=record_data)
         configuration = record.make_config()
-        config = configuration.config
-        assert config == encoding_configs_v1_all[config_name]
+        candidate_config = configuration.config
+
+        # normalise admin metadata in config as each are unique
+        candidate_config['identification']['supplemental_information'] = "..."
+        reference_config['identification']['supplemental_information'] = "..."
+
+        assert candidate_config == reference_config
 
     @pytest.mark.parametrize("config_name", list(encoding_configs_v1_all.keys()))
     def test_lossless_conversion(self, fx_get_record_response: Callable[..., Element], config_name: str):
