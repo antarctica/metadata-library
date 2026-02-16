@@ -1,7 +1,10 @@
 import datetime
 import json
 
+from bas_metadata_library.standards.magic_administration.v1 import AdministrationMetadata
+from bas_metadata_library.standards.magic_administration.v1.utils import set_admin
 from tests.resources.configs.magic_discovery_profile import _appendix_2
+from tests.resources.keys import load_keys
 
 _appendix_1_v1 = {
     "specification": {
@@ -42,7 +45,7 @@ content_all_v1 = {
 
 
 def _make_encoding_for_content(admin_meta: dict, configuration: str, version: str) -> dict:
-    return {
+    config = {
         "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
         "file_identifier": admin_meta["id"],
         "metadata": {
@@ -58,10 +61,11 @@ def _make_encoding_for_content(admin_meta: dict, configuration: str, version: st
             },
             "abstract": f"Test Record for ISO 19115 metadata standard (MAGIC Administration {version} profile) with required properties only and a {configuration} administration metadata instance.",
             "language": "eng",
-            "supplemental_information": json.dumps({"admin_metadata": "..."}),
             "domain_consistency": [_appendix_1_v1],
         },
     }
+    set_admin(keys=load_keys(), config=config, admin_meta=AdministrationMetadata.loads_json(json.dumps(admin_meta)))
+    return config
 
 
 content_configs_v1_all = {"minimal_v1": content_minimal_v1, "all_v1": content_all_v1}

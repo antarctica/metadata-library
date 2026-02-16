@@ -40,7 +40,6 @@
     },
     "abstract": "Test Record for ISO 19115 metadata standard (MAGIC Administration v1 profile) with required properties only and a minimal administration metadata instance.",
     "language": "eng",
-    "supplemental_information": "{\"admin_metadata\": \"...\"}",
     "domain_consistency": [
       {
         "specification": {
@@ -81,6 +80,7 @@
         "explanation": "Resource within scope of the British Antarctic Survey (BAS) Mapping and Geographic Information Centre (MAGIC) Administration Metadata Profile.",
         "result": true
       }
-    ]
+    ],
+    "supplemental_information": "{\"admin_metadata\": \"eyJjdHkiOiJKV1QiLCJlcGsiOnsia3R5IjoiRUMiLCJjcnYiOiJQLTI1NiIsIngiOiJuYkxSS2tnYXRSalFwZlR1aTVCYWFyUGx0UXV0OG5yT3ROOHJ1M19DQTRrIiwieSI6ImM0aGQ0TzJ6bVdtY3pDeVZ1aTU0LS1GTU9HUGRqbEoyNlV0Z1hNVUdfVUUifSwiYWxnIjoiRUNESC1FUytBMTI4S1ciLCJlbmMiOiJBMjU2R0NNIiwia2lkIjoiYmFzX21ldGFkYXRhX3Rlc3RpbmdfZW5jcnlwdGlvbl9rZXkifQ.BeIXhmz3HLB_SGOf21J2o-gErnXgRRTkjXAH_U9y3ZAp6BixciVzSg.o68vlPjI7s_x4bL_.d-wXqU4dPIX9_FJg9LT-cpneJsNFfA8FXg9vIA9Jqeo75Sbmhp4Ugedl6Vhibm-uf7RJUmX46dusNk20n42oFje-eiJ53SZ53ak6d85GQSKhZCzfd6lA43HLEnyjrt7z_5dBZisk6RaIc4aEMUm2CY5P4QBr2WMIXtjUctWL2591wbC-JaQWTfrnouIg2YKxUNQyp3FxdSgNzZ30ThWBcktEGu9bKKqNWI_pokx8RqWjXx719STT9xRcKrv-kUYsrELPYScHWgXd6CmA0rsSQVpO0u7zKEndVXZIAOWM7kNGQ1kLSsLOziF6rZRyDM5B4m3VkItiekq4evHi91h-EHlfX8g8cMQ5OgHaUnVsPmwlDTRcbNapGmp_cbLLVnVncrTHlbtvafz9C2XTsQyRORwXk9hBSduQq3ezBL1WiubMo5DaFjFCCYv-QSrnXJvDb_zbgERHytQ-ieOlZB6NTh6ptSnJ17E8DsccUKii2PWCc5U8t5hFZuqYhvDRZ68n6md0S-ouESf5D32WgQYq_BrFpGIrUgRXcFLgI0wXtkErYr43IOV3KLaNy0cqf-YPmymDKbqHia3QYp4HjWab_5-XsOU_pYy4pK_HvUlyUkz6gL3BfTPMr852-VRLO6VqVzaO_41xAEgxX4n1AvHjGIsFb3YwP-txUs-BANj73-CiYHko1YB5fkLHOKqt2_i4-3UsKhl4TATRQLhaJE6Ijujry8qNB4z0SwD1rOPaF_sGZ7Y5eMEvw8SarcMjAlJYzxTXBeCYOBx1JmLK43wvl6DTKuPs0Ai9Rm-Wbwx8IunoQ65hNltZ_c0Cy4RYzv_lW_7jfG3jbsJzdZKBl5T6LtNmLvLxMccemmj4maTANyUeta3GB7kHYgglhUVFxe9c4TWvD_9w8wYhKJdseTxs6VwC7Gxo20O93-rH0Zeqyw-WpyF85ChYZJATyM1c2sZEXxNEC0YsaJGooYYZ6fDyU6nyINjjPjn5olDGyZsXK8nZSQ5tHbdkuD_zjm1O2-wxLlTFmpg_WWgREnVhIAAjUXTYiJjFfFcsRRzeB1KAgh5f2wA1BsD4GQP50QgAgpxK3Ixx8ItK.xXALXB9ZYPbkVyz4f41okA\"}"
   }
 }
