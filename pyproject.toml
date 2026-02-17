@@ -35,10 +35,10 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "dunamai>=1.25.0",
+    "dunamai>=1.26.0",
     "jsonref>=1.1.0",
     "pymarkdownlnt>=0.9.33",
-    "ruff>=0.14.6",
+    "ruff>=0.15.1",
     "safety>=3.7.0",
     "taskipy>=1.14.1",
 ]
@@ -163,5 +163,5 @@ source = ["src"]
 omit = []
 
 [build-system]
-requires = ["uv_build>=0.8.18,<0.9.0"]
+requires = ["uv_build>=0.8.18,<0.11.0"]
 build-backend = "uv_build"
