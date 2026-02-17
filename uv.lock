@@ -113,7 +113,7 @@ wheels = [
 
 [[package]]
 name = "bas-metadata-library"
-version = "0.16.0a8"
+version = "0.16.0rc1"
 source = { editable = "." }
 dependencies = [
     { name = "cattrs" },
