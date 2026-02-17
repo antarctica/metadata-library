@@ -14,15 +14,15 @@ repos:
     - id: trailing-whitespace
     - id: end-of-file-fixer
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.14.7
+  rev: v0.15.1
   hooks:
     - id: ruff
     - id: ruff-format
 - repo: https://github.com/astral-sh/uv-pre-commit
-  rev: 0.9.13
+  rev: 0.10.3
   hooks:
     - id: uv-lock
 - repo: https://github.com/jackdewinter/pymarkdown
-  rev: v0.9.33
+  rev: v0.9.35
   hooks:
       - id: pymarkdown
