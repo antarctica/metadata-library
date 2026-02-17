@@ -3,11 +3,12 @@ from copy import deepcopy
 from http import HTTPStatus
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Callable
 
 import pytest
 from flask.testing import FlaskClient
 from jsonschema import ValidationError
-from lxml.etree import XML, ElementTree, tostring, Element
+from lxml.etree import XML, ElementTree, tostring
 
 from tests.resources.configs.test_metadata_standard import configs_all as configs
 from tests.resources.configs.test_metadata_standard import minimal_record as minimal_config
@@ -92,14 +93,14 @@ def test_xml_declaration_enabled():
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_xml_namespaces(fx_get_record_response: Element, config_name: str):
+def test_xml_namespaces(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind='standards', standard_profile=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_root_element(fx_get_record_response: Element, config_name: str):
+def test_root_element(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind='standards', standard_profile=standard, config=config_name)
     config = configs[config_name]
 
@@ -111,7 +112,7 @@ def test_root_element(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_resource_title(fx_get_record_response: Element, config_name: str):
+def test_resource_title(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind='standards', standard_profile=standard, config=config_name)
     config = configs[config_name]
 
@@ -143,7 +144,7 @@ def test_parse_existing_record(config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs.keys()))
-def test_lossless_conversion(fx_get_record_response: Element, config_name: str):
+def test_lossless_conversion(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     _record = tostring(
         fx_get_record_response(kind='standards', standard_profile=standard, config=config_name),
         pretty_print=True,

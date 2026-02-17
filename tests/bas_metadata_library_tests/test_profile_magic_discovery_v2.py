@@ -1,11 +1,12 @@
 from copy import deepcopy
 from http import HTTPStatus
 from pathlib import Path
+from typing import Callable
 
 import pytest
 from flask.testing import FlaskClient
 from jsonschema.exceptions import ValidationError
-from lxml.etree import tostring, Element
+from lxml.etree import tostring, ElementTree
 
 from bas_metadata_library.standards.iso_19115_2 import (
     MetadataRecord,
@@ -71,7 +72,7 @@ def test_parse_existing_record(config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v2_all.keys()))
-def test_lossless_conversion(fx_get_record_response: Element, config_name: str):
+def test_lossless_conversion(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     """Can encode then decode a record config without loss of information."""
     _record = tostring(
         fx_get_record_response(kind="profiles", standard_profile=profile, config=config_name),

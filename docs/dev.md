@@ -2,50 +2,6 @@
 
 ## Setup
 
-### Terraform
-
-Terraform is used to provision IAM resources needed to host
-[Configuration schemas](/docs/implementation.md#configuration-schemas) for external access.
-
-Access to the [BAS AWS Account 🛡️](https://gitlab.data.bas.ac.uk/WSF/bas-aws) is needed to provision these resources.
-
-> [!Note]
-> This provisioning should have already been performed (and applies globally). Any changes only need to be applied once.
-
-```shell
-# start terraform inside a docker container if not installed locally
-$ cd provisioning/terraform
-$ docker compose run terraform
-# setup terraform
-$ terraform init
-# apply changes
-$ terraform validate
-$ terraform fmt
-$ terraform apply
-# exit container
-$ exit
-$ docker compose down
-```
-
-#### Terraform remote state
-
-State information for this project is stored remotely using a
-[Backend](https://www.terraform.io/docs/backends/index.html).
-
-Specifically the [AWS S3](https://www.terraform.io/docs/backends/types/s3.html) backend as part of the
-[BAS Terraform Remote State 🛡️](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project.
-
-Remote state storage will be automatically initialised when running `terraform init`. Any changes to remote state will
-be automatically saved to the remote backend, there is no need to push or pull changes.
-
-##### Remote state authentication
-
-Permission to read and/or write remote state information for this project is restricted to authorised users. Contact
-the [BAS Web & Applications Team](mailto:servicedesk@bas.ac.uk) to request access.
-
-See the [BAS Terraform Remote State 🛡️](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project for how these
-permissions to remote state are enforced.
-
 ## Local development environment
 
 Requirements:
@@ -740,9 +696,15 @@ Then follow the [Release Workflow](#release-workflow) using `uv version --bump a
 
 ## Deployment
 
+### JSON schemas
+
+[Configuration schemas](/docs/implementation.md#configuration-schemas) are distributed via the
+`metadata-resources.data.bas.ac.uk` static site via [Continuous Deployment](#continuous-deployment).
+
 ### Python package
 
-This project is distributed as a Python (Pip) package available from [PyPi](https://pypi.org/project/bas-metadata-library/)
+This project is distributed as a Python (Pip) package available from
+[PyPi](https://pypi.org/project/bas-metadata-library/) via [Continuous Deployment](#continuous-deployment).
 
 > [!TIP]
 > To build the package manually run the `build` [Development Task](#development-tasks).
@@ -758,3 +720,47 @@ Follow the [Release Workflow](#release-workflow) to trigger a deployment, which 
 
 Tagged commits created for [Releases](#releases) will trigger Continuous Deployment using GitLab's
 CI/CD platform configured in `.gitlab-ci.yml`.
+
+### Terraform
+
+Terraform is used to provision IAM resources needed to host
+[Configuration schemas](/docs/implementation.md#configuration-schemas) for external access.
+
+Access to the [BAS AWS Account 🛡️](https://gitlab.data.bas.ac.uk/WSF/bas-aws) is needed to provision these resources.
+
+> [!Note]
+> This provisioning should have already been performed (and applies globally). Any changes only need to be applied once.
+
+```shell
+# start terraform inside a docker container if not installed locally
+$ cd provisioning/terraform
+$ docker compose run terraform
+# setup terraform
+$ terraform init
+# apply changes
+$ terraform validate
+$ terraform fmt
+$ terraform apply
+# exit container
+$ exit
+$ docker compose down
+```
+
+#### Terraform remote state
+
+State information for this project is stored remotely using a
+[Backend](https://www.terraform.io/docs/backends/index.html).
+
+Specifically the [AWS S3](https://www.terraform.io/docs/backends/types/s3.html) backend as part of the
+[BAS Terraform Remote State 🛡️](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project.
+
+Remote state storage will be automatically initialised when running `terraform init`. Any changes to remote state will
+be automatically saved to the remote backend, there is no need to push or pull changes.
+
+##### Remote state authentication
+
+Permission to read and/or write remote state information for this project is restricted to authorised users. Contact
+the [BAS Web & Applications Team](mailto:servicedesk@bas.ac.uk) to request access.
+
+See the [BAS Terraform Remote State 🛡️](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project for how these
+permissions to remote state are enforced.

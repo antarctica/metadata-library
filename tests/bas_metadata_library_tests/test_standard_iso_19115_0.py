@@ -5,11 +5,12 @@ from datetime import date
 from http import HTTPStatus
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Callable
 
 import pytest
 from flask.testing import FlaskClient
 from jsonschema import ValidationError
-from lxml.etree import XML, ElementTree, XMLParser, fromstring, tostring, Element
+from lxml.etree import XML, ElementTree, XMLParser, fromstring, tostring
 
 from bas_metadata_library import RecordValidationError
 from bas_metadata_library.standards.iso_19115_0 import (
@@ -122,14 +123,14 @@ def test_xml_declaration(app_client: FlaskClient, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_xml_namespaces(fx_get_record_response: Element, config_name: str):
+def test_xml_namespaces(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     expected_namespaces = Namespaces().nsmap()
     assert record.nsmap == expected_namespaces
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_root_element(fx_get_record_response: Element, config_name: str):
+def test_root_element(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
 
     metadata_records = record.xpath("/gmd:MD_Metadata", namespaces=namespaces.nsmap())
@@ -137,7 +138,7 @@ def test_root_element(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_file_identifier(fx_get_record_response: Element, config_name: str):
+def test_file_identifier(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -152,7 +153,7 @@ def test_file_identifier(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_language(fx_get_record_response: Element, config_name: str):
+def test_language(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -170,7 +171,7 @@ def test_language(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_character_set(fx_get_record_response: Element, config_name: str):
+def test_character_set(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -189,7 +190,7 @@ def test_character_set(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_hierarchy_level(fx_get_record_response: Element, config_name: str):
+def test_hierarchy_level(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -206,7 +207,7 @@ def test_hierarchy_level(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_hierarchy_level_name(fx_get_record_response: Element, config_name: str):
+def test_hierarchy_level_name(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -221,7 +222,7 @@ def test_hierarchy_level_name(fx_get_record_response: Element, config_name: str)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_contact(fx_get_record_response: Element, config_name: str):
+def test_contact(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -243,7 +244,7 @@ def test_contact(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_datestamp(fx_get_record_response: Element, config_name: str):
+def test_datestamp(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -256,7 +257,7 @@ def test_datestamp(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_metadata_standard(fx_get_record_response: Element, config_name: str):
+def test_metadata_standard(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -276,7 +277,7 @@ def test_metadata_standard(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_metadata_standard_version(fx_get_record_response: Element, config_name: str):
+def test_metadata_standard_version(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -296,7 +297,7 @@ def test_metadata_standard_version(fx_get_record_response: Element, config_name:
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_reference_system_info(fx_get_record_response: Element, config_name: str):
+def test_reference_system_info(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -352,7 +353,7 @@ def test_reference_system_info(fx_get_record_response: Element, config_name: str
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_citation(fx_get_record_response: Element, config_name: str):
+def test_identification_citation(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -368,7 +369,7 @@ def test_identification_citation(fx_get_record_response: Element, config_name: s
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_abstract(fx_get_record_response: Element, config_name: str):
+def test_identification_abstract(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -384,7 +385,7 @@ def test_identification_abstract(fx_get_record_response: Element, config_name: s
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_purpose(fx_get_record_response: Element, config_name: str):
+def test_identification_purpose(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -400,7 +401,7 @@ def test_identification_purpose(fx_get_record_response: Element, config_name: st
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_credit(fx_get_record_response: Element, config_name: str):
+def test_identification_credit(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -416,7 +417,7 @@ def test_identification_credit(fx_get_record_response: Element, config_name: str
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_status(fx_get_record_response: Element, config_name: str):
+def test_identification_status(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -475,7 +476,7 @@ def _resolve_points_of_contact_xpaths(point_of_contact_type, config):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_points_of_contact(fx_get_record_response: Element, config_name: str):
+def test_identification_points_of_contact(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -502,7 +503,7 @@ def test_identification_points_of_contact(fx_get_record_response: Element, confi
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_maintenance(fx_get_record_response: Element, config_name: str):
+def test_identification_maintenance(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -519,7 +520,7 @@ def test_identification_maintenance(fx_get_record_response: Element, config_name
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_graphic_overviews(fx_get_record_response: Element, config_name: str):
+def test_graphic_overviews(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -555,7 +556,7 @@ def test_graphic_overviews(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_resource_formats(fx_get_record_response: Element, config_name: str):
+def test_resource_formats(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -633,7 +634,7 @@ def _resolve_descriptive_keywords_xpaths(config) -> list[dict]:
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_descriptive_keywords(fx_get_record_response: Element, config_name: str):
+def test_identification_descriptive_keywords(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -739,7 +740,7 @@ def test_identification_aggregations(app_client: FlaskClient, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_spatial_representation_type(fx_get_record_response: Element, config_name: str):
+def test_identification_spatial_representation_type(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -779,14 +780,14 @@ def _test_identification_spatial_resolution(record, config):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_spatial_resolution(fx_get_record_response: Element, config_name: str):
+def test_identification_spatial_resolution(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
     _test_identification_spatial_resolution(record=record, config=config)
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_character_set(fx_get_record_response: Element, config_name: str):
+def test_identification_character_set(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -802,7 +803,7 @@ def test_identification_character_set(fx_get_record_response: Element, config_na
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_language(fx_get_record_response: Element, config_name: str):
+def test_identification_language(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -820,7 +821,7 @@ def test_identification_language(fx_get_record_response: Element, config_name: s
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_topics(fx_get_record_response: Element, config_name: str):
+def test_identification_topics(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -837,7 +838,7 @@ def test_identification_topics(fx_get_record_response: Element, config_name: str
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_geographic_extent_bounding_box(fx_get_record_response: Element, config_name: str):
+def test_identification_geographic_extent_bounding_box(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -887,7 +888,7 @@ def test_identification_geographic_extent_bounding_box(fx_get_record_response: E
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_geographic_extent_identifier(fx_get_record_response: Element, config_name: str):
+def test_identification_geographic_extent_identifier(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -915,7 +916,7 @@ def test_identification_geographic_extent_identifier(fx_get_record_response: Ele
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_temporal_extent(fx_get_record_response: Element, config_name: str):
+def test_identification_temporal_extent(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -971,7 +972,7 @@ def test_identification_temporal_extent(fx_get_record_response: Element, config_
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_vertical_extent(fx_get_record_response: Element, config_name: str):
+def test_identification_vertical_extent(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -1015,7 +1016,7 @@ def test_identification_vertical_extent(fx_get_record_response: Element, config_
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_supplemental_info(fx_get_record_response: Element, config_name: str):
+def test_identification_supplemental_info(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -1031,7 +1032,7 @@ def test_identification_supplemental_info(fx_get_record_response: Element, confi
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_distributions(fx_get_record_response: Element, config_name: str):
+def test_distributions(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
     xpath_base = "/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor"
@@ -1108,7 +1109,7 @@ def test_distributions(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_scope(fx_get_record_response: Element, config_name: str):
+def test_data_quality_scope(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -1125,7 +1126,7 @@ def test_data_quality_scope(fx_get_record_response: Element, config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_lineage_statement(fx_get_record_response: Element, config_name: str):
+def test_data_quality_lineage_statement(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -1143,7 +1144,7 @@ def test_data_quality_lineage_statement(fx_get_record_response: Element, config_
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_lineage_process_steps(fx_get_record_response: Element, config_name: str):
+def test_data_quality_lineage_process_steps(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -1160,7 +1161,7 @@ def test_data_quality_lineage_process_steps(fx_get_record_response: Element, con
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_lineage_sources(fx_get_record_response: Element, config_name: str):
+def test_data_quality_lineage_sources(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -1176,7 +1177,7 @@ def test_data_quality_lineage_sources(fx_get_record_response: Element, config_na
         assert_source(sources_elements[0], source_config)
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_data_quality_domain_consistency(fx_get_record_response: Element, config_name: str):
+def test_data_quality_domain_consistency(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -1212,7 +1213,7 @@ def test_data_quality_domain_consistency(fx_get_record_response: Element, config
         assert pass_value is True
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_metadata_maintenance(fx_get_record_response: Element, config_name: str):
+def test_metadata_maintenance(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -1226,7 +1227,7 @@ def test_metadata_maintenance(fx_get_record_response: Element, config_name: str)
     assert_maintenance(element=metadata_maintenance_elements[0], config=config["metadata"]["maintenance"])
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_identification_metadata_constraints(fx_get_record_response: Element, config_name: str):
+def test_identification_metadata_constraints(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     record = fx_get_record_response(kind="standards", standard_profile=standard, config=config_name)
     config = configs_v4_all[config_name]
 
@@ -1716,7 +1717,7 @@ def test_parse_existing_record_v4(config_name: str):
 
 
 @pytest.mark.parametrize("config_name", list(configs_v4_all.keys()))
-def test_lossless_conversion_v4(fx_get_record_response: Element, config_name: str):
+def test_lossless_conversion_v4(fx_get_record_response: Callable[...,ElementTree], config_name: str):
     _record = tostring(
         fx_get_record_response(kind="standards", standard_profile=standard, config=config_name),
         pretty_print=True,

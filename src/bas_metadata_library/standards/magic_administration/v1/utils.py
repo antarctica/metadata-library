@@ -143,8 +143,8 @@ def set_admin(keys: AdministrationKeys, config: dict, admin_meta: Administration
     if admin_meta.id != config.get("file_identifier"):
         raise AdministrationMetadataSubjectMismatchError() from None
     wrapper = AdministrationWrapper(keys=keys)
-    token = wrapper.encode(admin_meta)
-    set_kv(kv={"admin_metadata": token}, config=config)
+    element = wrapper.encode(admin_meta)
+    set_kv(kv={"admin_metadata": element}, config=config)
 
 
 def get_kv(config: dict) -> dict:

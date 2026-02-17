@@ -4,14 +4,15 @@ Python library for generating metadata records.
 
 ## Overview
 
-The BAS Metadata Library is an underpinning library for other tools and applications to generate discovery level
-metadata records (describing products, services and other resources). It is intended to avoid duplicating complex and
-verbose encode/decoding logic across projects.
+The BAS Metadata Library is an underpinning library for other tools and applications to generate discovery and
+administrative level metadata records (describing products, services and other resources, and their management).
 
-It supports a lossless, two-way, conversion between a
+This library is intended to avoid duplicating complex and verbose encode/decoding logic across projects and ensure
+interoperability between and within systems.
+
+The library supports a lossless, two-way, conversion between a
 [Configuration Object](/docs/implementation.md#configuration-classes) (a python dict representing the fields/structure
-of a record for a standard) into its formal representation (typically an XML document) to support processing and
-manipulation of information between and within systems.
+of a record for a standard) into its formal representation (typically an XML document)
 
 The library also supports validating record configurations (via JSON Schemas) and formal representations (typically via
 XML XSDs).
@@ -92,15 +93,15 @@ within the British Antarctic Survey (BAS) and the NERC Polar Data Centre (UK PDC
 
 ## Installation
 
-This package can be installed using Pip from [PyPi](https://pypi.org/project/bas-metadata-library):
+Installed from [PyPi](https://pypi.org/project/bas-metadata-library):
 
 ```text
 $ pip install bas-metadata-library
 ```
 
 > [!TIP]
-> To install on Windows, it's recommended to use [UV](https://docs.astral.sh/uv/) to use a Python version covered by
-> pre-built `lxml` wheels, avoiding the complexity of building packages from source.
+> On Windows, it's recommended to use [UV](https://docs.astral.sh/uv/) to use a Python version covered by pre-built
+> `lxml` wheels to avoid building packages from source.
 
 ### Installation dependencies
 
@@ -121,6 +122,10 @@ These libraries may already be installed, or require additional OS packages:
 | Linux (Debian)   | `libxml2-utils`                |
 
 ## Usage
+
+> [!TIP]
+> See [Usage](/docs/usage.md) documentation for further usage examples, including setting and loading administration
+> metadata.
 
 ### Encode an ISO 19115 metadata record
 
@@ -161,7 +166,7 @@ minimalish_config = {
     },
 }
 
-# encode configuration into a formal document
+# encode metadata library specific Python config into a standards compliant XML document
 config = MetadataRecordConfigV4(**minimal_config)
 record = MetadataRecord(configuration=config)
 document = record.generate_xml_document()
@@ -178,13 +183,15 @@ print(document.decode())
 ### Decode an ISO 19115 metadata record
 
 ```python
+from pathlib import Path
+
 from bas_metadata_library.standards.iso_19115_2 import MetadataRecord
 
-# load a formal document
-with open(f"record.xml") as document_file:
+# load XML document from a file
+with Path(f"record.xml").open() as document_file:
     document = document_file.read()
 
-# decode formal document into an informal Python config
+# decode document into an metadata library specific Python config
 record = MetadataRecord(record=document)
 configuration = record.make_config()
 config = configuration.config
@@ -192,10 +199,6 @@ config = configuration.config
 # output config
 print(config)
 ```
-
-### Further examples
-
-See [Usage](/docs/usage.md) documentation for further usage examples.
 
 ## Implementation
 
