@@ -61,6 +61,142 @@ configuration = MetadataRecordConfigV4(**minimalish_config)
 configuration.dump(file=Path(output_path))
 ```
 
+## Encode MAGIC administration metadata within an ISO 19115 record
+
+To generate an ISO 19115 metadata record containing MAGIC administration metadata:
+
+```python
+from datetime import date, datetime, timezone
+from uuid import uuid4
+
+from jwskate import Jwk
+
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecord, MetadataRecordConfigV4
+from bas_metadata_library.standards.magic_administration.v1 import AdministrationMetadata, Permission
+from bas_metadata_library.standards.magic_administration.v1.utils import AdministrationKeys, set_admin
+
+# setup keys for signing and encrypting administration metadata
+admin_keys = AdministrationKeys(
+    signing_private=Jwk({
+        "kty": "EC",
+        "kid": "bas_metadata_testing_signing_key",
+        "alg": "ES256",
+        "crv": "P-256",
+        "x": "FzxBM1ZPO5W2bYlhT9AjZUKz5_oH5vIh4_k4aEZ64rM",
+        "y": "vmK5PWOoIA9eO0ntLh37AMpVODyj0NWf842FwoN-GRs",
+        "d": "FdxFSRF2zAAfn7_GaDk81T8PdBGlzZpRtxd10-kc4PE",
+    }),
+    encryption_private=Jwk({
+    "kty": "EC",
+    "kid": "bas_metadata_testing_encryption_key",
+    "alg": "ECDH-ES+A128KW",
+    "crv": "P-256",
+    "x": "kYiwq6MW8lGN6PB2csVMuMRcISVk5eNUpGkjM-mm8QY",
+    "y": "raOTT2xAQhHFKhPHy338L8Ql0hvgsDtHwtEc8pCOf2Q",
+    "d": "2lBuUtJK2TcV_b4B-bDCPnRVAqMnYvnLZ41IUguprs8",
+}),
+)
+
+# generate random identifier for the resource
+resource_identifier = str(uuid4())
+
+# define administration metadata with:
+# - associated GitLab issue
+# - permissions to allow anyone to access to the metadata (an implicit expiry at Python max datetime will be set)
+# - permissions to allow a specific group in a directory/IdP to access the resource until an explicit date
+admin_meta = AdministrationMetadata(
+    id=resource_identifier,
+    gitlab_issues=['https://gitlab.com/group/project/-/issues/123'],
+    metadata_permissions=[Permission(directory="*", group="*", comment="Unrestricted access.")],
+    resource_permissions=[Permission(directory="123", group="abc", expiry=datetime(2018, 10, 18, tzinfo=timezone.utc), comment="Restricted access.")],
+)
+
+# define a minimalish record configuration (file_identifier is required)
+minimalish_config = {
+    "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-1-v4.json",
+    "file_identifier": resource_identifier,
+    "hierarchy_level": "product",
+    "metadata": {
+        "contacts": [{"organisation": {"name": "Mapping and Geographic Information Centre, British Antarctic Survey"}, "role": ["pointOfContact"]}],
+        "date_stamp": date(2018, 10, 18),
+    },
+    "identification": {
+        "title": {"value": "Test Record"},
+        "dates": {"creation": {"date": date(2018, 1, 1), "date_precision": "year"}},
+        "abstract": "Test Record for ISO 19115 metadata standard with MAGIC administration metadata and profile, plus minimal (but not minimal) fields.",
+        "character_set": "utf8",
+        "language": "eng",
+        "extents": [
+            {
+                "identifier": "bounding",
+                "geographic": {
+                    "bounding_box": {
+                        "west_longitude": -45.61521,
+                        "east_longitude": -27.04976,
+                        "south_latitude": -68.1511,
+                        "north_latitude": -54.30761,
+                    }
+                },
+            },
+        ],
+    },
+}
+
+# encode admin metadata within record config
+set_admin(keys=admin_keys, config=minimalish_config, admin_meta=admin_meta)
+
+# encode configuration into a formal document
+config = MetadataRecordConfigV4(**minimalish_config)
+record = MetadataRecord(configuration=config)
+document = record.generate_xml_document()
+
+# output document
+print(document.decode())
+```
+
+## Decode administration metadata from an ISO 19115 record
+
+To extract MAGIC administration metadata from an ISO 19115 metadata record:
+
+```python
+from pathlib import Path
+
+from jwskate import Jwk
+
+from bas_metadata_library.standards.iso_19115_2 import MetadataRecord
+from bas_metadata_library.standards.magic_administration.v1.utils import AdministrationKeys, get_admin
+
+# setup keys for signing and encrypting administration metadata
+admin_keys = AdministrationKeys(
+    signing_private=Jwk({
+        "kty": "EC",
+        "kid": "bas_metadata_testing_signing_key",
+        "alg": "ES256",
+        "crv": "P-256",
+        "x": "FzxBM1ZPO5W2bYlhT9AjZUKz5_oH5vIh4_k4aEZ64rM",
+        "y": "vmK5PWOoIA9eO0ntLh37AMpVODyj0NWf842FwoN-GRs",
+        "d": "FdxFSRF2zAAfn7_GaDk81T8PdBGlzZpRtxd10-kc4PE",
+    }),
+    encryption_private=Jwk({
+        "kty": "EC",
+        "kid": "bas_metadata_testing_encryption_key",
+        "alg": "ECDH-ES+A128KW",
+        "crv": "P-256",
+        "x": "kYiwq6MW8lGN6PB2csVMuMRcISVk5eNUpGkjM-mm8QY",
+        "y": "raOTT2xAQhHFKhPHy338L8Ql0hvgsDtHwtEc8pCOf2Q",
+        "d": "2lBuUtJK2TcV_b4B-bDCPnRVAqMnYvnLZ41IUguprs8",
+    }),
+)
+
+with Path(f"record.xml").open() as document_file:
+    document = document_file.read()
+
+record = MetadataRecord(record=document)
+configuration = record.make_config()
+config = configuration.config
+print(get_admin(keys=admin_keys, config=config).dumps_json())
+```
+
 ## Validating a record
 
 The formal encoding of a record can be validated against one or more XML schemas relevant to each metadata or data
