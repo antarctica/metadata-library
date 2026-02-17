@@ -233,7 +233,6 @@ class TestMagicAdministrationProfileEncoding:
         record_normalised = tostring(record, xml_declaration=True, encoding="utf-8").decode()
         return record_normalised
 
-
     @pytest.mark.parametrize("config_name", list(encoding_configs_v1_all.keys()))
     def test_complete_record(self, app_client: FlaskClient, fx_admin_meta_keys: AdministrationKeys, config_name: str):
         """
