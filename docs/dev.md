@@ -675,6 +675,33 @@ To generate and update test configurations for standards encoded as JSON files i
 It is intended that this command will update pre-existing records, with differences reviewed in version control to aid
 in this manual verification.
 
+### Test keys
+
+A set of test keys are used for signing and encrypting administrative metadata within test configurations. These keys
+were generated using `tests.resources.keys.make_keys()` [1] and are intended as insecure shared values.
+
+> [!WARNING]
+> Changing these keys will MAY require changes to downstream projects.
+
+For downstream projects needing to set these keys as environment variables, use:
+
+```shell
+# signing key (public)
+FOO="{\"kty\":\"EC\",\"kid\":\"bas_metadata_testing_signing_key\",\"alg\":\"ES256\",\"crv\":\"P-256\",\"x\":\"FzxBM1ZPO5W2bYlhT9AjZUKz5_oH5vIh4_k4aEZ64rM\",\"y\":\"vmK5PWOoIA9eO0ntLh37AMpVODyj0NWf842FwoN-GRs\"}",
+
+# signing key (private)
+BAR="{\"kty\":\"EC\",\"kid\":\"bas_metadata_testing_signing_key\",\"alg\":\"ES256\",\"crv\":\"P-256\",\"x\":\"FzxBM1ZPO5W2bYlhT9AjZUKz5_oH5vIh4_k4aEZ64rM\",\"y\":\"vmK5PWOoIA9eO0ntLh37AMpVODyj0NWf842FwoN-GRs\",\"d\":\"2lBuUtJK2TcV_b4B-bDCPnRVAqMnYvnLZ41IUguprs8\"}",
+
+# encryption key (private)
+BAZ="enc":"{\"kty\":\"EC\",\"kid\":\"bas_metadata_testing_encryption_key\",\"alg\":\"ECDH-ES+A128KW\",\"crv\":\"P-256\",\"x\":\"kYiwq6MW8lGN6PB2csVMuMRcISVk5eNUpGkjM-mm8QY\",\"y\":\"raOTT2xAQhHFKhPHy338L8Ql0hvgsDtHwtEc8pCOf2Q\",\"d\":\"2lBuUtJK2TcV_b4B-bDCPnRVAqMnYvnLZ41IUguprs8\"}"
+```
+
+[1]
+
+```shell
+% python -c "from tests.resources.keys import make_keys; make_keys()"
+```
+
 ### Continuous Integration
 
 All commits will trigger Continuous Integration using GitLab's CI/CD platform, configured in `.gitlab-ci.yml`.
