@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Optional, Union
+from typing import Callable, Optional, Union
 
 import pytest
 from _pytest.fixtures import FixtureRequest
@@ -46,7 +46,7 @@ def app_client(app: Flask) -> FlaskClient:
 
 
 @pytest.fixture
-def fx_get_record_response(app_client: FlaskClient) -> ElementTree():
+def fx_get_record_response(app_client: FlaskClient) -> Callable[..., ElementTree]:
     """Get a generated record for a given standard/profile and config."""
 
     def _get_record_response_for_config(kind: str, standard_profile: str, config: str) -> etree:
