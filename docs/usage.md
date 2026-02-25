@@ -389,3 +389,34 @@ section for implementation details.
 |------------|--------|------------------------------|
 | CSV        | 68 kB  | [Link](https://example.com/) |
 | GeoPackage | 1.2 MB | [Link](https://example.com/) |
+
+## MAGIC Administration metadata
+
+To support the internal management of metadata records,
+[Administrative metadata](https://metadata-standards.data.bas.ac.uk/profiles/magic-administration-v1/) (as opposed
+to discovery, calibration or other metadata) can be included in ISO 19115 records.
+
+> [!NOTE]
+> Administrative metadata uses an internally developed information model and is not intended for external use.
+> Administrative metadata is stored in the supplemental information element within the ISO 19115 information model.
+
+The `bas_metadata_library.standards.magic_administration.v1.AdministrationMetadata` Python data class implements
+the information model for administration metadata, and encoding/decoding to/from a string encoded JSON value.
+
+The `bas_metadata_library.standards.magic_administration.v1.AdministrationMetadata.utils.AdministrationWrapper` class
+implements encoding/decoding a JSON string encoded administration metadata instance within a JSON Web Token (JWT).
+
+Specifically the administration metadata string is included as a custom `pyd` (payload) claim within an asymmetrically
+signed, long-lived, JWT. This is nested within a symmetrically encrypted JWE (JSON Web Encryption) string, suitable for
+embedding within an ISO 19115 record. JSON Web Keys (JWKs) for signing/verifying JWTs and encrypting/decrypting JWEs
+are held in a
+`bas_metadata_library.standards.magic_administration.v1.AdministrationMetadata.utils.AdministrationKeys` data class.
+
+The `bas_metadata_library.standards.magic_administration.v1.AdministrationMetadata.utils.get_admin` and `set_admin`
+methods implement encoding/decoding a JWE value within an ISO 19115 record configuration via the
+[`gmd:supplementalInformation`](https://www.datypic.com/sc/niem21/e-gmd_supplementalInformation-1.html) element, as a
+string encoded JSON object under an `admin_metadata` key.
+
+> [!TIP]
+> See the [Administrative metadata](https://metadata-standards.data.bas.ac.uk/profiles/magic-administration-v1/) profile
+> for more information on the administration metadata information model, and encoding.
