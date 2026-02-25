@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 <!-- pyml disable no-duplicate-heading,no-duplicate-header -->
 ## [Unreleased]
 
+## 0.16.0 - 2026-02-25 [BREAKING!]
+
 ### Changed [BREAKING!]
 
 * Switching from Poetry to UV
