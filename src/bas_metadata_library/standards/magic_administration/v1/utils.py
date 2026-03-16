@@ -126,7 +126,10 @@ def get_admin(keys: AdministrationKeys, config: dict) -> Optional[Administration
 
     Checks loaded administration metadata relates to parent discovery metadata record via resource (file) identifier.
     """
-    kv = get_kv(config)
+    try:
+        kv = get_kv(config)
+    except ValueError:
+        return None
     raw_value: Optional[str] = kv.get("admin_metadata", None)
     if raw_value is None:
         return None
@@ -169,11 +172,16 @@ def set_kv(kv: dict, config: dict, replace: bool = False) -> None:
     """
     Set key-value pairs in a JSON encoded string for use in record supplemental information.
 
-    Use `replace` to remove existing keys with new value.
+    Use `replace` to remove existing keys and replace with new value.
 
-    If new value is empty, removes value rather than setting an empty dict.
+    Wraps any existing non-JSON encoded value as a 'statement' key.
+
+    If new value is empty, removes element rather than setting an empty value.
     """
-    kv_ = get_kv(config)
+    try:
+        kv_ = get_kv(config)
+    except ValueError:
+        kv_ = {"statement": config["identification"]["supplemental_information"]}
     kv_.update(kv)
     if replace:
         kv_ = kv
