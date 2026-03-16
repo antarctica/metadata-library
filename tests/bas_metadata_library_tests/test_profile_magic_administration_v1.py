@@ -471,6 +471,42 @@ class TestMagicAdministrationProfileGetSet:
         result = get_admin(keys=fx_admin_meta_keys, config=config)
         assert result == expected
 
+    @pytest.mark.cov()
+    def test_get_other(
+        self,
+        fx_admin_meta_keys: AdministrationKeys,
+        fx_admin_meta_element: AdministrationMetadata,
+        fx_admin_wrapper: AdministrationWrapper    ):
+        """Can get admin metadata from a record alongside other supplemental content."""
+        config = deepcopy(MetadataRecordConfigV4(**iso_configs_all["minimal_v4"])).config
+        config['file_identifier'] = "x"
+        fx_admin_meta_element.id = config['file_identifier']
+        config['identification']['supplemental_information'] = json.dumps(
+            {"admin_metadata": fx_admin_wrapper.encode(fx_admin_meta_element), 'x': 'x'}
+        )
+        expected = fx_admin_meta_element
+
+        result = get_admin(keys=fx_admin_meta_keys, config=config)
+        assert result == expected
+
+    @pytest.mark.cov()
+    def test_get_non_json(self, fx_admin_meta_keys: AdministrationKeys):
+        """Cannot get admin metadata but does not fail where non-JSON supplemental content is used."""
+        config = deepcopy(MetadataRecordConfigV4(**iso_configs_all["minimal_v4"])).config
+        config['identification']['supplemental_information'] = 'x'
+
+        result = get_admin(keys=fx_admin_meta_keys, config=config)
+        assert result is None
+
+    @pytest.mark.cov()
+    def test_get_non_admin(self, fx_admin_meta_keys: AdministrationKeys):
+        """Cannot get admin metadata but does not fail where admin key is missing."""
+        config = deepcopy(MetadataRecordConfigV4(**iso_configs_all["minimal_v4"])).config
+        config['identification']['supplemental_information'] = json.dumps({"x": "x"})
+
+        result = get_admin(keys=fx_admin_meta_keys, config=config)
+        assert result is None
+
     def test_get_mismatched_subject(
         self,
         fx_admin_meta_keys: AdministrationKeys,
@@ -517,6 +553,26 @@ class TestMagicAdministrationProfileGetSet:
 
         with pytest.raises(AdministrationMetadataSubjectMismatchError):
             set_admin(keys=fx_admin_meta_keys, config=config, admin_meta=fx_admin_meta_element)
+
+    @pytest.mark.cov()
+    def test_set_non_json(
+        self,
+        fx_admin_meta_keys: AdministrationKeys,
+        fx_admin_meta_element: AdministrationMetadata,
+        fx_admin_wrapper: AdministrationWrapper,
+    ):
+        """Can set admin metadata where an existing non-JSON supplemental content is used."""
+        expected = 'x'
+        config = deepcopy(MetadataRecordConfigV4(**iso_configs_all["minimal_v4"])).config
+        config['file_identifier'] = "x"
+        fx_admin_meta_element.id = config['file_identifier']
+        config['identification']['supplemental_information'] = expected
+
+        set_admin(keys=fx_admin_meta_keys, config=config, admin_meta=fx_admin_meta_element)
+        result = json.loads(config['identification']['supplemental_information'])
+        assert 'admin_metadata' in result
+        assert result['statement'] == expected
+
 
 class TestMagicAdministrationProfileKv:
     @pytest.mark.parametrize(("value", "expected"), [(None, {}), ("", {}), (json.dumps({"x": "x"}), {"x": "x"})])

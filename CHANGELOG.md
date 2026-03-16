@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 <!-- pyml disable no-duplicate-heading,no-duplicate-header -->
 ## [Unreleased]
 
+### Fixed
+
+* `get_admin` method not gracefully handling non-JSON encoded supplemental information element
+  [#279](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/279)
+* `set_kv` method not gracefully handling existing non-JSON encoded supplemental information content
+  [#279](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/279)
+
 ## 0.16.0 - 2026-02-25 [BREAKING!]
 
 ### Changed [BREAKING!]
