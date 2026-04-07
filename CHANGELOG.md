@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 <!-- pyml disable no-duplicate-heading,no-duplicate-header -->
 ## [Unreleased]
 
+## 0.17.0 - 2026-xx-xx [BREAKING!]
+
+### Removed [BREAKING!]
+
+* ... Bespoke permissions support (use Administration Metadata instead)
+
+### Added
+
+* Support for Lantern specific catalogue identifiers in MAGIC discovery metadata profile V2
+  [#281](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/281)
+
 ## 0.16.1 - 2026-03-16
 
 ### Fixed

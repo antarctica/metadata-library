@@ -253,6 +253,14 @@ minimal_resource_v2 = {
     },
 }
 
+_minimal_resource_v2_alt_id = "e5ef9a53-2f23-4ae0-9a78-a3ae6e2003d8"
+minimal_resource_v2_alt = deepcopy(minimal_resource_v2)
+minimal_resource_v2_alt["file_identifier"] = _minimal_resource_v2_alt_id
+minimal_resource_v2_alt["identification"]["identifiers"][0]["identifier"] = _minimal_resource_v2_alt_id
+minimal_resource_v2_alt["identification"]["identifiers"][0]["href"] = (
+    f"https://lantern.data.bas.ac.uk/items/{_minimal_resource_v2_alt_id}"
+)
+
 _minimal_container_v2_id = "ccb0dd38-29cd-4973-be7a-2db494db6e99"
 minimal_container_v2 = {
     "$schema": "https://metadata-resources.data.bas.ac.uk/bas-metadata-generator-configuration-schemas/v2/iso-19115-2-v4.json",
@@ -326,6 +334,10 @@ minimal_container_v2 = {
     },
 }
 
-configs_v2_all = {"minimal_resource_v2": minimal_resource_v2, "minimal_container_v2": minimal_container_v2}
+configs_v2_all = {
+    "minimal_resource_v2": minimal_resource_v2,
+    "minimal_resource_v2_alt": minimal_resource_v2_alt,
+    "minimal_container_v2": minimal_container_v2,
+}
 
 configs_all = {**configs_v1_all, **configs_v2_all}
