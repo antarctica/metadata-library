@@ -36,11 +36,11 @@
         },
         "href": {
           "type": "string",
-          "pattern": "^https://data\\.bas\\.ac\\.uk/items/.+"
+          "pattern": "^https://(?:lantern\\.)?data\\.bas\\.ac\\.uk/items/.+"
         },
         "namespace": {
           "type": "string",
-          "const": "data.bas.ac.uk"
+          "enum": ["data.bas.ac.uk", "lantern.data.bas.ac.uk"]
         }
       }
     },
