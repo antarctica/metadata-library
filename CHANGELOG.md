@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * ... Bespoke permissions support (use Administration Metadata instead)
 
+## 0.17.0 - 2026-04-07
+
 ### Added
 
 * Support for Lantern specific catalogue identifiers in MAGIC discovery metadata profile V2
