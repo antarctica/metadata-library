@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * ... Bespoke permissions support (use Administration Metadata instead)
 
+### Fixed
+
+* Incomplete support for ISO 19115 progress code list values
+  [#283](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/283)
+
 ## 0.17.0 - 2026-04-07
 
 ### Added

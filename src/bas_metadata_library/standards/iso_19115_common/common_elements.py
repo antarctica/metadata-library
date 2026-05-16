@@ -628,13 +628,24 @@ class MaintenanceProgress(CodeListElement):
             xpath=f"{xpath}/gmd:MD_ProgressCode",
         )
         self.code_list_values = [
+            "accepted",
             "completed",
+            "deprecated",
+            "final",
             "historicalArchive",
+            "notAccepted",
             "obsolete",
             "onGoing",
+            "pending",
             "planned",
+            "proposed",
             "required",
+            "retired",
+            "superseded",
+            "tentative",
             "underDevelopment",
+            "valid",
+            "withdrawn",
         ]
         self.code_list = (
             "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/"

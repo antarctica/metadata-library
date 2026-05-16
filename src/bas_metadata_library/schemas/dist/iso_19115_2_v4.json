@@ -1349,13 +1349,24 @@
             "description": "The status of the resource, or element related to the resource.",
             "type": "string",
             "enum": [
+                "accepted",
                 "completed",
+                "deprecated",
+                "final",
                 "historicalArchive",
+                "notAccepted",
                 "obsolete",
                 "onGoing",
+                "pending",
                 "planned",
+                "proposed",
                 "required",
-                "underDevelopment"
+                "retired",
+                "superseded",
+                "tentative",
+                "underDevelopment",
+                "valid",
+                "withdrawn"
             ],
             "examples": [
                 "completed"
