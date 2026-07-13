@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 <!-- pyml disable no-duplicate-heading,no-duplicate-header -->
 ## [Unreleased]
 
-### Changed [!BREAKING]
+## [0.18.0] - 2026-07-13 [BREAKING!]
+
+### Changed [BREAKING!]
 
 * Minimum Python version changed to 3.11
 
