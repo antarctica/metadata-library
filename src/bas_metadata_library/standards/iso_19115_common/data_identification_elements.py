@@ -930,6 +930,7 @@ class InitiativeType(CodeListElement):
             "dataDictionary",
             "sciencePaper",
             "userGuide",
+            "mapLayer",
         ]
         self.code_list = (
             "https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_InitiativeTypeCode"

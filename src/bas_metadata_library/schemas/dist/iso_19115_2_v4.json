@@ -124,7 +124,8 @@
                         "dataDictionary",
                         "sciencePaper",
                         "userGuide",
-                        "paperMap"
+                        "paperMap",
+                        "mapLayer"
                     ],
                     "examples": [
                         "collection"
