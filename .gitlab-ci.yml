@@ -15,8 +15,8 @@ variables:
   # Image
   UV_CACHE_DIR: ".uv-cache"
   UV_VERSION: "0.11.26"
-  PYTHON_VERSION: "3.9"
-  BASE_LAYER: "bookworm-slim"
+  PYTHON_VERSION: "3.11"
+  BASE_LAYER: "trixie-slim"
 
   # Task runner
   TASK_BIN: "uv run task"
@@ -32,16 +32,12 @@ variables:
   #   - AWS_ACCESS_KEY_ID: "[Sensitive]"
   #   - AWS_SECRET_ACCESS_KEY: "[Sensitive]"
 
-image: python:3.9-slim-bookworm
+image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYER
 
 .before_script_python: &before_script_python
   - apt-get update
 
   # setup UV
-  - apt-get install -y curl
-  - curl -LsSfo uv.tar.gz https://github.com/astral-sh/uv/releases/download/$UV_VERSION/uv-x86_64-unknown-linux-gnu.tar.gz
-  - tar -xzf uv.tar.gz
-  - mv uv-x86_64-unknown-linux-gnu/uv uv-x86_64-unknown-linux-gnu/uvx /usr/local/bin
   - uv --version
 
 .before_script_testing: &before_script_testing

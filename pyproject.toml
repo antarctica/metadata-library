@@ -22,7 +22,7 @@ classifiers = [
   "Intended Audience :: Science/Research",
   "Topic :: Software Development :: Libraries"
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 dependencies = [
   "cattrs>=25.3.0",
   "importlib-resources>=6.5.2", # python-version backport
@@ -30,7 +30,6 @@ dependencies = [
   "jwskate>=0.12.2",
   "lxml>=6.0.2",
   "rfc3987>=1.3.8", # jsonschema indirect dependency
-  "strict-rfc3339>=0.7", # jsonschema indirect dependency # backport for Python < 3.10
 ]
 
 [dependency-groups]
@@ -44,20 +43,9 @@ dev = [
 
 test = [
     "flask>=3.1.2",
-    "pytest>=8.4.2",
+    "pytest>=9.0.3",
     "pytest-cov>=7.0.0",
     "pytest-random-order>=1.2.0",
-]
-
-[tool.uv.audit]
-ignore = [
-    # click < 8.3.3 (needs Python > 3.9)
-    "PYSEC-2026-2132",
-    # cryptography < 48.0.1 (needs Python > 3.9)
-    "GHSA-537c-gmf6-5ccf",
-    # pytest < 9.0.3 (needs Python > 3.9)
-    "GHSA-6w46-j5rx-g56g",
-    "PYSEC-2026-1845",
 ]
 
 [tool.taskipy.variables]
@@ -88,7 +76,7 @@ capture-json-test-configs = { cmd = "flask --app tests.app capture-json-test-con
 [tool.ruff]
 src = ["src"]
 line-length = 120
-target-version = "py39"
+target-version = "py311"
 # tests/bas_metadata_library_tests/* | excluded as too much effort to retrofit and largely unnecessary (stylistic)
 extend-exclude = ["tests/bas_metadata_library_tests"]
 

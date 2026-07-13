@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 <!-- pyml disable no-duplicate-heading,no-duplicate-header -->
 ## [Unreleased]
 
+### Changed [!BREAKING]
+
+* Minimum Python version changed to 3.11
+
 ### Added
 
 * Local term for map layers in ISO 19115 aggregation initiative code list
