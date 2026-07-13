@@ -405,21 +405,23 @@ The minimum Python version is 3.9 for compatibility with older BAS IT base image
 
 ### Vulnerability scanning
 
-The [Safety](https://pypi.org/project/safety/) package checks dependencies for known vulnerabilities.
+The [`uv audit`](https://docs.astral.sh/uv/reference/cli/#uv-audit) command checks for known vulnerabilities in
+packages using a range of sources, including GitHub and the
+[Python Packaging Advisory Database](https://github.com/pypa/advisory-database).
 
 > [!WARNING]
-> As with all security tools, Safety is an aid for spotting common mistakes, not a guarantee of secure code.
-> In particular this is using the free vulnerability database, which is updated less frequently than paid options.
+> As with all security tools, `uv audit` is a tool for detecting well-known vulnerabilities, not a guarantee of
+> secure dependencies. While `uv audit` is experimental, it's data source is not.
 
 Checks are run automatically in [Continuous Integration](#continuous-integration).
 
 > [!TIP]
-> To check locally run the `safety` [Development Task](#development-tasks).
+> To check locally run the `audit` [Development Task](#development-tasks).
 
 ### Updating dependencies
 
 - create an issue and switch to branch
-- run `uv tree --outdated --depth=1` to list outdated packages
+- run `uv tree --all-groups --outdated --depth=1` to list outdated packages
 - follow https://docs.astral.sh/uv/concepts/projects/sync/#upgrading-locked-package-versions
 - note upgrades in the issue
 - review any major/breaking upgrades

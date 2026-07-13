@@ -39,7 +39,6 @@ dev = [
     "jsonref>=1.1.0",
     "pymarkdownlnt>=0.9.33",
     "ruff>=0.15.1",
-    "safety>=3.7.0",
     "taskipy>=1.14.1",
 ]
 
@@ -48,6 +47,17 @@ test = [
     "pytest>=8.4.2",
     "pytest-cov>=7.0.0",
     "pytest-random-order>=1.2.0",
+]
+
+[tool.uv.audit]
+ignore = [
+    # click < 8.3.3 (needs Python > 3.9)
+    "PYSEC-2026-2132",
+    # cryptography < 48.0.1 (needs Python > 3.9)
+    "GHSA-537c-gmf6-5ccf",
+    # pytest < 9.0.3 (needs Python > 3.9)
+    "GHSA-6w46-j5rx-g56g",
+    "PYSEC-2026-1845",
 ]
 
 [tool.taskipy.variables]
@@ -66,10 +76,9 @@ pre-commit = { cmd = "pre-commit run --all-files", help = "Run pre-commit hooks 
 test = { cmd = "pytest", help = "Run tests" }
 test-cov = { cmd = "pytest {cov_options}", help = "Run tests with coverage", use_vars = true }
 test-reset = { cmd = "pytest --cache-clear", help = "Reset pytest cache and run tests" }
-safety = { cmd = "safety scan --detailed-output", help = "Check for insecure dependencies" }
+audit = { cmd = "uv audit --frozen", help = "Check for insecure dependencies" }
 # CI
 ci-test = { cmd = "pytest {cov_options} -o junit_family=xunit2 --junitxml=test-results.xml --continue-on-collection-errors", help = "Called by CI", use_vars = true }
-ci-safety = { cmd = "safety --stage cicd scan --detailed-output", help = "Called by CI" }
 # app dev
 generate-schemas = { cmd = "flask --app tests.app generate-schemas", help="Generate JSON schemas via Flask app" }
 validate-schemas = { cmd = "flask --app tests.app validate-schemas", help="Validate JSON schemas via Flask app" }

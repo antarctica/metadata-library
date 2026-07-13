@@ -14,7 +14,7 @@ stages:
 variables:
   # Image
   UV_CACHE_DIR: ".uv-cache"
-  UV_VERSION: "0.9.9"
+  UV_VERSION: "0.11.26"
   PYTHON_VERSION: "3.9"
   BASE_LAYER: "bookworm-slim"
 
@@ -26,20 +26,22 @@ variables:
   S3_SCHEMA_BUCKET_PROD: metadata-resources.data.bas.ac.uk
 
   # Secrets (set in GitLab CI/CD settings)
-  # - SAFETY_API_KEY
-  #   - https://start.1password.com/open/i?a=QSB6V7TUNVEOPPPWR6G7S2ARJ4&v=k34cpwfkqaxp2r56u4aklza6ni&i=swbuhnii4ego6qycyqknvtk7gi&h=magic.1password.eu
   # - PYPI_TOKEN
   #    - create tokens at https://pypi.org/manage/account/
   # - AWS IAM id/secret key for 'bas-gitlab-ci-bas-metadata-generator' user
   #   - AWS_ACCESS_KEY_ID: "[Sensitive]"
   #   - AWS_SECRET_ACCESS_KEY: "[Sensitive]"
 
-image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYER
+image: python:3.9-slim-bookworm
 
 .before_script_python: &before_script_python
   - apt-get update
 
   # setup UV
+  - apt-get install -y curl
+  - curl -LsSfo uv.tar.gz https://github.com/astral-sh/uv/releases/download/$UV_VERSION/uv-x86_64-unknown-linux-gnu.tar.gz
+  - tar -xzf uv.tar.gz
+  - mv uv-x86_64-unknown-linux-gnu/uv uv-x86_64-unknown-linux-gnu/uvx /usr/local/bin
   - uv --version
 
 .before_script_testing: &before_script_testing
@@ -92,18 +94,15 @@ ruff:
         - '**/*.py'
       if: '$CI_COMMIT_BRANCH != "main" && $CI_COMMIT_TAG == null'
 
-safety:
+vulnerabilities:
   stage: 📋 lint
   needs: []
   before_script:
     - *before_script_testing
   script:
-    - $TASK_BIN ci-safety
+    - $TASK_BIN audit
   rules:
     -
-      changes:
-        - '.safety-policy.yml'
-        - 'uv.lock'
       if: '$CI_COMMIT_BRANCH != "main" && $CI_COMMIT_TAG == null'
 
 markdown:

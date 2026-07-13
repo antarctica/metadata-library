@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Local term for map layers in ISO 19115 aggregation initiative code list
   [#285](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/285)
 
+### Changed
+
+* Upgrading project dependencies
+  [#287](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/287)
+* Replacing Safety with UV audit for Python dependencies vulnerability scanning
+  [#288](https://gitlab.data.bas.ac.uk/uk-pdc/metadata-infrastructure/metadata-library/-/issues/288)
+
 ## [0.17.1] - 2026-05-16
 
 ### Fixed
