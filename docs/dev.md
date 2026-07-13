@@ -397,10 +397,6 @@ example of removing a standard.
 
 See the [Taskipy](https://github.com/taskipy/taskipy?tab=readme-ov-file#adding-tasks) documentation.
 
-## Python version
-
-The minimum Python version is 3.9 for compatibility with older BAS IT base images.
-
 ## Dependencies
 
 ### Vulnerability scanning
