@@ -6,7 +6,7 @@
 
 Requirements:
 
-- Git
+- [Git](https://git-scm.com/)
 - [UV](https://docs.astral.sh/uv/)
 - [Pre-commit](https://pre-commit.com)
 
