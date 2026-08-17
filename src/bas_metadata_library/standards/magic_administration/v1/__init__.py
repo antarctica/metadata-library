@@ -41,6 +41,10 @@ class Permission:
         other_dict.pop("comment", None)
         return self_dict == other_dict
 
+    def __hash__(self) -> int:
+        """Hash all properties dynamically."""
+        return hash(tuple(asdict(self).items()))
+
 
 @dataclass
 class AdministrationMetadata:

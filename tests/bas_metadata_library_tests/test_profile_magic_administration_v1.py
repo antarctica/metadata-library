@@ -79,6 +79,13 @@ class TestMagicAdministrationProfilePermission:
         with pytest.raises(TypeError):
             _ = Permission(directory="x", group="x") == "x"
 
+    @pytest.mark.cov()
+    def test_hash(self):
+        """Can hash Permissions."""
+        x = {Permission(directory="x", group="x"): "x"}
+        assert len(x) == 1
+
+
 class TestMagicAdministrationProfileContent:
     """Test administration element."""
 

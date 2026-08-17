@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 <!-- pyml disable no-duplicate-heading,no-duplicate-header -->
 ## [Unreleased]
 
+### Fixed
+
+* Missing hash support for MAGIC administration metadata `Permission` class
+
 ## [0.18.0] - 2026-07-13 [BREAKING!]
 
 ### Changed [BREAKING!]
