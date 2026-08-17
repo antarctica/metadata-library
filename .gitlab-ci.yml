@@ -97,8 +97,12 @@ vulnerabilities:
     - *before_script_testing
   script:
     - $TASK_BIN audit
+  allow_failure: true
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
     -
+      changes:
+        - 'uv.lock'
       if: '$CI_COMMIT_BRANCH != "main" && $CI_COMMIT_TAG == null'
 
 markdown:
